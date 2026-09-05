@@ -701,7 +701,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const FIREBASE_URL = "https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync.json";
+    const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
 
     // Brian's Theater Dedicated Firebase Configuration
@@ -928,7 +928,7 @@
 
       // 1. Direct update to Firebase RTDB for instant global sync
       try {
-        await fetch('https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
+        await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(mode)
@@ -1739,7 +1739,7 @@
             }
 
             // Sync full 398+ past movies catalog from Firebase
-            fetch('https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
+            fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
               .then(r => r.json())
               .then(pastData => {
                 if (Array.isArray(pastData) && pastData.length > 0) {

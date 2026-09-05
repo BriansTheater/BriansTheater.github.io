@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.16] - 2026-09-05
+
+### What's New
+- Migrated Realtime Database to dedicated BriansTheater Firebase project.
+- Configured public read and write security rules for theaterSync.
+- Migrated live theater status, schedule, and all past movies.
+- Repointed web app and bot endpoints to dedicated database.
+- Synchronized all schedule lineups and Movie Vault past titles.
+
 ## [4.9.15] - 2026-09-05
 
 ### What's New
