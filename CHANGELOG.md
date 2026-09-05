@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.7] - 2026-09-04
+
+### What's New
+- Moved showing stats into the top header banner.
+- Display live movies, TV shows, and days open banner pills.
+- Removed standalone trailer player from the Screening Room.
+- Removed all social media channels and placeholders across views.
+- Cleanly concluded completed screenings and paused the auditorium.
+- Reset now playing heading to between screenings state.
+- Hid active screening alert banner when no movie plays.
+- Connected movie lineup trailer buttons directly to YouTube.
+
 ## [4.9.6] - 2026-09-04
 
 ### What's New

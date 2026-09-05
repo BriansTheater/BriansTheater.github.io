@@ -52,15 +52,23 @@
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             <span id="liveClock">Loading Live Time...</span>
           </div>
+          <!-- Showing Stats Banner Row -->
+          <div class="flex items-center gap-2 mt-1 text-[10px] sm:text-[11px] font-mono flex-wrap">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-semibold flex items-center gap-1 shadow-sm">
+              <span>🍿</span> <b id="statMoviesNumBanner" class="text-white">398</b> Movies
+            </span>
+            <span class="px-2 py-0.5 rounded-md bg-amber-950/80 text-amber-300 border border-amber-800/60 font-semibold flex items-center gap-1 shadow-sm">
+              <span>📺</span> <b id="statTvNumBanner" class="text-white">36</b> TV Shows
+            </span>
+            <span class="px-2 py-0.5 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800/60 font-semibold flex items-center gap-1 shadow-sm">
+              <span>🗓️</span> <b id="statDaysNumBanner" class="text-white">1 yr, 5 mos, 30 days</b> Open
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- Auth & Social Hub -->
+      <!-- Auth Action -->
       <div class="flex items-center gap-2.5">
-        
-        <a href="#" onclick="alert('Official social channels coming soon! Check back for updates.'); return false;" class="hidden sm:flex px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition items-center gap-1 border border-slate-700">
-          <span>🌳</span> Social Hub
-        </a>
 
         <!-- GOOGLE AUTH LOGIN / PROFILE BADGE -->
         <div id="authSection">
@@ -134,13 +142,13 @@
 
       <div class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
         <div class="flex items-center gap-2" id="bannerLiveIndicator">
-          <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-          <span class="font-bold text-red-400 uppercase tracking-wider">Live Screening Auditorium:</span>
-          <span class="text-slate-100 font-semibold">"Return To Silent Hill" is Screening Live!</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+          <span class="font-bold text-slate-400 uppercase tracking-wider">Auditorium Status:</span>
+          <span class="text-slate-300 font-semibold">Doors Closed • Next Premiere: Neighbors (Saturday 7:00 PM)</span>
         </div>
         <div class="flex items-center gap-2 font-mono">
           <span class="text-slate-400">Runtime Left:</span>
-          <span id="screenTimeLeft" class="text-amber-400 font-bold">1h 24m</span>
+          <span id="screenTimeLeft" class="text-amber-400 font-bold">--</span>
         </div>
       </div>
 
@@ -148,14 +156,14 @@
         <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
 
         <div class="relative z-10 flex flex-col items-center">
-          <span id="auditoriumStatusPill" class="px-3 py-1 rounded-full bg-red-500/20 border border-red-500/50 text-red-400 text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5 animate-pulse">
-            <span class="w-2 h-2 rounded-full bg-red-500"></span> 🔴 LIVE ON STAGE NOW
+          <span id="auditoriumStatusPill" class="px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300 text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-slate-500"></span> ⏸️ AUDITORIUM PAUSED • NEXT SHOW UPCOMING
           </span>
           <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-slate-100 mt-2">
-            Return To Silent Hill
+            No Movie Playing
           </h2>
           <p class="text-xs text-slate-400 mt-1 max-w-md">
-            Join Brian and the community in the virtual cinema. Grab your seat and enjoy the show!
+            The auditorium is currently between screenings. Check the schedule below for upcoming showtimes!
           </p>
         </div>
 
@@ -176,85 +184,13 @@
         </div>
       </div>
 
-      <!-- Trailer Player -->
-      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6 shadow-2xl flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-red-500 text-base">▶</span>
-            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200">Interactive Trailer Player</h3>
-          </div>
-          <span class="text-xs text-slate-400">Watch trailers on demand</span>
-        </div>
-
-        <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800">
-          <iframe id="trailerFrame" class="w-full h-full" src="https://www.youtube-nocookie.com/embed/3VbW9A6gGgQ?autoplay=0" title="Movie Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-
-        <div class="flex items-center gap-2 flex-wrap text-xs text-slate-400">
-          <span class="text-slate-500">Feature Trailers:</span>
-          <button onclick="setTrailer('https://www.youtube.com/watch?v=3VbW9A6gGgQ')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 transition">Return to Silent Hill</button>
-          <button onclick="setTrailer('https://www.youtube.com/watch?v=gCcx85zbxz4')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 transition">Blade Runner 2049</button>
-          <button onclick="setTrailer('https://www.youtube.com/watch?v=Way9Dexny3w')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 transition">Dune: Part Two</button>
-        </div>
-      </div>
-
-      <!-- 🌳 CONNECT WITH BRIAN'S THEATER (Social Channels) -->
-      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6 shadow-2xl flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
-              <span>🌳</span> Connect with Brian's Theater
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Join our social channels to catch announcements, movie polls, and discussions.</p>
-          </div>
-          <a href="#" onclick="alert('Official social channels coming soon! Check back for updates.'); return false;" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition self-start sm:self-auto border border-slate-700 shrink-0">
-            <span>🌳</span> Social Hub
-          </a>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📸</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">Instagram</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">🎵</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">TikTok</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📺</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">YouTube</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <!-- TAB 2: 📅 SCHEDULE & NEXT UP -->
     <div id="view-schedule" class="tab-view hidden flex flex-col gap-6">
 
       <!-- Active Screening In-Progress Alert Banner -->
-      <div id="schedActiveAlertBox" class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse">
+      <div id="schedActiveAlertBox" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse">
         <div class="flex items-center gap-3.5">
           <span class="text-3xl sm:text-4xl">🍿</span>
           <div>
@@ -427,48 +363,6 @@
         </div>
       </div>
 
-      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
-        <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-          <span>🌳</span> Connect with Brian's Theater
-        </h3>
-        <p class="text-xs text-slate-400">Join our social channels to catch announcements, movie polls, and discussions.</p>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📸</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">Instagram</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">🎵</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">TikTok</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📺</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">YouTube</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <!-- TAB 6: 👑 ADMIN PORTAL -->
@@ -559,58 +453,9 @@
 
   </main>
 
-  <!-- GLOBAL SOCIAL FOOTER -->
+  <!-- GLOBAL FOOTER -->
   <footer class="border-t border-slate-800/80 bg-[#0f172a]/95 backdrop-blur-md mt-12 py-8 px-4 sm:px-6">
     <div class="max-w-5xl mx-auto flex flex-col gap-6">
-      
-      <div class="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
-          <div>
-            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              <span>🌳</span> Connect with Brian's Theater
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Join our social channels to catch announcements, movie polls, and discussions.</p>
-          </div>
-          <a href="#" onclick="alert('Official social channels coming soon! Check back for updates.'); return false;" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition self-start sm:self-auto border border-slate-700">
-            <span>🌳</span> Social Hub
-          </a>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📸</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">Instagram</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">🎵</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">TikTok</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📺</span>
-              <div>
-                <div class="text-xs font-bold text-slate-100">YouTube</div>
-                <div class="text-[11px] text-slate-400">Social Channel</div>
-              </div>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold uppercase tracking-wider">Coming Soon</span>
-          </div>
-        </div>
-      </div>
 
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
         <div class="flex items-center gap-2">
@@ -725,16 +570,45 @@
       document.getElementById('countMins').textContent = String(m).padStart(2, '0');
       document.getElementById('countSecs').textContent = String(s).padStart(2, '0');
 
-      // Dynamic calculation of active screening runtime
+      // Dynamic calculation of active screening runtime & concluded auditorium transitions
       const activeStart = 1788573600000; // 7:00 PM PST (Friday Sept 4)
       const activeEnd = activeStart + (105 * 60 * 1000); // 8:45 PM PST
+      const screenTimeEl = document.getElementById('screenTimeLeft');
+      const schedTimeEl = document.getElementById('schedActiveTimeLeft');
+      const alertBox = document.getElementById('schedActiveAlertBox');
+      const bannerLive = document.getElementById('bannerLiveIndicator');
+      const statusPill = document.getElementById('auditoriumStatusPill');
+
       if (now >= activeStart && now < activeEnd) {
         const minsLeft = Math.max(1, Math.ceil((activeEnd - now) / 60000));
         const formattedTime = minsLeft >= 60 ? `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m` : `${minsLeft}m`;
-        const screenTimeEl = document.getElementById('screenTimeLeft');
-        const schedTimeEl = document.getElementById('schedActiveTimeLeft');
         if (screenTimeEl) screenTimeEl.textContent = formattedTime;
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
+        if (alertBox) {
+          alertBox.classList.remove('hidden');
+          alertBox.classList.add('flex');
+        }
+        if (bannerLive && !bannerLive.innerHTML.includes('animate-ping')) {
+          bannerLive.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span><span class="font-bold text-red-400 uppercase tracking-wider">Live Screening Auditorium:</span><span class="text-slate-100 font-semibold">"Return To Silent Hill" is Screening Live!</span>';
+        }
+        if (statusPill && !statusPill.innerHTML.includes('LIVE ON STAGE')) {
+          statusPill.className = "px-3 py-1 rounded-full bg-red-500/20 border border-red-500/50 text-red-400 text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5 animate-pulse";
+          statusPill.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500"></span> 🔴 LIVE ON STAGE NOW';
+        }
+      } else {
+        if (screenTimeEl && screenTimeEl.textContent !== "--") screenTimeEl.textContent = "--";
+        if (schedTimeEl && schedTimeEl.textContent !== "--") schedTimeEl.textContent = "--";
+        if (alertBox && !alertBox.classList.contains('hidden')) {
+          alertBox.classList.add('hidden');
+          alertBox.classList.remove('flex');
+        }
+        if (bannerLive && !bannerLive.innerHTML.includes('Doors Closed')) {
+          bannerLive.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span><span class="font-bold text-slate-400 uppercase tracking-wider">Auditorium Status:</span><span class="text-slate-300 font-semibold">Doors Closed • Next Premiere: Neighbors (Saturday 7:00 PM)</span>';
+        }
+        if (statusPill && !statusPill.innerHTML.includes('AUDITORIUM PAUSED')) {
+          statusPill.className = "px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300 text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5";
+          statusPill.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span> ⏸️ AUDITORIUM PAUSED • NEXT SHOW UPCOMING';
+        }
       }
     }
     setInterval(updateCountdown, 1000);
@@ -750,7 +624,10 @@
     function setTrailer(url) {
       const videoId = extractYouTubeId(url);
       if (videoId) {
-        document.getElementById('trailerFrame').src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+        const frame = document.getElementById('trailerFrame');
+        if (frame) {
+          frame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+        }
         const adminInput = document.getElementById('adminTrailerUrl');
         if (adminInput) adminInput.value = url;
       }
@@ -871,11 +748,16 @@
               document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
             } else if (isLive) {
               document.getElementById('nowPlayingHeading').textContent = "Return To Silent Hill";
-            } else if (data.nowPlaying) {
-              document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
+            } else {
+              document.getElementById('nowPlayingHeading').textContent = "No Movie Playing";
             }
 
-            if (data.timeLeft) document.getElementById('screenTimeLeft').textContent = data.timeLeft;
+            if (isLive && data.timeLeft) {
+              document.getElementById('screenTimeLeft').textContent = data.timeLeft;
+            } else if (!isLive) {
+              document.getElementById('screenTimeLeft').textContent = "--";
+            }
+
             if (data.nextTitle) {
               const formattedTitle = data.nextTitle.startsWith('🎬') ? data.nextTitle : `🎬 ${data.nextTitle}`;
               document.getElementById('schedNextTitle').textContent = formattedTitle;
@@ -901,9 +783,24 @@
             if (data.nextStartMs && data.nextStartMs > Date.now()) {
               targetNextMs = data.nextStartMs;
             }
-            if (data.moviesCount) document.getElementById('statMoviesNum').textContent = data.moviesCount;
-            if (data.tvCount) document.getElementById('statTvNum').textContent = data.tvCount;
-            if (data.daysOpen) document.getElementById('statDaysNum').textContent = data.daysOpen;
+            if (data.moviesCount) {
+              const el1 = document.getElementById('statMoviesNum');
+              const el2 = document.getElementById('statMoviesNumBanner');
+              if (el1) el1.textContent = data.moviesCount;
+              if (el2) el2.textContent = data.moviesCount;
+            }
+            if (data.tvCount) {
+              const el1 = document.getElementById('statTvNum');
+              const el2 = document.getElementById('statTvNumBanner');
+              if (el1) el1.textContent = data.tvCount;
+              if (el2) el2.textContent = data.tvCount;
+            }
+            if (data.daysOpen) {
+              const el1 = document.getElementById('statDaysNum');
+              const el2 = document.getElementById('statDaysNumBanner');
+              if (el1) el1.textContent = data.daysOpen;
+              if (el2) el2.textContent = data.daysOpen;
+            }
 
             // Render schedule directly from Firebase (0 Google Sheets calls!)
             if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
@@ -964,8 +861,7 @@
     function watchTrailerByVaultIndex(idx) {
       const item = currentFilteredVault[idx];
       if (item && item.title) {
-        setTrailer('https://www.youtube.com/results?search_query=' + encodeURIComponent(item.title + ' trailer'));
-        switchTab('screening');
+        window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(item.title + ' trailer'), '_blank');
       }
     }
 
@@ -1091,8 +987,8 @@
         runtime: "1h 46m", 
         year: "2026", 
         summary: "James Sunderland returns to Silent Hill to find his lost love, only to discover a living nightmare.", 
-        status: "🔴 LIVE NOW", 
-        tagColor: "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse", 
+        status: "CONCLUDED", 
+        tagColor: "bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold", 
         trailerId: "Way9Dexny3w",
         afterShow: "the simpson yellow mirror (8:54 PM - 9:21 PM)"
       },
@@ -1332,8 +1228,8 @@
               <button onclick="toggleCardTrailer(${idx})" id="trailerBtn-${idx}" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95">
                 <span>🎬</span> <span id="trailerBtnText-${idx}">Watch Trailer ▾</span>
               </button>
-              <button onclick="sendToScreeningRoom('${escapeHtml(trailerId)}', '${escapeHtml(s.title || '')}')" title="Play on big stage" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 transition flex items-center gap-1.5 active:scale-95">
-                <span>📺</span> Main Stage
+              <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1.5 active:scale-95">
+                <span>▶</span> YouTube ↗
               </button>
             </div>
 
