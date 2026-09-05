@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brian's Theater — Standalone Web App</title>
@@ -168,8 +169,15 @@
           </div>
         </div>
 
-        <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl w-full max-w-md aspect-[16/10] flex items-center justify-center">
-          <img id="stagePoster" src="https://ugc.production.linktr.ee/6cb05a9d-901c-4b75-b102-0856bb99bfa4_SEPTEMBER-4--2026.png?io=true&size=thumbnail-feature-v1_0" alt="Now Playing Poster" class="w-full h-full object-cover">
+        <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl w-full max-w-md aspect-[16/10] flex items-center justify-center group">
+          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover transition duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none"></div>
+          <div id="stagePosterBadge" class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-700/80 flex items-center justify-between text-xs font-mono shadow-lg">
+            <span id="stagePosterBadgeLabel" class="font-bold text-amber-300 flex items-center gap-1.5 truncate">
+              <span>⭐</span> <span id="stagePosterBadgeTitle">NEXT UP: Neighbors</span>
+            </span>
+            <span id="stagePosterBadgeDate" class="text-sky-300 text-[11px] font-semibold shrink-0">Sat, Sept 5 • 7 PM</span>
+          </div>
         </div>
 
         <!-- PRIMARY DE-BRANDED CALL-TO-ACTION: ENTER THEATER -->
@@ -214,6 +222,16 @@
           🎬 Neighbors
         </h2>
         <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Saturday, Sept 5 • 7:00 PM PST</p>
+
+        <!-- Next Up Featured Movie Artwork Banner -->
+        <div id="schedNextPosterContainer" class="w-full max-w-lg aspect-[16/9] rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl relative my-1 group">
+          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Next Upcoming Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
+          <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-500/90 text-slate-950 font-bold uppercase tracking-wider text-[10px]">Next Premiere</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-sm text-slate-300 font-mono text-[11px] border border-slate-800">Saturday, Sept 5 • 7:00 PM PST</span>
+          </div>
+        </div>
 
         <!-- Precision Countdown -->
         <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 w-full max-w-lg my-2">
@@ -418,7 +436,94 @@
           </div>
         </div>
 
-        <!-- 3. Review Queue -->
+        <!-- 3. Movie Posters & Artwork Manager -->
+        <div class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-amber-500/50 flex flex-col gap-5 shadow-2xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                <span>🖼️</span> Movie Posters & Artwork Manager
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Set high-definition posters for each movie in your lineup and display them when next up in the Screening Room.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 font-mono" id="adminArtworkMovieCount">10 Movies</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left: Artwork Editor & Tools (7 cols) -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+              <div>
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <span>🎬</span> Select Movie to Configure
+                </label>
+                <select id="adminArtworkMovieSelect" onchange="onAdminSelectArtworkMovie()" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-semibold focus:border-amber-400">
+                  <!-- Populated dynamically with all scheduled movies -->
+                </select>
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Custom Image URL</label>
+                <div class="flex gap-2 mt-1">
+                  <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, Discord, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400">
+                  <button onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0">
+                    Preview
+                  </button>
+                </div>
+              </div>
+
+              <!-- Quick Action Buttons -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <label class="cursor-pointer py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-2 transition active:scale-95 text-center">
+                  <span>📁</span> Browse Local File
+                  <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
+                </label>
+
+                <button onclick="fetchTmdbArtworkForSelectedMovie()" id="btnFetchTmdbArtwork" class="py-2.5 px-3 bg-gradient-to-r from-sky-600 to-cyan-500 hover:from-sky-500 hover:to-cyan-400 text-slate-950 font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <span>🔍</span> TMDB 1-Click Auto-Fetch
+                </button>
+              </div>
+
+              <!-- Save & Stage Buttons -->
+              <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-slate-850">
+                <button onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
+                  <span>💾</span> Save Movie Image
+                </button>
+                <button onclick="applySelectedArtworkToStageNow()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 active:scale-95 shrink-0">
+                  <span>⭐</span> Set on Stage Now
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Live Selected Artwork Preview (5 cols) -->
+            <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 self-start flex items-center gap-1.5">
+                <span>👁️</span> Artwork Preview
+              </span>
+              <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border-2 border-slate-750 bg-black shadow-inner flex items-center justify-center">
+                <img id="adminArtworkPreviewImg" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Artwork Preview" class="w-full h-full object-cover">
+                <div class="absolute bottom-1.5 left-2 right-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-sm text-[10px] font-mono text-amber-300 truncate" id="adminArtworkPreviewCaption">
+                  Neighbors (2014)
+                </div>
+              </div>
+              <div class="w-full mt-2 text-[11px] text-slate-400 text-center font-mono truncate" id="adminArtworkPreviewUrl">
+                https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg
+              </div>
+            </div>
+          </div>
+
+          <!-- Schedule Artwork Mini-Gallery -->
+          <div class="mt-3 pt-4 border-t border-slate-850">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <span>🖼️</span> Upcoming Lineup Artwork Gallery (Click to Edit)
+            </h4>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="adminArtworkGalleryGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Review Queue -->
         <div class="mt-6 p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
@@ -509,6 +614,7 @@
           view.classList.remove('hidden');
           if (tab === 'admin') {
             btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow-md transition flex items-center gap-2";
+            populateAdminArtworkSelector();
           } else {
             btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
           }
@@ -540,6 +646,77 @@
     setInterval(updateClock, 1000);
     updateClock();
 
+    // High-Definition Artwork dictionary for scheduled movies
+    const DEFAULT_MOVIE_ARTWORK = {
+      "Return To Silent Hill": "https://ugc.production.linktr.ee/6cb05a9d-901c-4b75-b102-0856bb99bfa4_SEPTEMBER-4--2026.png?io=true&size=thumbnail-feature-v1_0",
+      "Neighbors": "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg",
+      "Neighbors 2": "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg",
+      "Machine Gun Preacher": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg",
+      "beast": "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
+      "mother mary": "https://image.tmdb.org/t/p/w780/9eynUDRhChIsgSYLK82aC4zIQ2M.jpg",
+      "Normal": "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg",
+      "Dog Man": "https://image.tmdb.org/t/p/w780/iXU87IdtNsYt7n6OigPJBDdbFf1.jpg",
+      "Borderlands": "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg",
+      "Scary Movie 2026": "https://image.tmdb.org/t/p/w780/gCcx85zbxz4.jpg"
+    };
+
+    let customMovieImages = {};
+    try {
+      const stored = localStorage.getItem('brian_movie_posters_map');
+      if (stored) customMovieImages = JSON.parse(stored);
+    } catch(e) {}
+
+    function getMovieArtworkUrl(movieOrTitle) {
+      if (!movieOrTitle) return DEFAULT_MOVIE_ARTWORK["Neighbors"];
+      let title = typeof movieOrTitle === 'string' ? movieOrTitle : (movieOrTitle.title || "");
+      title = title.replace(/^🎬\s*/, '').trim();
+
+      if (customMovieImages[title]) return customMovieImages[title];
+      if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl)) {
+        return movieOrTitle.posterUrl || movieOrTitle.imageUrl;
+      }
+      if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
+
+      const lower = title.toLowerCase().trim();
+      for (const [k, v] of Object.entries(customMovieImages)) {
+        if (k.toLowerCase().trim() === lower) return v;
+      }
+      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
+        if (k.toLowerCase().trim() === lower) return v;
+      }
+
+      return "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg";
+    }
+
+    function updateStageArtwork(isLive, nowPlayingTitle, nextUpTitle, data) {
+      const stagePoster = document.getElementById('stagePoster');
+      const stagePosterBadgeTitle = document.getElementById('stagePosterBadgeTitle');
+      const stagePosterBadgeDate = document.getElementById('stagePosterBadgeDate');
+      const schedNextPoster = document.getElementById('schedNextPoster');
+
+      const activeMovie = (nowPlayingTitle && nowPlayingTitle !== "No Movie Playing") ? nowPlayingTitle : "Return To Silent Hill";
+      const nextMovie = (nextUpTitle && nextUpTitle !== "None") ? nextUpTitle.replace(/^🎬\s*/, '') : "Neighbors";
+
+      if (isLive) {
+        const activeImg = (data && data.nowPlayingPoster) || getMovieArtworkUrl(activeMovie);
+        if (stagePoster && stagePoster.src !== activeImg) stagePoster.src = activeImg;
+        if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `LIVE ON STAGE: ${activeMovie}`;
+        if (stagePosterBadgeDate) stagePosterBadgeDate.textContent = `Doors Open Now`;
+      } else {
+        // Auditorium closed between screenings: Dynamically display the NEXT UP movie's artwork!
+        const nextImg = (data && data.nextPoster) || getMovieArtworkUrl(nextMovie);
+        if (stagePoster && stagePoster.src !== nextImg) stagePoster.src = nextImg;
+        if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `NEXT UP: ${nextMovie}`;
+        const nextDateStr = document.getElementById('schedNextDate')?.textContent || "Saturday, Sept 5 • 7:00 PM PST";
+        if (stagePosterBadgeDate) stagePosterBadgeDate.textContent = nextDateStr;
+      }
+
+      if (schedNextPoster) {
+        const nextImg = (data && data.nextPoster) || getMovieArtworkUrl(nextMovie);
+        if (schedNextPoster.src !== nextImg) schedNextPoster.src = nextImg;
+      }
+    }
+
     function updateCountdown() {
       const now = Date.now();
       const diff = Math.max(0, targetNextMs - now);
@@ -568,6 +745,9 @@
       // Dynamic calculation of active screening runtime & concluded auditorium transitions
       const activeStart = 1788573600000; // 7:00 PM PST (Friday Sept 4)
       const activeEnd = activeStart + (105 * 60 * 1000); // 8:45 PM PST
+      const isLiveScreening = (now >= activeStart && now < activeEnd);
+      updateStageArtwork(isLiveScreening, document.getElementById('nowPlayingHeading')?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
+
       const screenTimeEl = document.getElementById('screenTimeLeft');
       const screenTimeLabel = document.getElementById('screenTimeLabel');
       const schedTimeEl = document.getElementById('schedActiveTimeLeft');
@@ -712,6 +892,173 @@
       }
     });
 
+    document.getElementById('adminArtworkFileInput')?.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const urlInput = document.getElementById('adminArtworkUrlInput');
+          const previewImg = document.getElementById('adminArtworkPreviewImg');
+          const urlText = document.getElementById('adminArtworkPreviewUrl');
+          if (urlInput) urlInput.value = evt.target.result;
+          if (previewImg) previewImg.src = evt.target.result;
+          if (urlText) urlText.textContent = `[Local File: ${file.name}]`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 🎬 Movie Posters & Artwork Manager Engine
+    function populateAdminArtworkSelector() {
+      const select = document.getElementById('adminArtworkMovieSelect');
+      const gallery = document.getElementById('adminArtworkGalleryGrid');
+      const countBadge = document.getElementById('adminArtworkMovieCount');
+      if (!select) return;
+
+      const moviesList = sampleSchedule.map(s => s.title);
+      select.innerHTML = moviesList.map(title => `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`).join('');
+
+      if (countBadge) countBadge.textContent = `${moviesList.length} Movies in Lineup`;
+
+      if (gallery) {
+        gallery.innerHTML = sampleSchedule.map(s => {
+          const artUrl = getMovieArtworkUrl(s.title);
+          return `
+            <div onclick="selectMovieFromGallery('${escapeHtml(s.title)}')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/60 transition flex flex-col gap-1.5 shadow-md">
+              <div class="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-black border border-slate-800">
+                <img src="${escapeHtml(artUrl)}" alt="${escapeHtml(s.title)}" class="w-full h-full object-cover group-hover/art:scale-105 transition duration-200" loading="lazy">
+                <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-slate-950/80 text-[9px] font-mono text-amber-300">${s.status || 'SET'}</div>
+              </div>
+              <div class="text-[11px] font-bold text-slate-200 truncate group-hover/art:text-amber-300">${escapeHtml(s.title)}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      onAdminSelectArtworkMovie();
+    }
+
+    function selectMovieFromGallery(title) {
+      const select = document.getElementById('adminArtworkMovieSelect');
+      if (select) {
+        select.value = title;
+        onAdminSelectArtworkMovie();
+        select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function onAdminSelectArtworkMovie() {
+      const select = document.getElementById('adminArtworkMovieSelect');
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const caption = document.getElementById('adminArtworkPreviewCaption');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+      if (!select) return;
+
+      const title = select.value;
+      const currentUrl = getMovieArtworkUrl(title);
+
+      if (urlInput) urlInput.value = currentUrl;
+      if (previewImg) previewImg.src = currentUrl;
+      if (caption) caption.textContent = `${title}`;
+      if (urlText) urlText.textContent = currentUrl;
+    }
+
+    function previewCustomArtworkUrl() {
+      const url = document.getElementById('adminArtworkUrlInput')?.value.trim();
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+      if (url && previewImg) {
+        previewImg.src = url;
+        if (urlText) urlText.textContent = url;
+      }
+    }
+
+    async function fetchTmdbArtworkForSelectedMovie() {
+      const select = document.getElementById('adminArtworkMovieSelect');
+      const btn = document.getElementById('btnFetchTmdbArtwork');
+      if (!select) return;
+
+      const title = select.value.replace(/^🎬\s*/, '').trim();
+      if (btn) btn.textContent = "Fetching TMDB...";
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(title)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.results && data.results.length > 0) {
+            const top = data.results[0];
+            const backdrop = top.backdrop_path ? `https://image.tmdb.org/t/p/w780${top.backdrop_path}` : null;
+            const poster = top.poster_path ? `https://image.tmdb.org/t/p/w500${top.poster_path}` : null;
+            const chosen = backdrop || poster;
+            if (chosen) {
+              const urlInput = document.getElementById('adminArtworkUrlInput');
+              const previewImg = document.getElementById('adminArtworkPreviewImg');
+              const urlText = document.getElementById('adminArtworkPreviewUrl');
+              if (urlInput) urlInput.value = chosen;
+              if (previewImg) previewImg.src = chosen;
+              if (urlText) urlText.textContent = chosen;
+              alert(`🎬 Found TMDB Artwork for "${top.title}" (${top.release_date ? top.release_date.split('-')[0] : 'N/A'})!\n\nClick 'Save Movie Image' to apply it.`);
+            } else {
+              alert(`No poster images found on TMDB for "${title}".`);
+            }
+          } else {
+            alert(`No TMDB results found for "${title}".`);
+          }
+        } else {
+          alert("TMDB search request failed. Please paste an image URL directly.");
+        }
+      } catch(e) {
+        alert("Could not reach TMDB: " + e.message);
+      } finally {
+        if (btn) btn.innerHTML = '<span>🔍</span> TMDB 1-Click Auto-Fetch';
+      }
+    }
+
+    function saveSelectedMovieArtwork() {
+      const select = document.getElementById('adminArtworkMovieSelect');
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      if (!select || !urlInput) return;
+
+      const title = select.value.trim();
+      const url = urlInput.value.trim();
+      if (!title || !url) return alert("Please select a movie and provide an image URL.");
+
+      customMovieImages[title] = url;
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+      } catch(e) {}
+
+      // Sync to backend Google Apps Script and Firebase
+      fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
+
+      // Refresh schedule cards and admin gallery
+      renderSchedule();
+      populateAdminArtworkSelector();
+
+      // If this movie is currently on stage (live or next up), update stage image immediately
+      updateStageArtwork(false, document.getElementById('nowPlayingHeading')?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
+
+      alert(`🎉 Success! Saved custom image for "${title}".`);
+    }
+
+    function applySelectedArtworkToStageNow() {
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const select = document.getElementById('adminArtworkMovieSelect');
+      const url = urlInput?.value.trim();
+      const title = select?.value.trim() || "Featured Movie";
+      if (!url) return alert("Please specify an image URL first.");
+
+      const stagePoster = document.getElementById('stagePoster');
+      const stagePosterBadgeTitle = document.getElementById('stagePosterBadgeTitle');
+      if (stagePoster) stagePoster.src = url;
+      if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `FEATURED: ${title}`;
+
+      alert(`⭐ Updated Screening Room stage poster with "${title}" image!`);
+      switchTab('screening');
+    }
+
     function handleFormSubmit(e) {
       e.preventDefault();
       const name = (document.getElementById('formReqName')?.value || '').trim() || 'Guest';
@@ -827,6 +1174,11 @@
               if (el1) el1.textContent = data.daysOpen;
               if (el2) el2.textContent = data.daysOpen;
             }
+
+            if (data.moviePosters && typeof data.moviePosters === 'object') {
+              Object.assign(customMovieImages, data.moviePosters);
+            }
+            updateStageArtwork(isLive, data.nowPlaying, data.nextTitle, data);
 
             // Render schedule directly from Firebase (0 Google Sheets calls!)
             if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
@@ -1285,19 +1637,29 @@
       grid.innerHTML = items.map((s, idx) => {
         const trailerId = getTrailerIdForMovie(s);
         const d = parseMovieScheduleDetails(s);
+        const posterUrl = getMovieArtworkUrl(s);
         return `
         <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
           <div>
-            <!-- Top Bar: Status Badge + Date Badge -->
-            <div class="flex items-center justify-between gap-2 text-xs">
-              <span class="px-2.5 py-0.5 rounded ${s.tagColor || 'bg-slate-800 text-slate-300'} font-bold">${s.status || 'SCHEDULED'}</span>
-              <span class="font-mono text-sky-400 font-semibold bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/60 flex items-center gap-1 text-[11px]">
-                <span>📅</span> ${escapeHtml(s.date || '')}
-              </span>
+            <!-- Movie Poster / Artwork Thumbnail Banner -->
+            <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
+              <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.src='https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg'">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 left-2.5">
+                <span class="px-2.5 py-0.5 rounded ${s.tagColor || 'bg-slate-800 text-slate-300'} font-bold text-[11px] shadow-md">${s.status || 'SCHEDULED'}</span>
+              </div>
+              <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
+                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
+                  <span>📅</span> ${escapeHtml(s.date || '')}
+                </span>
+                <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
+                  ${escapeHtml(d.startTime)}
+                </span>
+              </div>
             </div>
 
             <!-- Movie Title -->
-            <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-2.5 group-hover:text-amber-300 transition flex items-center gap-1.5">
+            <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-1 group-hover:text-amber-300 transition flex items-center gap-1.5">
               <span>🎬</span> <span>${escapeHtml(s.title || '')}</span>
             </h4>
 
@@ -1431,6 +1793,7 @@
     renderVault();
     renderSchedule();
     loadRequests();
+    populateAdminArtworkSelector();
   </script>
 </body>
 </html>

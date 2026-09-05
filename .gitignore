@@ -21,7 +21,12 @@ secrets/
 *service_account*.json
 *credentials*.json
 
-# Backend Google Apps Script Files (Synced via clasp push, NEVER for public GitHub Pages)
+# Modular Backend & Bot Directories (Private, NEVER for public GitHub Pages)
+sheets_backend/
+bot/
+backups/
+
+# Backend Google Apps Script Files (Legacy & Direct)
 Code.js
 MovieFetcher.js
 DiscordAlerts.js
@@ -38,6 +43,7 @@ MoviePicker.html
 MovieSearch.html
 PosterStudio.html
 QuotaMonitor.html
+Sidebar.html
 Sidebar.html.html
 TheaterWeb.html
 

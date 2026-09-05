@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.11] - 2026-09-04
+
+### What's New
+- Organized project into clean backups, bot, and sheets directories.
+- Added Movie Posters & Artwork Manager to Admin Portal.
+- Added 1-click TMDB auto-fetch for movie posters and backdrops.
+- Display next up movie image when theater is closed.
+- Added rich movie artwork banners to upcoming lineup cards.
+- Cleaned up old redundant backup archives from project root.
+
 ## [4.9.10] - 2026-09-04
 
 ### What's New
