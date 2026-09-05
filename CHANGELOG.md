@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.4] - 2026-09-04
+
+### What's New
+- Synchronized schedule directly with official Google Sheets lineup.
+- Fixed next screening premiere to target Neighbors on Saturday.
+- Replaced outdated sample films with actual ten-movie cinema lineup.
+- Connected community request queue to real spreadsheet request data.
+- Enhanced ISO timestamp parsing for graceful time display everywhere.
+
 ## [4.9.3] - 2026-09-04
 
 ### What's New

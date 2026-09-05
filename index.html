@@ -274,9 +274,9 @@
       <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-sky-500/40 p-6 sm:p-8 shadow-2xl neon-card flex flex-col items-center text-center gap-4">
         <span class="text-xs font-bold uppercase tracking-widest text-sky-400">Next Scheduled Screening</span>
         <h2 id="schedNextTitle" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
-          🎬 Alien: Romulus
+          🎬 Neighbors
         </h2>
-        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Tomorrow • 9:30 PM PST</p>
+        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Saturday, Sept 5 • 7:00 PM PST</p>
 
         <!-- Precision Countdown -->
         <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 w-full max-w-lg my-2">
@@ -667,8 +667,8 @@
     const FIREBASE_URL = "https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
     
-    // Target next upcoming premiere (Alien: Romulus, Saturday Sept 5 at 9:30 PM PST)
-    let targetNextMs = 1788669000000;
+    // Target next upcoming premiere (Neighbors, Saturday Sept 5 at 7:00 PM PST)
+    let targetNextMs = 1788660000000;
     let isAdmin = false;
 
     function switchTab(targetTab) {
@@ -880,7 +880,24 @@
               const formattedTitle = data.nextTitle.startsWith('🎬') ? data.nextTitle : `🎬 ${data.nextTitle}`;
               document.getElementById('schedNextTitle').textContent = formattedTitle;
             }
-            if (data.nextTime) document.getElementById('schedNextDate').textContent = data.nextTime;
+            if (data.nextTime) {
+              if (data.nextTime.includes('T') && (data.nextTime.includes('Z') || data.nextTime.includes('+'))) {
+                try {
+                  const d = new Date(data.nextTime);
+                  if (!isNaN(d.getTime())) {
+                    const fDate = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' });
+                    const fTime = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' });
+                    document.getElementById('schedNextDate').textContent = `${fDate} • ${fTime} PST`;
+                  } else {
+                    document.getElementById('schedNextDate').textContent = data.nextTime;
+                  }
+                } catch(e) {
+                  document.getElementById('schedNextDate').textContent = data.nextTime;
+                }
+              } else {
+                document.getElementById('schedNextDate').textContent = data.nextTime;
+              }
+            }
             if (data.nextStartMs && data.nextStartMs > Date.now()) {
               targetNextMs = data.nextStartMs;
             }
@@ -901,18 +918,20 @@
 
     // Initial Vault Library
     let vaultMovies = [
-      { title: "Return To Silent Hill", year: "2026", source: "past", genre: "Horror / Mystery", runtime: "1h 45m" },
-      { title: "Alien: Romulus", year: "2024", source: "past", genre: "Sci-Fi / Horror", runtime: "1h 59m" },
+      { title: "Return To Silent Hill", year: "2026", source: "past", genre: "Horror / Mystery", runtime: "1h 46m" },
+      { title: "Neighbors", year: "2014", source: "past", genre: "Comedy", runtime: "1h 37m" },
+      { title: "Neighbors 2", year: "2016", source: "past", genre: "Comedy", runtime: "1h 32m" },
+      { title: "Machine Gun Preacher", year: "2011", source: "past", genre: "Action / Biography", runtime: "2h 09m" },
+      { title: "The Whisper Man", year: "2026", source: "past", genre: "Mystery / Thriller", runtime: "1h 54m" },
       { title: "Blade Runner 2049", year: "2017", source: "past", genre: "Sci-Fi / Neo-Noir", runtime: "2h 44m" },
       { title: "Dune: Part Two", year: "2024", source: "past", genre: "Sci-Fi / Adventure", runtime: "2h 46m" },
-      { title: "Beetlejuice Beetlejuice", year: "2024", source: "past", genre: "Comedy / Fantasy", runtime: "1h 45m" },
       { title: "Deadpool & Wolverine", year: "2024", source: "past", genre: "Action / Comedy", runtime: "2h 08m" },
       { title: "Spider-Man: Across the Spider-Verse", year: "2023", source: "past", genre: "Animation / Action", runtime: "2h 20m" },
       { title: "Oppenheimer", year: "2023", source: "past", genre: "Biography / Drama", runtime: "3h 00m" },
       { title: "Interstellar", year: "2014", source: "past", genre: "Sci-Fi / Adventure", runtime: "2h 49m" },
       { title: "The Dark Knight", year: "2008", source: "past", genre: "Action / Crime", runtime: "2h 32m" },
-      { title: "Tron: Ares", year: "2025", source: "request", genre: "Sci-Fi / Action", runtime: "Pending" },
-      { title: "Gladiator II", year: "2024", source: "request", genre: "Action / Drama", runtime: "Pending" }
+      { title: "The interview", year: "2014", source: "request", genre: "Comedy", runtime: "Pending" },
+      { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "Pending" }
     ];
 
     let vFilter = 'all';
@@ -981,10 +1000,16 @@
 
     // Schedule Cards
     const sampleSchedule = [
-      { title: "Return To Silent Hill", time: "7:00 PM", date: "Friday, Sept 4, 2026", desc: "James returns to Silent Hill to find his lost love, only to discover a living nightmare.", status: "🔴 LIVE NOW", tagColor: "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse" },
-      { title: "Alien: Romulus", time: "9:30 PM", date: "Saturday, Sept 5, 2026", desc: "Young space colonizers come face to face with the most terrifying life form in the universe.", status: "NEXT UP", tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40" },
-      { title: "Beetlejuice Beetlejuice", time: "7:00 PM", date: "Sunday, Sept 6, 2026", desc: "After an unexpected family tragedy, three generations of the Deetz family return home to Winter River.", status: "SUNDAY", tagColor: "bg-purple-500/20 text-purple-300" },
-      { title: "Gladiator II", time: "8:00 PM", date: "Friday, Sept 11, 2026", desc: "Years after witnessing the death of Maximus, Lucius must enter the Colosseum to fight.", status: "NEXT WEEK", tagColor: "bg-slate-800 text-slate-300" }
+      { title: "Return To Silent Hill", time: "7:00 PM", date: "Friday, Sept 4, 2026", desc: "James Sunderland returns to Silent Hill to find his lost love, only to discover a living nightmare.", status: "🔴 LIVE NOW", tagColor: "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse" },
+      { title: "Neighbors", time: "7:00 PM", date: "Saturday, Sept 5, 2026", desc: "A young couple with a newborn baby face off in an escalating war with an unruly fraternity next door.", status: "NEXT UP", tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40" },
+      { title: "Neighbors 2", time: "7:00 PM", date: "Sunday, Sept 6, 2026", desc: "Mac and Kelly team up with their former enemy to take on an even wilder sorority.", status: "SUNDAY", tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40" },
+      { title: "Machine Gun Preacher", time: "7:00 PM", date: "Wednesday, Sept 9, 2026", desc: "The true story of Sam Childers, a former drug dealer who dedicates his life to saving Sudanese child soldiers.", status: "WEDNESDAY", tagColor: "bg-slate-800 text-slate-300" },
+      { title: "beast", time: "7:00 PM", date: "Thursday, Sept 10, 2026", desc: "A father and his two teenage daughters find themselves hunted by a rogue lion in South Africa.", status: "THURSDAY", tagColor: "bg-slate-800 text-slate-300" },
+      { title: "mother mary", time: "7:00 PM", date: "Monday, Sept 14, 2026", desc: "An epic pop melodrama chronicling the relationship between a musician and an iconic fashion designer.", status: "MONDAY", tagColor: "bg-slate-800 text-slate-300" },
+      { title: "Normal", time: "7:00 PM", date: "Tuesday, Sept 15, 2026", desc: "A temporary sheriff in the quiet town of Normal uncovers a sinister criminal conspiracy.", status: "TUESDAY", tagColor: "bg-slate-800 text-slate-300" },
+      { title: "Dog Man", time: "7:00 PM", date: "Friday, Sept 18, 2026", desc: "Part dog, part policeman, all hero—Dog Man fights crime while trying to impress his Chief.", status: "FRIDAY", tagColor: "bg-slate-800 text-slate-300" },
+      { title: "Borderlands", time: "7:00 PM", date: "Saturday, Sept 19, 2026", desc: "An infamous outlaw returns to her home planet to find the missing daughter of the universe's most powerful man.", status: "SATURDAY", tagColor: "bg-slate-800 text-slate-300" },
+      { title: "Scary Movie 2026", time: "7:00 PM", date: "Sunday, Sept 20, 2026", desc: "The franchise returns for a hilarious new send-up of modern horror cinema.", status: "SUNDAY", tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40" }
     ];
 
     function renderSchedule(scheduleItems) {
@@ -1010,9 +1035,21 @@
     }
 
     let communityRequests = [
-      { title: "Tron: Ares", requester: "Marcus", genre: "Sci-Fi / Action", status: "Under Review" },
-      { title: "Gladiator II", requester: "Sarah", genre: "Action / Epic", status: "Scheduled" },
-      { title: "The Substance", requester: "David", genre: "Body Horror", status: "Under Review" }
+      { title: "The interview", requester: "Dwarf", genre: "Disney+ / Hulu", status: "Under Review" },
+      { title: "Pineapple Express", requester: "Dwarf", genre: "Netflix", status: "Under Review" },
+      { title: "The Mandalorian and Grogu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
+      { title: "The President's Cake", requester: "Brian", genre: "Netflix", status: "Under Review" },
+      { title: "Fuze", requester: "Brian", genre: "HBO Max", status: "Under Review" },
+      { title: "Signal One", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
+      { title: "Rich Flu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
+      { title: "In the Grey", requester: "Brian", genre: "Starz", status: "Under Review" },
+      { title: "Stop! That! Train!", requester: "Brian", genre: "Netflix", status: "Under Review" },
+      { title: "Lifehack", requester: "Brian", genre: "Netflix", status: "Under Review" },
+      { title: "Toy Story 5", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
+      { title: "Backrooms", requester: "Brian", genre: "HBO Max", status: "Under Review" },
+      { title: "Neighbors", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
+      { title: "Neighbors 2", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
+      { title: "Return to silent hill", requester: "Brian", genre: "plex", status: "Scheduled" }
     ];
 
     function loadRequests() {
