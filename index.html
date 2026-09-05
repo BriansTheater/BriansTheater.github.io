@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.19 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.20 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -93,7 +93,10 @@
             <div class="px-2.5 py-1 rounded-xl bg-slate-900 border border-amber-500/50 flex items-center gap-2 text-xs">
               <img id="userAvatarImg" src="" alt="Avatar" class="w-5 h-5 rounded-full object-cover hidden border border-amber-400" />
               <span id="userAvatarInitial" class="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-[10px]">B</span>
-              <span id="userNameLabel" class="font-bold text-amber-300">Brian (Admin)</span>
+              <div class="flex flex-col">
+                <span id="userNameLabel" class="font-bold text-amber-300 leading-tight">Brian (Admin)</span>
+                <span id="userEmailLabel" class="text-[9px] text-slate-400 leading-none"></span>
+              </div>
             </div>
             <button onclick="signOutAdmin()" class="text-[11px] text-slate-400 hover:text-red-400 underline transition">Sign out</button>
           </div>
@@ -457,7 +460,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.19</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.20</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -657,7 +660,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.19</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.20</span>
         </div>
         <div>
           <span>© 2026 Brian Diva Cox • All Rights Reserved</span>
@@ -791,11 +794,15 @@
         </button>
 
         <div id="sidebarUserProfile" class="hidden items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-amber-500/50">
-          <div class="flex items-center gap-2">
-            <span id="sidebarUserAvatarInitial" class="w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-xs">B</span>
-            <span id="sidebarUserNameLabel" class="text-xs font-bold text-amber-300">Brian (Admin)</span>
+          <div class="flex items-center gap-2 min-w-0">
+            <img id="sidebarUserAvatarImg" src="" alt="Avatar" class="w-6 h-6 rounded-full object-cover hidden border border-amber-400 shrink-0" />
+            <span id="sidebarUserAvatarInitial" class="w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-xs shrink-0">B</span>
+            <div class="flex flex-col min-w-0">
+              <span id="sidebarUserNameLabel" class="text-xs font-bold text-amber-300 truncate">Brian (Admin)</span>
+              <span id="sidebarUserEmailLabel" class="text-[10px] text-slate-400 truncate"></span>
+            </div>
           </div>
-          <button onclick="signOutAdmin(); toggleSidebar(false);" class="text-[11px] text-slate-400 hover:text-red-400 underline transition">Sign out</button>
+          <button onclick="signOutAdmin(); toggleSidebar(false);" class="text-[11px] text-slate-400 hover:text-red-400 underline transition shrink-0 ml-2">Sign out</button>
         </div>
 
       </div>
@@ -805,7 +812,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.19</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.20</span>
     </div>
 
   </aside>
@@ -815,16 +822,16 @@
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative flex flex-col gap-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-          <span>🔑</span> Admin Authentication
+          <span>🔒</span> Admin Authentication
         </h3>
         <button onclick="closeAdminAuthModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
 
-      <p class="text-xs text-slate-400">Sign in with your authorized Google account to unlock the theater control studio.</p>
+      <p class="text-xs text-slate-400">Sign in with an authorized Google account to unlock Brian's Theater Admin Studio.</p>
 
       <div class="flex flex-col gap-3">
         <!-- Google Sign-In Action -->
-        <button onclick="signInWithGoogle()" id="btnModalGoogleSignIn" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition shadow-lg hover:shadow-cyan-500/10 border border-slate-200">
+        <button onclick="signInWithGoogle()" id="btnModalGoogleSignIn" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition shadow-lg hover:shadow-cyan-500/10 border border-slate-200 active:scale-95">
           <svg class="w-4 h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -834,15 +841,15 @@
           <span id="btnGoogleSignInLabel">Sign in with Google</span>
         </button>
 
-        <div id="authErrorMsg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2.5 rounded-xl text-center"></div>
+        <div id="authErrorMsg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-3 rounded-xl text-center leading-relaxed"></div>
 
         <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 space-y-1.5">
           <div class="flex items-center gap-1.5 text-emerald-400 font-semibold">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            <span>Google Sign-In Provider</span>
+            <span>Real Google Identity Security</span>
           </div>
           <p class="leading-relaxed text-slate-400">
-            Authenticated via Firebase Google Sign-In. Secure, 1-click identity login with zero password management.
+            Authenticated via official Google OAuth. Only authorized administrators (<code class="text-sky-300">@gmail.com</code> / <code class="text-sky-300">@brianstheater.com</code>) are granted control access.
           </p>
         </div>
       </div>
@@ -904,10 +911,27 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.19";
+    const APP_VERSION = "4.9.20";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
+
+    // Brian's Theater Authorized Administrator Email Allowlist
+    const AUTHORIZED_ADMIN_EMAILS = [
+      "briandivacox@gmail.com",
+      "brian@brianstheater.com",
+      "brian.diva.cox@gmail.com"
+    ];
+    let remoteAdminEmails = [];
+
+    function isAuthorizedAdmin(user) {
+      if (!user) return false;
+      const email = (user.email || '').toLowerCase().trim();
+      if (!email) return false;
+      if (AUTHORIZED_ADMIN_EMAILS.some(e => e.toLowerCase().trim() === email)) return true;
+      if (Array.isArray(remoteAdminEmails) && remoteAdminEmails.some(e => e.toLowerCase().trim() === email)) return true;
+      return false;
+    }
 
     // Brian's Theater Dedicated Firebase Configuration
     const firebaseConfig = {
@@ -928,6 +952,23 @@
         }
         if (firebase.auth) {
           authInstance = firebase.auth();
+          window.authInstance = authInstance;
+
+          // Enable persistent session
+          try {
+            authInstance.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+          } catch(e) {}
+
+          // Check for mobile redirect result
+          authInstance.getRedirectResult().then(result => {
+            if (result && result.user) {
+              handleAuthUser(result.user);
+              if (isAdmin) switchTab('admin');
+            }
+          }).catch(err => {
+            console.warn("Firebase redirect auth result:", err);
+          });
+
           authInstance.onAuthStateChanged(user => {
             if (user) {
               handleAuthUser(user);
@@ -1027,6 +1068,11 @@
     }
 
     function switchTab(targetTab) {
+      if (targetTab === 'admin' && !isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const allViews = ['screening', 'schedule', 'vault', 'requests', 'admin'];
       allViews.forEach(tab => {
         const view = document.getElementById(`view-${tab}`);
@@ -1224,6 +1270,11 @@
     }
 
     async function setDoorOverrideMode(mode) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       doorOverrideMode = mode;
       try {
         localStorage.setItem('brian_theater_door_mode', mode);
@@ -1587,28 +1638,75 @@
       document.getElementById('authModal').classList.add('hidden');
     }
 
-    function handleAuthUser(user) {
+    async function handleAuthUser(user) {
+      if (!user) {
+        handleAuthSignedOut();
+        return;
+      }
+
+      const email = (user.email || '').toLowerCase().trim();
+      const isAllowed = isAuthorizedAdmin(user);
+
+      if (!isAllowed) {
+        console.warn(`[SECURITY] Unauthorized sign-in attempt from Google account: ${email}`);
+        isAdmin = false;
+        handleAuthSignedOut();
+
+        // Immediately revoke unauthorized session
+        if (authInstance) {
+          try { await authInstance.signOut(); } catch(e) {}
+        }
+
+        const errBox = document.getElementById('authErrorMsg');
+        if (errBox) {
+          errBox.innerHTML = `
+            <div class="flex flex-col gap-1.5 text-left">
+              <div class="font-bold text-rose-400 flex items-center gap-1 text-xs">
+                <span>⛔</span> Access Denied
+              </div>
+              <p class="text-slate-300 text-[11px] leading-snug">
+                The Google account <code class="text-rose-400 bg-rose-950/60 px-1 py-0.5 rounded border border-rose-800/60">${escapeHtml(email || 'Unknown')}</code> is not an authorized administrator for Brian's Theater.
+              </p>
+              <p class="text-[10px] text-slate-400">
+                Only verified administrator Google accounts can access theater controls.
+              </p>
+            </div>
+          `;
+          errBox.classList.remove('hidden');
+        }
+        showTheaterToast(`⛔ Access Denied for ${email || 'user'}`);
+        return;
+      }
+
+      // Verified Authorized Administrator
       isAdmin = true;
       const name = user.displayName || user.email || "Brian";
       const nameLabel = document.getElementById('userNameLabel');
       if (nameLabel) nameLabel.textContent = `${name} (Admin)`;
+      const userEmailLabel = document.getElementById('userEmailLabel');
+      if (userEmailLabel) userEmailLabel.textContent = email;
+
       const sidebarNameLabel = document.getElementById('sidebarUserNameLabel');
       if (sidebarNameLabel) sidebarNameLabel.textContent = `${name} (Admin)`;
+      const sidebarUserEmailLabel = document.getElementById('sidebarUserEmailLabel');
+      if (sidebarUserEmailLabel) sidebarUserEmailLabel.textContent = email;
 
       const avatarImg = document.getElementById('userAvatarImg');
       const avatarInit = document.getElementById('userAvatarInitial');
+      const sidebarAvatarImg = document.getElementById('sidebarUserAvatarImg');
       const sidebarAvatarInit = document.getElementById('sidebarUserAvatarInitial');
-      if (user.photoURL && avatarImg) {
-        avatarImg.src = user.photoURL;
-        avatarImg.classList.remove('hidden');
+
+      if (user.photoURL) {
+        if (avatarImg) { avatarImg.src = user.photoURL; avatarImg.classList.remove('hidden'); }
         if (avatarInit) avatarInit.classList.add('hidden');
-      } else if (avatarInit) {
-        avatarInit.textContent = name.charAt(0).toUpperCase();
-        avatarInit.classList.remove('hidden');
+        if (sidebarAvatarImg) { sidebarAvatarImg.src = user.photoURL; sidebarAvatarImg.classList.remove('hidden'); }
+        if (sidebarAvatarInit) sidebarAvatarInit.classList.add('hidden');
+      } else {
+        const initial = name.charAt(0).toUpperCase();
+        if (avatarInit) { avatarInit.textContent = initial; avatarInit.classList.remove('hidden'); }
         if (avatarImg) avatarImg.classList.add('hidden');
-      }
-      if (sidebarAvatarInit) {
-        sidebarAvatarInit.textContent = name.charAt(0).toUpperCase();
+        if (sidebarAvatarInit) { sidebarAvatarInit.textContent = initial; sidebarAvatarInit.classList.remove('hidden'); }
+        if (sidebarAvatarImg) sidebarAvatarImg.classList.add('hidden');
       }
 
       ['btnLoginGoogle', 'sidebarBtnLoginGoogle'].forEach(id => {
@@ -1630,7 +1728,7 @@
       });
 
       closeAdminAuthModal();
-      showTheaterToast(`👋 Welcome, ${name}! Admin unlocked.`);
+      showTheaterToast(`👋 Welcome, ${name}! Administrator verified.`);
     }
 
     function handleAuthSignedOut() {
@@ -1670,25 +1768,40 @@
           authInstance = firebase.auth();
         }
 
-        if (authInstance) {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          provider.setCustomParameters({ prompt: 'select_account' });
+        if (!authInstance) {
+          throw new Error("Google Sign-In service is initializing. Please try again in a moment.");
+        }
+
+        try {
+          await authInstance.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        } catch(e) {}
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+
+        try {
           const result = await authInstance.signInWithPopup(provider);
           if (result && result.user) {
-            handleAuthUser(result.user);
-            switchTab('admin');
+            await handleAuthUser(result.user);
+            if (isAdmin) switchTab('admin');
           }
-        } else {
-          handleAuthUser({ displayName: "Brian", email: "brian@brianstheater.com" });
-          switchTab('admin');
+        } catch(popupErr) {
+          if (popupErr.code === 'auth/popup-blocked') {
+            if (btnLabel) btnLabel.textContent = 'Redirecting to Google...';
+            await authInstance.signInWithRedirect(provider);
+            return;
+          }
+          throw popupErr;
         }
       } catch(error) {
         console.error("Firebase Google Sign-In Error:", error);
         if (errBox) {
           if (error.code === 'auth/popup-closed-by-user') {
-            errBox.textContent = "Sign-in popup was closed before completing.";
+            errBox.textContent = "Google sign-in window was closed before completing.";
           } else if (error.code === 'auth/popup-blocked') {
-            errBox.textContent = "Pop-up was blocked by your browser. Please allow popups for this site.";
+            errBox.textContent = "Pop-up was blocked by your browser. Redirecting to Google...";
+          } else if (error.code === 'auth/unauthorized-domain') {
+            errBox.textContent = "This domain is not authorized in Firebase Auth settings.";
           } else {
             errBox.textContent = error.message || "Failed to sign in with Google.";
           }
@@ -1719,6 +1832,11 @@
     }
 
     function applyAdminNowPlaying() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const title = document.getElementById('adminTitle').value.trim();
       const timeLeft = document.getElementById('adminTimeLeft').value.trim();
       const posterUrl = document.getElementById('adminPosterUrl').value.trim();
@@ -1734,6 +1852,11 @@
     }
 
     function dispatchAdminTrailer() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const url = document.getElementById('adminTrailerUrl').value.trim();
       if (!url) return alert('Please enter a YouTube video URL');
       setTrailer(url);
@@ -1744,6 +1867,11 @@
     }
 
     function triggerForceSync() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const btn = document.getElementById('btnForceSync');
       btn.textContent = "Syncing...";
       fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' });
@@ -1848,6 +1976,11 @@
     }
 
     async function fetchTmdbArtworkForSelectedMovie() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const select = document.getElementById('adminArtworkMovieSelect');
       const btn = document.getElementById('btnFetchTmdbArtwork');
       if (!select) return;
@@ -1890,6 +2023,11 @@
     }
 
     function saveSelectedMovieArtwork() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const select = document.getElementById('adminArtworkMovieSelect');
       const urlInput = document.getElementById('adminArtworkUrlInput');
       if (!select || !urlInput) return;
@@ -1917,6 +2055,11 @@
     }
 
     function applySelectedArtworkToStageNow() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
       const urlInput = document.getElementById('adminArtworkUrlInput');
       const select = document.getElementById('adminArtworkMovieSelect');
       const url = urlInput?.value.trim();

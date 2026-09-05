@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.9.20] - 2026-09-05
+
+### What's New
+- Upgraded admin authentication to official Google OAuth sign-in.
+- Added strict administrator email verification for theater controls.
+- Blocked unauthorized Google accounts with immediate security denial.
+- Removed all mock login fallbacks for true security.
+- Added persistent session storage across browser reloads.
+- Guarded Admin Studio tabs and actions from unauthorized visitors.
+- Added verified Google profile badge and email in sidebar.
+
 ## [4.9.19] - 2026-09-05
 
 ### What's New
