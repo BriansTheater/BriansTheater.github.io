@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.10] - 2026-09-04
+
+### What's New
+- Added real-time countdown when theater is closed between screenings.
+- Displayed live ticking countdown in theater status banner.
+- Added real-time countdown badge above stage poster.
+- Added I don't know option to platform selector.
+
 ## [4.9.9] - 2026-09-04
 
 ### What's New
