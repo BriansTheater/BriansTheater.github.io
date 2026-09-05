@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.12] - 2026-09-04
+
+### What's New
+- Unlocked theater entrance 10 minutes prior to movie showtime.
+- Replaced entrance button with locked countdown card when closed.
+- Added interactive inline trailer player directly on the stage.
+- Showcased upcoming movie title and artwork on stage marquee.
+- Added 1-click auditorium door override controls in Admin Portal.
+- Unified theater lifecycle into three smooth automated screening states.
+
 ## [4.9.11] - 2026-09-04
 
 ### What's New
