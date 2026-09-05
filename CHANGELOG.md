@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.18] - 2026-09-05
+
+### What's New
+- Removed redundant relative duration subtitles from screening stage header.
+- Cleaned top theater status banner by omitting duplicate timers.
+- Removed locked doors text box leaving clean action buttons.
+- Added full Progressive Web App manifest for Google Android.
+- Added Apple mobile web app tags for iOS devices.
+- Added offline Service Worker and 1-click app install prompt.
+
 ## [4.9.17] - 2026-09-05
 
 ### What's New

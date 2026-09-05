@@ -1,0 +1,44 @@
+{
+  "name": "Brian's Theater",
+  "short_name": "BrianTheater",
+  "description": "Brian's Virtual Cinema & Theater Experience",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1120",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["entertainment", "movies"],
+  "shortcuts": [
+    {
+      "name": "Screening Room",
+      "url": "./index.html#screening",
+      "description": "Open live screening room"
+    },
+    {
+      "name": "Movie Vault",
+      "url": "./index.html#vault",
+      "description": "Browse 400+ past movies"
+    }
+  ]
+}
