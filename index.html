@@ -998,40 +998,362 @@
       `).join('');
     }
 
-    // Schedule Cards
+    // Schedule Trailers Mapping & Interactive Dropdown Viewer Engine
+    const SCHEDULE_TRAILERS = {
+      "Return To Silent Hill": "Way9Dexny3w",
+      "Neighbors": "kL5c2Szf3E4",
+      "Neighbors 2": "X2i9Zz_AqTg",
+      "Machine Gun Preacher": "q5D4v8a7o4M",
+      "manchine gun pearcher": "q5D4v8a7o4M",
+      "beast": "oQMc7Sq366I",
+      "mother mary": "3VbW9A6gGgQ",
+      "Normal": "dQw4w9WgXcQ",
+      "Dog Man": "Wa0B2s7E2b8",
+      "Borderlands": "l3XzepN03KQ",
+      "Scary Movie 2026": "gCcx85zbxz4"
+    };
+
+    let activeCardTrailerIdx = null;
+
+    function getTrailerIdForMovie(movie) {
+      if (!movie) return "Way9Dexny3w";
+      if (movie.trailerId) return movie.trailerId;
+      if (movie.trailerUrl) {
+        const extracted = extractYouTubeId(movie.trailerUrl);
+        if (extracted) return extracted;
+      }
+      if (movie.desc) {
+        const descMatch = movie.desc.match(/(?:youtu\.be\/|v\/|watch\?v=)([\w-]{11})/);
+        if (descMatch && descMatch[1]) return descMatch[1];
+      }
+      if (SCHEDULE_TRAILERS[movie.title]) {
+        return SCHEDULE_TRAILERS[movie.title];
+      }
+      const lower = (movie.title || "").toLowerCase().trim();
+      for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
+        if (k.toLowerCase() === lower) return v;
+      }
+      return "Way9Dexny3w";
+    }
+
+    function toggleCardTrailer(idx) {
+      const viewer = document.getElementById(`trailerViewer-${idx}`);
+      const frame = document.getElementById(`trailerFrame-${idx}`);
+      const btnText = document.getElementById(`trailerBtnText-${idx}`);
+      const btn = document.getElementById(`trailerBtn-${idx}`);
+      if (!viewer || !frame) return;
+
+      const isOpening = viewer.classList.contains('hidden');
+
+      // Close any previously opened card trailer to prevent duplicate audio
+      if (activeCardTrailerIdx !== null && activeCardTrailerIdx !== idx) {
+        const prevViewer = document.getElementById(`trailerViewer-${activeCardTrailerIdx}`);
+        const prevFrame = document.getElementById(`trailerFrame-${activeCardTrailerIdx}`);
+        const prevBtnText = document.getElementById(`trailerBtnText-${activeCardTrailerIdx}`);
+        const prevBtn = document.getElementById(`trailerBtn-${activeCardTrailerIdx}`);
+        if (prevViewer) prevViewer.classList.add('hidden');
+        if (prevFrame) prevFrame.src = "";
+        if (prevBtnText) prevBtnText.textContent = "Watch Trailer ▾";
+        if (prevBtn) prevBtn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95";
+        activeCardTrailerIdx = null;
+      }
+
+      if (isOpening) {
+        const trailerId = frame.dataset.trailerId || "Way9Dexny3w";
+        frame.src = `https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&rel=0`;
+        viewer.classList.remove('hidden');
+        if (btnText) btnText.textContent = "Hide Trailer ▴";
+        if (btn) btn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-bold border border-amber-300 transition flex items-center gap-1.5 shadow-md active:scale-95";
+        activeCardTrailerIdx = idx;
+      } else {
+        frame.src = "";
+        viewer.classList.add('hidden');
+        if (btnText) btnText.textContent = "Watch Trailer ▾";
+        if (btn) btn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95";
+        activeCardTrailerIdx = null;
+      }
+    }
+
+    function sendToScreeningRoom(trailerId, title) {
+      if (!trailerId) return;
+      setTrailer(`https://www.youtube.com/watch?v=${trailerId}`);
+      switchTab('screening');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Schedule Cards - Structured directly from Google Sheets Quick Schedule & Data
     const sampleSchedule = [
-      { title: "Return To Silent Hill", time: "7:00 PM", date: "Friday, Sept 4, 2026", desc: "James Sunderland returns to Silent Hill to find his lost love, only to discover a living nightmare.", status: "🔴 LIVE NOW", tagColor: "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse" },
-      { title: "Neighbors", time: "7:00 PM", date: "Saturday, Sept 5, 2026", desc: "A young couple with a newborn baby face off in an escalating war with an unruly fraternity next door.", status: "NEXT UP", tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40" },
-      { title: "Neighbors 2", time: "7:00 PM", date: "Sunday, Sept 6, 2026", desc: "Mac and Kelly team up with their former enemy to take on an even wilder sorority.", status: "SUNDAY", tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40" },
-      { title: "Machine Gun Preacher", time: "7:00 PM", date: "Wednesday, Sept 9, 2026", desc: "The true story of Sam Childers, a former drug dealer who dedicates his life to saving Sudanese child soldiers.", status: "WEDNESDAY", tagColor: "bg-slate-800 text-slate-300" },
-      { title: "beast", time: "7:00 PM", date: "Thursday, Sept 10, 2026", desc: "A father and his two teenage daughters find themselves hunted by a rogue lion in South Africa.", status: "THURSDAY", tagColor: "bg-slate-800 text-slate-300" },
-      { title: "mother mary", time: "7:00 PM", date: "Monday, Sept 14, 2026", desc: "An epic pop melodrama chronicling the relationship between a musician and an iconic fashion designer.", status: "MONDAY", tagColor: "bg-slate-800 text-slate-300" },
-      { title: "Normal", time: "7:00 PM", date: "Tuesday, Sept 15, 2026", desc: "A temporary sheriff in the quiet town of Normal uncovers a sinister criminal conspiracy.", status: "TUESDAY", tagColor: "bg-slate-800 text-slate-300" },
-      { title: "Dog Man", time: "7:00 PM", date: "Friday, Sept 18, 2026", desc: "Part dog, part policeman, all hero—Dog Man fights crime while trying to impress his Chief.", status: "FRIDAY", tagColor: "bg-slate-800 text-slate-300" },
-      { title: "Borderlands", time: "7:00 PM", date: "Saturday, Sept 19, 2026", desc: "An infamous outlaw returns to her home planet to find the missing daughter of the universe's most powerful man.", status: "SATURDAY", tagColor: "bg-slate-800 text-slate-300" },
-      { title: "Scary Movie 2026", time: "7:00 PM", date: "Sunday, Sept 20, 2026", desc: "The franchise returns for a hilarious new send-up of modern horror cinema.", status: "SUNDAY", tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40" }
+      { 
+        title: "Return To Silent Hill", 
+        date: "Friday, Sept 4, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:46 PM", 
+        runtime: "1h 46m", 
+        year: "2026", 
+        summary: "James Sunderland returns to Silent Hill to find his lost love, only to discover a living nightmare.", 
+        status: "🔴 LIVE NOW", 
+        tagColor: "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse", 
+        trailerId: "Way9Dexny3w",
+        afterShow: "the simpson yellow mirror (8:54 PM - 9:21 PM)"
+      },
+      { 
+        title: "Neighbors", 
+        date: "Saturday, Sept 5, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:37 PM", 
+        runtime: "1h 37m", 
+        year: "2014", 
+        summary: "A young couple with a newborn baby face off in an escalating war with an unruly fraternity next door.", 
+        status: "NEXT UP", 
+        tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40", 
+        trailerId: "kL5c2Szf3E4" 
+      },
+      { 
+        title: "Neighbors 2", 
+        date: "Sunday, Sept 6, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:32 PM", 
+        runtime: "1h 32m", 
+        year: "2016", 
+        summary: "Mac and Kelly team up with their former enemy to take on an even wilder sorority.", 
+        status: "SUNDAY", 
+        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
+        trailerId: "X2i9Zz_AqTg" 
+      },
+      { 
+        title: "Machine Gun Preacher", 
+        date: "Wednesday, Sept 9, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "9:09 PM", 
+        runtime: "2h 09m", 
+        year: "2011", 
+        summary: "The true story of Sam Childers, a former drug dealer who dedicates his life to saving Sudanese child soldiers.", 
+        status: "WEDNESDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "q5D4v8a7o4M" 
+      },
+      { 
+        title: "beast", 
+        date: "Thursday, Sept 10, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:55 PM", 
+        runtime: "1h 55m", 
+        year: "2022", 
+        summary: "A father and his two teenage daughters find themselves hunted by a rogue lion in South Africa.", 
+        status: "THURSDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "oQMc7Sq366I" 
+      },
+      { 
+        title: "mother mary", 
+        date: "Monday, Sept 14, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:52 PM", 
+        runtime: "1h 52m", 
+        year: "2026", 
+        summary: "An epic pop melodrama chronicling the relationship between a musician and an iconic fashion designer.", 
+        status: "MONDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "3VbW9A6gGgQ" 
+      },
+      { 
+        title: "Normal", 
+        date: "Tuesday, Sept 15, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:31 PM", 
+        runtime: "1h 31m", 
+        year: "2025", 
+        summary: "A temporary sheriff in the quiet town of Normal uncovers a sinister criminal conspiracy.", 
+        status: "TUESDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "dQw4w9WgXcQ" 
+      },
+      { 
+        title: "Dog Man", 
+        date: "Friday, Sept 18, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:29 PM", 
+        runtime: "1h 29m", 
+        year: "2025", 
+        summary: "Part dog, part policeman, all hero—Dog Man fights crime while trying to impress his Chief.", 
+        status: "FRIDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "Wa0B2s7E2b8" 
+      },
+      { 
+        title: "Borderlands", 
+        date: "Saturday, Sept 19, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:41 PM", 
+        runtime: "1h 41m", 
+        year: "2024", 
+        summary: "An infamous outlaw returns to her home planet to find the missing daughter of the universe's most powerful man.", 
+        status: "SATURDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "l3XzepN03KQ" 
+      },
+      { 
+        title: "Scary Movie 2026", 
+        date: "Sunday, Sept 20, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:36 PM", 
+        runtime: "1h 36m", 
+        year: "2026", 
+        summary: "The franchise returns for a hilarious new send-up of modern horror cinema.", 
+        status: "SUNDAY", 
+        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
+        trailerId: "gCcx85zbxz4" 
+      }
     ];
+
+    function parseMovieScheduleDetails(s) {
+      const desc = s.desc || "";
+
+      // 1. Extract Year
+      let year = s.year || "";
+      if (!year && desc) {
+        const yMatch = desc.match(/Year:\s*(\d{4})/i);
+        if (yMatch) year = yMatch[1];
+      }
+      if (!year && s.title) {
+        const yMatch = s.title.match(/\b(19\d\d|20\d\d)\b/);
+        if (yMatch) year = yMatch[1];
+      }
+      if (!year) year = "2026";
+
+      // 2. Extract Runtime
+      let runtime = s.runtime || s.runTime || "";
+      if (!runtime && desc) {
+        const rMatch = desc.match(/Runtime:\s*([^\r\n]+)/i);
+        if (rMatch) runtime = rMatch[1].trim();
+      }
+      if (runtime && /^\d+:\d+$/.test(runtime)) {
+        const parts = runtime.split(':');
+        const h = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        runtime = h > 0 ? `${h}h ${m}m` : `${m}m`;
+      }
+      if (!runtime) runtime = "1h 45m";
+
+      // 3. Extract Summary
+      let summary = s.summary || "";
+      if (!summary && desc) {
+        const sMatch = desc.match(/Summary:\s*([\s\S]+?)(?=\n+Trailer:|$)/i);
+        if (sMatch) {
+          summary = sMatch[1].trim();
+        } else if (!desc.includes("Movie:") && !desc.includes("Runtime:")) {
+          summary = desc.trim();
+        }
+      }
+      if (!summary) {
+        summary = "Virtual cinema screening at Brian's Theater.";
+      }
+
+      // 4. Start Time & End Time
+      let startTime = s.startTime || s.time || "7:00 PM";
+      let endTime = s.endTime || "";
+      if (!endTime && s.endMs) {
+        try {
+          const endDate = new Date(s.endMs);
+          endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        } catch(e) {}
+      }
+      if (!endTime) endTime = "8:45 PM";
+
+      return {
+        year,
+        runtime,
+        summary,
+        startTime,
+        endTime
+      };
+    }
 
     function renderSchedule(scheduleItems) {
       const items = (scheduleItems && Array.isArray(scheduleItems) && scheduleItems.length > 0) ? scheduleItems : sampleSchedule;
       const grid = document.getElementById('scheduleCardsGrid');
       if (!grid) return;
-      grid.innerHTML = items.map(s => `
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-between gap-3">
+      grid.innerHTML = items.map((s, idx) => {
+        const trailerId = getTrailerIdForMovie(s);
+        const d = parseMovieScheduleDetails(s);
+        return `
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
           <div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="px-2 py-0.5 rounded ${s.tagColor || 'bg-slate-800 text-slate-300'} font-bold">${s.status || 'SCHEDULED'}</span>
-              <span class="text-slate-400 font-mono">${escapeHtml(s.time || '')}</span>
+            <!-- Top Bar: Status Badge + Date Badge -->
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <span class="px-2.5 py-0.5 rounded ${s.tagColor || 'bg-slate-800 text-slate-300'} font-bold">${s.status || 'SCHEDULED'}</span>
+              <span class="font-mono text-sky-400 font-semibold bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/60 flex items-center gap-1 text-[11px]">
+                <span>📅</span> ${escapeHtml(s.date || '')}
+              </span>
             </div>
-            <h4 class="text-base font-bold text-slate-100 mt-2">${escapeHtml(s.title || '')}</h4>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">${escapeHtml(s.desc || "Virtual cinema screening at Brian's Theater.")}</p>
+
+            <!-- Movie Title -->
+            <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-2.5 group-hover:text-amber-300 transition flex items-center gap-1.5">
+              <span>🎬</span> <span>${escapeHtml(s.title || '')}</span>
+            </h4>
+
+            <!-- Google Sheets Formatted Details Table / Pills -->
+            <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">🕒 Start Time:</span>
+                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">🏁 End Time:</span>
+                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">⏱️ Runtime:</span>
+                <span class="font-mono font-bold text-amber-300">${escapeHtml(d.runtime)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">📆 Year:</span>
+                <span class="font-mono font-bold text-sky-300">${escapeHtml(d.year)}</span>
+              </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
+              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>📖</span> Summary
+              </div>
+              <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
+            </div>
+
+            ${s.afterShow ? `
+            <div class="mt-2 text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+              <span>📺</span> <span class="font-semibold text-amber-200">After-Show:</span> ${escapeHtml(s.afterShow)}
+            </div>
+            ` : ''}
           </div>
-          <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-900">
-            <span class="text-slate-400">${escapeHtml(s.date || '')}</span>
-            <span class="text-emerald-400 font-semibold">● Confirmed</span>
+
+          <div class="flex flex-col gap-2 pt-2.5 border-t border-slate-900">
+            <div class="flex items-center justify-between gap-2">
+              <button onclick="toggleCardTrailer(${idx})" id="trailerBtn-${idx}" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                <span>🎬</span> <span id="trailerBtnText-${idx}">Watch Trailer ▾</span>
+              </button>
+              <button onclick="sendToScreeningRoom('${escapeHtml(trailerId)}', '${escapeHtml(s.title || '')}')" title="Play on big stage" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 transition flex items-center gap-1.5 active:scale-95">
+                <span>📺</span> Main Stage
+              </button>
+            </div>
+
+            <!-- Dropdown Video Viewer Drawer -->
+            <div id="trailerViewer-${idx}" class="hidden flex-col gap-2 mt-2 pt-3 border-t border-slate-800/80">
+              <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
+                <iframe id="trailerFrame-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(s.title || '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
+                <span class="truncate font-mono">🍿 ${escapeHtml(s.title || '')} Trailer</span>
+                <button onclick="toggleCardTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition">
+                  <span>✕</span> Close
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     let communityRequests = [

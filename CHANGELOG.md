@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.6] - 2026-09-04
+
+### What's New
+- Formatted movie lineup cards matching Google Sheets specifications.
+- Added start time, end time, runtime, and release year.
+- Added structured summary and after-show details to cards.
+- Added interactive dropdown video player to each movie card.
+- Added single-click button routing trailers to main screening stage.
+- Enhanced backend auto-sync to export full spreadsheet card fields.
+
 ## [4.9.5] - 2026-09-04
 
 ### What's New
