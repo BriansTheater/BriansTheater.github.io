@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.24 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.25 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -133,7 +133,7 @@
 
         <button onclick="switchTab('requests')" id="nav-requests" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
           <span>📝</span>
-          <span>Request Kiosk</span>
+          <span>Request</span>
         </button>
 
         <!-- ADMIN PORTAL TAB -->
@@ -387,7 +387,7 @@
 
     </div>
 
-    <!-- TAB 4: 📝 REQUEST KIOSK -->
+    <!-- TAB 4: 📝 REQUEST -->
     <div id="view-requests" class="tab-view hidden flex flex-col gap-6">
 
       <!-- Top Header Banner -->
@@ -398,13 +398,13 @@
           </div>
           <div>
             <div class="flex items-center gap-2.5 flex-wrap">
-              <h2 class="text-lg sm:text-xl font-black text-slate-100 tracking-tight">Movie Request Kiosk</h2>
+              <h2 class="text-lg sm:text-xl font-black text-slate-100 tracking-tight">Movie Requests</h2>
               <span class="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>Live Sheets Sync</span>
               </span>
             </div>
-            <p class="text-xs text-slate-400 mt-0.5">Suggest films for upcoming screening nights • Synced with Brian's Google Sheets</p>
+            <p class="text-xs text-slate-400 mt-0.5">Suggest films & shows for upcoming screening nights</p>
           </div>
         </div>
 
@@ -420,7 +420,7 @@
         </div>
       </div>
 
-      <!-- Main Kiosk 2-Column Grid -->
+      <!-- Main Request 2-Column Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
         <!-- Column 1: Native Movie Request Form (lg:col-span-5) -->
@@ -522,7 +522,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.24</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.25</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -722,7 +722,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.24</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.25</span>
         </div>
       </div>
 
@@ -820,7 +820,7 @@
           </button>
           <button onclick="switchTab('requests'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
             <span class="text-sm group-hover:scale-110 transition-transform">📝</span>
-            <span class="flex-1">Request Kiosk</span>
+            <span class="flex-1">Request</span>
             <span class="text-[10px] text-slate-500 font-mono">Suggest</span>
           </button>
           <button id="sidebarNavAdmin" onclick="switchTab('admin'); toggleSidebar(false);" class="hidden w-full text-left px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-2.5 group">
@@ -871,7 +871,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.24</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.25</span>
     </div>
 
   </aside>
@@ -970,7 +970,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.24";
+    const APP_VERSION = "4.9.25";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";

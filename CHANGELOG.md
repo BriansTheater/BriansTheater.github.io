@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.25] - 2026-09-05
+
+### What's New
+- Renamed Request Kiosk navigation menu button to Request.
+- Renamed sidebar navigation menu button to Request.
+- Updated section header title to Movie Requests.
+- Removed legacy Google Sheets queue subtitle text.
+- Streamlined header subtitle for upcoming screening night suggestions.
+- Purged all occurrences of kiosk across the interface.
+
 ## [4.9.24] - 2026-09-05
 
 ### What's New
