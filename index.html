@@ -185,36 +185,54 @@
           </div>
         </div>
 
-        <!-- 5. THEN A COUNTDOWN -->
-        <div id="stageCountdownBox" class="relative z-10 bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full max-w-md shadow-xl my-1">
-          <div id="stageCountdownLabel" class="text-[11px] text-center uppercase tracking-widest text-slate-400 mb-2.5 font-mono">Next Premiere Commences In</div>
-          <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center font-mono">
-            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-              <div id="stageCountDays" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
-              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Days</div>
+        <!-- 5. PRIMARY STAGE ENTRANCE SLOT (COUNTDOWN WHEN CLOSED -> REPLACED BY ENTER BUTTON WHEN OPEN) -->
+        <div id="stageEntranceSlot" class="relative z-10 w-full max-w-md my-1">
+          
+          <!-- STATE A: COUNTDOWN BOX (Visible when theater is closed) -->
+          <div id="stageCountdownBox" class="bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full shadow-xl">
+            <div id="stageCountdownLabel" class="text-[11px] text-center uppercase tracking-widest text-sky-400 mb-2.5 font-mono font-bold flex items-center justify-center gap-1.5">
+              <span>⏱️</span> <span id="stageCountdownLabelText">Theater Opens In</span>
             </div>
-            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-              <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">26</div>
-              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Hours</div>
-            </div>
-            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-              <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">30</div>
-              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Mins</div>
-            </div>
-            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-              <div id="stageCountSecs" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
-              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Secs</div>
+            <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center font-mono">
+              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+                <div id="stageCountDays" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
+                <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Days</div>
+              </div>
+              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+                <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">19</div>
+                <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Hours</div>
+              </div>
+              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+                <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">02</div>
+                <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Mins</div>
+              </div>
+              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+                <div id="stageCountSecs" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
+                <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Secs</div>
+              </div>
             </div>
           </div>
+
+          <!-- STATE B: ENTER THEATER BUTTON (Replaces countdown box when doors open / forced open) -->
+          <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
+            <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2">
+              <span>⭐</span>
+              <span id="btnEnterAuditoriumText">ENTER THEATER (DOORS OPEN NOW)</span>
+              <span>⭐</span>
+            </a>
+            <div id="btnEnterAuditoriumSubtext" class="flex items-center justify-center text-xs text-amber-300 font-semibold text-center">
+              Auditorium Doors Open • Click to Enter Live Cinema Lobby
+            </div>
+          </div>
+
         </div>
 
-        <!-- STREAMLINED THEATER ENTRANCE SYSTEM (LOCKED / OPEN / LIVE) -->
-        <div id="theaterEntranceContainer" class="relative z-10 w-full max-w-md flex flex-col gap-3">
+        <!-- AUXILIARY ACTION CONTROLS & TRAILER -->
+        <div id="stageActionControls" class="relative z-10 w-full max-w-md flex flex-col gap-2.5">
           
-          <!-- STATE 1: DOORS LOCKED CARD (When > 10m before showtime) -->
           <div id="theaterDoorsLockedCard" class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 shadow-xl flex flex-col items-center gap-2.5">
             <div class="flex items-center gap-2 text-xs font-mono font-bold text-amber-400 bg-amber-950/40 px-3 py-1 rounded-full border border-amber-800/60">
-              <span>🔒</span>
+              <span id="doorsLockIcon">🔒</span>
               <span id="doorsLockedStatusTitle">DOORS OPEN 10 MIN BEFORE SHOWTIME</span>
             </div>
             <p id="doorsLockedSubtext" class="text-xs text-slate-400 text-center leading-relaxed">
@@ -229,18 +247,6 @@
               <button type="button" onclick="switchTab('requests')" class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 hover:border-sky-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
                 <span>🍿</span> <span>Request Movie</span>
               </button>
-            </div>
-          </div>
-
-          <!-- STATE 2 & 3: UNLOCKED ACTIVE CALL-TO-ACTION (10m Before & During Live Screening) -->
-          <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
-            <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2">
-              <span>⭐</span>
-              <span id="btnEnterAuditoriumText">ENTER THEATER</span>
-              <span>⭐</span>
-            </a>
-            <div id="btnEnterAuditoriumSubtext" class="flex items-center justify-center text-xs text-slate-400 text-center">
-              Virtual Auditorium Open • Click to Enter Lobby & Chat
             </div>
           </div>
 
@@ -266,7 +272,7 @@
               <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
               <span>SCREENING IN PROGRESS RIGHT NOW</span>
             </div>
-            <div class="text-base sm:text-lg font-black text-slate-100 mt-0.5">"Return To Silent Hill" is live on stage!</div>
+            <div id="schedActiveMovieTitle" class="text-base sm:text-lg font-black text-slate-100 mt-0.5">Screening is live on stage!</div>
             <div class="text-xs text-slate-300">Auditorium doors are open • Estimated Runtime Left: <span id="schedActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
           </div>
         </div>
@@ -329,6 +335,18 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="scheduleCardsGrid"></div>
+
+        <!-- Collapsible Recently Concluded Screenings Shelf -->
+        <div id="concludedScreeningsWrapper" class="mt-4 pt-4 border-t border-slate-800 hidden flex-col gap-3">
+          <button type="button" onclick="toggleConcludedShelf()" class="flex items-center justify-between w-full text-xs font-bold text-slate-400 hover:text-slate-200 transition py-1">
+            <span class="flex items-center gap-2">
+              <span>📼</span>
+              <span id="concludedShelfTitle">Recently Concluded Screenings</span>
+            </span>
+            <span id="concludedShelfArrow" class="text-xs font-mono text-sky-400">▾ Show Concluded</span>
+          </button>
+          <div id="concludedCardsGrid" class="hidden grid-cols-1 sm:grid-cols-2 gap-4 mt-2"></div>
+        </div>
       </div>
 
     </div>
@@ -679,6 +697,9 @@
     </div>
   </div>
 
+  <!-- Pre-cached 398+ Past Movies Catalog Data for Instant Offline/Direct Vault Search -->
+  <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
+
   <script>
     const FIREBASE_URL = "https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -921,25 +942,34 @@
     }
 
     function setEntranceState(isOpen) {
-      const lockedCard = document.getElementById('theaterDoorsLockedCard');
+      const countdownBox = document.getElementById('stageCountdownBox');
       const openCta = document.getElementById('theaterDoorsOpenCta');
+      const lockIcon = document.getElementById('doorsLockIcon');
+      const lockTitle = document.getElementById('doorsLockedStatusTitle');
+      const lockSub = document.getElementById('doorsLockedSubtext');
+
       if (isOpen) {
-        if (lockedCard) {
-          lockedCard.classList.add('hidden');
-          lockedCard.classList.remove('flex');
-        }
+        // Replace countdown box directly with the Enter Theater button!
+        if (countdownBox) countdownBox.classList.add('hidden');
         if (openCta) {
           openCta.classList.remove('hidden');
           openCta.classList.add('flex');
         }
+        if (lockIcon) lockIcon.textContent = '🟢';
+        if (lockTitle) lockTitle.textContent = 'AUDITORIUM DOORS ARE OPEN NOW';
+        if (lockSub) lockSub.innerHTML = 'Virtual auditorium doors are unlocked! Click <b class="text-amber-300">ENTER THEATER</b> above to join the lobby & chat.';
       } else {
-        if (lockedCard) {
-          lockedCard.classList.remove('hidden');
-          lockedCard.classList.add('flex');
-        }
+        // Closed: Show countdown box, hide Enter Theater button
+        if (countdownBox) countdownBox.classList.remove('hidden');
         if (openCta) {
           openCta.classList.add('hidden');
           openCta.classList.remove('flex');
+        }
+        if (lockIcon) lockIcon.textContent = '🔒';
+        if (lockTitle) lockTitle.textContent = 'DOORS OPEN 10 MIN BEFORE SHOWTIME';
+        if (lockSub) {
+          const openTimeText = document.getElementById('doorsOpenAtTime')?.textContent || '6:50 PM PST';
+          lockSub.innerHTML = `The virtual auditorium doors open 10 minutes prior to premiere (<span id="doorsOpenAtTime" class="text-amber-300 font-semibold font-mono">${escapeHtml(openTimeText)}</span>).`;
         }
       }
     }
@@ -1029,15 +1059,22 @@
       if (countMinsEl) countMinsEl.textContent = mStr;
       if (countSecsEl) countSecsEl.textContent = sStr;
 
-      // Screening room stage precision countdown counters (under PIC)
+      // Screening room stage precision countdown counters (under PIC): Counts down to DOORS OPENING
+      const doorsOpenMs = targetNextMs - 600000;
+      const diffDoors = Math.max(0, doorsOpenMs - now);
+      const dDoors = Math.floor(diffDoors / (1000 * 60 * 60 * 24));
+      const hDoors = Math.floor((diffDoors / (1000 * 60 * 60)) % 24);
+      const mDoors = Math.floor((diffDoors / (1000 * 60)) % 60);
+      const sDoors = Math.floor((diffDoors / 1000) % 60);
+
       const stageDaysEl = document.getElementById('stageCountDays');
       const stageHoursEl = document.getElementById('stageCountHours');
       const stageMinsEl = document.getElementById('stageCountMins');
       const stageSecsEl = document.getElementById('stageCountSecs');
-      if (stageDaysEl) stageDaysEl.textContent = dStr;
-      if (stageHoursEl) stageHoursEl.textContent = hStr;
-      if (stageMinsEl) stageMinsEl.textContent = mStr;
-      if (stageSecsEl) stageSecsEl.textContent = sStr;
+      if (stageDaysEl) stageDaysEl.textContent = String(dDoors).padStart(2, '0');
+      if (stageHoursEl) stageHoursEl.textContent = String(hDoors).padStart(2, '0');
+      if (stageMinsEl) stageMinsEl.textContent = String(mDoors).padStart(2, '0');
+      if (stageSecsEl) stageSecsEl.textContent = String(sDoors).padStart(2, '0');
 
       const countdownClockStr = d > 0 ? `${d}d ${hStr}h ${mStr}m ${sStr}s` : `${hStr}h ${mStr}m ${sStr}s`;
       const countdownPillStr = d > 0 ? `${d}D ${hStr}H ${mStr}M ${sStr}S` : `${hStr}H ${mStr}M ${sStr}S`;
@@ -1050,7 +1087,7 @@
       const isLiveScreening = (now >= activeStart && now < activeEnd) || isExplicitLive;
 
       // 10-Minute Door Access Window (600,000 ms)
-      const isWithin10Mins = (diff > 0 && diff <= 600000);
+      const isWithin10Mins = (diffDoors <= 0 && diff > 0);
 
       // Determine State: 1 = Doors Closed (>10m), 2 = Doors Open (10m-0m), 3 = Live Screening
       let stateMode = 1;
@@ -1079,9 +1116,7 @@
       const bannerLive = document.getElementById('bannerLiveIndicator');
       const stageCategoryLabel = document.getElementById('stageCategoryLabel');
       const nowPlayingDate = document.getElementById('nowPlayingDate');
-      const stageCountdownLabel = document.getElementById('stageCountdownLabel');
-      const lockedCard = document.getElementById('theaterDoorsLockedCard');
-      const openCta = document.getElementById('theaterDoorsOpenCta');
+      const stageCountdownLabelText = document.getElementById('stageCountdownLabelText');
       const btnEnterText = document.getElementById('btnEnterAuditoriumText');
       const btnEnterSubtext = document.getElementById('btnEnterAuditoriumSubtext');
       const doorsOpenAtTime = document.getElementById('doorsOpenAtTime');
@@ -1108,11 +1143,10 @@
           stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live Screening In Progress';
         }
         if (headingEl) {
-          headingEl.textContent = "🎬 Return To Silent Hill";
+          headingEl.textContent = `🎬 ${nextMovieTitle}`;
           headingEl.className = "text-2xl sm:text-3xl font-black text-red-400";
         }
         if (nowPlayingDate) nowPlayingDate.textContent = `Screening Live On Stage • Runtime Left: ${formattedTime}`;
-        if (stageCountdownLabel) stageCountdownLabel.textContent = "Live Screening In Progress";
 
         if (screenTimeLabel) screenTimeLabel.textContent = "Runtime Left:";
         if (screenTimeEl) {
@@ -1126,7 +1160,7 @@
           alertBox.classList.add('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"Return To Silent Hill" is Screening Live!</span>';
+          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"${escapeHtml(nextMovieTitle)}" is Screening Live!</span>`;
         }
 
         setEntranceState(true);
@@ -1148,9 +1182,6 @@
         }
         if (nowPlayingDate) {
           nowPlayingDate.textContent = isForced ? `Doors Open For Seating • Premiere: ${nextDateStr}` : nextDateStr;
-        }
-        if (stageCountdownLabel) {
-          stageCountdownLabel.textContent = isForced ? "Doors Open For Seating • Premiere Begins In" : "Premiere Commences In";
         }
 
         if (screenTimeLabel) screenTimeLabel.textContent = isForced ? "Doors Status:" : "Starts In:";
@@ -1179,7 +1210,10 @@
         if (btnEnterSubtext) btnEnterSubtext.textContent = "Virtual Auditorium Open • Click to Enter Lobby & Chat";
 
       } else {
-        // STATE 1: DOORS CLOSED (> 10m before show) - MATCHES SCHEDULE FORMAT
+        // STATE 1: DOORS CLOSED (> 10m before show)
+        setEntranceState(false);
+        if (stageCountdownLabelText) stageCountdownLabelText.textContent = "Theater Opens In";
+
         if (stageCategoryLabel) {
           stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-sky-400";
           stageCategoryLabel.textContent = "Next Scheduled Screening";
@@ -1189,7 +1223,6 @@
           headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
         }
         if (nowPlayingDate) nowPlayingDate.textContent = nextDateStr;
-        if (stageCountdownLabel) stageCountdownLabel.textContent = "Next Premiere Commences In";
 
         if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
         if (screenTimeEl) {
@@ -1205,8 +1238,6 @@
         if (bannerLive) {
           bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span><span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: ${escapeHtml(nextMovieTitle)} • ${escapeHtml(nextDateStr)}</span>`;
         }
-
-        setEntranceState(false);
       }
     }
     setInterval(updateCountdown, 1000);
@@ -1706,6 +1737,16 @@
               renderSchedule(data.schedule);
               mergeScheduleIntoVault(data.schedule);
             }
+
+            // Sync full 398+ past movies catalog from Firebase
+            fetch('https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
+              .then(r => r.json())
+              .then(pastData => {
+                if (Array.isArray(pastData) && pastData.length > 0) {
+                  mergePastMoviesIntoVault(pastData);
+                }
+              })
+              .catch(() => {});
           }
         }
       } catch(e) {}
@@ -1713,38 +1754,26 @@
     syncFromFirebase();
     setInterval(syncFromFirebase, 15000);
 
-    // Initial Vault Library
+    // Initial Vault Library & Community Requests
     let vaultMovies = [
-      { title: "Return To Silent Hill", year: "2026", source: "past", genre: "Horror / Mystery", runtime: "1h 46m" },
-      { title: "Neighbors", year: "2014", source: "past", genre: "Comedy", runtime: "1h 37m" },
-      { title: "Neighbors 2", year: "2016", source: "past", genre: "Comedy", runtime: "1h 32m" },
-      { title: "Machine Gun Preacher", year: "2011", source: "past", genre: "Action / Biography", runtime: "2h 09m" },
-      { title: "The Whisper Man", year: "2026", source: "past", genre: "Mystery / Thriller", runtime: "1h 54m" },
-      { title: "Blade Runner 2049", year: "2017", source: "past", genre: "Sci-Fi / Neo-Noir", runtime: "2h 44m" },
-      { title: "Dune: Part Two", year: "2024", source: "past", genre: "Sci-Fi / Adventure", runtime: "2h 46m" },
-      { title: "Deadpool & Wolverine", year: "2024", source: "past", genre: "Action / Comedy", runtime: "2h 08m" },
-      { title: "Spider-Man: Across the Spider-Verse", year: "2023", source: "past", genre: "Animation / Action", runtime: "2h 20m" },
-      { title: "Oppenheimer", year: "2023", source: "past", genre: "Biography / Drama", runtime: "3h 00m" },
-      { title: "Interstellar", year: "2014", source: "past", genre: "Sci-Fi / Adventure", runtime: "2h 49m" },
-      { title: "The Dark Knight", year: "2008", source: "past", genre: "Action / Crime", runtime: "2h 32m" },
       { title: "The interview", year: "2014", source: "request", genre: "Comedy", runtime: "Pending" },
-      { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "Pending" }
+      { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "Pending" },
+      { title: "The Mandalorian and Grogu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
+      { title: "The President's Cake", year: "2026", source: "request", genre: "Netflix", runtime: "Pending" },
+      { title: "Fuze", year: "2026", source: "request", genre: "HBO Max", runtime: "Pending" },
+      { title: "Signal One", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
+      { title: "Rich Flu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
+      { title: "In the Grey", year: "2026", source: "request", genre: "Starz", runtime: "Pending" },
+      { title: "Stop! That! Murder!", year: "2026", source: "request", genre: "Comedy", runtime: "Pending" },
+      { title: "Lifehack", year: "2026", source: "request", genre: "Netflix", runtime: "Pending" },
+      { title: "Toy Story 5", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
+      { title: "Backrooms", year: "2026", source: "request", genre: "Horror", runtime: "Pending" }
     ];
 
     let vFilter = 'all';
-
-    function setVaultFilter(filter) {
-      vFilter = filter;
-      ['all', 'past', 'request'].forEach(f => {
-        const btn = document.getElementById(f === 'all' ? 'vTabAll' : (f === 'past' ? 'vTabPast' : 'vTabReq'));
-        if (f === filter) {
-          btn.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-slate-950 transition";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
-        }
-      });
-      renderVault();
-    }
+    let currentFilteredVault = [];
+    let activeVaultTrailerIdx = null;
+    let activeCardTrailerIdx = null;
 
     function escapeHtml(str) {
       if (!str) return '';
@@ -1755,10 +1784,6 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
     }
-
-    let currentFilteredVault = [];
-    let activeVaultTrailerIdx = null;
-    let activeCardTrailerIdx = null;
 
     // Comprehensive Trailers Mapping for Schedule & Vault Movies
     const SCHEDULE_TRAILERS = {
@@ -1978,11 +2003,55 @@
       }).join('');
     }
 
-    function toggleCardTrailer(idx) {
-      const viewer = document.getElementById(`trailerViewer-${idx}`);
-      const frame = document.getElementById(`trailerFrame-${idx}`);
-      const btnText = document.getElementById(`trailerBtnText-${idx}`);
-      const btn = document.getElementById(`trailerBtn-${idx}`);
+    function setVaultFilter(filter) {
+      vFilter = filter;
+      ['all', 'past', 'request'].forEach(f => {
+        const btn = document.getElementById(f === 'all' ? 'vTabAll' : (f === 'past' ? 'vTabPast' : 'vTabReq'));
+        if (f === filter) {
+          btn.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-slate-950 transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+        }
+      });
+      renderVault();
+    }
+
+    function mergePastMoviesIntoVault(pastList) {
+      if (!Array.isArray(pastList)) return;
+      let added = 0;
+      pastList.forEach(m => {
+        if (!m || !m.title) return;
+        const cleanTitle = m.title.replace(/^🎬\s*/, '').trim();
+        const exists = vaultMovies.some(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
+        if (!exists) {
+          vaultMovies.push({
+            title: cleanTitle,
+            year: m.year || "Past",
+            date: m.date || "",
+            source: m.source || "past",
+            genre: m.genre || "Past Screening",
+            runtime: m.runtime || "Full Feature",
+            trailerUrl: m.trailerUrl || "",
+            trailerId: m.trailerId || "",
+            overview: m.overview || ""
+          });
+          added++;
+        }
+      });
+      if (added > 0) renderVault();
+    }
+
+    // Ingest pre-cached 398+ past movies catalog on load
+    if (typeof window !== 'undefined' && window.INITIAL_PAST_MOVIES && Array.isArray(window.INITIAL_PAST_MOVIES)) {
+      mergePastMoviesIntoVault(window.INITIAL_PAST_MOVIES);
+    }
+
+    function toggleCardTrailer(id) {
+      const cardKey = String(id).includes('-') ? id : `trailer-${id}`;
+      const viewer = document.getElementById(`trailerViewer-${cardKey}`) || document.getElementById(`trailerViewer-${id}`);
+      const frame = document.getElementById(`trailerFrame-${cardKey}`) || document.getElementById(`trailerFrame-${id}`);
+      const btnText = document.getElementById(`trailerBtnText-${cardKey}`) || document.getElementById(`trailerBtnText-${id}`);
+      const btn = document.getElementById(`trailerBtn-${cardKey}`) || document.getElementById(`trailerBtn-${id}`);
       if (!viewer || !frame) return;
 
       const isOpening = viewer.classList.contains('hidden');
@@ -1991,7 +2060,7 @@
       closeActiveVaultTrailer();
 
       // Close any previously opened card trailer to prevent duplicate audio
-      if (activeCardTrailerIdx !== null && activeCardTrailerIdx !== idx) {
+      if (activeCardTrailerIdx !== null && activeCardTrailerIdx !== id) {
         closeActiveCardTrailer();
       }
 
@@ -2001,7 +2070,7 @@
         viewer.classList.remove('hidden');
         if (btnText) btnText.textContent = "Hide Trailer ▴";
         if (btn) btn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-bold border border-amber-300 transition flex items-center gap-1.5 shadow-md active:scale-95";
-        activeCardTrailerIdx = idx;
+        activeCardTrailerIdx = id;
       } else {
         frame.src = "";
         viewer.classList.add('hidden');
@@ -2018,21 +2087,24 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Schedule Cards - Structured directly from Google Sheets Quick Schedule & Data
+    function toggleConcludedShelf() {
+      const grid = document.getElementById('concludedCardsGrid');
+      const arrow = document.getElementById('concludedShelfArrow');
+      if (!grid) return;
+      const isHidden = grid.classList.contains('hidden');
+      if (isHidden) {
+        grid.classList.remove('hidden');
+        grid.classList.add('grid');
+        if (arrow) arrow.textContent = '▴ Hide Concluded';
+      } else {
+        grid.classList.add('hidden');
+        grid.classList.remove('grid');
+        if (arrow) arrow.textContent = '▾ Show Concluded';
+      }
+    }
+
+    // Schedule Cards - Structured directly from Google Sheets Quick Schedule (Only Upcoming Movies)
     const sampleSchedule = [
-      { 
-        title: "Return To Silent Hill", 
-        date: "Friday, Sept 4, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:46 PM", 
-        runtime: "1h 46m", 
-        year: "2026", 
-        summary: "James Sunderland returns to Silent Hill to find his lost love, only to discover a living nightmare.", 
-        status: "CONCLUDED", 
-        tagColor: "bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold", 
-        trailerId: "Way9Dexny3w",
-        afterShow: "the simpson yellow mirror (8:54 PM - 9:21 PM)"
-      },
       { 
         title: "Neighbors", 
         date: "Saturday, Sept 5, 2026", 
@@ -2201,101 +2273,137 @@
       };
     }
 
-    function renderSchedule(scheduleItems) {
-      const items = (scheduleItems && Array.isArray(scheduleItems) && scheduleItems.length > 0) ? scheduleItems : sampleSchedule;
-      const grid = document.getElementById('scheduleCardsGrid');
-      if (!grid) return;
-      grid.innerHTML = items.map((s, idx) => {
-        const trailerId = getTrailerIdForMovie(s);
-        const d = parseMovieScheduleDetails(s);
-        const posterUrl = getMovieArtworkUrl(s);
-        return `
-        <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
-          <div>
-            <!-- Movie Poster / Artwork Thumbnail Banner -->
-            <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
-              <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
-              <div class="absolute top-2.5 left-2.5">
-                <span class="px-2.5 py-0.5 rounded ${s.tagColor || 'bg-slate-800 text-slate-300'} font-bold text-[11px] shadow-md">${s.status || 'SCHEDULED'}</span>
-              </div>
-              <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
-                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
-                  <span>📅</span> ${escapeHtml(s.date || '')}
-                </span>
-                <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
-                  ${escapeHtml(d.startTime)}
-                </span>
-              </div>
+    function renderScheduleCardHtml(s, idx, isConcluded) {
+      const trailerId = getTrailerIdForMovie(s);
+      const d = parseMovieScheduleDetails(s);
+      const posterUrl = getMovieArtworkUrl(s);
+      const btnPrefix = isConcluded ? `concTrailer` : `trailer`;
+      return `
+      <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border ${isConcluded ? 'border-slate-850 opacity-80' : 'border-slate-800'} flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
+        <div>
+          <!-- Movie Poster / Artwork Thumbnail Banner -->
+          <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
+            <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-2.5 left-2.5">
+              <span class="px-2.5 py-0.5 rounded ${s.tagColor || (isConcluded ? 'bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold' : 'bg-slate-800 text-slate-300')} font-bold text-[11px] shadow-md">${isConcluded ? 'CONCLUDED' : (s.status || 'SCHEDULED')}</span>
             </div>
-
-            <!-- Movie Title -->
-            <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-1 group-hover:text-amber-300 transition flex items-center gap-1.5">
-              <span>🎬</span> <span>${escapeHtml(s.title || '')}</span>
-            </h4>
-
-            <!-- Google Sheets Formatted Details Table / Pills -->
-            <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">🕒 Start Time:</span>
-                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
-              </div>
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">🏁 End Time:</span>
-                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
-              </div>
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">⏱️ Runtime:</span>
-                <span class="font-mono font-bold text-amber-300">${escapeHtml(d.runtime)}</span>
-              </div>
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">📆 Year:</span>
-                <span class="font-mono font-bold text-sky-300">${escapeHtml(d.year)}</span>
-              </div>
+            <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
+              <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
+                <span>📅</span> ${escapeHtml(s.date || '')}
+              </span>
+              <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
+                ${escapeHtml(d.startTime)}
+              </span>
             </div>
-
-            <!-- Summary Section -->
-            <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
-              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>📖</span> Summary
-              </div>
-              <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
-            </div>
-
-            ${s.afterShow ? `
-            <div class="mt-2 text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
-              <span>📺</span> <span class="font-semibold text-amber-200">After-Show:</span> ${escapeHtml(s.afterShow)}
-            </div>
-            ` : ''}
           </div>
 
-          <div class="flex flex-col gap-2 pt-2.5 border-t border-slate-900">
-            <div class="flex items-center justify-between gap-2">
-              <button onclick="toggleCardTrailer(${idx})" id="trailerBtn-${idx}" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95">
-                <span>🎬</span> <span id="trailerBtnText-${idx}">Watch Trailer ▾</span>
-              </button>
-              <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1.5 active:scale-95">
-                <span>▶</span> YouTube ↗
-              </button>
-            </div>
+          <!-- Movie Title -->
+          <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-1 group-hover:text-amber-300 transition flex items-center gap-1.5">
+            <span>🎬</span> <span>${escapeHtml(s.title || '')}</span>
+          </h4>
 
-            <!-- Dropdown Video Viewer Drawer -->
-            <div id="trailerViewer-${idx}" class="hidden flex-col gap-2 mt-2 pt-3 border-t border-slate-800/80">
-              <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
-                <iframe id="trailerFrame-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(s.title || '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
-                <span class="truncate font-mono">🍿 ${escapeHtml(s.title || '')} Trailer</span>
-                <button onclick="toggleCardTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition">
-                  <span>✕</span> Close
-                </button>
-              </div>
+          <!-- Google Sheets Formatted Details Table / Pills -->
+          <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+            <div class="flex items-center justify-between px-1">
+              <span class="text-slate-400">🕒 Start Time:</span>
+              <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
             </div>
-
+            <div class="flex items-center justify-between px-1">
+              <span class="text-slate-400">🏁 End Time:</span>
+              <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
+            </div>
+            <div class="flex items-center justify-between px-1">
+              <span class="text-slate-400">⏱️ Runtime:</span>
+              <span class="font-mono font-bold text-amber-300">${escapeHtml(d.runtime)}</span>
+            </div>
+            <div class="flex items-center justify-between px-1">
+              <span class="text-slate-400">📆 Year:</span>
+              <span class="font-mono font-bold text-sky-300">${escapeHtml(d.year)}</span>
+            </div>
           </div>
+
+          <!-- Summary Section -->
+          <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
+            <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1">
+              <span>📖</span> Summary
+            </div>
+            <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
+          </div>
+
+          ${s.afterShow ? `
+          <div class="mt-2 text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+            <span>📺</span> <span class="font-semibold text-amber-200">After-Show:</span> ${escapeHtml(s.afterShow)}
+          </div>
+          ` : ''}
         </div>
-      `;
-      }).join('');
+
+        <div class="flex flex-col gap-2 pt-2.5 border-t border-slate-900">
+          <div class="flex items-center justify-between gap-2">
+            <button onclick="toggleCardTrailer('${btnPrefix}-${idx}')" id="trailerBtn-${btnPrefix}-${idx}" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+              <span>🎬</span> <span id="trailerBtnText-${btnPrefix}-${idx}">Watch Trailer ▾</span>
+            </button>
+            <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1.5 active:scale-95">
+              <span>▶</span> YouTube ↗
+            </button>
+          </div>
+
+          <!-- Dropdown Video Viewer Drawer -->
+          <div id="trailerViewer-${btnPrefix}-${idx}" class="hidden flex-col gap-2 mt-2 pt-3 border-t border-slate-800/80">
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
+              <iframe id="trailerFrame-${btnPrefix}-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(s.title || '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
+              <span class="truncate font-mono">🍿 ${escapeHtml(s.title || '')} Trailer</span>
+              <button onclick="toggleCardTrailer('${btnPrefix}-${idx}')" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition">
+                <span>✕</span> Close
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
+    }
+
+    function renderSchedule(scheduleItems) {
+      const raw = (scheduleItems && Array.isArray(scheduleItems) && scheduleItems.length > 0) ? scheduleItems : sampleSchedule;
+      const now = Date.now();
+
+      const upcomingItems = [];
+      const pastItems = [];
+
+      raw.forEach(s => {
+        if (!s || !s.title) return;
+        const isConcluded = s.status === 'CONCLUDED' || (s.endMs && s.endMs < now);
+        if (isConcluded) {
+          pastItems.push(s);
+        } else {
+          upcomingItems.push(s);
+        }
+      });
+
+      const items = upcomingItems.length > 0 ? upcomingItems : sampleSchedule;
+      const grid = document.getElementById('scheduleCardsGrid');
+      if (grid) {
+        grid.innerHTML = items.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
+      }
+
+      // Render recently concluded shelf
+      const concWrapper = document.getElementById('concludedScreeningsWrapper');
+      const concGrid = document.getElementById('concludedCardsGrid');
+      const concTitle = document.getElementById('concludedShelfTitle');
+      if (concWrapper && concGrid) {
+        if (pastItems.length > 0) {
+          concWrapper.classList.remove('hidden');
+          concWrapper.classList.add('flex');
+          if (concTitle) concTitle.textContent = `Recently Concluded Screenings (${pastItems.length})`;
+          concGrid.innerHTML = pastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
+        } else {
+          concWrapper.classList.add('hidden');
+          concWrapper.classList.remove('flex');
+        }
+      }
     }
 
     let communityRequests = [

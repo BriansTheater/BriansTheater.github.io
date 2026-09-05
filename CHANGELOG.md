@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.15] - 2026-09-05
+
+### What's New
+- Labeled countdown box as Theater Opens In before showtime.
+- Replaced countdown box directly with Enter button when open.
+- Filtered watched and concluded movies from upcoming lineup grid.
+- Added clean collapsible shelf for recently concluded movie screenings.
+- Loaded full 398+ past movies catalog into Movie Vault.
+- Restored instant search across all 398+ past movie titles.
+
 ## [4.9.14] - 2026-09-04
 
 ### What's New
