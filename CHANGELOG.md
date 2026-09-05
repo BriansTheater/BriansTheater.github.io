@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.22] - 2026-09-05
+
+### What's New
+- Embedded official Google Form full-page iframe for movie requests.
+- Form submissions now write directly to Brian's Google Sheets.
+- Added 1-click popout to open Google Form in new tab.
+- Added quick reload button for embedded Google Form.
+- Added collapsible community queue drawer for live requests.
+
 ## [4.9.21] - 2026-09-05
 
 ### What's New
