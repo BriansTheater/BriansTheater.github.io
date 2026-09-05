@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.8] - 2026-09-04
+
+### What's New
+- Added dropdown trailer players across all Movie Vault cards.
+- Prevented overlapping audio when playing movie trailers.
+- Added quick YouTube button to every vault card.
+- Embedded official Brian's Theater Google Form request kiosk.
+- Matched movie request questions directly to the Google Form.
+- Added streaming platform selection to movie requests.
+- Removed redundant showing stats tab from navigation menu.
+- Maintained showing stats visibility inside top header banner.
+
 ## [4.9.7] - 2026-09-04
 
 ### What's New

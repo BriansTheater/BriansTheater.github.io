@@ -119,11 +119,6 @@
           <span>Request Kiosk</span>
         </button>
 
-        <button onclick="switchTab('stats')" id="nav-stats" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
-          <span>📊</span>
-          <span>Showing Stats</span>
-        </button>
-
         <!-- ADMIN PORTAL TAB -->
         <button onclick="switchTab('admin')" id="nav-admin" class="tab-btn hidden px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md transition flex items-center gap-2">
           <span>👑</span>
@@ -279,7 +274,7 @@
           <span id="vaultCount" class="absolute right-4 top-3.5 text-xs text-slate-400 font-mono">Loading library...</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto pr-1" id="vaultGrid"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[650px] overflow-y-auto pr-1" id="vaultGrid"></div>
       </div>
 
     </div>
@@ -287,79 +282,100 @@
     <!-- TAB 4: 📝 REQUEST KIOSK -->
     <div id="view-requests" class="tab-view hidden flex flex-col gap-6">
 
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <div class="md:col-span-5 rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
-          <div>
-            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              <span>📝</span> Submit a Movie Request
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Request a movie for Brian to schedule in an upcoming showing!</p>
-          </div>
-
-          <form onsubmit="handleFormSubmit(event)" class="flex flex-col gap-3">
-            <div>
-              <label class="text-xs font-semibold text-slate-300">Movie Title *</label>
-              <input type="text" id="formReqTitle" required placeholder="e.g. Inception, The Matrix..." class="w-full mt-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-sky-400">
-            </div>
-
-            <div>
-              <label class="text-xs font-semibold text-slate-300">Your Name or Discord Handle</label>
-              <input type="text" id="formReqName" placeholder="e.g. Alex / @cinemafan" class="w-full mt-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-sky-400">
-            </div>
-
-            <div>
-              <label class="text-xs font-semibold text-slate-300">Why should we watch this?</label>
-              <textarea id="formReqNote" rows="3" placeholder="Tell Brian why this movie deserves a screen..." class="w-full mt-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-sky-400"></textarea>
-            </div>
-
-            <button type="submit" id="btnSubmitReq" class="w-full mt-2 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm tracking-wide transition shadow-lg">
-              Submit Request to Google Sheets
-            </button>
-          </form>
+      <!-- View Switcher & Actions Header -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
+            <span>📝</span> Movie Request Form
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Submit movie requests directly to Brian's Theater queue & Google Form</p>
         </div>
 
-        <div class="md:col-span-7 rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center gap-1 text-xs">
+            <button onclick="setRequestMode('embed')" id="btnReqEmbed" class="px-3 py-1.5 rounded-lg font-bold bg-amber-400 text-slate-950 transition shadow-sm">
+              📋 Official Google Form
+            </button>
+            <button onclick="setRequestMode('quick')" id="btnReqQuick" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition">
+              ⚡ Quick Form
+            </button>
+          </div>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?usp=send_form" target="_blank" class="px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-amber-300 flex items-center gap-1.5 transition">
+            <span>↗</span> Open in Google
+          </a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- FORM CONTAINER (Col 7) -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+
+          <!-- Mode 1: Embedded Official Google Form -->
+          <div id="reqEmbedPanel" class="rounded-2xl bg-slate-900 border border-slate-800 p-2 sm:p-4 shadow-2xl flex flex-col">
+            <div class="flex items-center justify-between px-3 py-2 mb-2 border-b border-slate-800 text-xs text-slate-400">
+              <span class="flex items-center gap-1.5 text-slate-300 font-semibold"><span>📋</span> Google Form Embed</span>
+              <span class="text-[11px] text-emerald-400 font-mono">Direct Google Sync</span>
+            </div>
+            <div class="relative w-full rounded-xl overflow-hidden bg-slate-950 border border-slate-800 min-h-[750px]">
+              <iframe id="googleFormIframe" src="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?embedded=true" class="w-full h-[780px] border-0" frameborder="0" marginheight="0" marginwidth="0">Loading Movie Request Form…</iframe>
+            </div>
+          </div>
+
+          <!-- Mode 2: Quick Form Matching Form Questions -->
+          <div id="reqQuickPanel" class="hidden rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+                <span>⚡</span> Quick Movie Request
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">Directly matching questions from Brian's official Movie Request Form</p>
+            </div>
+
+            <form onsubmit="handleFormSubmit(event)" class="flex flex-col gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Name: *</label>
+                <input type="text" id="formReqName" required placeholder="e.g. Alex / @cinemafan" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-slate-300">What movie are you requesting? *</label>
+                <input type="text" id="formReqTitle" required placeholder="e.g. Inception, The Matrix, Bad Boys..." class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-slate-300">platform? *</label>
+                <select id="formReqPlatform" required class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
+                  <option value="" disabled selected>Select streaming platform or theater...</option>
+                  <option value="HBO Max">HBO Max</option>
+                  <option value="Disney+/ Hulu">Disney+/ Hulu</option>
+                  <option value="Netflix">Netflix</option>
+                  <option value="Tubi">Tubi</option>
+                  <option value="Peacock">Peacock</option>
+                  <option value="Parmount+">Parmount+</option>
+                  <option value="Starz">Starz</option>
+                  <option value="Theaters">Theaters</option>
+                  <option value="Prime">Prime</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <button type="submit" id="btnSubmitReq" class="w-full mt-2 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm tracking-wide transition shadow-lg flex items-center justify-center gap-2">
+                <span>🚀</span> <span>Submit Request</span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- COMMUNITY REQUESTS (Col 5) -->
+        <div class="lg:col-span-5 rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4 self-start">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
               <span>📋</span> Current Community Requests
             </h3>
-            <span class="text-xs text-amber-400">From Movie Requests Sheet</span>
+            <span class="text-xs text-amber-400 font-mono">From Brian's Sheet</span>
           </div>
 
-          <div class="flex flex-col gap-2.5" id="communityRequestsList"></div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- TAB 5: 📊 SHOWING STATS -->
-    <div id="view-stats" class="tab-view hidden flex flex-col gap-6">
-
-      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div class="text-center mb-6 pb-4 border-b border-slate-800">
-          <div class="text-xs sm:text-sm font-mono text-slate-400" id="statsDateFull">
-            Friday, September 4, 2026, 2:24:01 PM
-          </div>
-          <h2 class="text-xl sm:text-2xl font-black uppercase tracking-widest text-slate-100 mt-1">
-            Showings Stats
-          </h2>
-        </div>
-
-        <div class="flex flex-col gap-3 max-w-xl mx-auto">
-          <div class="rounded-xl bg-emerald-950/40 border border-emerald-700/50 p-4 flex items-center justify-between">
-            <span class="text-sm sm:text-base font-bold text-emerald-300 uppercase tracking-wider">Movies</span>
-            <span id="statMoviesNum" class="text-2xl sm:text-3xl font-black text-emerald-200 font-mono">398</span>
-          </div>
-
-          <div class="rounded-xl bg-amber-950/40 border border-amber-700/50 p-4 flex items-center justify-between">
-            <span class="text-sm sm:text-base font-bold text-amber-300 uppercase tracking-wider">Tv Shows</span>
-            <span id="statTvNum" class="text-2xl sm:text-3xl font-black text-amber-200 font-mono">36</span>
-          </div>
-
-          <div class="rounded-xl bg-purple-950/40 border border-purple-700/50 p-4 flex items-center justify-between">
-            <span class="text-sm sm:text-base font-bold text-purple-300 uppercase tracking-wider">Days Open</span>
-            <span id="statDaysNum" class="text-sm sm:text-base font-bold text-purple-200 font-mono">1 year, 5 months, 30 days</span>
-          </div>
+          <div class="flex flex-col gap-2.5 max-h-[720px] overflow-y-auto pr-1" id="communityRequestsList"></div>
         </div>
       </div>
 
@@ -516,8 +532,27 @@
     let targetNextMs = 1788660000000;
     let isAdmin = false;
 
+    function setRequestMode(mode) {
+      const embedPanel = document.getElementById('reqEmbedPanel');
+      const quickPanel = document.getElementById('reqQuickPanel');
+      const btnEmbed = document.getElementById('btnReqEmbed');
+      const btnQuick = document.getElementById('btnReqQuick');
+
+      if (mode === 'embed') {
+        if (embedPanel) embedPanel.classList.remove('hidden');
+        if (quickPanel) quickPanel.classList.add('hidden');
+        if (btnEmbed) btnEmbed.className = "px-3 py-1.5 rounded-lg font-bold bg-amber-400 text-slate-950 transition shadow-sm";
+        if (btnQuick) btnQuick.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition";
+      } else {
+        if (embedPanel) embedPanel.classList.add('hidden');
+        if (quickPanel) quickPanel.classList.remove('hidden');
+        if (btnQuick) btnQuick.className = "px-3 py-1.5 rounded-lg font-bold bg-amber-400 text-slate-950 transition shadow-sm";
+        if (btnEmbed) btnEmbed.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition";
+      }
+    }
+
     function switchTab(targetTab) {
-      const allViews = ['screening', 'schedule', 'vault', 'requests', 'stats', 'admin'];
+      const allViews = ['screening', 'schedule', 'vault', 'requests', 'admin'];
       allViews.forEach(tab => {
         const view = document.getElementById(`view-${tab}`);
         const btn = document.getElementById(`nav-${tab}`);
@@ -708,26 +743,46 @@
 
     function handleFormSubmit(e) {
       e.preventDefault();
-      const title = document.getElementById('formReqTitle').value.trim();
-      const name = document.getElementById('formReqName').value.trim() || 'Guest';
-      const note = document.getElementById('formReqNote').value.trim();
+      const name = (document.getElementById('formReqName')?.value || '').trim() || 'Guest';
+      const title = (document.getElementById('formReqTitle')?.value || '').trim();
+      const platform = (document.getElementById('formReqPlatform')?.value || '').trim() || 'Other';
 
       if (!title) return;
 
       const btn = document.getElementById('btnSubmitReq');
-      btn.textContent = "Submitting...";
-      btn.disabled = true;
+      if (btn) {
+        btn.textContent = "Submitting...";
+        btn.disabled = true;
+      }
 
-      // Post request to backend API
-      fetch(`${API_BASE_URL}?action=submit_movie_request&title=${encodeURIComponent(title)}&requester=${encodeURIComponent(name)}&overview=${encodeURIComponent(note)}`, { mode: 'no-cors' })
+      // Post directly to official Google Form response endpoint
+      try {
+        const formData = new FormData();
+        formData.append('entry.2011388280', name);
+        formData.append('entry.655230611', title);
+        formData.append('entry.1587670981', platform);
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/formResponse', {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        }).catch(() => {});
+      } catch(err) {}
+
+      // Also post request to Brian's backend API
+      fetch(`${API_BASE_URL}?action=submit_movie_request&title=${encodeURIComponent(title)}&requester=${encodeURIComponent(name)}&overview=${encodeURIComponent('Platform: ' + platform)}`, { mode: 'no-cors' })
         .finally(() => {
-          btn.textContent = "Submit Request to Google Sheets";
-          btn.disabled = false;
-          alert(`🎉 Thank you, ${name}! "${title}" has been submitted to Brian\'s Theater request queue in Google Sheets.`);
-          document.getElementById('formReqTitle').value = '';
-          document.getElementById('formReqName').value = '';
-          document.getElementById('formReqNote').value = '';
-          communityRequests.unshift({ title, requester: name, genre: "Community Request", status: "Under Review" });
+          if (btn) {
+            btn.textContent = "Submit Request";
+            btn.disabled = false;
+          }
+          alert(`🎉 Thank you, ${name}! "${title}" (${platform}) has been submitted to Brian\'s Theater request queue.`);
+          const tInput = document.getElementById('formReqTitle');
+          const nInput = document.getElementById('formReqName');
+          const pSelect = document.getElementById('formReqPlatform');
+          if (tInput) tInput.value = '';
+          if (nInput) nInput.value = '';
+          if (pSelect) pSelect.selectedIndex = 0;
+          communityRequests.unshift({ title, requester: name, genre: platform, status: "Under Review" });
           loadRequests();
         });
     }
@@ -857,50 +912,26 @@
     }
 
     let currentFilteredVault = [];
+    let activeVaultTrailerIdx = null;
+    let activeCardTrailerIdx = null;
 
-    function watchTrailerByVaultIndex(idx) {
-      const item = currentFilteredVault[idx];
-      if (item && item.title) {
-        window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(item.title + ' trailer'), '_blank');
-      }
-    }
-
-    function renderVault() {
-      const q = document.getElementById('vaultSearch').value.toLowerCase().trim();
-      const grid = document.getElementById('vaultGrid');
-
-      currentFilteredVault = vaultMovies.filter(m => {
-        if (vFilter !== 'all' && m.source !== vFilter) return false;
-        if (!q) return true;
-        return m.title.toLowerCase().includes(q) || (m.genre && m.genre.toLowerCase().includes(q)) || (m.year && m.year.includes(q));
-      });
-
-      document.getElementById('vaultCount').textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} movies`;
-
-      grid.innerHTML = currentFilteredVault.map((m, idx) => `
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between text-xs mb-1">
-              <span class="font-bold text-slate-100">${escapeHtml(m.title)}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded ${m.source === 'request' ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-sky-950/60 text-sky-400 border border-sky-800/60'}">${m.source === 'request' ? 'Request' : 'Past'}</span>
-            </div>
-            <div class="text-[11px] text-slate-400">${escapeHtml(m.genre || 'Feature Film')} ${m.year ? '(' + escapeHtml(m.year) + ')' : ''}</div>
-          </div>
-          <div class="flex items-center justify-between text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-900">
-            <span>⏱️ ${escapeHtml(m.runtime || m.dateText || 'Standard')}</span>
-            <button onclick="watchTrailerByVaultIndex(${idx})" class="text-sky-400 hover:underline">Watch Trailer</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Schedule Trailers Mapping & Interactive Dropdown Viewer Engine
+    // Comprehensive Trailers Mapping for Schedule & Vault Movies
     const SCHEDULE_TRAILERS = {
       "Return To Silent Hill": "Way9Dexny3w",
       "Neighbors": "kL5c2Szf3E4",
       "Neighbors 2": "X2i9Zz_AqTg",
       "Machine Gun Preacher": "q5D4v8a7o4M",
       "manchine gun pearcher": "q5D4v8a7o4M",
+      "The Whisper Man": "rT22nYLaeWc",
+      "Blade Runner 2049": "gCcx85zbxz4",
+      "Dune: Part Two": "Way9Dexny3w",
+      "Deadpool & Wolverine": "73_1biulkYk",
+      "Spider-Man: Across the Spider-Verse": "cqGjhVJWtEg",
+      "Oppenheimer": "uYPbbksJxIg",
+      "Interstellar": "zSWdZVtXT7E",
+      "The Dark Knight": "EXeTwQWrcwY",
+      "The interview": "KpyVENBPj5M",
+      "Pineapple Express": "BWZt4v6b1hI",
       "beast": "oQMc7Sq366I",
       "mother mary": "3VbW9A6gGgQ",
       "Normal": "dQw4w9WgXcQ",
@@ -908,8 +939,6 @@
       "Borderlands": "l3XzepN03KQ",
       "Scary Movie 2026": "gCcx85zbxz4"
     };
-
-    let activeCardTrailerIdx = null;
 
     function getTrailerIdForMovie(movie) {
       if (!movie) return "Way9Dexny3w";
@@ -932,17 +961,22 @@
       return "Way9Dexny3w";
     }
 
-    function toggleCardTrailer(idx) {
-      const viewer = document.getElementById(`trailerViewer-${idx}`);
-      const frame = document.getElementById(`trailerFrame-${idx}`);
-      const btnText = document.getElementById(`trailerBtnText-${idx}`);
-      const btn = document.getElementById(`trailerBtn-${idx}`);
-      if (!viewer || !frame) return;
+    function closeActiveVaultTrailer() {
+      if (activeVaultTrailerIdx !== null) {
+        const prevViewer = document.getElementById(`vaultTrailerViewer-${activeVaultTrailerIdx}`);
+        const prevFrame = document.getElementById(`vaultTrailerFrame-${activeVaultTrailerIdx}`);
+        const prevBtnText = document.getElementById(`vaultTrailerBtnText-${activeVaultTrailerIdx}`);
+        const prevBtn = document.getElementById(`vaultTrailerBtn-${activeVaultTrailerIdx}`);
+        if (prevViewer) prevViewer.classList.add('hidden');
+        if (prevFrame) prevFrame.src = "";
+        if (prevBtnText) prevBtnText.textContent = "Watch Trailer ▾";
+        if (prevBtn) prevBtn.className = "text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95";
+        activeVaultTrailerIdx = null;
+      }
+    }
 
-      const isOpening = viewer.classList.contains('hidden');
-
-      // Close any previously opened card trailer to prevent duplicate audio
-      if (activeCardTrailerIdx !== null && activeCardTrailerIdx !== idx) {
+    function closeActiveCardTrailer() {
+      if (activeCardTrailerIdx !== null) {
         const prevViewer = document.getElementById(`trailerViewer-${activeCardTrailerIdx}`);
         const prevFrame = document.getElementById(`trailerFrame-${activeCardTrailerIdx}`);
         const prevBtnText = document.getElementById(`trailerBtnText-${activeCardTrailerIdx}`);
@@ -952,6 +986,114 @@
         if (prevBtnText) prevBtnText.textContent = "Watch Trailer ▾";
         if (prevBtn) prevBtn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95";
         activeCardTrailerIdx = null;
+      }
+    }
+
+    function toggleVaultTrailer(idx) {
+      const viewer = document.getElementById(`vaultTrailerViewer-${idx}`);
+      const frame = document.getElementById(`vaultTrailerFrame-${idx}`);
+      const btnText = document.getElementById(`vaultTrailerBtnText-${idx}`);
+      const btn = document.getElementById(`vaultTrailerBtn-${idx}`);
+      if (!viewer || !frame) return;
+
+      const isOpening = viewer.classList.contains('hidden');
+
+      // Stop any other active trailer to ensure zero overlapping audio
+      closeActiveCardTrailer();
+      if (activeVaultTrailerIdx !== null && activeVaultTrailerIdx !== idx) {
+        closeActiveVaultTrailer();
+      }
+
+      if (isOpening) {
+        const trailerId = frame.dataset.trailerId || "Way9Dexny3w";
+        frame.src = `https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&rel=0`;
+        viewer.classList.remove('hidden');
+        if (btnText) btnText.textContent = "Hide Trailer ▴";
+        if (btn) btn.className = "text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-bold border border-amber-300 transition flex items-center gap-1 shadow-md active:scale-95";
+        activeVaultTrailerIdx = idx;
+      } else {
+        frame.src = "";
+        viewer.classList.add('hidden');
+        if (btnText) btnText.textContent = "Watch Trailer ▾";
+        if (btn) btn.className = "text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95";
+        activeVaultTrailerIdx = null;
+      }
+    }
+
+    function renderVault() {
+      const q = document.getElementById('vaultSearch').value.toLowerCase().trim();
+      const grid = document.getElementById('vaultGrid');
+
+      // Reset active vault trailer when filtering or searching
+      activeVaultTrailerIdx = null;
+
+      currentFilteredVault = vaultMovies.filter(m => {
+        if (vFilter !== 'all' && m.source !== vFilter) return false;
+        if (!q) return true;
+        return m.title.toLowerCase().includes(q) || (m.genre && m.genre.toLowerCase().includes(q)) || (m.year && m.year.includes(q));
+      });
+
+      document.getElementById('vaultCount').textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} movies`;
+
+      grid.innerHTML = currentFilteredVault.map((m, idx) => {
+        const trailerId = getTrailerIdForMovie(m);
+        return `
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between group shadow-lg">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="font-bold text-slate-100 group-hover:text-amber-300 transition text-sm">${escapeHtml(m.title)}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded ${m.source === 'request' ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-sky-950/60 text-sky-400 border border-sky-800/60'} font-semibold">${m.source === 'request' ? 'Request' : 'Past'}</span>
+            </div>
+            <div class="text-[11px] text-slate-400">${escapeHtml(m.genre || 'Feature Film')} ${m.year ? '(' + escapeHtml(m.year) + ')' : ''}</div>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-3 pt-2.5 border-t border-slate-900">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2">
+              <span class="truncate font-mono">⏱️ ${escapeHtml(m.runtime || m.dateText || 'Standard')}</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="toggleVaultTrailer(${idx})" id="vaultTrailerBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95">
+                  <span>🎬</span> <span id="vaultTrailerBtnText-${idx}">Watch Trailer ▾</span>
+                </button>
+                <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-2 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1 active:scale-95">
+                  <span>▶</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Vault Dropdown Video Viewer Drawer -->
+            <div id="vaultTrailerViewer-${idx}" class="hidden flex-col gap-2 mt-2 pt-2.5 border-t border-slate-800/80">
+              <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
+                <iframe id="vaultTrailerFrame-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(m.title || '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
+                <span class="truncate font-mono">🍿 ${escapeHtml(m.title || '')} Trailer</span>
+                <button onclick="toggleVaultTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition">
+                  <span>✕</span> Close
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function toggleCardTrailer(idx) {
+      const viewer = document.getElementById(`trailerViewer-${idx}`);
+      const frame = document.getElementById(`trailerFrame-${idx}`);
+      const btnText = document.getElementById(`trailerBtnText-${idx}`);
+      const btn = document.getElementById(`trailerBtn-${idx}`);
+      if (!viewer || !frame) return;
+
+      const isOpening = viewer.classList.contains('hidden');
+
+      // Stop any vault trailer if playing
+      closeActiveVaultTrailer();
+
+      // Close any previously opened card trailer to prevent duplicate audio
+      if (activeCardTrailerIdx !== null && activeCardTrailerIdx !== idx) {
+        closeActiveCardTrailer();
       }
 
       if (isOpening) {
