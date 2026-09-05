@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.2] - 2026-09-04
+
+### What's New
+- Added prominent social channels for Instagram, TikTok, and YouTube.
+- Fixed live movie screening detection for active showing events.
+- Fixed countdown timer to target next upcoming scheduled movie.
+- Added active screening alert banner with direct auditorium access.
+- Hardened schedule engine against stale timestamps and timezone drifts.
+
 ## [4.9.1] - 2026-09-04
 
 ### What's New

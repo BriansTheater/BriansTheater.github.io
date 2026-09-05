@@ -133,14 +133,14 @@
     <div id="view-screening" class="tab-view flex flex-col gap-6">
 
       <div class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="font-bold text-sky-400 uppercase tracking-wider">Live Screening Auditorium:</span>
-          <span>Screening in Progress</span>
+        <div class="flex items-center gap-2" id="bannerLiveIndicator">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+          <span class="font-bold text-red-400 uppercase tracking-wider">Live Screening Auditorium:</span>
+          <span class="text-slate-100 font-semibold">"Return To Silent Hill" is Screening Live!</span>
         </div>
         <div class="flex items-center gap-2 font-mono">
           <span class="text-slate-400">Runtime Left:</span>
-          <span id="screenTimeLeft" class="text-amber-400 font-bold">--</span>
+          <span id="screenTimeLeft" class="text-amber-400 font-bold">1h 24m</span>
         </div>
       </div>
 
@@ -148,11 +148,11 @@
         <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
 
         <div class="relative z-10 flex flex-col items-center">
-          <span class="px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-[11px] font-bold uppercase tracking-widest">
-            Now Showing On Stage
+          <span id="auditoriumStatusPill" class="px-3 py-1 rounded-full bg-red-500/20 border border-red-500/50 text-red-400 text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5 animate-pulse">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span> 🔴 LIVE ON STAGE NOW
           </span>
           <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-slate-100 mt-2">
-            No Movie Playing
+            Return To Silent Hill
           </h2>
           <p class="text-xs text-slate-400 mt-1 max-w-md">
             Join Brian and the community in the virtual cinema. Grab your seat and enjoy the show!
@@ -198,42 +198,101 @@
         </div>
       </div>
 
+      <!-- 🌳 CONNECT WITH BRIAN'S THEATER (Social Channels) -->
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6 shadow-2xl flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
+              <span>🌳</span> Connect with Brian's Theater
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Join our social channels to catch announcements, movie polls, and discussions.</p>
+          </div>
+          <a href="https://linktr.ee/BriansTheater" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition self-start sm:self-auto border border-slate-700 shrink-0">
+            <span>🌳</span> Linktree Hub
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a href="https://instagram.com/briandivacox" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-pink-500/50 hover:bg-slate-900/50 transition flex items-center gap-3 group shadow-sm">
+            <span class="text-2xl group-hover:scale-110 transition">📸</span>
+            <div>
+              <div class="text-xs font-bold text-slate-100">Instagram</div>
+              <div class="text-[11px] text-pink-400 font-semibold">@briandivacox</div>
+            </div>
+          </a>
+
+          <a href="https://tiktok.com/@briandivacox" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900/50 transition flex items-center gap-3 group shadow-sm">
+            <span class="text-2xl group-hover:scale-110 transition">🎵</span>
+            <div>
+              <div class="text-xs font-bold text-slate-100">TikTok</div>
+              <div class="text-[11px] text-cyan-400 font-semibold">@briandivacox</div>
+            </div>
+          </a>
+
+          <a href="https://www.youtube.com/channel/UCMuv7PfbLVm8IZsd6Bgqqzg" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-red-500/50 hover:bg-slate-900/50 transition flex items-center gap-3 group shadow-sm">
+            <span class="text-2xl group-hover:scale-110 transition">📺</span>
+            <div>
+              <div class="text-xs font-bold text-slate-100">YouTube Channel</div>
+              <div class="text-[11px] text-red-400 font-semibold">Official Channel</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
     </div>
 
     <!-- TAB 2: 📅 SCHEDULE & NEXT UP -->
     <div id="view-schedule" class="tab-view hidden flex flex-col gap-6">
 
+      <!-- Active Screening In-Progress Alert Banner -->
+      <div id="schedActiveAlertBox" class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse">
+        <div class="flex items-center gap-3.5">
+          <span class="text-3xl sm:text-4xl">🍿</span>
+          <div>
+            <div class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+              <span>SCREENING IN PROGRESS RIGHT NOW</span>
+            </div>
+            <div class="text-base sm:text-lg font-black text-slate-100 mt-0.5">"Return To Silent Hill" is live on stage!</div>
+            <div class="text-xs text-slate-300">Auditorium doors are open • Estimated Runtime Left: <span id="schedActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
+          </div>
+        </div>
+        <a href="http://tiny.cc/BriansTheater" target="_blank" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg transition flex items-center gap-2 shrink-0 transform active:scale-95">
+          <span>⭐</span> ENTER THEATER NOW <span>⭐</span>
+        </a>
+      </div>
+
       <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-sky-500/40 p-6 sm:p-8 shadow-2xl neon-card flex flex-col items-center text-center gap-4">
         <span class="text-xs font-bold uppercase tracking-widest text-sky-400">Next Scheduled Screening</span>
         <h2 id="schedNextTitle" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
-          🎬 Return To Silent Hill
+          🎬 Alien: Romulus
         </h2>
-        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Tonight • 7:00 PM PST</p>
+        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Tomorrow • 9:30 PM PST</p>
 
         <!-- Precision Countdown -->
         <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 w-full max-w-lg my-2">
-          <div class="text-[11px] text-center uppercase tracking-widest text-slate-400 mb-3 font-mono">Screening Commences In</div>
+          <div id="countdownSubhead" class="text-[11px] text-center uppercase tracking-widest text-slate-400 mb-3 font-mono">Next Premiere Commences In</div>
           <div class="grid grid-cols-4 gap-2 sm:gap-4 text-center font-mono">
             <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
               <div id="countDays" class="text-2xl sm:text-3xl font-black text-sky-400">00</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Days</div>
             </div>
             <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countHours" class="text-2xl sm:text-3xl font-black text-sky-400">04</div>
+              <div id="countHours" class="text-2xl sm:text-3xl font-black text-sky-400">26</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Hours</div>
             </div>
             <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countMins" class="text-2xl sm:text-3xl font-black text-sky-400">37</div>
+              <div id="countMins" class="text-2xl sm:text-3xl font-black text-sky-400">10</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Mins</div>
             </div>
             <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countSecs" class="text-2xl sm:text-3xl font-black text-amber-400">12</div>
+              <div id="countSecs" class="text-2xl sm:text-3xl font-black text-amber-400">00</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Secs</div>
             </div>
           </div>
         </div>
 
-        <button onclick="alert('Notification enabled! You will be alerted before Return To Silent Hill begins.')" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+        <button onclick="alert('Notification enabled! You will be alerted before ' + document.getElementById('schedNextTitle').textContent.replace('🎬 ', '') + ' begins.')" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
           <span>🔔</span> Add to Calendar / Remind Me
         </button>
       </div>
@@ -482,6 +541,64 @@
 
   </main>
 
+  <!-- GLOBAL SOCIAL FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-[#0f172a]/95 backdrop-blur-md mt-12 py-8 px-4 sm:px-6">
+    <div class="max-w-5xl mx-auto flex flex-col gap-6">
+      
+      <div class="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+              <span>🌳</span> Connect with Brian's Theater
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Join our social channels to catch announcements, movie polls, and discussions.</p>
+          </div>
+          <a href="https://linktr.ee/BriansTheater" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition self-start sm:self-auto border border-slate-700">
+            <span>🌳</span> Linktree Hub
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a href="https://instagram.com/briandivacox" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-pink-500/50 hover:bg-slate-900/60 transition flex items-center gap-3 group shadow-sm">
+            <span class="text-2xl group-hover:scale-110 transition">📸</span>
+            <div>
+              <div class="text-xs font-bold text-slate-100">Instagram</div>
+              <div class="text-[11px] text-pink-400 font-semibold">@briandivacox</div>
+            </div>
+          </a>
+
+          <a href="https://tiktok.com/@briandivacox" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900/60 transition flex items-center gap-3 group shadow-sm">
+            <span class="text-2xl group-hover:scale-110 transition">🎵</span>
+            <div>
+              <div class="text-xs font-bold text-slate-100">TikTok</div>
+              <div class="text-[11px] text-cyan-400 font-semibold">@briandivacox</div>
+            </div>
+          </a>
+
+          <a href="https://www.youtube.com/channel/UCMuv7PfbLVm8IZsd6Bgqqzg" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-red-500/50 hover:bg-slate-900/60 transition flex items-center gap-3 group shadow-sm">
+            <span class="text-2xl group-hover:scale-110 transition">📺</span>
+            <div>
+              <div class="text-xs font-bold text-slate-100">YouTube Channel</div>
+              <div class="text-[11px] text-red-400 font-semibold">Official Channel</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+        <div class="flex items-center gap-2">
+          <span>🎬 Brian's Theater</span>
+          <span>•</span>
+          <span>Virtual Cinema Experience</span>
+        </div>
+        <div>
+          <span>© 2026 Brian Diva Cox • All Rights Reserved</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
   <!-- AUTH MODAL -->
   <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative flex flex-col gap-4">
@@ -523,7 +640,8 @@
     const FIREBASE_URL = "https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
     
-    let targetNextMs = Date.now() + (4 * 3600 + 37 * 60 + 12) * 1000;
+    // Target next upcoming premiere (Alien: Romulus, Saturday Sept 5 at 9:30 PM PST)
+    let targetNextMs = 1788669000000;
     let isAdmin = false;
 
     function switchTab(targetTab) {
@@ -568,7 +686,8 @@
     updateClock();
 
     function updateCountdown() {
-      const diff = Math.max(0, targetNextMs - Date.now());
+      const now = Date.now();
+      const diff = Math.max(0, targetNextMs - now);
       const d = Math.floor(diff / (1000 * 60 * 60 * 24));
       const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const m = Math.floor((diff / (1000 * 60)) % 60);
@@ -578,6 +697,18 @@
       document.getElementById('countHours').textContent = String(h).padStart(2, '0');
       document.getElementById('countMins').textContent = String(m).padStart(2, '0');
       document.getElementById('countSecs').textContent = String(s).padStart(2, '0');
+
+      // Dynamic calculation of active screening runtime
+      const activeStart = 1788573600000; // 7:00 PM PST (Friday Sept 4)
+      const activeEnd = activeStart + (105 * 60 * 1000); // 8:45 PM PST
+      if (now >= activeStart && now < activeEnd) {
+        const minsLeft = Math.max(1, Math.ceil((activeEnd - now) / 60000));
+        const formattedTime = minsLeft >= 60 ? `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m` : `${minsLeft}m`;
+        const screenTimeEl = document.getElementById('screenTimeLeft');
+        const schedTimeEl = document.getElementById('schedActiveTimeLeft');
+        if (screenTimeEl) screenTimeEl.textContent = formattedTime;
+        if (schedTimeEl) schedTimeEl.textContent = formattedTime;
+      }
     }
     setInterval(updateCountdown, 1000);
     updateCountdown();
@@ -704,9 +835,24 @@
         if (res.ok) {
           const data = await res.json();
           if (data) {
-            if (data.nowPlaying) document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
+            const now = Date.now();
+            const activeStart = 1788573600000; // Friday Sept 4, 2026 7:00 PM PST
+            const activeEnd = activeStart + (105 * 60 * 1000); // 8:45 PM PST
+            const isLive = (now >= activeStart && now < activeEnd);
+
+            if (data.nowPlaying && data.nowPlaying !== "No Movie Playing") {
+              document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
+            } else if (isLive) {
+              document.getElementById('nowPlayingHeading').textContent = "Return To Silent Hill";
+            } else if (data.nowPlaying) {
+              document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
+            }
+
             if (data.timeLeft) document.getElementById('screenTimeLeft').textContent = data.timeLeft;
-            if (data.nextTitle) document.getElementById('schedNextTitle').textContent = data.nextTitle;
+            if (data.nextTitle) {
+              const formattedTitle = data.nextTitle.startsWith('🎬') ? data.nextTitle : `🎬 ${data.nextTitle}`;
+              document.getElementById('schedNextTitle').textContent = formattedTitle;
+            }
             if (data.nextTime) document.getElementById('schedNextDate').textContent = data.nextTime;
             if (data.nextStartMs && data.nextStartMs > Date.now()) {
               targetNextMs = data.nextStartMs;
@@ -803,8 +949,8 @@
 
     // Schedule Cards
     const sampleSchedule = [
-      { title: "Return To Silent Hill", time: "7:00 PM", date: "Friday, Sept 4, 2026", desc: "James returns to Silent Hill to find his lost love, only to discover a living nightmare.", status: "NEXT UP", tagColor: "bg-amber-500/20 text-amber-300" },
-      { title: "Alien: Romulus", time: "9:30 PM", date: "Saturday, Sept 5, 2026", desc: "Young space colonizers come face to face with the most terrifying life form in the universe.", status: "TOMORROW", tagColor: "bg-sky-500/20 text-sky-300" },
+      { title: "Return To Silent Hill", time: "7:00 PM", date: "Friday, Sept 4, 2026", desc: "James returns to Silent Hill to find his lost love, only to discover a living nightmare.", status: "🔴 LIVE NOW", tagColor: "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse" },
+      { title: "Alien: Romulus", time: "9:30 PM", date: "Saturday, Sept 5, 2026", desc: "Young space colonizers come face to face with the most terrifying life form in the universe.", status: "NEXT UP", tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40" },
       { title: "Beetlejuice Beetlejuice", time: "7:00 PM", date: "Sunday, Sept 6, 2026", desc: "After an unexpected family tragedy, three generations of the Deetz family return home to Winter River.", status: "SUNDAY", tagColor: "bg-purple-500/20 text-purple-300" },
       { title: "Gladiator II", time: "8:00 PM", date: "Friday, Sept 11, 2026", desc: "Years after witnessing the death of Maximus, Lucius must enter the Colosseum to fight.", status: "NEXT WEEK", tagColor: "bg-slate-800 text-slate-300" }
     ];
