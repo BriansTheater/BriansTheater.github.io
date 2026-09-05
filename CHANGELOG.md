@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.26] - 2026-09-05
+
+### What's New
+- Implemented wosBDC edge-to-edge Google Form iframe layout.
+- Card uses zero padding for seamless flush borders.
+- Applied absolute-fill iframe positioning with zero extra spaces.
+- Removed Community Requests Queue entirely from request tab.
+- Added clean top bar with direct popout button.
+- Eliminated all color inversion filters for natural Google display.
+
 ## [4.9.25] - 2026-09-05
 
 ### What's New
