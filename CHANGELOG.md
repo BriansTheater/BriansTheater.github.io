@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.5] - 2026-09-04
+
+### What's New
+- Added instant installable trigger for auto-syncing on spreadsheet edits.
+- Added 5-minute background heartbeat trigger for continuous live syncing.
+- Added 1-click Auto-Sync activator inside Google Sheets Admin menu.
+- Enabled immediate push bypass when adding or updating movies.
+
 ## [4.9.4] - 2026-09-04
 
 ### What's New
