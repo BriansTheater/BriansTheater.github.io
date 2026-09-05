@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.3] - 2026-09-04
+
+### What's New
+- Pushed full movie schedule directly to Firebase Realtime Database.
+- Client browsers pull live schedule from Firebase without quotas.
+- Protected Google Apps Script from UrlFetchApp rate limit exhaustion.
+- Removed unapproved social usernames and URLs until officially provided.
+- Added clean Coming Soon status badges for social channels.
+
 ## [4.9.2] - 2026-09-04
 
 ### What's New
