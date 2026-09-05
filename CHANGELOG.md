@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.9.19] - 2026-09-05
+
+### What's New
+- Cleaned up top header for sleek single-row smartphone viewing.
+- Removed cluttering clock and stats pills from mobile banner.
+- Removed top version badge as requested for cleaner branding.
+- Added sliding sidebar drawer for stats, date, and navigation.
+- Added real-time Pacific Time clock inside new sidebar drawer.
+- Added live theater stats hub inside new sliding sidebar.
+- Massively sped up Movie Vault with batched 24-item loading.
+- Added on-demand trailer iframes to eliminate mobile lag entirely.
+- Added debounced search input for smooth and fluid typing.
+
 ## [4.9.18] - 2026-09-05
 
 ### What's New
