@@ -136,47 +136,71 @@
     <!-- TAB 1: 🎬 SCREENING ROOM -->
     <div id="view-screening" class="tab-view flex flex-col gap-6">
 
+      <!-- TOP BANNER STATUS -->
       <div class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
-        <div class="flex items-center gap-2" id="bannerLiveIndicator">
-          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-          <span class="font-bold text-slate-400 uppercase tracking-wider">Theater Status:</span>
-          <span class="text-amber-300 font-semibold font-mono">🔴 Doors Closed • Opens In: --</span>
+        <div class="flex items-center gap-2 truncate" id="bannerLiveIndicator">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span>
+          <span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span>
+          <span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: Neighbors • Sat, Sept 5 • 7:00 PM PST</span>
         </div>
-        <div class="flex items-center gap-2 font-mono">
-          <span class="text-slate-400" id="screenTimeLabel">Next Movie In:</span>
-          <span id="screenTimeLeft" class="text-amber-400 font-bold font-mono">--</span>
+        <div class="flex items-center gap-2 font-mono shrink-0">
+          <span class="text-slate-400" id="screenTimeLabel">Starts In:</span>
+          <span id="screenTimeLeft" class="text-sky-400 font-bold font-mono">--</span>
         </div>
       </div>
 
-      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-6">
+      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4">
         <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
 
-        <div class="relative z-10 flex flex-col items-center">
-          <span id="auditoriumStatusPill" class="px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 font-mono shadow-md">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> 🔴 THEATER CLOSED • OPENS IN --
+        <!-- 1. SAYS NEXT MOVIE (Category Label) -->
+        <div class="relative z-10 flex flex-col items-center gap-1">
+          <span id="stageCategoryLabel" class="text-xs font-bold uppercase tracking-widest text-sky-400">
+            Next Scheduled Screening
           </span>
-          <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-slate-100 mt-2">
-            No Movie Playing
-          </h2>
-          <p class="text-xs text-slate-400 mt-1 max-w-md" id="nowPlayingSubtext">
-            The auditorium is currently closed while waiting for the next screening to start. Check the schedule below for upcoming showtimes!
-          </p>
 
-          <!-- Real-Time Countdown Badge Box when waiting for next movie -->
-          <div id="stageCountdownBox" class="mt-3 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-mono shadow-inner flex items-center gap-2">
-            <span class="text-amber-400 font-semibold">⏳ NEXT PREMIERE STARTS IN:</span>
-            <span id="stageCountdownTime" class="text-sky-300 font-black text-sm tracking-wider">--</span>
-          </div>
+          <!-- 2. TITLE -->
+          <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
+            🎬 Neighbors
+          </h2>
+
+          <!-- 3. DATE AND TIME -->
+          <p id="nowPlayingDate" class="text-xs sm:text-sm text-slate-400">
+            Saturday, Sept 5 • 7:00 PM PST
+          </p>
         </div>
 
-        <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl w-full max-w-md aspect-[16/10] flex items-center justify-center group">
+        <!-- 4. PIC (The Stage Poster) -->
+        <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl w-full max-w-md aspect-[16/10] flex items-center justify-center group my-1">
           <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover transition duration-300">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none"></div>
           <div id="stagePosterBadge" class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-700/80 flex items-center justify-between text-xs font-mono shadow-lg">
             <span id="stagePosterBadgeLabel" class="font-bold text-amber-300 flex items-center gap-1.5 truncate">
-              <span>⭐</span> <span id="stagePosterBadgeTitle">NEXT UP: Neighbors</span>
+              <span>⭐</span> <span id="stagePosterBadgeTitle">NEXT PREMIERE: Neighbors</span>
             </span>
-            <span id="stagePosterBadgeDate" class="text-sky-300 text-[11px] font-semibold shrink-0">Sat, Sept 5 • 7 PM</span>
+            <span id="stagePosterBadgeDate" class="text-sky-300 text-[11px] font-semibold shrink-0">Saturday, Sept 5 • 7:00 PM PST</span>
+          </div>
+        </div>
+
+        <!-- 5. THEN A COUNTDOWN -->
+        <div id="stageCountdownBox" class="relative z-10 bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full max-w-md shadow-xl my-1">
+          <div id="stageCountdownLabel" class="text-[11px] text-center uppercase tracking-widest text-slate-400 mb-2.5 font-mono">Next Premiere Commences In</div>
+          <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center font-mono">
+            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageCountDays" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
+              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Days</div>
+            </div>
+            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">26</div>
+              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Hours</div>
+            </div>
+            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">30</div>
+              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Mins</div>
+            </div>
+            <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageCountSecs" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
+              <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Secs</div>
+            </div>
           </div>
         </div>
 
@@ -860,6 +884,7 @@
       const mStr = String(m).padStart(2, '0');
       const sStr = String(s).padStart(2, '0');
 
+      // Schedule tab precision countdown counters
       const countDaysEl = document.getElementById('countDays');
       const countHoursEl = document.getElementById('countHours');
       const countMinsEl = document.getElementById('countMins');
@@ -868,6 +893,16 @@
       if (countHoursEl) countHoursEl.textContent = hStr;
       if (countMinsEl) countMinsEl.textContent = mStr;
       if (countSecsEl) countSecsEl.textContent = sStr;
+
+      // Screening room stage precision countdown counters (under PIC)
+      const stageDaysEl = document.getElementById('stageCountDays');
+      const stageHoursEl = document.getElementById('stageCountHours');
+      const stageMinsEl = document.getElementById('stageCountMins');
+      const stageSecsEl = document.getElementById('stageCountSecs');
+      if (stageDaysEl) stageDaysEl.textContent = dStr;
+      if (stageHoursEl) stageHoursEl.textContent = hStr;
+      if (stageMinsEl) stageMinsEl.textContent = mStr;
+      if (stageSecsEl) stageSecsEl.textContent = sStr;
 
       const countdownClockStr = d > 0 ? `${d}d ${hStr}h ${mStr}m ${sStr}s` : `${hStr}h ${mStr}m ${sStr}s`;
       const countdownPillStr = d > 0 ? `${d}D ${hStr}H ${mStr}M ${sStr}S` : `${hStr}H ${mStr}M ${sStr}S`;
@@ -907,9 +942,9 @@
       const schedTimeEl = document.getElementById('schedActiveTimeLeft');
       const alertBox = document.getElementById('schedActiveAlertBox');
       const bannerLive = document.getElementById('bannerLiveIndicator');
-      const statusPill = document.getElementById('auditoriumStatusPill');
-      const stageSubtext = document.getElementById('nowPlayingSubtext');
-      const stageCountdownBox = document.getElementById('stageCountdownBox');
+      const stageCategoryLabel = document.getElementById('stageCategoryLabel');
+      const nowPlayingDate = document.getElementById('nowPlayingDate');
+      const stageCountdownLabel = document.getElementById('stageCountdownLabel');
       const lockedCard = document.getElementById('theaterDoorsLockedCard');
       const openCta = document.getElementById('theaterDoorsOpenCta');
       const btnEnterText = document.getElementById('btnEnterAuditoriumText');
@@ -917,6 +952,7 @@
       const doorsOpenAtTime = document.getElementById('doorsOpenAtTime');
 
       const nextMovieTitle = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
+      const nextDateStr = document.getElementById('schedNextDate')?.textContent || "Saturday, Sept 5 • 7:00 PM PST";
 
       // Display the exact time when doors open (10 mins before start)
       if (doorsOpenAtTime && targetNextMs) {
@@ -932,6 +968,17 @@
         const minsLeft = Math.max(1, Math.ceil((activeEnd - now) / 60000));
         const formattedTime = minsLeft >= 60 ? `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m` : `${minsLeft}m`;
         
+        if (stageCategoryLabel) {
+          stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-red-400 flex items-center gap-1.5";
+          stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live Screening In Progress';
+        }
+        if (headingEl) {
+          headingEl.textContent = "🎬 Return To Silent Hill";
+          headingEl.className = "text-2xl sm:text-3xl font-black text-red-400";
+        }
+        if (nowPlayingDate) nowPlayingDate.textContent = `Screening Live On Stage • Runtime Left: ${formattedTime}`;
+        if (stageCountdownLabel) stageCountdownLabel.textContent = "Live Screening In Progress";
+
         if (screenTimeLabel) screenTimeLabel.textContent = "Runtime Left:";
         if (screenTimeEl) screenTimeEl.textContent = formattedTime;
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
@@ -941,20 +988,7 @@
           alertBox.classList.add('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span><span class="font-bold text-red-400 uppercase tracking-wider">Theater Status:</span><span class="text-slate-100 font-semibold">"Return To Silent Hill" is Screening Live!</span>';
-        }
-        if (statusPill) {
-          statusPill.className = "px-3.5 py-1.5 rounded-full bg-red-500/20 border border-red-500/50 text-red-400 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 font-mono animate-pulse shadow-md";
-          statusPill.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500"></span> 🔴 LIVE ON STAGE NOW';
-        }
-        if (headingEl) {
-          headingEl.innerHTML = 'Now Playing: <span class="text-red-400">Return To Silent Hill</span>';
-        }
-        if (stageSubtext) {
-          stageSubtext.textContent = "Live screening currently in progress. Doors remain open for late arrivals!";
-        }
-        if (stageCountdownBox) {
-          stageCountdownBox.innerHTML = '<span class="text-emerald-400 font-semibold">🎬 SCREENING IN PROGRESS NOW</span>';
+          bannerLive.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"Return To Silent Hill" is Screening Live!</span>';
         }
 
         if (lockedCard) lockedCard.classList.add('hidden');
@@ -969,8 +1003,19 @@
         // STATE 2: DOORS OPEN & SEATING NOW (10m to 0m before show)
         const minsToStart = Math.max(1, Math.ceil(diff / 60000));
         
-        if (screenTimeLabel) screenTimeLabel.textContent = "Premiere Starts In:";
-        if (screenTimeEl) screenTimeEl.textContent = `${minsToStart}m (${countdownClockStr})`;
+        if (stageCategoryLabel) {
+          stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5";
+          stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Auditorium Doors Open • Seating Now';
+        }
+        if (headingEl) {
+          headingEl.textContent = `🎬 ${nextMovieTitle}`;
+          headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
+        }
+        if (nowPlayingDate) nowPlayingDate.textContent = nextDateStr;
+        if (stageCountdownLabel) stageCountdownLabel.textContent = "Premiere Commences In";
+
+        if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
+        if (screenTimeEl) screenTimeEl.textContent = countdownClockStr;
         if (schedTimeEl) schedTimeEl.textContent = `${minsToStart}m`;
 
         if (alertBox && !alertBox.classList.contains('hidden')) {
@@ -978,20 +1023,7 @@
           alertBox.classList.remove('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span><span class="font-bold text-amber-400 uppercase tracking-wider">Theater Status:</span><span class="text-amber-200 font-semibold font-mono">🟡 Doors Open • Seating Now (Starts in ${countdownClockStr})</span>`;
-        }
-        if (statusPill) {
-          statusPill.className = "px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/70 text-amber-300 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 font-mono animate-pulse shadow-lg";
-          statusPill.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> 🟡 DOORS OPEN • SEATING NOW (${countdownPillStr})`;
-        }
-        if (headingEl) {
-          headingEl.innerHTML = `Doors Are Open! <span class="text-amber-300">${escapeHtml(nextMovieTitle)}</span>`;
-        }
-        if (stageSubtext) {
-          stageSubtext.textContent = `Auditorium doors are open! Enter now to take your seat and chat before "${nextMovieTitle}" begins.`;
-        }
-        if (stageCountdownBox) {
-          stageCountdownBox.innerHTML = `<span class="text-amber-400 font-semibold">🍿 SEATING IN PROGRESS • STARTS IN:</span> <span id="stageCountdownTime" class="text-sky-300 font-black text-sm tracking-wider">${countdownClockStr}</span>`;
+          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Open Now for ${escapeHtml(nextMovieTitle)}</span>`;
         }
 
         if (lockedCard) lockedCard.classList.add('hidden');
@@ -1003,8 +1035,19 @@
         if (btnEnterSubtext) btnEnterSubtext.textContent = "Virtual Auditorium Open • Click to Enter Lobby & Chat";
 
       } else {
-        // STATE 1: DOORS CLOSED (> 10m before show)
-        if (screenTimeLabel) screenTimeLabel.textContent = "Next Movie In:";
+        // STATE 1: DOORS CLOSED (> 10m before show) - MATCHES SCHEDULE FORMAT
+        if (stageCategoryLabel) {
+          stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-sky-400";
+          stageCategoryLabel.textContent = "Next Scheduled Screening";
+        }
+        if (headingEl) {
+          headingEl.textContent = `🎬 ${nextMovieTitle}`;
+          headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
+        }
+        if (nowPlayingDate) nowPlayingDate.textContent = nextDateStr;
+        if (stageCountdownLabel) stageCountdownLabel.textContent = "Next Premiere Commences In";
+
+        if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
         if (screenTimeEl) screenTimeEl.textContent = countdownClockStr;
         if (schedTimeEl) schedTimeEl.textContent = "--";
 
@@ -1013,20 +1056,7 @@
           alertBox.classList.remove('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span><span class="font-bold text-slate-400 uppercase tracking-wider">Theater Status:</span><span class="text-amber-300 font-semibold font-mono">🔴 Doors Closed • Opens In: ${countdownClockStr}</span>`;
-        }
-        if (statusPill) {
-          statusPill.className = "px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 font-mono shadow-md";
-          statusPill.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> 🔴 THEATER CLOSED • NEXT SHOW IN ${countdownPillStr}`;
-        }
-        if (headingEl) {
-          headingEl.innerHTML = `Next Premiere: <span class="text-amber-300">${escapeHtml(nextMovieTitle)}</span>`;
-        }
-        if (stageSubtext) {
-          stageSubtext.textContent = "The auditorium doors open 10 minutes prior to premiere. Check the schedule below or preview the trailer!";
-        }
-        if (stageCountdownBox) {
-          stageCountdownBox.innerHTML = `<span class="text-amber-400 font-semibold">⏳ NEXT PREMIERE STARTS IN:</span> <span id="stageCountdownTime" class="text-sky-300 font-black text-sm tracking-wider">${countdownClockStr}</span>`;
+          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span><span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: ${escapeHtml(nextMovieTitle)} • ${escapeHtml(nextDateStr)}</span>`;
         }
 
         if (lockedCard) lockedCard.classList.remove('hidden');

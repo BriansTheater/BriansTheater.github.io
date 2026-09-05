@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.13] - 2026-09-04
+
+### What's New
+- Redesigned screening room stage to match schedule menu layout.
+- Displayed movie title, date, poster, then precision countdown.
+- Removed repetitive closed text from header banner and stage.
+- Added precision countdown clocks directly under stage poster.
+
 ## [4.9.12] - 2026-09-04
 
 ### What's New
