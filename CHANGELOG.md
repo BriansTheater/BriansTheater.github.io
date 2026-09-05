@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.24] - 2026-09-05
+
+### What's New
+- Removed inverted Google Form iframe from request kiosk.
+- Restored high-end native dark cinema request form.
+- Form matches exact dark theater styling and colors.
+- Kept direct popout link for official Google Forms.
+- Displayed live community request queue side-by-side with form.
+- Added instant search filter for queued community requests.
+
 ## [4.9.23] - 2026-09-05
 
 ### What's New

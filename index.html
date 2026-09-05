@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.23 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.24 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -388,117 +388,126 @@
     </div>
 
     <!-- TAB 4: 📝 REQUEST KIOSK -->
-    <div id="view-requests" class="tab-view hidden flex flex-col gap-4">
+    <div id="view-requests" class="tab-view hidden flex flex-col gap-6">
 
-      <!-- Top Toolbar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shadow-inner">
+      <!-- Top Header Banner -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl shadow-inner flex-shrink-0">
             📝
           </div>
           <div>
-            <h2 class="text-base sm:text-lg font-black text-slate-100 flex items-center gap-2">
-              <span>Movie Request Kiosk</span>
-              <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Official Google Form</span>
-            </h2>
-            <p class="text-xs text-slate-400">Directly connected to Brian's Theater Google Sheets queue</p>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 class="text-lg sm:text-xl font-black text-slate-100 tracking-tight">Movie Request Kiosk</h2>
+              <span class="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Live Sheets Sync</span>
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Suggest films for upcoming screening nights • Synced with Brian's Google Sheets</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-2 flex-wrap">
-          <!-- Toggle Community Requests View -->
-          <button type="button" onclick="toggleCommunityRequestsSection()" id="btnToggleCommunityReqs" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
-            <span>📋</span> <span id="communityReqsToggleText">Community Queue</span>
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- Refresh Queue Button -->
+          <button type="button" onclick="loadRequests(); showTheaterToast('🔄 Requests queue refreshed!');" title="Refresh Requests Queue" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+            <span>🔄</span> <span>Refresh</span>
           </button>
-          <!-- Toggle Dark / Light Theme for Form -->
-          <button type="button" onclick="toggleIframeTheme()" id="btnToggleIframeTheme" title="Toggle Form Dark / Light Theme" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
-            <span>🌓</span> <span id="iframeThemeToggleText">Dark Theme</span>
-          </button>
-          <!-- Reload Iframe -->
-          <button type="button" onclick="reloadGoogleFormIframe()" title="Reload Google Form" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
-            <span>🔄</span> <span>Reload</span>
-          </button>
-          <!-- Open Direct in New Tab -->
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-            <span>↗️</span> <span>Open in New Tab</span>
+          <!-- Direct Popout Link to Official Google Form -->
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform" target="_blank" rel="noopener noreferrer" title="Open Google Form in a new browser tab" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md hover:shadow-amber-500/20 active:scale-95">
+            <span>↗️</span> <span>Official Google Form</span>
           </a>
         </div>
       </div>
 
-      <!-- Collapsible Community Requests Drawer (Hidden by default, toggled via button) -->
-      <div id="communityRequestsDrawer" class="hidden rounded-2xl bg-slate-900 border border-slate-800 p-5 shadow-2xl flex flex-col gap-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div>
-            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
-              <span>📋</span> Current Community Requests
+      <!-- Main Kiosk 2-Column Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Column 1: Native Movie Request Form (lg:col-span-5) -->
+        <div class="lg:col-span-5 rounded-2xl bg-slate-900/90 border border-slate-800 p-5 sm:p-6 shadow-2xl flex flex-col gap-4 backdrop-blur-md">
+          <div class="border-b border-slate-800/80 pb-3.5">
+            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+              <span class="text-amber-400">⚡</span> Submit Movie Request
             </h3>
-            <p class="text-[11px] text-slate-400">Live request status synced with Brian's Google Sheets</p>
-          </div>
-          <button type="button" onclick="toggleCommunityRequestsSection()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 transition">✕ Close Queue</button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <!-- QUICK MOVIE REQUEST FORM FALLBACK (Col 5) -->
-          <div class="md:col-span-5 rounded-xl bg-slate-950/80 border border-slate-800/80 p-4 flex flex-col gap-3">
-            <h4 class="text-xs font-bold text-slate-200">⚡ Quick Manual Submission</h4>
-            <form id="movieReqForm" onsubmit="handleFormSubmit(event)" class="flex flex-col gap-3">
-              <div>
-                <label class="text-[11px] font-semibold text-slate-400">Name: *</label>
-                <input type="text" id="formReqName" required placeholder="e.g. Alex / @cinemafan" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
-              </div>
-              <div>
-                <label class="text-[11px] font-semibold text-slate-400">Movie Title: *</label>
-                <input type="text" id="formReqTitle" required placeholder="e.g. Inception, The Matrix..." class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
-              </div>
-              <div>
-                <label class="text-[11px] font-semibold text-slate-400">Platform: *</label>
-                <select id="formReqPlatform" required class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
-                  <option value="" disabled selected>Select platform...</option>
-                  <option value="HBO Max">HBO Max</option>
-                  <option value="Disney+/ Hulu">Disney+/ Hulu</option>
-                  <option value="Netflix">Netflix</option>
-                  <option value="Tubi">Tubi</option>
-                  <option value="Peacock">Peacock</option>
-                  <option value="Parmount+">Parmount+</option>
-                  <option value="Starz">Starz</option>
-                  <option value="Theaters">Theaters</option>
-                  <option value="Prime">Prime</option>
-                  <option value="I don't know">I don't know</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <button type="submit" id="btnSubmitReq" class="w-full mt-1 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs tracking-wide transition shadow flex items-center justify-center gap-1.5">
-                <span>🚀</span> <span>Submit Request</span>
-              </button>
-            </form>
+            <p class="text-xs text-slate-400 mt-0.5">Your request instantly queues for Brian's Google Sheets review.</p>
           </div>
 
-          <!-- COMMUNITY REQUESTS LIST (Col 7) -->
-          <div class="md:col-span-7 flex flex-col gap-2">
-            <div class="flex items-center justify-between text-xs text-slate-400 font-mono pb-1">
-              <span>Pending in Google Sheet:</span>
-              <span class="text-amber-400">Live Sync Active</span>
+          <form id="movieReqForm" onsubmit="handleFormSubmit(event)" class="flex flex-col gap-4">
+            <div>
+              <label for="formReqName" class="block text-xs font-semibold text-slate-300 mb-1.5">Your Name / Handle: <span class="text-amber-400">*</span></label>
+              <input type="text" id="formReqName" required placeholder="e.g. Alex / @cinemafan" class="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition">
             </div>
-            <div class="flex flex-col gap-2 max-h-[340px] overflow-y-auto pr-1" id="communityRequestsList"></div>
+
+            <div>
+              <label for="formReqTitle" class="block text-xs font-semibold text-slate-300 mb-1.5">Movie or Show Title: <span class="text-amber-400">*</span></label>
+              <input type="text" id="formReqTitle" required placeholder="e.g. Inception, Everything Everywhere All At Once..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition">
+            </div>
+
+            <div>
+              <label for="formReqPlatform" class="block text-xs font-semibold text-slate-300 mb-1.5">Platform / Service: <span class="text-amber-400">*</span></label>
+              <select id="formReqPlatform" required class="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition cursor-pointer">
+                <option value="" disabled selected>Select streaming platform...</option>
+                <option value="HBO Max">HBO Max</option>
+                <option value="Disney+/ Hulu">Disney+/ Hulu</option>
+                <option value="Netflix">Netflix</option>
+                <option value="Tubi">Tubi</option>
+                <option value="Peacock">Peacock</option>
+                <option value="Parmount+">Paramount+</option>
+                <option value="Starz">Starz</option>
+                <option value="Theaters">Theaters</option>
+                <option value="Prime">Amazon Prime</option>
+                <option value="Plex">Plex</option>
+                <option value="I don't know">I don't know</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="formReqNotes" class="block text-xs font-semibold text-slate-300 mb-1.5">Notes / Description <span class="text-slate-500 font-normal">(Optional)</span>:</label>
+              <textarea id="formReqNotes" rows="2" placeholder="Why should we screen this? Any specific version, director's cut, or notes?" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition resize-none"></textarea>
+            </div>
+
+            <button type="submit" id="btnSubmitReq" class="w-full mt-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-bold text-xs sm:text-sm tracking-wide transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer">
+              <span>🚀</span> <span>Submit Movie Request</span>
+            </button>
+          </form>
+
+          <!-- External Google Form Helper Card -->
+          <div class="mt-2 p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2 text-slate-400">
+              <span>📋</span>
+              <span>Prefer Google's native form?</span>
+            </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 font-semibold transition flex items-center gap-1 hover:underline">
+              <span>Open Form</span> <span>↗️</span>
+            </a>
           </div>
         </div>
-      </div>
 
-      <!-- Full-Page Google Form Iframe Container -->
-      <div class="w-full rounded-2xl bg-[#0b0f19] border border-slate-800 p-2 sm:p-3 shadow-2xl overflow-hidden relative min-h-[850px] flex-1">
-        <iframe
-          id="googleFormIframe"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?embedded=true"
-          class="w-full h-[88vh] min-h-[850px] rounded-xl bg-[#0b0f19] border-0 transition-all duration-300"
-          style="background-color: #0b0f19; filter: invert(0.92) hue-rotate(180deg) brightness(0.95) contrast(0.92);"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0"
-          title="Brian's Theater Movie Request Google Form"
-          allow="autoplay; encrypted-media; fullscreen"
-          loading="eager">
-          Loading Brian's Theater Movie Request Form…
-        </iframe>
+        <!-- Column 2: Live Community Requests Queue (lg:col-span-7) -->
+        <div class="lg:col-span-7 rounded-2xl bg-slate-900/90 border border-slate-800 p-5 sm:p-6 shadow-2xl flex flex-col gap-4 backdrop-blur-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3.5">
+            <div>
+              <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+                <span>📋</span> Community Requests Queue
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Live requests pending review or scheduled for upcoming showtimes</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="communityQueueCount" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-amber-400 font-mono border border-slate-700">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Quick Filter Input -->
+          <div class="relative">
+            <input type="text" id="filterRequestsInput" oninput="filterCommunityRequests()" placeholder="Search requests by title, user, or platform..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition">
+            <span class="absolute right-3 top-2 text-slate-500 text-xs">🔍</span>
+          </div>
+
+          <!-- Requests List Container -->
+          <div class="flex flex-col gap-2.5 max-h-[520px] overflow-y-auto pr-1" id="communityRequestsList"></div>
+        </div>
+
       </div>
 
     </div>
@@ -513,7 +522,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.23</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.24</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -713,7 +722,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.23</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.24</span>
         </div>
       </div>
 
@@ -862,7 +871,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.23</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.24</span>
     </div>
 
   </aside>
@@ -961,7 +970,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.23";
+    const APP_VERSION = "4.9.24";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -2130,12 +2139,13 @@
       const name = (document.getElementById('formReqName')?.value || '').trim() || 'Guest';
       const title = (document.getElementById('formReqTitle')?.value || '').trim();
       const platform = (document.getElementById('formReqPlatform')?.value || '').trim() || 'Other';
+      const notes = (document.getElementById('formReqNotes')?.value || '').trim();
 
       if (!title) return;
 
       const btn = document.getElementById('btnSubmitReq');
       if (btn) {
-        btn.textContent = "Submitting to Brian's Sheets...";
+        btn.innerHTML = '<span>⏳</span> <span>Submitting to Sheets...</span>';
         btn.disabled = true;
       }
 
@@ -2147,7 +2157,7 @@
         title: title,
         requester: name,
         genre: platform,
-        overview: "Platform: " + platform,
+        overview: notes ? `Platform: ${platform} • Notes: ${notes}` : `Platform: ${platform}`,
         date: todayStr,
         timestamp: Date.now(),
         status: "Under Review"
@@ -2175,66 +2185,39 @@
 
       // 3. Trigger backend sync endpoint as well
       try {
-        fetch(`${API_BASE_URL}?action=submit_movie_request&title=${encodeURIComponent(title)}&requester=${encodeURIComponent(name)}&overview=${encodeURIComponent('Platform: ' + platform)}`, { mode: 'no-cors' });
+        fetch(`${API_BASE_URL}?action=submit_movie_request&title=${encodeURIComponent(title)}&requester=${encodeURIComponent(name)}&overview=${encodeURIComponent(notes ? 'Platform: ' + platform + ' • Notes: ' + notes : 'Platform: ' + platform)}`, { mode: 'no-cors' });
       } catch(e) {}
 
       if (btn) {
-        btn.textContent = "Submit Request";
+        btn.innerHTML = '<span>🚀</span> <span>Submit Movie Request</span>';
         btn.disabled = false;
       }
       const tInput = document.getElementById('formReqTitle');
       const nInput = document.getElementById('formReqName');
       const pSelect = document.getElementById('formReqPlatform');
+      const nNotes = document.getElementById('formReqNotes');
       if (tInput) tInput.value = '';
       if (nInput) nInput.value = '';
       if (pSelect) pSelect.selectedIndex = 0;
+      if (nNotes) nNotes.value = '';
 
       communityRequests.unshift(newRequest);
       loadRequests();
       showTheaterToast(`🎬 Request submitted! "${title}" queued for Google Sheets.`);
-      alert(`🎉 Thank you, ${name}! "${title}" (${platform}) has been successfully submitted and queued directly for Brian's Google Sheet!`);
     }
 
-    function toggleCommunityRequestsSection() {
-      const drawer = document.getElementById('communityRequestsDrawer');
-      const txt = document.getElementById('communityReqsToggleText');
-      if (drawer) {
-        drawer.classList.toggle('hidden');
-        const isHidden = drawer.classList.contains('hidden');
-        if (txt) {
-          txt.textContent = isHidden ? 'Community Queue' : 'Hide Queue';
-        }
-        showTheaterToast(isHidden ? "📋 Community Queue closed" : "📋 Community Queue opened");
+    function filterCommunityRequests() {
+      const q = (document.getElementById('filterRequestsInput')?.value || '').toLowerCase().trim();
+      if (!q) {
+        renderCommunityRequests(communityRequests);
+        return;
       }
-    }
-
-    function reloadGoogleFormIframe() {
-      const iframe = document.getElementById('googleFormIframe');
-      if (iframe) {
-        const src = iframe.src;
-        iframe.src = '';
-        setTimeout(() => { iframe.src = src; }, 100);
-        showTheaterToast("🔄 Reloading Google Form...");
-      }
-    }
-
-    let isIframeDarkMode = true;
-    function toggleIframeTheme() {
-      const iframe = document.getElementById('googleFormIframe');
-      const txt = document.getElementById('iframeThemeToggleText');
-      if (!iframe) return;
-      isIframeDarkMode = !isIframeDarkMode;
-      if (isIframeDarkMode) {
-        iframe.style.filter = "invert(0.92) hue-rotate(180deg) brightness(0.95) contrast(0.92)";
-        iframe.style.backgroundColor = "#0b0f19";
-        if (txt) txt.textContent = "Dark Theme";
-        showTheaterToast("🌙 Form Dark Theme enabled (matching site)");
-      } else {
-        iframe.style.filter = "none";
-        iframe.style.backgroundColor = "#ffffff";
-        if (txt) txt.textContent = "Original Light";
-        showTheaterToast("☀️ Form Original Light Theme enabled");
-      }
+      const filtered = communityRequests.filter(r => 
+        (r.title || '').toLowerCase().includes(q) || 
+        (r.requester || '').toLowerCase().includes(q) || 
+        (r.genre || '').toLowerCase().includes(q)
+      );
+      renderCommunityRequests(filtered);
     }
 
     // Live Firebase Listener
@@ -3077,31 +3060,57 @@
     ];
 
     function loadRequests() {
-      const list = document.getElementById('communityRequestsList');
+      renderCommunityRequests(communityRequests);
+
+      const adminCount = document.getElementById('adminQueueCount');
+      if (adminCount) adminCount.textContent = `${communityRequests.length} Pending in Google Sheet`;
+
       const adminList = document.getElementById('adminRequestsQueueList');
-      
-      list.innerHTML = communityRequests.map(r => `
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
-          <div>
-            <div class="text-sm font-bold text-slate-100">${escapeHtml(r.title)}</div>
-            <div class="text-xs text-slate-400 mt-0.5">Requested by ${escapeHtml(r.requester)} • ${escapeHtml(r.genre || 'Movie')}</div>
+      if (adminList) {
+        adminList.innerHTML = communityRequests.map((r, idx) => `
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-bold text-slate-100">${escapeHtml(r.title)}</div>
+              <div class="text-[11px] text-slate-400">Requested by ${escapeHtml(r.requester)} • ${escapeHtml(r.genre || 'Movie')}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="adminScheduleMovieByIndex(${idx})" class="px-3 py-1 rounded bg-emerald-500 text-slate-950 text-xs font-bold transition hover:bg-emerald-400 cursor-pointer">Schedule</button>
+              <button onclick="adminDismissMovie(${idx})" class="px-3 py-1 rounded bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 cursor-pointer">Dismiss</button>
+            </div>
           </div>
-          <span class="px-2 py-1 rounded ${r.status === 'Scheduled' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'} text-xs font-semibold">${escapeHtml(r.status)}</span>
-        </div>
-      `).join('');
+        `).join('');
+      }
+    }
 
-      document.getElementById('adminQueueCount').textContent = `${communityRequests.length} Pending in Google Sheet`;
+    function renderCommunityRequests(items) {
+      const list = document.getElementById('communityRequestsList');
+      const countBadge = document.getElementById('communityQueueCount');
+      if (countBadge) countBadge.textContent = `${items.length} ${items.length === 1 ? 'Queued' : 'Queued'}`;
+      if (!list) return;
 
-      adminList.innerHTML = communityRequests.map((r, idx) => `
-        <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div class="text-xs font-bold text-slate-100">${escapeHtml(r.title)}</div>
-            <div class="text-[11px] text-slate-400">Requested by ${escapeHtml(r.requester)} • ${escapeHtml(r.genre || 'Movie')}</div>
+      if (!items || items.length === 0) {
+        list.innerHTML = `
+          <div class="p-8 text-center text-slate-500 text-xs bg-slate-950/40 rounded-xl border border-slate-800/60 flex flex-col items-center gap-2">
+            <span class="text-2xl opacity-60">🎬</span>
+            <span>No requests found matching your search.</span>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="adminScheduleMovieByIndex(${idx})" class="px-3 py-1 rounded bg-emerald-500 text-slate-950 text-xs font-bold transition hover:bg-emerald-400">Schedule</button>
-            <button onclick="adminDismissMovie(${idx})" class="px-3 py-1 rounded bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700">Dismiss</button>
+        `;
+        return;
+      }
+
+      list.innerHTML = items.map(r => `
+        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700 transition flex items-center justify-between gap-3 shadow-sm">
+          <div class="min-w-0 flex-1">
+            <div class="text-xs sm:text-sm font-bold text-slate-100 truncate">${escapeHtml(r.title)}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5 truncate">
+              Requested by <span class="text-slate-300 font-medium">${escapeHtml(r.requester)}</span> • <span class="text-slate-400">${escapeHtml(r.genre || 'Movie')}</span>
+            </div>
           </div>
+          <span class="flex-shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+            r.status === 'Scheduled' 
+              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
+              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+          }">${escapeHtml(r.status || 'Under Review')}</span>
         </div>
       `).join('');
     }
