@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.23] - 2026-09-05
+
+### What's New
+- Styled Google Form iframe background to match theater dark aesthetic.
+- Added dark mode inversion filter for seamless night viewing.
+- Added 1-click theme toggle for dark and light modes.
+- Removed copyright notice text from the global page footer.
+- Centered theater branding badge inside clean global site footer.
+
 ## [4.9.22] - 2026-09-05
 
 ### What's New

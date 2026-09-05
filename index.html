@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.22 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.23 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -410,6 +410,10 @@
           <button type="button" onclick="toggleCommunityRequestsSection()" id="btnToggleCommunityReqs" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
             <span>📋</span> <span id="communityReqsToggleText">Community Queue</span>
           </button>
+          <!-- Toggle Dark / Light Theme for Form -->
+          <button type="button" onclick="toggleIframeTheme()" id="btnToggleIframeTheme" title="Toggle Form Dark / Light Theme" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
+            <span>🌓</span> <span id="iframeThemeToggleText">Dark Theme</span>
+          </button>
           <!-- Reload Iframe -->
           <button type="button" onclick="reloadGoogleFormIframe()" title="Reload Google Form" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
             <span>🔄</span> <span>Reload</span>
@@ -481,17 +485,18 @@
       </div>
 
       <!-- Full-Page Google Form Iframe Container -->
-      <div class="w-full rounded-2xl bg-slate-900/60 border border-slate-800 p-2 sm:p-3 shadow-2xl overflow-hidden relative min-h-[850px] flex-1">
+      <div class="w-full rounded-2xl bg-[#0b0f19] border border-slate-800 p-2 sm:p-3 shadow-2xl overflow-hidden relative min-h-[850px] flex-1">
         <iframe
           id="googleFormIframe"
           src="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?embedded=true"
-          class="w-full h-[88vh] min-h-[850px] rounded-xl bg-white border-0"
+          class="w-full h-[88vh] min-h-[850px] rounded-xl bg-[#0b0f19] border-0 transition-all duration-300"
+          style="background-color: #0b0f19; filter: invert(0.92) hue-rotate(180deg) brightness(0.95) contrast(0.92);"
           frameborder="0"
           marginheight="0"
           marginwidth="0"
           title="Brian's Theater Movie Request Google Form"
           allow="autoplay; encrypted-media; fullscreen"
-          loading="lazy">
+          loading="eager">
           Loading Brian's Theater Movie Request Form…
         </iframe>
       </div>
@@ -508,7 +513,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.22</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.23</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -702,16 +707,13 @@
   <footer class="border-t border-slate-800/80 bg-[#0f172a]/95 backdrop-blur-md mt-12 py-8 px-4 sm:px-6">
     <div class="max-w-5xl mx-auto flex flex-col gap-6">
 
-      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+      <div class="flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 gap-2">
         <div class="flex items-center gap-2">
           <span>🎬 Brian's Theater</span>
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.22</span>
-        </div>
-        <div>
-          <span>© 2026 Brian Diva Cox • All Rights Reserved</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.23</span>
         </div>
       </div>
 
@@ -860,7 +862,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.22</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.23</span>
     </div>
 
   </aside>
@@ -959,7 +961,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.22";
+    const APP_VERSION = "4.9.23";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -2213,6 +2215,25 @@
         iframe.src = '';
         setTimeout(() => { iframe.src = src; }, 100);
         showTheaterToast("🔄 Reloading Google Form...");
+      }
+    }
+
+    let isIframeDarkMode = true;
+    function toggleIframeTheme() {
+      const iframe = document.getElementById('googleFormIframe');
+      const txt = document.getElementById('iframeThemeToggleText');
+      if (!iframe) return;
+      isIframeDarkMode = !isIframeDarkMode;
+      if (isIframeDarkMode) {
+        iframe.style.filter = "invert(0.92) hue-rotate(180deg) brightness(0.95) contrast(0.92)";
+        iframe.style.backgroundColor = "#0b0f19";
+        if (txt) txt.textContent = "Dark Theme";
+        showTheaterToast("🌙 Form Dark Theme enabled (matching site)");
+      } else {
+        iframe.style.filter = "none";
+        iframe.style.backgroundColor = "#ffffff";
+        if (txt) txt.textContent = "Original Light";
+        showTheaterToast("☀️ Form Original Light Theme enabled");
       }
     }
 
