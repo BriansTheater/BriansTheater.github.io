@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater — Standalone Web App</title>
+  <title>Brian's Theater v4.9.17 — Virtual Cinema</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <!-- Firebase App & Google Sign-In SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -49,9 +49,12 @@
           🎬
         </div>
         <div>
-          <h1 class="text-lg sm:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-amber-300">
-            Brian's Theater
-          </h1>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-amber-300">
+              Brian's Theater
+            </h1>
+            <span id="appVersionBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-950/80 text-sky-400 border border-sky-800/80 shadow-sm">v4.9.17</span>
+          </div>
           <div class="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             <span id="liveClock">Loading Live Time...</span>
@@ -452,7 +455,10 @@
             <span class="text-xl text-amber-400">👑</span>
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
-          <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono">Admin Mode Active</span>
+          <div class="flex items-center gap-2">
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.17</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -649,6 +655,8 @@
           <span>🎬 Brian's Theater</span>
           <span>•</span>
           <span>Virtual Cinema Experience</span>
+          <span>•</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.17</span>
         </div>
         <div>
           <span>© 2026 Brian Diva Cox • All Rights Reserved</span>
@@ -701,6 +709,8 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
+    const APP_VERSION = "4.9.17";
+    window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
 

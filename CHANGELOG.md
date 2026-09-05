@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.17] - 2026-09-05
+
+### What's New
+- Added visible neon version badge to main header brand.
+- Added version number indicator to global site footer.
+- Added version display to Admin Control Studio header.
+- Updated page title and exposed APP_VERSION global variable.
+
 ## [4.9.16] - 2026-09-05
 
 ### What's New
