@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.9.21] - 2026-09-05
+
+### What's New
+- Fixed movie requests syncing directly to Brian's Google Sheets.
+- Queued submitted requests in Firebase for reliable sheet ingestion.
+- Added automatic pending requests ingestion during theater sync cycles.
+- Added manual sync pending requests button in Admin Tools.
+- Added official Google Form link inside Request Kiosk.
+- Synced live requests list from Google Sheets to website.
+- Guarded admin request dismissal and scheduling from unauthorized visitors.
+
 ## [4.9.20] - 2026-09-05
 
 ### What's New
