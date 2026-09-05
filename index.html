@@ -282,92 +282,52 @@
     <!-- TAB 4: 📝 REQUEST KIOSK -->
     <div id="view-requests" class="tab-view hidden flex flex-col gap-6">
 
-      <!-- View Switcher & Actions Header -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
-            <span>📝</span> Movie Request Form
-          </h3>
-          <p class="text-xs text-slate-400 mt-0.5">Submit movie requests directly to Brian's Theater queue & Google Form</p>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center gap-1 text-xs">
-            <button onclick="setRequestMode('embed')" id="btnReqEmbed" class="px-3 py-1.5 rounded-lg font-bold bg-amber-400 text-slate-950 transition shadow-sm">
-              📋 Official Google Form
-            </button>
-            <button onclick="setRequestMode('quick')" id="btnReqQuick" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition">
-              ⚡ Quick Form
-            </button>
-          </div>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?usp=send_form" target="_blank" class="px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-amber-300 flex items-center gap-1.5 transition">
-            <span>↗</span> Open in Google
-          </a>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- FORM CONTAINER (Col 7) -->
-        <div class="lg:col-span-7 flex flex-col gap-4">
-
-          <!-- Mode 1: Embedded Official Google Form -->
-          <div id="reqEmbedPanel" class="rounded-2xl bg-slate-900 border border-slate-800 p-2 sm:p-4 shadow-2xl flex flex-col">
-            <div class="flex items-center justify-between px-3 py-2 mb-2 border-b border-slate-800 text-xs text-slate-400">
-              <span class="flex items-center gap-1.5 text-slate-300 font-semibold"><span>📋</span> Google Form Embed</span>
-              <span class="text-[11px] text-emerald-400 font-mono">Direct Google Sync</span>
-            </div>
-            <div class="relative w-full rounded-xl overflow-hidden bg-slate-950 border border-slate-800 min-h-[750px]">
-              <iframe id="googleFormIframe" src="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?embedded=true" class="w-full h-[780px] border-0" frameborder="0" marginheight="0" marginwidth="0">Loading Movie Request Form…</iframe>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- QUICK MOVIE REQUEST FORM (Col 5) -->
+        <div class="md:col-span-5 rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4 self-start">
+          <div>
+            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+              <span>📝</span> Submit a Movie Request
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Request a movie for Brian to schedule in an upcoming showing!</p>
           </div>
 
-          <!-- Mode 2: Quick Form Matching Form Questions -->
-          <div id="reqQuickPanel" class="hidden rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
+          <form onsubmit="handleFormSubmit(event)" class="flex flex-col gap-4">
             <div>
-              <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-                <span>⚡</span> Quick Movie Request
-              </h3>
-              <p class="text-xs text-slate-400 mt-1">Directly matching questions from Brian's official Movie Request Form</p>
+              <label class="text-xs font-semibold text-slate-300">Name: *</label>
+              <input type="text" id="formReqName" required placeholder="e.g. Alex / @cinemafan" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
             </div>
 
-            <form onsubmit="handleFormSubmit(event)" class="flex flex-col gap-4">
-              <div>
-                <label class="text-xs font-semibold text-slate-300">Name: *</label>
-                <input type="text" id="formReqName" required placeholder="e.g. Alex / @cinemafan" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
-              </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-300">What movie are you requesting? *</label>
+              <input type="text" id="formReqTitle" required placeholder="e.g. Inception, The Matrix, Bad Boys..." class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
+            </div>
 
-              <div>
-                <label class="text-xs font-semibold text-slate-300">What movie are you requesting? *</label>
-                <input type="text" id="formReqTitle" required placeholder="e.g. Inception, The Matrix, Bad Boys..." class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
-              </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-300">platform? *</label>
+              <select id="formReqPlatform" required class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
+                <option value="" disabled selected>Select streaming platform or theater...</option>
+                <option value="HBO Max">HBO Max</option>
+                <option value="Disney+/ Hulu">Disney+/ Hulu</option>
+                <option value="Netflix">Netflix</option>
+                <option value="Tubi">Tubi</option>
+                <option value="Peacock">Peacock</option>
+                <option value="Parmount+">Parmount+</option>
+                <option value="Starz">Starz</option>
+                <option value="Theaters">Theaters</option>
+                <option value="Prime">Prime</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-              <div>
-                <label class="text-xs font-semibold text-slate-300">platform? *</label>
-                <select id="formReqPlatform" required class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400">
-                  <option value="" disabled selected>Select streaming platform or theater...</option>
-                  <option value="HBO Max">HBO Max</option>
-                  <option value="Disney+/ Hulu">Disney+/ Hulu</option>
-                  <option value="Netflix">Netflix</option>
-                  <option value="Tubi">Tubi</option>
-                  <option value="Peacock">Peacock</option>
-                  <option value="Parmount+">Parmount+</option>
-                  <option value="Starz">Starz</option>
-                  <option value="Theaters">Theaters</option>
-                  <option value="Prime">Prime</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <button type="submit" id="btnSubmitReq" class="w-full mt-2 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm tracking-wide transition shadow-lg flex items-center justify-center gap-2">
-                <span>🚀</span> <span>Submit Request</span>
-              </button>
-            </form>
-          </div>
-
+            <button type="submit" id="btnSubmitReq" class="w-full mt-2 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm tracking-wide transition shadow-lg flex items-center justify-center gap-2">
+              <span>🚀</span> <span>Submit Request</span>
+            </button>
+          </form>
         </div>
 
-        <!-- COMMUNITY REQUESTS (Col 5) -->
-        <div class="lg:col-span-5 rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4 self-start">
+        <!-- COMMUNITY REQUESTS (Col 7) -->
+        <div class="md:col-span-7 rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4 self-start">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
               <span>📋</span> Current Community Requests
@@ -531,25 +491,6 @@
     // Target next upcoming premiere (Neighbors, Saturday Sept 5 at 7:00 PM PST)
     let targetNextMs = 1788660000000;
     let isAdmin = false;
-
-    function setRequestMode(mode) {
-      const embedPanel = document.getElementById('reqEmbedPanel');
-      const quickPanel = document.getElementById('reqQuickPanel');
-      const btnEmbed = document.getElementById('btnReqEmbed');
-      const btnQuick = document.getElementById('btnReqQuick');
-
-      if (mode === 'embed') {
-        if (embedPanel) embedPanel.classList.remove('hidden');
-        if (quickPanel) quickPanel.classList.add('hidden');
-        if (btnEmbed) btnEmbed.className = "px-3 py-1.5 rounded-lg font-bold bg-amber-400 text-slate-950 transition shadow-sm";
-        if (btnQuick) btnQuick.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition";
-      } else {
-        if (embedPanel) embedPanel.classList.add('hidden');
-        if (quickPanel) quickPanel.classList.remove('hidden');
-        if (btnQuick) btnQuick.className = "px-3 py-1.5 rounded-lg font-bold bg-amber-400 text-slate-950 transition shadow-sm";
-        if (btnEmbed) btnEmbed.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition";
-      }
-    }
 
     function switchTab(targetTab) {
       const allViews = ['screening', 'schedule', 'vault', 'requests', 'admin'];

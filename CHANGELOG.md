@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.9] - 2026-09-04
+
+### What's New
+- Streamlined movie request kiosk to fast direct submission form.
+- Removed redundant external Google Form embeds and view switchers.
+- Matched request questions directly to Brian's Google Form.
+- Directly submits movie requests to Google Forms and Sheets.
+
 ## [4.9.8] - 2026-09-04
 
 ### What's New
