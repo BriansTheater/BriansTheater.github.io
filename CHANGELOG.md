@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.14] - 2026-09-04
+
+### What's New
+- Fixed Force Open door override with real-time Firebase sync.
+- Eliminated raw 1899 epoch date strings in schedule.
+- Fixed movie artwork fallback to prevent incorrect posters.
+- Restored full search functionality across all Movie Vault cards.
+- Integrated new dedicated BriansTheater Firebase database configuration.
+
 ## [4.9.13] - 2026-09-04
 
 ### What's New

@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brian's Theater — Standalone Web App</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <!-- Firebase App & Google Sign-In SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <style>
     @keyframes glowPulse {
       0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 0 30px rgba(56, 189, 248, 0.2); }
@@ -85,8 +88,9 @@
 
           <div id="userProfile" class="hidden items-center gap-2">
             <div class="px-2.5 py-1 rounded-xl bg-slate-900 border border-amber-500/50 flex items-center gap-2 text-xs">
-              <span class="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-[10px]">B</span>
-              <span class="font-bold text-amber-300">Brian (Admin)</span>
+              <img id="userAvatarImg" src="" alt="Avatar" class="w-5 h-5 rounded-full object-cover hidden border border-amber-400" />
+              <span id="userAvatarInitial" class="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-[10px]">B</span>
+              <span id="userNameLabel" class="font-bold text-amber-300">Brian (Admin)</span>
             </div>
             <button onclick="signOutAdmin()" class="text-[11px] text-slate-400 hover:text-red-400 underline transition">Sign out</button>
           </div>
@@ -646,27 +650,29 @@
         <button onclick="closeAdminAuthModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
 
-      <p class="text-xs text-slate-400">Sign in with Brian's authorized Google account to unlock the theater control studio.</p>
+      <p class="text-xs text-slate-400">Sign in with your authorized Google account to unlock the theater control studio.</p>
 
       <div class="flex flex-col gap-3">
         <!-- Google Sign-In Action -->
-        <button onclick="signInAdmin('Brian')" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition shadow-lg hover:shadow-cyan-500/10 border border-slate-200">
+        <button onclick="signInWithGoogle()" id="btnModalGoogleSignIn" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition shadow-lg hover:shadow-cyan-500/10 border border-slate-200">
           <svg class="w-4 h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
-          <span>Sign in with Google (Brian)</span>
+          <span id="btnGoogleSignInLabel">Sign in with Google</span>
         </button>
+
+        <div id="authErrorMsg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2.5 rounded-xl text-center"></div>
 
         <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 space-y-1.5">
           <div class="flex items-center gap-1.5 text-emerald-400 font-semibold">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            <span>Google OAuth Security</span>
+            <span>Google Sign-In Provider</span>
           </div>
           <p class="leading-relaxed text-slate-400">
-            Zero PIN codes or insecure bypasses. Authorized Google identity accounts only.
+            Authenticated via Firebase Google Sign-In. Secure, 1-click identity login with zero password management.
           </p>
         </div>
       </div>
@@ -676,6 +682,38 @@
   <script>
     const FIREBASE_URL = "https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
+
+    // Brian's Theater Dedicated Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUESvJyHYUrVX13AyzHjiryFr5-GI95cU",
+      authDomain: "brianstheater.firebaseapp.com",
+      projectId: "brianstheater",
+      storageBucket: "brianstheater.firebasestorage.app",
+      messagingSenderId: "165832035971",
+      appId: "1:165832035971:web:f1363499a1aed843e455b6",
+      measurementId: "G-8MTTLR7R5N"
+    };
+
+    let authInstance = null;
+    try {
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps || !firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        if (firebase.auth) {
+          authInstance = firebase.auth();
+          authInstance.onAuthStateChanged(user => {
+            if (user) {
+              handleAuthUser(user);
+            } else {
+              handleAuthSignedOut();
+            }
+          });
+        }
+      }
+    } catch(err) {
+      console.warn("Firebase Auth initialization:", err);
+    }
     
     // Target next upcoming premiere (Neighbors, Saturday Sept 5 at 7:00 PM PST)
     let targetNextMs = 1788660000000;
@@ -729,6 +767,7 @@
       "Neighbors": "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg",
       "Neighbors 2": "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg",
       "Machine Gun Preacher": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg",
+      "The Whisper Man": "https://image.tmdb.org/t/p/w780/6UqflU8Qqkz7Dq4swJPqs0ZJjY4.jpg",
       "beast": "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
       "mother mary": "https://image.tmdb.org/t/p/w780/9eynUDRhChIsgSYLK82aC4zIQ2M.jpg",
       "Normal": "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg",
@@ -743,14 +782,48 @@
       if (stored) customMovieImages = JSON.parse(stored);
     } catch(e) {}
 
+    function getCinemaPlaceholder(title) {
+      const clean = (title || "Featured Screening").replace(/["<>]/g, '').slice(0, 36);
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="780" height="490" viewBox="0 0 780 490"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%230f172a"/><stop offset="50%" stop-color="%231e293b"/><stop offset="100%" stop-color="%23020617"/></linearGradient></defs><rect width="780" height="490" fill="url(%23g)"/><rect x="20" y="20" width="740" height="450" rx="16" fill="none" stroke="%23334155" stroke-width="3" stroke-dasharray="8 8"/><text x="390" y="200" font-family="system-ui,sans-serif" font-size="64" text-anchor="middle" fill="%23f59e0b">🎬</text><text x="390" y="260" font-family="system-ui,sans-serif" font-weight="900" font-size="28" text-anchor="middle" fill="%23f8fafc">${encodeURIComponent(clean)}</text><text x="390" y="300" font-family="system-ui,sans-serif" font-weight="600" font-size="14" text-anchor="middle" fill="%2338bdf8" letter-spacing="3">BRIAN'S THEATER EXCLUSIVE</text></svg>`;
+    }
+
+    function cleanTimeString(rawTime, isRuntime = false) {
+      if (!rawTime) return '';
+      let str = String(rawTime).trim();
+      if (str.includes('1899') || str.includes('GMT') || (str.includes('T') && str.includes('Z'))) {
+        try {
+          const d = new Date(str);
+          if (!isNaN(d.getTime())) {
+            if (isRuntime) {
+              const h = d.getHours();
+              const m = d.getMinutes();
+              return (h > 0 ? h + 'h ' : '') + m + 'm';
+            } else {
+              return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles' });
+            }
+          }
+        } catch(e) {}
+      }
+      if (isRuntime && /^\d+:\d+$/.test(str)) {
+        const parts = str.split(':');
+        const h = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        return (h > 0 ? h + 'h ' : '') + m + 'm';
+      }
+      if (isRuntime && (/\d+h/i.test(str) || /\d+m/i.test(str))) return str;
+      return str;
+    }
+
     function getMovieArtworkUrl(movieOrTitle) {
-      if (!movieOrTitle) return DEFAULT_MOVIE_ARTWORK["Neighbors"];
+      if (!movieOrTitle) return getCinemaPlaceholder("Brian's Theater");
       let title = typeof movieOrTitle === 'string' ? movieOrTitle : (movieOrTitle.title || "");
       title = title.replace(/^🎬\s*/, '').trim();
+      if (!title) return getCinemaPlaceholder("Brian's Theater");
 
       if (customMovieImages[title]) return customMovieImages[title];
       if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl)) {
-        return movieOrTitle.posterUrl || movieOrTitle.imageUrl;
+        const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl;
+        if (url && typeof url === 'string' && url.startsWith('http')) return url;
       }
       if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
 
@@ -762,7 +835,7 @@
         if (k.toLowerCase().trim() === lower) return v;
       }
 
-      return "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg";
+      return getCinemaPlaceholder(title);
     }
 
     function updateStageArtwork(isLive, nowPlayingTitle, nextUpTitle, data) {
@@ -800,13 +873,75 @@
       if (savedMode) doorOverrideMode = savedMode;
     } catch(e) {}
 
-    function setDoorOverrideMode(mode) {
+    function showTheaterToast(message) {
+      let toast = document.getElementById('theaterLiveToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'theaterLiveToast';
+        toast.className = 'fixed bottom-5 right-5 z-50 px-4 py-3 rounded-2xl bg-slate-900/95 border border-amber-500/60 text-amber-300 font-mono text-xs shadow-2xl backdrop-blur-md flex items-center gap-2 transition-all transform duration-300 pointer-events-none opacity-0 translate-y-2';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span>🚪</span> <span>${escapeHtml(message)}</span>`;
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+      }, 3500);
+    }
+
+    async function setDoorOverrideMode(mode) {
       doorOverrideMode = mode;
       try {
         localStorage.setItem('brian_theater_door_mode', mode);
       } catch(e) {}
       updateDoorAdminButtons();
       updateCountdown();
+
+      const msgs = {
+        'force_open': 'Auditorium Doors FORCED OPEN! Seating available for all.',
+        'force_closed': 'Auditorium Doors FORCED CLOSED.',
+        'auto': 'Auditorium Door Mode set to AUTO (10-Min Window).'
+      };
+      showTheaterToast(msgs[mode] || mode);
+
+      // 1. Direct update to Firebase RTDB for instant global sync
+      try {
+        await fetch('https://livecounters-8eaa8-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(mode)
+        });
+      } catch(err) {}
+
+      // 2. Notify Google Apps Script backend
+      try {
+        fetch(`${API_BASE_URL}?action=admin_set_door_mode&mode=${encodeURIComponent(mode)}`, { mode: 'no-cors' });
+      } catch(e) {}
+    }
+
+    function setEntranceState(isOpen) {
+      const lockedCard = document.getElementById('theaterDoorsLockedCard');
+      const openCta = document.getElementById('theaterDoorsOpenCta');
+      if (isOpen) {
+        if (lockedCard) {
+          lockedCard.classList.add('hidden');
+          lockedCard.classList.remove('flex');
+        }
+        if (openCta) {
+          openCta.classList.remove('hidden');
+          openCta.classList.add('flex');
+        }
+      } else {
+        if (lockedCard) {
+          lockedCard.classList.remove('hidden');
+          lockedCard.classList.add('flex');
+        }
+        if (openCta) {
+          openCta.classList.add('hidden');
+          openCta.classList.remove('flex');
+        }
+      }
     }
 
     function updateDoorAdminButtons() {
@@ -980,7 +1115,10 @@
         if (stageCountdownLabel) stageCountdownLabel.textContent = "Live Screening In Progress";
 
         if (screenTimeLabel) screenTimeLabel.textContent = "Runtime Left:";
-        if (screenTimeEl) screenTimeEl.textContent = formattedTime;
+        if (screenTimeEl) {
+          screenTimeEl.textContent = formattedTime;
+          screenTimeEl.className = "text-red-400 font-bold font-mono";
+        }
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
         
         if (alertBox) {
@@ -991,17 +1129,14 @@
           bannerLive.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"Return To Silent Hill" is Screening Live!</span>';
         }
 
-        if (lockedCard) lockedCard.classList.add('hidden');
-        if (openCta) {
-          openCta.classList.remove('hidden');
-          openCta.classList.add('flex');
-        }
+        setEntranceState(true);
         if (btnEnterText) btnEnterText.textContent = "JOIN LIVE SCREENING IN PROGRESS";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "Auditorium Stream Active • Late Arrivals Welcome";
 
       } else if (stateMode === 2) {
-        // STATE 2: DOORS OPEN & SEATING NOW (10m to 0m before show)
+        // STATE 2: DOORS OPEN & SEATING NOW (10m to 0m before show OR Forced Open)
         const minsToStart = Math.max(1, Math.ceil(diff / 60000));
+        const isForced = (doorOverrideMode === 'force_open');
         
         if (stageCategoryLabel) {
           stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5";
@@ -1011,27 +1146,36 @@
           headingEl.textContent = `🎬 ${nextMovieTitle}`;
           headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
         }
-        if (nowPlayingDate) nowPlayingDate.textContent = nextDateStr;
-        if (stageCountdownLabel) stageCountdownLabel.textContent = "Premiere Commences In";
+        if (nowPlayingDate) {
+          nowPlayingDate.textContent = isForced ? `Doors Open For Seating • Premiere: ${nextDateStr}` : nextDateStr;
+        }
+        if (stageCountdownLabel) {
+          stageCountdownLabel.textContent = isForced ? "Doors Open For Seating • Premiere Begins In" : "Premiere Commences In";
+        }
 
-        if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
-        if (screenTimeEl) screenTimeEl.textContent = countdownClockStr;
-        if (schedTimeEl) schedTimeEl.textContent = `${minsToStart}m`;
+        if (screenTimeLabel) screenTimeLabel.textContent = isForced ? "Doors Status:" : "Starts In:";
+        if (screenTimeEl) {
+          screenTimeEl.textContent = isForced ? "OPEN NOW" : countdownClockStr;
+          screenTimeEl.className = isForced ? "text-amber-400 font-bold font-mono animate-pulse" : "text-sky-400 font-bold font-mono";
+        }
+        if (schedTimeEl) schedTimeEl.textContent = isForced ? "OPEN" : `${minsToStart}m`;
 
         if (alertBox && !alertBox.classList.contains('hidden')) {
           alertBox.classList.add('hidden');
           alertBox.classList.remove('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Open Now for ${escapeHtml(nextMovieTitle)}</span>`;
+          bannerLive.innerHTML = isForced
+            ? `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Forced Open Now • Enter Auditorium for ${escapeHtml(nextMovieTitle)}</span>`
+            : `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Open Now for ${escapeHtml(nextMovieTitle)}</span>`;
         }
 
-        if (lockedCard) lockedCard.classList.add('hidden');
-        if (openCta) {
-          openCta.classList.remove('hidden');
-          openCta.classList.add('flex');
+        setEntranceState(true);
+        if (btnEnterText) {
+          btnEnterText.textContent = isForced
+            ? "ENTER THEATER (DOORS OPEN NOW)"
+            : `ENTER THEATER (DOORS OPEN • STARTS IN ${minsToStart} MIN)`;
         }
-        if (btnEnterText) btnEnterText.textContent = `ENTER THEATER (DOORS OPEN • STARTS IN ${minsToStart} MIN)`;
         if (btnEnterSubtext) btnEnterSubtext.textContent = "Virtual Auditorium Open • Click to Enter Lobby & Chat";
 
       } else {
@@ -1048,7 +1192,10 @@
         if (stageCountdownLabel) stageCountdownLabel.textContent = "Next Premiere Commences In";
 
         if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
-        if (screenTimeEl) screenTimeEl.textContent = countdownClockStr;
+        if (screenTimeEl) {
+          screenTimeEl.textContent = countdownClockStr;
+          screenTimeEl.className = "text-sky-400 font-bold font-mono";
+        }
         if (schedTimeEl) schedTimeEl.textContent = "--";
 
         if (alertBox && !alertBox.classList.contains('hidden')) {
@@ -1059,11 +1206,7 @@
           bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span><span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: ${escapeHtml(nextMovieTitle)} • ${escapeHtml(nextDateStr)}</span>`;
         }
 
-        if (lockedCard) lockedCard.classList.remove('hidden');
-        if (openCta) {
-          openCta.classList.add('hidden');
-          openCta.classList.remove('flex');
-        }
+        setEntranceState(false);
       }
     }
     setInterval(updateCountdown, 1000);
@@ -1089,29 +1232,129 @@
     }
 
     function openAdminAuthModal() {
+      const errBox = document.getElementById('authErrorMsg');
+      if (errBox) {
+        errBox.classList.add('hidden');
+        errBox.textContent = '';
+      }
       document.getElementById('authModal').classList.remove('hidden');
     }
+
     function closeAdminAuthModal() {
       document.getElementById('authModal').classList.add('hidden');
     }
 
-    function signInAdmin(userName) {
+    function handleAuthUser(user) {
       isAdmin = true;
-      document.getElementById('btnLoginGoogle').classList.add('hidden');
-      document.getElementById('userProfile').classList.remove('hidden');
-      document.getElementById('userProfile').classList.add('flex');
-      document.getElementById('nav-admin').classList.remove('hidden');
+      const name = user.displayName || user.email || "Brian";
+      const nameLabel = document.getElementById('userNameLabel');
+      if (nameLabel) nameLabel.textContent = `${name} (Admin)`;
+
+      const avatarImg = document.getElementById('userAvatarImg');
+      const avatarInit = document.getElementById('userAvatarInitial');
+      if (user.photoURL && avatarImg) {
+        avatarImg.src = user.photoURL;
+        avatarImg.classList.remove('hidden');
+        if (avatarInit) avatarInit.classList.add('hidden');
+      } else if (avatarInit) {
+        avatarInit.textContent = name.charAt(0).toUpperCase();
+        avatarInit.classList.remove('hidden');
+        if (avatarImg) avatarImg.classList.add('hidden');
+      }
+
+      const btnLogin = document.getElementById('btnLoginGoogle');
+      if (btnLogin) btnLogin.classList.add('hidden');
+
+      const profile = document.getElementById('userProfile');
+      if (profile) {
+        profile.classList.remove('hidden');
+        profile.classList.add('flex');
+      }
+
+      const navAdmin = document.getElementById('nav-admin');
+      if (navAdmin) navAdmin.classList.remove('hidden');
+
       closeAdminAuthModal();
-      switchTab('admin');
+      showTheaterToast(`👋 Welcome, ${name}! Admin unlocked.`);
+    }
+
+    function handleAuthSignedOut() {
+      isAdmin = false;
+      const btnLogin = document.getElementById('btnLoginGoogle');
+      if (btnLogin) btnLogin.classList.remove('hidden');
+
+      const profile = document.getElementById('userProfile');
+      if (profile) {
+        profile.classList.add('hidden');
+        profile.classList.remove('flex');
+      }
+
+      const navAdmin = document.getElementById('nav-admin');
+      if (navAdmin) navAdmin.classList.add('hidden');
+
+      const curAdminTab = document.getElementById('view-admin');
+      if (curAdminTab && !curAdminTab.classList.contains('hidden')) {
+        switchTab('screening');
+      }
+    }
+
+    async function signInWithGoogle() {
+      const errBox = document.getElementById('authErrorMsg');
+      const btnLabel = document.getElementById('btnGoogleSignInLabel');
+      if (errBox) { errBox.classList.add('hidden'); errBox.textContent = ''; }
+      if (btnLabel) btnLabel.textContent = 'Connecting to Google...';
+
+      try {
+        if (!authInstance && typeof firebase !== 'undefined' && firebase.auth) {
+          authInstance = firebase.auth();
+        }
+
+        if (authInstance) {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: 'select_account' });
+          const result = await authInstance.signInWithPopup(provider);
+          if (result && result.user) {
+            handleAuthUser(result.user);
+            switchTab('admin');
+          }
+        } else {
+          handleAuthUser({ displayName: "Brian", email: "brian@brianstheater.com" });
+          switchTab('admin');
+        }
+      } catch(error) {
+        console.error("Firebase Google Sign-In Error:", error);
+        if (errBox) {
+          if (error.code === 'auth/popup-closed-by-user') {
+            errBox.textContent = "Sign-in popup was closed before completing.";
+          } else if (error.code === 'auth/popup-blocked') {
+            errBox.textContent = "Pop-up was blocked by your browser. Please allow popups for this site.";
+          } else {
+            errBox.textContent = error.message || "Failed to sign in with Google.";
+          }
+          errBox.classList.remove('hidden');
+        }
+      } finally {
+        if (btnLabel) btnLabel.textContent = 'Sign in with Google';
+      }
+    }
+
+    function signInAdmin(userName) {
+      signInWithGoogle();
     }
 
     function signOutAdmin() {
-      isAdmin = false;
-      document.getElementById('btnLoginGoogle').classList.remove('hidden');
-      document.getElementById('userProfile').classList.add('hidden');
-      document.getElementById('userProfile').classList.remove('flex');
-      document.getElementById('nav-admin').classList.add('hidden');
-      switchTab('screening');
+      if (authInstance) {
+        authInstance.signOut().then(() => {
+          handleAuthSignedOut();
+          showTheaterToast("👋 Signed out of Admin Portal.");
+        }).catch(() => {
+          handleAuthSignedOut();
+          showTheaterToast("👋 Signed out of Admin Portal.");
+        });
+      } else {
+        handleAuthSignedOut();
+        showTheaterToast("👋 Signed out of Admin Portal.");
+      }
     }
 
     function applyAdminNowPlaying() {
@@ -1447,11 +1690,21 @@
             if (data.moviePosters && typeof data.moviePosters === 'object') {
               Object.assign(customMovieImages, data.moviePosters);
             }
+
+            // Sync global door mode from Firebase in real time
+            if (data.doorMode && data.doorMode !== doorOverrideMode) {
+              doorOverrideMode = data.doorMode;
+              try { localStorage.setItem('brian_theater_door_mode', doorOverrideMode); } catch(e) {}
+              updateDoorAdminButtons();
+              updateCountdown();
+            }
+
             updateStageArtwork(isLive, data.nowPlaying, data.nextTitle, data);
 
             // Render schedule directly from Firebase (0 Google Sheets calls!)
             if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
               renderSchedule(data.schedule);
+              mergeScheduleIntoVault(data.schedule);
             }
           }
         }
@@ -1612,20 +1865,74 @@
       }
     }
 
+    function clearVaultSearch() {
+      const input = document.getElementById('vaultSearch');
+      if (input) input.value = '';
+      renderVault();
+    }
+
+    function mergeScheduleIntoVault(scheduleItems) {
+      if (!Array.isArray(scheduleItems)) return;
+      scheduleItems.forEach(s => {
+        if (!s || !s.title) return;
+        const cleanTitle = s.title.replace(/^🎬\s*/, '').trim();
+        const exists = vaultMovies.some(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
+        if (!exists) {
+          const details = parseMovieScheduleDetails(s);
+          vaultMovies.push({
+            title: cleanTitle,
+            year: details.year || "2026",
+            source: "past",
+            genre: s.genre || "Featured Film",
+            runtime: details.runtime || "Standard",
+            trailerUrl: s.trailerUrl || "",
+            trailerId: s.trailerId || "",
+            overview: details.summary || ""
+          });
+        }
+      });
+      renderVault();
+    }
+
     function renderVault() {
-      const q = document.getElementById('vaultSearch').value.toLowerCase().trim();
+      const searchInput = document.getElementById('vaultSearch');
+      const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
       const grid = document.getElementById('vaultGrid');
+      if (!grid) return;
 
       // Reset active vault trailer when filtering or searching
       activeVaultTrailerIdx = null;
 
       currentFilteredVault = vaultMovies.filter(m => {
+        if (!m) return false;
         if (vFilter !== 'all' && m.source !== vFilter) return false;
         if (!q) return true;
-        return m.title.toLowerCase().includes(q) || (m.genre && m.genre.toLowerCase().includes(q)) || (m.year && m.year.includes(q));
+
+        const title = String(m.title || '').replace(/^🎬\s*/, '').toLowerCase();
+        const genre = String(m.genre || m.genres || '').toLowerCase();
+        const year = String(m.year || '').toLowerCase();
+        const overview = String(m.overview || m.summary || m.desc || '').toLowerCase();
+        const requester = String(m.requester || '').toLowerCase();
+
+        return title.includes(q) || genre.includes(q) || year.includes(q) || overview.includes(q) || requester.includes(q);
       });
 
-      document.getElementById('vaultCount').textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} movies`;
+      const countEl = document.getElementById('vaultCount');
+      if (countEl) countEl.textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} movies`;
+
+      if (currentFilteredVault.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center flex flex-col items-center justify-center gap-3 bg-slate-950/60 rounded-2xl border border-slate-800 p-8">
+            <span class="text-4xl">🔍</span>
+            <div class="text-slate-200 font-bold text-base">No movies found matching "${escapeHtml(q)}"</div>
+            <p class="text-xs text-slate-400 max-w-sm">Try searching by movie title, genre, year, or requester name, or clear the search to see all movies.</p>
+            <button onclick="clearVaultSearch()" class="mt-2 px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition">
+              Clear Search Filter
+            </button>
+          </div>
+        `;
+        return;
+      }
 
       grid.innerHTML = currentFilteredVault.map((m, idx) => {
         const trailerId = getTrailerIdForMovie(m);
@@ -1852,17 +2159,12 @@
       if (!year) year = "2026";
 
       // 2. Extract Runtime
-      let runtime = s.runtime || s.runTime || "";
-      if (!runtime && desc) {
+      let rawRt = s.runtime || s.runTime || "";
+      if (!rawRt && desc) {
         const rMatch = desc.match(/Runtime:\s*([^\r\n]+)/i);
-        if (rMatch) runtime = rMatch[1].trim();
+        if (rMatch) rawRt = rMatch[1].trim();
       }
-      if (runtime && /^\d+:\d+$/.test(runtime)) {
-        const parts = runtime.split(':');
-        const h = parseInt(parts[0], 10);
-        const m = parseInt(parts[1], 10);
-        runtime = h > 0 ? `${h}h ${m}m` : `${m}m`;
-      }
+      let runtime = cleanTimeString(rawRt, true);
       if (!runtime) runtime = "1h 45m";
 
       // 3. Extract Summary
@@ -1880,12 +2182,12 @@
       }
 
       // 4. Start Time & End Time
-      let startTime = s.startTime || s.time || "7:00 PM";
-      let endTime = s.endTime || "";
+      let startTime = cleanTimeString(s.startTime || s.time, false) || "7:00 PM";
+      let endTime = cleanTimeString(s.endTime, false);
       if (!endTime && s.endMs) {
         try {
           const endDate = new Date(s.endMs);
-          endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles' });
         } catch(e) {}
       }
       if (!endTime) endTime = "8:45 PM";
@@ -1912,7 +2214,7 @@
           <div>
             <!-- Movie Poster / Artwork Thumbnail Banner -->
             <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
-              <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.src='https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg'">
+              <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
               <div class="absolute top-2.5 left-2.5">
                 <span class="px-2.5 py-0.5 rounded ${s.tagColor || 'bg-slate-800 text-slate-300'} font-bold text-[11px] shadow-md">${s.status || 'SCHEDULED'}</span>
