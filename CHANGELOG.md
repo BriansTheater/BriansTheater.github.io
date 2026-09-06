@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.49] - 2026-09-06
+
+### What's New
+- Upgraded Vault cards to match Schedule tab layout.
+- Added 16:9 poster artwork banner to every movie.
+- Prominently featured watched dates and times across cards.
+- Added two-column details grid for times, runtime, year.
+- Integrated interactive trailer player drawer into Vault cards.
+- Synchronized all 459 past movies from Google Sheets.
+
 ## [4.9.48] - 2026-09-06
 
 ### What's New

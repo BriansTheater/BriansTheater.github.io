@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.48 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.49 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -378,7 +378,7 @@
           <span id="vaultCount" class="absolute right-4 top-3.5 text-xs text-slate-400 font-mono">Loading library...</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[650px] overflow-y-auto pr-1" id="vaultGrid"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-h-[750px] overflow-y-auto pr-1" id="vaultGrid"></div>
       </div>
 
     </div>
@@ -1302,11 +1302,11 @@
 
   </div>
 
-  <!-- Pre-cached 398+ Past Movies Catalog Data for Instant Offline/Direct Vault Search -->
+  <!-- Pre-cached 459+ Past Movies Catalog Data for Instant Offline/Direct Vault Search -->
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.48";
+    const APP_VERSION = "4.9.49";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1661,6 +1661,14 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.49": [
+        "Upgraded Vault cards to match Schedule tab layout.",
+        "Added 16:9 poster artwork banner to every movie.",
+        "Prominently featured watched dates and times across cards.",
+        "Added two-column details grid for times, runtime, year.",
+        "Integrated interactive trailer player drawer into Vault cards.",
+        "Synchronized all 459 past movies from Google Sheets."
+      ],
       "4.9.48": [
         "Transformed movie request tab into multi-color morphic theme.",
         "Integrated glassmorphic frosted cards with ambient color glows.",
@@ -1817,7 +1825,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.48"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.49"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4083,11 +4091,18 @@
           vaultMovies.push({
             title: cleanTitle,
             year: details.year || "2026",
+            date: s.date || "",
+            watchDate: s.date || "",
+            dateText: s.date || "",
+            startTime: details.startTime || "7:00 PM",
+            endTime: details.endTime || "8:45 PM",
             source: "past",
             genre: s.genre || "Featured Film",
+            genres: s.genre || "Featured Film",
             runtime: details.runtime || "Standard",
             trailerUrl: s.trailerUrl || "",
             trailerId: s.trailerId || "",
+            summary: details.summary || "",
             overview: details.summary || ""
           });
         }
@@ -4150,119 +4165,134 @@
         const trailerId = getTrailerIdForMovie(m);
         const hasTrailer = Boolean(trailerId && trailerId.trim() !== "");
         const isTv = isTvShowItem(m);
-        const meta = parseVaultMovieCardData(m);
+        const d = parseVaultMovieCardData(m);
         const cleanTitle = String(m.title || '').replace(/^🎬\s*/, '').trim();
-        const runtimeDisplay = meta.runtime || (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard' ? m.runtime : '');
+        const posterUrl = getMovieArtworkUrl(m);
 
         return `
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between group shadow-lg">
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
           <div>
-            <!-- Title Row: Clean Title + Theatrical Release Year + Rating Badge -->
-            <div class="flex items-start justify-between gap-2 mb-2">
-              <div class="flex items-baseline flex-wrap gap-1.5">
-                <p class="font-bold text-slate-100 group-hover:text-amber-300 transition text-sm sm:text-base leading-snug" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;" title="${escapeHtml(cleanTitle)}">${escapeHtml(cleanTitle)}</p>
-                ${meta.releaseYear ? `
-                <span class="text-xs px-2 py-0.5 rounded font-mono font-bold bg-amber-950/70 text-amber-300 border border-amber-700/60 shrink-0" title="Theatrical Release Year">${escapeHtml(meta.releaseYear)}</span>
-                ` : ''}
+            <!-- Movie Poster / Artwork Thumbnail Banner (16:9 Aspect Ratio) -->
+            <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
+              <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(cleanTitle)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
+              <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
+              
+              <!-- Top-Left Badge: Watched Date / Request / TV -->
+              <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
+                ${isRequest ? `
+                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                  <span>⏳ REQUEST</span>
+                </span>
+                ` : (d.watchDate ? `
+                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-sky-300 border border-sky-500/70 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
+                  <span>🗓️ WATCHED: ${escapeHtml(d.watchDate)}</span>
+                </span>
+                ` : `
+                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-slate-400 border border-slate-700 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                  <span>PAST SCREENING</span>
+                </span>
+                `)}
+                ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
-              ${meta.rating ? `
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 text-rose-300 border border-rose-800/60 font-mono font-bold shrink-0">${escapeHtml(meta.rating)}</span>
+
+              <!-- Bottom Overlay on Banner: Date and Start Time -->
+              <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
+                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
+                  <span>📅</span> ${escapeHtml(d.watchDate || 'Archive')}
+                </span>
+                <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
+                  ${escapeHtml(d.startTime)}
+                </span>
+              </div>
+            </div>
+
+            <!-- Movie Title -->
+            <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-1 group-hover:text-amber-300 transition flex items-center gap-1.5">
+              <span>🎬</span> <span title="${escapeHtml(cleanTitle)}">${escapeHtml(cleanTitle)}</span>
+            </h4>
+
+            <!-- Watched Date Prominent Pill (Directly below Title) -->
+            <div class="mt-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs flex items-center justify-between">
+              <span class="text-slate-400 flex items-center gap-1.5">
+                <span>🗓️</span> <span class="font-semibold">Watched Date:</span>
+              </span>
+              <span class="font-mono font-bold text-sky-300">${escapeHtml(d.watchDate || 'Past Screening')}</span>
+            </div>
+
+            <!-- Google Sheets Formatted Details Table / Pills (Identical to Schedule Tab) -->
+            <div class="grid grid-cols-2 gap-2 mt-2 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">🕒 Start Time:</span>
+                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">🏁 End Time:</span>
+                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">⏱️ Runtime:</span>
+                <span class="font-mono font-bold text-amber-300">${escapeHtml(d.runtime)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <span class="text-slate-400">📆 Year:</span>
+                <span class="font-mono font-bold text-sky-300">${escapeHtml(d.year)}</span>
+              </div>
+            </div>
+
+            <!-- Summary Section (Identical to Schedule Tab) -->
+            <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
+              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>📖</span> Summary
+              </div>
+              <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
+            </div>
+          </div>
+
+          <!-- Trailer Controls & Dropdown Video Viewer Drawer -->
+          <div class="flex flex-col gap-2 pt-2.5 border-t border-slate-900">
+            <div class="flex items-center justify-between gap-2">
+              ${hasTrailer ? `
+              <button onclick="toggleCardTrailer('vault-${idx}')" id="trailerBtn-vault-${idx}" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                <span>🎬</span> <span id="trailerBtnText-vault-${idx}">Watch Trailer ▾</span>
+              </button>
+              <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1.5 active:scale-95">
+                <span>▶</span> YouTube ↗
+              </button>
+              ` : (isRequest ? `
+              <span class="text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-1.5 rounded-lg font-mono flex items-center gap-1 font-semibold" title="Trailer verified once scheduled">
+                <span>⏳</span> Awaiting Schedule
+              </span>
+              ` : `
+              <span class="text-xs text-slate-500 font-mono px-2 py-1">No Trailer</span>
+              `)}
+
+              ${isAdmin ? `
+              <button onclick="openAdminTrailerForMovie('${escapeHtml(cleanTitle)}')" title="Admin: Configure Trailer" class="text-xs px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95 shrink-0 ml-auto">
+                <span>✏️</span>
+              </button>
               ` : ''}
             </div>
 
-            <!-- Badges row: Media type + Watched Date (or Request Badge) - No Platform Badge -->
-            <div class="flex items-center flex-wrap gap-1.5 mb-2">
-              <span class="text-[10px] px-2 py-0.5 rounded font-semibold ${isTv ? 'bg-purple-950/80 text-purple-300 border border-purple-800/80' : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/80'}">${isTv ? '📺 TV' : '🎬 Movie'}</span>
-              ${isRequest ? `
-              <span class="text-[10px] px-2 py-0.5 rounded font-semibold bg-amber-950/60 text-amber-400 border border-amber-800/60">Request</span>
-              ` : (meta.watchDate ? `
-              <span class="text-[10px] px-2 py-0.5 rounded-lg font-bold bg-sky-950/90 text-sky-300 border border-sky-700 font-mono shadow-sm" title="Screening Watch Date">🗓️ Watched: ${escapeHtml(meta.watchDate)}</span>
-              ` : `
-              <span class="text-[10px] px-2 py-0.5 rounded font-semibold bg-sky-950/60 text-sky-400 border border-sky-800/60">Past</span>
-              `)}
-            </div>
-
-            <!-- Genre -->
-            ${meta.genres ? `
-            <div class="text-[11px] text-slate-300 font-medium mb-1.5 flex items-center gap-1.5">
-              <span class="text-amber-400 text-[10px]">🎭</span>
-              <span class="truncate">${escapeHtml(meta.genres)}</span>
-            </div>
-            ` : `
-            <div class="text-[11px] text-slate-500 leading-tight mb-1.5">${escapeHtml(m.genre || (isTv ? 'TV Series' : 'Feature Film'))}</div>
-            `}
-
-            <!-- 2-Line Synopsis Teaser -->
-            ${meta.teaser ? `
-            <p class="text-xs text-slate-400 leading-relaxed line-clamp-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(meta.teaser)}</p>
-            ` : ''}
-          </div>
-
-          <div class="flex flex-col gap-2 mt-3 pt-2.5 border-t border-slate-900">
-            <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2">
-              <span class="font-mono text-sky-400 shrink-0 text-xs font-semibold">
-                ${runtimeDisplay ? `⏱️ ${escapeHtml(runtimeDisplay)}` : `<span class="text-slate-500">⏱️ Feature Film</span>`}
-              </span>
-
-              <div class="flex items-center gap-1.5 shrink-0">
-                ${meta.fullStory ? `
-                <button onclick="toggleVaultStory(${idx})" id="vaultStoryBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 hover:border-sky-400 transition flex items-center gap-1 active:scale-95 shadow-sm">
-                  <span>ℹ️</span> <span>Story ▾</span>
-                </button>
-                ` : ''}
-
-                ${hasTrailer ? `
-                <button onclick="toggleVaultTrailer(${idx})" id="vaultTrailerBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95">
-                  <span>🎬</span> <span id="vaultTrailerBtnText-${idx}">Trailer ▾</span>
-                </button>
-                <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-2 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1 active:scale-95">
-                  <span>▶</span>
-                </button>
-                ` : (isRequest ? `
-                <span class="text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2 py-0.5 rounded font-mono flex items-center gap-1 font-semibold shrink-0" title="Trailer verified once scheduled">
-                  <span>⏳</span> Awaiting Schedule
-                </span>
-                ` : `
-                <span class="text-[10px] text-slate-500 font-mono shrink-0">No Trailer</span>
-                `)}
-
-                ${isAdmin ? `
-                <button onclick="openAdminTrailerForMovie('${escapeHtml(m.title)}')" title="Admin: Configure Trailer" class="text-xs px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95">
-                  <span>✏️</span>
-                </button>
-                ` : ''}
-              </div>
-            </div>
-
-            ${meta.fullStory ? `
-            <!-- Expandable Story Drawer -->
-            <div id="vaultStoryViewer-${idx}" class="hidden flex-col gap-2 mt-2 p-3 rounded-xl bg-slate-900/95 border border-slate-800 text-xs text-slate-300 leading-relaxed shadow-inner">
-              <div class="flex items-center justify-between font-bold text-xs text-sky-400 border-b border-slate-800 pb-1 font-mono">
-                <span>📖 Movie Story & Archive Notes</span>
-                <button onclick="toggleVaultStory(${idx})" class="text-slate-400 hover:text-white px-1">✕</button>
-              </div>
-              <p class="pt-0.5 leading-relaxed">${escapeHtml(meta.fullStory)}</p>
-            </div>
-            ` : ''}
-
             ${hasTrailer ? `
             <!-- Vault Dropdown Video Viewer Drawer -->
-            <div id="vaultTrailerViewer-${idx}" class="hidden flex-col gap-2 mt-2 pt-2.5 border-t border-slate-800/80">
-              <div id="vaultTrailerContainer-${idx}" data-trailer-id="${escapeHtml(trailerId)}" data-movie-title="${escapeHtml(cleanTitle)}" class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
-                <!-- Trailer iframe dynamically injected on click -->
+            <div id="trailerViewer-vault-${idx}" class="hidden flex-col gap-2 mt-2 pt-3 border-t border-slate-800/80">
+              <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
+                <iframe id="trailerFrame-vault-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(cleanTitle)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
               <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
                 <span class="truncate font-mono">🍿 ${escapeHtml(cleanTitle)} Trailer</span>
-                <button onclick="toggleVaultTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition shrink-0 ml-2">
+                <button onclick="toggleCardTrailer('vault-${idx}')" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition">
                   <span>✕</span> Close
                 </button>
               </div>
             </div>
             ` : ''}
-
           </div>
         </div>
-      `;
+        `;
       }).join('');
 
       if (visibleMovies.length < totalCount) {
@@ -4323,19 +4353,23 @@
 
       // 2. Watch Date (Screening Date)
       let watchDate = '';
-      if (m.date) {
+      const rawDate = m.watchDate || m.date || m.dateText || '';
+      if (rawDate && !rawDate.includes('@')) {
         try {
-          const parts = String(m.date).split('/');
+          const parts = String(rawDate).split('/');
           if (parts.length === 3) {
             const d = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
             if (!isNaN(d.getTime())) {
               watchDate = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
             }
+          } else {
+            const d = new Date(rawDate);
+            if (!isNaN(d.getTime())) {
+              watchDate = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+            }
           }
         } catch(e) {}
-        if (!watchDate) watchDate = String(m.date);
-      } else if (m.dateText) {
-        watchDate = String(m.dateText);
+        if (!watchDate) watchDate = String(rawDate);
       }
 
       // 3. Runtime
@@ -4343,7 +4377,7 @@
       const rtMatch = ov.match(/Runtime:\s*([^\r\n<]+)/i);
       if (rtMatch) {
         runtime = rtMatch[1].trim();
-      } else if (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard') {
+      } else if (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard' && !m.runtime.includes(':')) {
         runtime = m.runtime;
       } else {
         const rtGeneric = ov.match(/\b(\d{1,2}h\s*\d{1,2}m|\d{1,2}hr\s*\d{1,2}mins?)\b/i);
@@ -4352,6 +4386,7 @@
       if (runtime) {
         runtime = runtime.replace(/mins?/i, 'm').replace(/hr/i, 'h').replace(/min/i, 'm').replace(/\s+/g, ' ').trim();
       }
+      if (!runtime) runtime = '1h 45m';
 
       // 4. Rating (MPAA / TV)
       let rating = '';
@@ -4393,15 +4428,35 @@
         fullStory = ov.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
         teaser = fullStory;
       }
+      const summary = teaser || fullStory || m.summary || m.overview || "Virtual cinema screening at Brian's Theater.";
+
+      // 7. Start Time & End Time
+      let startTime = cleanTimeString(m.startTime || m.time, false);
+      let endTime = cleanTimeString(m.endTime, false);
+      if (!startTime) {
+        const timeMatch = ov.match(/\b(\d{1,2}:\d{2}\s*(?:AM|PM)?)\s*[–-]\s*(\d{1,2}:\d{2}\s*(?:AM|PM)?)/i);
+        if (timeMatch) {
+          startTime = cleanTimeString(timeMatch[1], false);
+          if (!endTime) endTime = cleanTimeString(timeMatch[2], false);
+        }
+      }
+      if (!startTime) startTime = "7:00 PM";
+      if (!endTime) endTime = "8:45 PM";
+
+      const finalYear = releaseYear || (m.year && m.year !== 'Past' ? m.year : (watchDate ? (watchDate.match(/\b(19\d\d|20\d\d)\b/) ? watchDate.match(/\b(19\d\d|20\d\d)\b/)[1] : '2026') : '2026'));
 
       return {
-        releaseYear,
+        releaseYear: finalYear,
+        year: finalYear,
         watchDate,
         runtime,
         rating,
         genres,
         teaser,
-        fullStory
+        fullStory,
+        summary,
+        startTime,
+        endTime
       };
     }
 
@@ -4425,25 +4480,42 @@
       let added = 0;
       pastList.forEach(m => {
         if (!m || !m.title) return;
-        const cleanTitle = m.title.replace(/^🎬\s*/, '').trim();
+        const cleanTitle = m.title.replace(/^🎬\s*/, '').replace(/^Movie:\s*/i, '').replace(/\s+at\s+.*$/i, '').trim();
         const existing = vaultMovies.find(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
+        const watchDate = m.watchDate || m.date || m.dateText || "";
         if (!existing) {
           vaultMovies.push({
             title: cleanTitle,
+            mediaType: m.mediaType || ((cleanTitle.toLowerCase().includes("season") || cleanTitle.toLowerCase().includes("episode") || (m.genre && m.genre.includes("TV"))) ? "tv" : "movie"),
             year: m.year || "Past",
-            date: m.date || "",
+            date: watchDate,
+            dateText: watchDate,
+            watchDate: watchDate,
+            startTime: m.startTime || m.time || "7:00 PM",
+            endTime: m.endTime || "8:45 PM",
             source: m.source || "past",
-            genre: m.genre || "Past Screening",
+            genre: m.genres || m.genre || "Past Screening",
+            genres: m.genres || m.genre || "Past Screening",
             runtime: m.runtime || "Full Feature",
             trailerUrl: m.trailerUrl || "",
             trailerId: m.trailerId || "",
-            overview: m.overview || ""
+            summary: m.summary || m.overview || "",
+            overview: m.overview || m.summary || ""
           });
           added++;
         } else {
-          // 100% preservation of Column N data and watch date
+          // 100% preservation of Column N data, watch date, times, and trailer
           if (!existing.overview && m.overview) existing.overview = m.overview;
-          if (!existing.date && m.date) existing.date = m.date;
+          if (!existing.summary && m.summary) existing.summary = m.summary;
+          if (!existing.date && watchDate) {
+            existing.date = watchDate;
+            existing.watchDate = watchDate;
+            existing.dateText = watchDate;
+          }
+          if ((!existing.startTime || existing.startTime === "7:00 PM") && m.startTime) existing.startTime = m.startTime;
+          if ((!existing.endTime || existing.endTime === "8:45 PM") && m.endTime) existing.endTime = m.endTime;
+          if ((!existing.runtime || existing.runtime === "Full Feature") && m.runtime) existing.runtime = m.runtime;
+          if ((!existing.year || existing.year === "Past") && m.year) existing.year = m.year;
           if (!existing.trailerUrl && m.trailerUrl) existing.trailerUrl = m.trailerUrl;
         }
       });

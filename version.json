@@ -1,12 +1,13 @@
 {
-  "version": "4.9.48",
+  "version": "4.9.49",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.48",
+  "title": "Brian's Theater v4.9.49",
   "notes": [
-    "Transformed movie request tab into multi-color morphic theme.",
-    "Integrated glassmorphic frosted cards with ambient color glows.",
-    "Updated platform badges with signature iridescent brand gradient.",
-    "Enhanced TMDb movie suggestions with frosted glass styling.",
-    "Redesigned digital request pass with glowing holographic accents."
+    "Upgraded Vault cards to match Schedule tab layout.",
+    "Added 16:9 poster artwork banner to every movie.",
+    "Prominently featured watched dates and times across cards.",
+    "Added two-column details grid for times, runtime, year.",
+    "Integrated interactive trailer player drawer into Vault cards.",
+    "Synchronized all 459 past movies from Google Sheets."
   ]
 }
