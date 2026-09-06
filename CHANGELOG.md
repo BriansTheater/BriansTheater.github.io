@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.53] - 2026-09-06
+
+### What's New
+- Permanently eliminated automated reload countdown loop on update alerts.
+- Service worker stops caching HTML documents to prevent stale views.
+- Added full service worker unregistration on manual app reload.
+- Guaranteed instant clean HTML load from server on reload.
+- Resolved browser cache lock and synchronized live versions cleanly.
+
 ## [4.9.52] - 2026-09-06
 
 ### What's New

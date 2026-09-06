@@ -1,12 +1,12 @@
 {
-  "version": "4.9.52",
+  "version": "4.9.53",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.52",
+  "title": "Brian's Theater v4.9.53",
   "notes": [
-    "Dynamically synchronized footer version badge with active app version.",
-    "Unified version badges across footer, sidebar, and admin studio.",
-    "Added automatic version badge synchronizer on page startup.",
-    "Guaranteed footer version number updates instantly on new releases.",
-    "Eliminated stale hardcoded version tags throughout entire layout."
+    "Permanently eliminated automated reload countdown loop on update alerts.",
+    "Service worker stops caching HTML documents to prevent stale views.",
+    "Added full service worker unregistration on manual app reload.",
+    "Guaranteed instant clean HTML load from server on reload.",
+    "Resolved browser cache lock and synchronized live versions cleanly."
   ]
 }
