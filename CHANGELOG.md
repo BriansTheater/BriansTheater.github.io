@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.36] - 2026-09-05
+
+### What's New
+- Replaced Refresh button with direct Update Now action.
+- Added automated countdown timer to apply updates automatically.
+- Live remaining seconds display directly on update button.
+- Instantly reloads app when countdown reaches zero.
+- Cleanly cancels countdown if user closes update toast.
+
 ## [4.9.35] - 2026-09-05
 
 ### What's New

@@ -1,12 +1,12 @@
 {
-  "version": "4.9.35",
+  "version": "4.9.36",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.35",
+  "title": "Brian's Theater v4.9.36",
   "notes": [
-    "Renamed app to Brian's Theater.",
-    "Installed app on home screen shows Brian's Theater.",
-    "Long movie titles now wrap across two lines cleanly.",
-    "Badges and years moved to separate dedicated row.",
-    "Multi-layer update detection runs reliably in background."
+    "Update button now displays Update Now.",
+    "Added automated countdown timer to auto-apply updates.",
+    "Button shows live remaining seconds before updating.",
+    "Instantly applies update when countdown hits zero.",
+    "Countdown cancels cleanly if user dismisses toast."
   ]
 }

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.35 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.36 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -426,7 +426,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.35</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.36</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -626,7 +626,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.35</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.36</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -791,7 +791,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.35</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.36</span>
     </div>
 
   </aside>
@@ -1002,7 +1002,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h4 id="updateToastTitle" class="text-sm font-bold text-slate-100">Update Available</h4>
-            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.35</span>
+            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.36</span>
           </div>
           <p id="updateToastSubtitle" class="text-[11px] text-slate-400 mt-0.5">What's New in this release:</p>
         </div>
@@ -1020,7 +1020,7 @@
     <!-- Actions Bar -->
     <div class="flex items-center gap-2 pt-1">
       <button type="button" id="btnUpdateAppRefresh" onclick="refreshAndUpdateApp()" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-sky-500 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-sky-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
-        <span>🔄</span> <span id="btnUpdateAppRefreshLabel">Refresh & Update Now</span>
+        <span>⚡</span> <span id="btnUpdateAppRefreshLabel">Update Now</span>
       </button>
       <button type="button" id="btnUpdateAppDismiss" onclick="dismissAppUpdateToast()" class="py-2.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold transition active:scale-95">
         Later
@@ -1033,7 +1033,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.35";
+    const APP_VERSION = "4.9.36";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1376,9 +1376,25 @@
     // APP STORE STYLE UPDATE TOASTER & SERVICE WORKER CONTROLLER
     // ========================================================
     let waitingServiceWorker = null;
+    let updateCountdownTimer = null;
+    let updateCountdownSeconds = 5;
+
+    function clearAppUpdateCountdown() {
+      if (updateCountdownTimer) {
+        clearInterval(updateCountdownTimer);
+        updateCountdownTimer = null;
+      }
+    }
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.36": [
+        "Update button now displays Update Now.",
+        "Added automated countdown timer to auto-apply updates.",
+        "Button shows live remaining seconds before updating.",
+        "Instantly applies update when countdown hits zero.",
+        "Countdown cancels cleanly if user dismisses toast."
+      ],
       "4.9.35": [
         "Renamed app to Brian's Theater.",
         "Installed app on home screen shows Brian's Theater.",
@@ -1437,7 +1453,7 @@
 
       const version = options.version || APP_VERSION;
       const isAvailable = options.isUpdateAvailable !== false;
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.35"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.36"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "New Version Available" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -1452,11 +1468,29 @@
         `).join('');
       }
 
+      clearAppUpdateCountdown();
+
       if (refreshBtn && refreshLabel) {
         if (isAvailable) {
-          refreshLabel.textContent = "Refresh & Update Now";
-          refreshBtn.onclick = refreshAndUpdateApp;
+          updateCountdownSeconds = 5;
+          refreshLabel.textContent = `Update Now (${updateCountdownSeconds}s)`;
+          refreshBtn.onclick = () => {
+            clearAppUpdateCountdown();
+            refreshAndUpdateApp();
+          };
           if (dismissBtn) dismissBtn.classList.remove('hidden');
+
+          // Automated countdown to update itself
+          updateCountdownTimer = setInterval(() => {
+            updateCountdownSeconds--;
+            if (updateCountdownSeconds > 0) {
+              refreshLabel.textContent = `Update Now (${updateCountdownSeconds}s)`;
+            } else {
+              clearAppUpdateCountdown();
+              refreshLabel.textContent = "Updating...";
+              refreshAndUpdateApp();
+            }
+          }, 1000);
         } else {
           refreshLabel.textContent = "Got it! 👍";
           refreshBtn.onclick = dismissAppUpdateToast;
@@ -1469,6 +1503,7 @@
     }
 
     function dismissAppUpdateToast() {
+      clearAppUpdateCountdown();
       const toast = document.getElementById('appUpdateToast');
       if (toast) {
         toast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
@@ -1480,6 +1515,7 @@
     }
 
     function refreshAndUpdateApp() {
+      clearAppUpdateCountdown();
       if (waitingServiceWorker) {
         waitingServiceWorker.postMessage({ action: 'skipWaiting' });
       }
