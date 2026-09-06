@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.50] - 2026-09-06
+
+### What's New
+- Aligned Vault cards to match exact Schedule tab styling.
+- Added dedicated Watched section displaying formatted screening date.
+- Standardized top poster badge with glowing watched indicator.
+- Unified summary header with uppercase icon styling across cards.
+- Streamlined card details grid for pixel-perfect cinema layout.
+
 ## [4.9.49] - 2026-09-06
 
 ### What's New

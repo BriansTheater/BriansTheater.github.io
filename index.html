@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.49 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.50 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1306,7 +1306,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.49";
+    const APP_VERSION = "4.9.50";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1661,6 +1661,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.50": [
+        "Aligned Vault cards to match exact Schedule tab styling.",
+        "Added dedicated Watched section displaying formatted screening date.",
+        "Standardized top poster badge with glowing watched indicator.",
+        "Unified summary header with uppercase icon styling across cards.",
+        "Streamlined card details grid for pixel-perfect cinema layout."
+      ],
       "4.9.49": [
         "Upgraded Vault cards to match Schedule tab layout.",
         "Added 16:9 poster artwork banner to every movie.",
@@ -1825,7 +1832,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.49"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.50"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4177,31 +4184,26 @@
               <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(cleanTitle)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
               <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
               
-              <!-- Top-Left Badge: Watched Date / Request / TV -->
+              <!-- Top-Left Tag Badge: Exact Schedule Tab Style -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
                 ${isRequest ? `
-                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                   <span>⏳ REQUEST</span>
                 </span>
-                ` : (d.watchDate ? `
-                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-sky-300 border border-sky-500/70 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
-                  <span>🗓️ WATCHED: ${escapeHtml(d.watchDate)}</span>
-                </span>
                 ` : `
-                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-slate-400 border border-slate-700 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-                  <span>PAST SCREENING</span>
+                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]"></span>
+                  <span>⚡ WATCHED</span>
                 </span>
-                `)}
+                `}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
               <!-- Bottom Overlay on Banner: Date and Start Time -->
               <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
                 <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
-                  <span>📅</span> ${escapeHtml(d.watchDate || 'Archive')}
+                  <span>🗓️</span> ${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}
                 </span>
                 <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
                   ${escapeHtml(d.startTime)}
@@ -4211,19 +4213,11 @@
 
             <!-- Movie Title -->
             <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-1 group-hover:text-amber-300 transition flex items-center gap-1.5">
-              <span>🎬</span> <span title="${escapeHtml(cleanTitle)}">${escapeHtml(cleanTitle)}</span>
+              <span>🎬</span> <span>${escapeHtml(cleanTitle)}</span>
             </h4>
 
-            <!-- Watched Date Prominent Pill (Directly below Title) -->
-            <div class="mt-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs flex items-center justify-between">
-              <span class="text-slate-400 flex items-center gap-1.5">
-                <span>🗓️</span> <span class="font-semibold">Watched Date:</span>
-              </span>
-              <span class="font-mono font-bold text-sky-300">${escapeHtml(d.watchDate || 'Past Screening')}</span>
-            </div>
-
-            <!-- Google Sheets Formatted Details Table / Pills (Identical to Schedule Tab) -->
-            <div class="grid grid-cols-2 gap-2 mt-2 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+            <!-- Google Sheets Formatted Details Table (2x2 Grid Identical to Schedule Tab) -->
+            <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
               <div class="flex items-center justify-between px-1">
                 <span class="text-slate-400">🕒 Start Time:</span>
                 <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
@@ -4244,11 +4238,28 @@
 
             <!-- Summary Section (Identical to Schedule Tab) -->
             <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
-              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>📖</span> Summary
+              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span>💬</span> SUMMARY
               </div>
               <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
             </div>
+
+            <!-- Dedicated Watched Section -->
+            ${isRequest ? `
+            <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
+              <div class="font-semibold text-amber-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                <span>⏳</span> REQUEST STATUS
+              </div>
+              <span class="font-mono font-bold text-amber-300 text-[11px]">Awaiting Screening</span>
+            </div>
+            ` : `
+            <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
+              <div class="font-semibold text-sky-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                <span>🗓️</span> WATCHED
+              </div>
+              <span class="font-mono font-bold text-sky-300 text-[11px]">${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}</span>
+            </div>
+            `}
           </div>
 
           <!-- Trailer Controls & Dropdown Video Viewer Drawer -->
@@ -4353,6 +4364,7 @@
 
       // 2. Watch Date (Screening Date)
       let watchDate = '';
+      let watchDateFormatted = '';
       const rawDate = m.watchDate || m.date || m.dateText || '';
       if (rawDate && !rawDate.includes('@')) {
         try {
@@ -4361,15 +4373,18 @@
             const d = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
             if (!isNaN(d.getTime())) {
               watchDate = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+              watchDateFormatted = d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
             }
           } else {
             const d = new Date(rawDate);
             if (!isNaN(d.getTime())) {
               watchDate = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+              watchDateFormatted = d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
             }
           }
         } catch(e) {}
         if (!watchDate) watchDate = String(rawDate);
+        if (!watchDateFormatted) watchDateFormatted = watchDate;
       }
 
       // 3. Runtime
@@ -4449,6 +4464,8 @@
         releaseYear: finalYear,
         year: finalYear,
         watchDate,
+        watchDateFormatted: watchDateFormatted || watchDate,
+        location: m.location || '',
         runtime,
         rating,
         genres,
@@ -4733,8 +4750,8 @@
 
           <!-- Summary Section -->
           <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
-            <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1">
-              <span>📖</span> Summary
+            <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <span>💬</span> SUMMARY
             </div>
             <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
           </div>
