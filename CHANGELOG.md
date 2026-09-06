@@ -18,15 +18,6 @@
 - Updates existing calendar events and links newly created ones.
 - Added 1-click execution to Google Sheets calendar submenu.
 
-## [4.9.68] - 2026-09-06
-
-### What's New
-- Eliminated automatic Enter Theater popup on normal page loads.
-- Update alerts now strictly appear only for newer versions.
-- Preserved What's New modal exclusively for manual clicks.
-- Removed premature service worker waiting prompts on startup.
-- Ensured clean theater viewing with zero unexpected popups.
-
 ## [4.9.67] - 2026-09-06
 
 ### What's New
