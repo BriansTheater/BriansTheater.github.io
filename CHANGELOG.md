@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.44] - 2026-09-05
+
+### What's New
+- Added 1-click TMDb automated trailer finder to Admin Studio.
+- Added interactive trailer manager to test, edit, or clear trailers.
+- Preserved 100% of past movie data from Column N.
+- Separated theatrical release years from theater screening watch dates.
+- Added expandable story and venue notes drawer on cards.
+
 ## [4.9.43] - 2026-09-05
 
 ### What's New

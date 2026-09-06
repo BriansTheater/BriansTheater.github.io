@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.43 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.44 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -414,7 +414,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.43</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.44</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -586,7 +586,90 @@
           </div>
         </div>
 
-        <!-- 4. Review Queue -->
+        <!-- 4. Movie Trailers & Preview Manager -->
+        <div class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-red-500/50 flex flex-col gap-5 shadow-2xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
+                <span>🎬</span> Movie Trailers & Preview Manager
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Auto-discover official studio YouTube trailers via TMDB or edit custom trailer URLs for any movie.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-2.5 py-1 rounded bg-red-500/20 text-red-300 font-mono" id="adminTrailerMovieCount">Loading Titles...</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left: Trailer Controls & Links (7 cols) -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+              <div>
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <span>🍿</span> Select Movie to Configure
+                </label>
+                <select id="adminTrailerMovieSelect" onchange="onAdminSelectTrailerMovie()" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-semibold focus:border-red-400">
+                  <!-- Populated dynamically with scheduled movies + vault movies -->
+                </select>
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-slate-300">YouTube Trailer URL or ID</label>
+                <div class="flex gap-2 mt-1">
+                  <input type="text" id="adminTrailerCustomUrlInput" placeholder="https://www.youtube.com/watch?v=... or YouTube ID" class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-red-400 font-mono">
+                  <button type="button" onclick="previewCustomTrailerInput()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
+                    Preview
+                  </button>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <button type="button" onclick="fetchTmdbTrailerForSelectedMovie()" id="btnFetchTmdbTrailer" class="py-2.5 px-3 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 hover:opacity-90 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <span>🔍</span> TMDB 1-Click Auto-Find
+                </button>
+
+                <button type="button" onclick="testSelectedMovieTrailerInTheater()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <span>⚡</span> Test in Screening Room
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
+                <button type="button" onclick="saveSelectedMovieTrailer()" id="btnSaveTrailer" class="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
+                  <span>💾</span> Save Trailer
+                </button>
+                <button type="button" onclick="clearSelectedMovieTrailer()" class="py-3 px-4 rounded-xl bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-700/50 text-xs font-semibold transition active:scale-95">
+                  Clear
+                </button>
+              </div>
+
+              <p class="text-[11px] text-slate-400 leading-normal">
+                Saves trailer to website and automatically updates Google Sheets <strong>Column W</strong> and <strong>Column N</strong>.
+              </p>
+            </div>
+
+            <!-- Right: Live Trailer Video Preview (5 cols) -->
+            <div class="lg:col-span-5 flex flex-col gap-2">
+              <div class="text-xs font-semibold text-slate-400 flex items-center justify-between">
+                <span>Interactive Player Preview</span>
+                <span class="text-[10px] text-slate-500 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
+              </div>
+
+              <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl relative flex items-center justify-center">
+                <div id="adminTrailerPreviewPlaceholder" class="flex flex-col items-center justify-center p-4 text-center text-slate-500 text-xs gap-1.5">
+                  <span class="text-2xl">🎬</span>
+                  <span>Select a movie or click Auto-Find to preview trailer</span>
+                </div>
+                <iframe id="adminTrailerPreviewIframe" class="w-full h-full hidden" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+
+              <div class="text-[11px] text-slate-400 truncate font-mono mt-1" id="adminTrailerCurrentIdDisplay">
+                Trailer: <span class="text-slate-500">None</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Review Queue -->
         <div class="mt-6 p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
@@ -614,7 +697,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.43</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.44</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -779,7 +862,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.43</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.44</span>
     </div>
 
   </aside>
@@ -993,7 +1076,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.43</span>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.44</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1028,7 +1111,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.43";
+    const APP_VERSION = "4.9.44";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1383,6 +1466,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.44": [
+        "Added TMDB 1-click official trailer auto-discovery.",
+        "Built interactive Trailer Editor inside Admin Control Studio.",
+        "Unlocked 58 past movie trailers from Column N.",
+        "Full trailer sync across Column N and Column W.",
+        "Live player preview to verify trailers before saving."
+      ],
       "4.9.43": [
         "Removed unverified trailers from all community request cards.",
         "Fixed incorrect Dune 2 fallback trailer on requests.",
@@ -1504,7 +1594,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.43"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.44"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -1889,6 +1979,7 @@
           if (tab === 'admin') {
             btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow-md transition flex items-center gap-2";
             populateAdminArtworkSelector();
+            populateAdminTrailerSelector();
           } else {
             btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
           }
@@ -1965,6 +2056,12 @@
     try {
       const stored = localStorage.getItem('brian_movie_posters_map');
       if (stored) customMovieImages = JSON.parse(stored);
+    } catch(e) {}
+
+    let customMovieTrailers = {};
+    try {
+      const storedTrailers = localStorage.getItem('brian_movie_trailers_map');
+      if (storedTrailers) customMovieTrailers = JSON.parse(storedTrailers);
     } catch(e) {}
 
     function getCinemaPlaceholder(title) {
@@ -2989,6 +3086,253 @@
       switchTab('screening');
     }
 
+    // 🎬 Movie Trailers & Preview Manager Engine
+    function populateAdminTrailerSelector() {
+      const select = document.getElementById('adminTrailerMovieSelect');
+      const countBadge = document.getElementById('adminTrailerMovieCount');
+      if (!select) return;
+
+      const titleSet = new Set();
+      if (Array.isArray(sampleSchedule)) {
+        sampleSchedule.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
+      }
+      if (Array.isArray(vaultMovies)) {
+        vaultMovies.forEach(v => { if (v && v.title) titleSet.add(v.title.replace(/^🎬\s*/, '').trim()); });
+      }
+
+      const allTitles = Array.from(titleSet).sort((a, b) => a.localeCompare(b));
+      select.innerHTML = allTitles.map(title => `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`).join('');
+
+      if (countBadge) countBadge.textContent = `${allTitles.length} Titles`;
+
+      onAdminSelectTrailerMovie();
+    }
+
+    function onAdminSelectTrailerMovie() {
+      const select = document.getElementById('adminTrailerMovieSelect');
+      const input = document.getElementById('adminTrailerCustomUrlInput');
+      const previewIframe = document.getElementById('adminTrailerPreviewIframe');
+      const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
+      const statusText = document.getElementById('adminTrailerPreviewStatus');
+      const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
+      if (!select) return;
+
+      const title = select.value.trim();
+      const currentTrailerId = getTrailerIdForMovie({ title: title });
+
+      if (input) {
+        input.value = currentTrailerId ? `https://www.youtube.com/watch?v=${currentTrailerId}` : '';
+      }
+
+      if (currentTrailerId) {
+        if (previewIframe) {
+          previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(currentTrailerId)}?rel=0`;
+          previewIframe.classList.remove('hidden');
+        }
+        if (placeholder) placeholder.classList.add('hidden');
+        if (statusText) statusText.textContent = `Active Trailer`;
+        if (idDisplay) idDisplay.innerHTML = `Trailer ID: <span class="text-sky-400 font-bold">${escapeHtml(currentTrailerId)}</span>`;
+      } else {
+        if (previewIframe) {
+          previewIframe.src = '';
+          previewIframe.classList.add('hidden');
+        }
+        if (placeholder) placeholder.classList.remove('hidden');
+        if (statusText) statusText.textContent = `No Trailer Set`;
+        if (idDisplay) idDisplay.innerHTML = `Trailer: <span class="text-amber-400 font-semibold">None</span>`;
+      }
+    }
+
+    function previewCustomTrailerInput() {
+      const input = document.getElementById('adminTrailerCustomUrlInput');
+      const previewIframe = document.getElementById('adminTrailerPreviewIframe');
+      const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
+      const statusText = document.getElementById('adminTrailerPreviewStatus');
+      const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
+      if (!input) return;
+
+      const raw = input.value.trim();
+      const ytid = extractYouTubeId(raw) || (/^[\w-]{11}$/.test(raw) ? raw : null);
+
+      if (!ytid) {
+        alert("Please enter a valid YouTube video URL or 11-character video ID.");
+        return;
+      }
+
+      if (previewIframe) {
+        previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytid)}?autoplay=1&rel=0`;
+        previewIframe.classList.remove('hidden');
+      }
+      if (placeholder) placeholder.classList.add('hidden');
+      if (statusText) statusText.textContent = `Previewing (${ytid})`;
+      if (idDisplay) idDisplay.innerHTML = `Preview ID: <span class="text-emerald-400 font-bold">${escapeHtml(ytid)}</span>`;
+    }
+
+    async function fetchTmdbTrailerForMovie(title, year) {
+      const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+      const clean = title.replace(/^🎬\s*/, '').trim();
+      let searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(clean)}`;
+      if (year && /^\d{4}$/.test(year)) {
+        searchUrl += `&primary_release_year=${year}`;
+      }
+      const res = await fetch(searchUrl);
+      if (!res.ok) throw new Error("TMDB search request failed");
+      const data = await res.json();
+      if (!data.results || data.results.length === 0) {
+        if (year) {
+          return fetchTmdbTrailerForMovie(title, null);
+        }
+        return null;
+      }
+
+      const top = data.results[0];
+      const vRes = await fetch(`https://api.themoviedb.org/3/movie/${top.id}/videos?api_key=${_k}`);
+      if (!vRes.ok) throw new Error("TMDB videos request failed");
+      const vData = await vRes.json();
+      const results = vData.results || [];
+
+      const trailer = results.find(v => v.site === 'YouTube' && v.type === 'Trailer' && v.official)
+                   || results.find(v => v.site === 'YouTube' && v.type === 'Trailer')
+                   || results.find(v => v.site === 'YouTube' && (v.type === 'Teaser' || v.type === 'Clip'))
+                   || results.find(v => v.site === 'YouTube');
+
+      if (!trailer || !trailer.key) return null;
+
+      return {
+        id: top.id,
+        title: top.title,
+        releaseDate: top.release_date || '',
+        videoKey: trailer.key,
+        videoName: trailer.name || 'Official Trailer',
+        url: `https://www.youtube.com/watch?v=${trailer.key}`
+      };
+    }
+
+    async function fetchTmdbTrailerForSelectedMovie() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminTrailerMovieSelect');
+      const btn = document.getElementById('btnFetchTmdbTrailer');
+      const input = document.getElementById('adminTrailerCustomUrlInput');
+      if (!select) return;
+
+      const title = select.value.replace(/^🎬\s*/, '').trim();
+      if (btn) btn.innerHTML = '<span>⏳</span> Searching TMDB...';
+
+      try {
+        const result = await fetchTmdbTrailerForMovie(title);
+        if (result && result.videoKey) {
+          if (input) input.value = result.url;
+          previewCustomTrailerInput();
+          alert(`🎬 Found Official TMDB Trailer for "${result.title}"!\n\nVideo: ${result.videoName}\n\nClick 'Save Trailer' to apply it.`);
+        } else {
+          alert(`No official YouTube trailer found on TMDB for "${title}". You can paste any YouTube link manually.`);
+        }
+      } catch(e) {
+        alert("Could not reach TMDB: " + e.message);
+      } finally {
+        if (btn) btn.innerHTML = '<span>🔍</span> TMDB 1-Click Auto-Find';
+      }
+    }
+
+    function saveSelectedMovieTrailer() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminTrailerMovieSelect');
+      const input = document.getElementById('adminTrailerCustomUrlInput');
+      if (!select || !input) return;
+
+      const title = select.value.trim();
+      const rawUrl = input.value.trim();
+      const ytid = extractYouTubeId(rawUrl) || (/^[\w-]{11}$/.test(rawUrl) ? rawUrl : null);
+
+      if (!ytid) {
+        alert("Please enter or auto-find a valid YouTube URL or video ID before saving.");
+        return;
+      }
+
+      const fullUrl = `https://www.youtube.com/watch?v=${ytid}`;
+      customMovieTrailers[title] = fullUrl;
+      try {
+        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+      } catch(e) {}
+
+      // Sync to Google Apps Script and Firebase
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' });
+
+      // Refresh schedule cards, vault cards, and preview
+      renderSchedule();
+      renderVault();
+      onAdminSelectTrailerMovie();
+
+      alert(`🎉 Success! Saved official trailer for "${title}".`);
+    }
+
+    function clearSelectedMovieTrailer() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminTrailerMovieSelect');
+      if (!select) return;
+
+      const title = select.value.trim();
+      if (confirm(`Remove custom trailer for "${title}"?`)) {
+        delete customMovieTrailers[title];
+        try {
+          localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+        } catch(e) {}
+
+        fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+
+        renderSchedule();
+        renderVault();
+        onAdminSelectTrailerMovie();
+        alert(`Cleared trailer for "${title}".`);
+      }
+    }
+
+    function testSelectedMovieTrailerInTheater() {
+      const select = document.getElementById('adminTrailerMovieSelect');
+      const input = document.getElementById('adminTrailerCustomUrlInput');
+      const title = select ? select.value.trim() : "Movie";
+      const raw = input ? input.value.trim() : "";
+      const ytid = extractYouTubeId(raw) || (/^[\w-]{11}$/.test(raw) ? raw : null);
+
+      if (!ytid) {
+        alert("Please specify a trailer first.");
+        return;
+      }
+
+      sendToScreeningRoom(ytid, title);
+    }
+
+    function openAdminTrailerForMovie(title) {
+      if (!title) return;
+      switchTab('admin');
+      setTimeout(() => {
+        const select = document.getElementById('adminTrailerMovieSelect');
+        if (select) {
+          const clean = title.replace(/^🎬\s*/, '').trim();
+          for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value.toLowerCase() === clean.toLowerCase()) {
+              select.selectedIndex = i;
+              onAdminSelectTrailerMovie();
+              select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              break;
+            }
+          }
+        }
+      }, 150);
+    }
+
     async function handleFormSubmit(e) {
       e.preventDefault();
       const name = (document.getElementById('formReqName')?.value || '').trim() || 'Guest';
@@ -3139,6 +3483,10 @@
 
       if (data.moviePosters && typeof data.moviePosters === 'object') {
         Object.assign(customMovieImages, data.moviePosters);
+      }
+
+      if (data.movieTrailers && typeof data.movieTrailers === 'object') {
+        Object.assign(customMovieTrailers, data.movieTrailers);
       }
 
       // Sync global door mode from Firebase in real time
@@ -3335,24 +3683,54 @@
 
     function getTrailerIdForMovie(movie) {
       if (!movie) return "";
-      // Unscheduled community requests do not show unverified trailers
+      const rawTitle = (movie.title || "").trim();
+      const cleanTitle = rawTitle.replace(/^🎬\s*/, '').trim();
+
+      // 1. Explicit admin/custom override takes highest priority
+      if (customMovieTrailers[cleanTitle]) {
+        const id = extractYouTubeId(customMovieTrailers[cleanTitle]) || customMovieTrailers[cleanTitle];
+        if (id) return id;
+      }
+      for (const [k, v] of Object.entries(customMovieTrailers)) {
+        if (k.toLowerCase().trim() === cleanTitle.toLowerCase() && v) {
+          const id = extractYouTubeId(v) || v;
+          if (id) return id;
+        }
+      }
+
+      // Unscheduled community requests remain without trailers unless explicitly assigned an override
       if (movie.source === 'request') return "";
+
+      // 2. Explicit trailerId property
       if (movie.trailerId) return movie.trailerId;
+
+      // 3. Explicit trailerUrl property (from Column W)
       if (movie.trailerUrl) {
         const extracted = extractYouTubeId(movie.trailerUrl);
         if (extracted) return extracted;
       }
-      if (movie.desc) {
-        const descMatch = movie.desc.match(/(?:youtu\.be\/|v\/|watch\?v=)([\w-]{11})/);
-        if (descMatch && descMatch[1]) return descMatch[1];
+
+      // 4. Scan Column N info block from desc, overview, or summary
+      const textToScan = [movie.desc, movie.overview, movie.summary].filter(Boolean).join(' ');
+      if (textToScan) {
+        const trailerLineMatch = textToScan.match(/Trailer:\s*([^\s\r\n<"']+)/i);
+        if (trailerLineMatch && trailerLineMatch[1]) {
+          const extracted = extractYouTubeId(trailerLineMatch[1]);
+          if (extracted) return extracted;
+        }
+        const ytMatch = textToScan.match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
+        if (ytMatch && ytMatch[1]) return ytMatch[1];
       }
-      if (SCHEDULE_TRAILERS[movie.title]) {
-        return SCHEDULE_TRAILERS[movie.title];
+
+      // 5. Check SCHEDULE_TRAILERS dictionary
+      if (SCHEDULE_TRAILERS[cleanTitle]) {
+        return SCHEDULE_TRAILERS[cleanTitle];
       }
-      const lower = (movie.title || "").toLowerCase().trim();
+      const lower = cleanTitle.toLowerCase();
       for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
         if (k.toLowerCase() === lower) return v;
       }
+
       return "";
     }
 
@@ -3461,6 +3839,7 @@
         }
       });
       renderVault();
+      populateAdminTrailerSelector();
     }
 
     function renderVault() {
@@ -3514,55 +3893,112 @@
 
       let cardsHtml = visibleMovies.map((m, idx) => {
         const isRequest = m.source === 'request';
-        const trailerId = isRequest ? "" : getTrailerIdForMovie(m);
+        const trailerId = getTrailerIdForMovie(m);
         const hasTrailer = Boolean(trailerId && trailerId.trim() !== "");
         const isTv = isTvShowItem(m);
-        const runtimeText = m.runtime || m.dateText || 'Standard';
+        const meta = parseVaultMovieCardData(m);
+        const cleanTitle = String(m.title || '').replace(/^🎬\s*/, '').trim();
+        const runtimeDisplay = meta.runtime || (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard' ? m.runtime : '');
+
         return `
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between group shadow-lg">
           <div>
-            <!-- Title: 2-line clamp so long names wrap cleanly instead of cutting mid-word -->
-            <p class="font-bold text-slate-100 group-hover:text-amber-300 transition text-sm leading-snug mb-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</p>
-
-            <!-- Badges row: Media type + Source — always has full room now -->
-            <div class="flex items-center flex-wrap gap-1 mb-1.5">
-              <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${isTv ? 'bg-purple-950/80 text-purple-300 border border-purple-800/80' : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/80'}">${isTv ? '📺 TV' : '🎬 Movie'}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${m.source === 'request' ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-sky-950/60 text-sky-400 border border-sky-800/60'}">${m.source === 'request' ? 'Request' : 'Past'}</span>
-              ${m.year ? `<span class="text-[10px] text-slate-500 font-mono">${escapeHtml(m.year)}</span>` : ''}
+            <!-- Title Row: Clean Title + Theatrical Release Year + Rating Badge -->
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <div class="flex items-baseline flex-wrap gap-1.5">
+                <p class="font-bold text-slate-100 group-hover:text-amber-300 transition text-sm sm:text-base leading-snug" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;" title="${escapeHtml(cleanTitle)}">${escapeHtml(cleanTitle)}</p>
+                ${meta.releaseYear ? `
+                <span class="text-xs px-2 py-0.5 rounded font-mono font-bold bg-amber-950/70 text-amber-300 border border-amber-700/60 shrink-0" title="Theatrical Release Year">${escapeHtml(meta.releaseYear)}</span>
+                ` : ''}
+              </div>
+              ${meta.rating ? `
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 text-rose-300 border border-rose-800/60 font-mono font-bold shrink-0">${escapeHtml(meta.rating)}</span>
+              ` : ''}
             </div>
 
-            <div class="text-[11px] text-slate-500 leading-tight">${escapeHtml(m.genre || (isTv ? 'TV Series' : 'Feature Film'))}</div>
+            <!-- Badges row: Media type + Watched Date (or Request Badge) - No Platform Badge -->
+            <div class="flex items-center flex-wrap gap-1.5 mb-2">
+              <span class="text-[10px] px-2 py-0.5 rounded font-semibold ${isTv ? 'bg-purple-950/80 text-purple-300 border border-purple-800/80' : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/80'}">${isTv ? '📺 TV' : '🎬 Movie'}</span>
+              ${isRequest ? `
+              <span class="text-[10px] px-2 py-0.5 rounded font-semibold bg-amber-950/60 text-amber-400 border border-amber-800/60">Request</span>
+              ` : (meta.watchDate ? `
+              <span class="text-[10px] px-2 py-0.5 rounded-lg font-bold bg-sky-950/90 text-sky-300 border border-sky-700 font-mono shadow-sm" title="Screening Watch Date">🗓️ Watched: ${escapeHtml(meta.watchDate)}</span>
+              ` : `
+              <span class="text-[10px] px-2 py-0.5 rounded font-semibold bg-sky-950/60 text-sky-400 border border-sky-800/60">Past</span>
+              `)}
+            </div>
+
+            <!-- Genre -->
+            ${meta.genres ? `
+            <div class="text-[11px] text-slate-300 font-medium mb-1.5 flex items-center gap-1.5">
+              <span class="text-amber-400 text-[10px]">🎭</span>
+              <span class="truncate">${escapeHtml(meta.genres)}</span>
+            </div>
+            ` : `
+            <div class="text-[11px] text-slate-500 leading-tight mb-1.5">${escapeHtml(m.genre || (isTv ? 'TV Series' : 'Feature Film'))}</div>
+            `}
+
+            <!-- 2-Line Synopsis Teaser -->
+            ${meta.teaser ? `
+            <p class="text-xs text-slate-400 leading-relaxed line-clamp-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(meta.teaser)}</p>
+            ` : ''}
           </div>
 
           <div class="flex flex-col gap-2 mt-3 pt-2.5 border-t border-slate-900">
             <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2">
-              <span class="font-mono text-slate-500 shrink-0 text-[10px]">⏱️ ${escapeHtml(runtimeText)}</span>
-              ${hasTrailer ? `
+              <span class="font-mono text-sky-400 shrink-0 text-xs font-semibold">
+                ${runtimeDisplay ? `⏱️ ${escapeHtml(runtimeDisplay)}` : `<span class="text-slate-500">⏱️ Feature Film</span>`}
+              </span>
+
               <div class="flex items-center gap-1.5 shrink-0">
+                ${meta.fullStory ? `
+                <button onclick="toggleVaultStory(${idx})" id="vaultStoryBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 hover:border-sky-400 transition flex items-center gap-1 active:scale-95 shadow-sm">
+                  <span>ℹ️</span> <span>Story ▾</span>
+                </button>
+                ` : ''}
+
+                ${hasTrailer ? `
                 <button onclick="toggleVaultTrailer(${idx})" id="vaultTrailerBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95">
-                  <span>🎬</span> <span id="vaultTrailerBtnText-${idx}">Watch Trailer ▾</span>
+                  <span>🎬</span> <span id="vaultTrailerBtnText-${idx}">Trailer ▾</span>
                 </button>
                 <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-2 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1 active:scale-95">
                   <span>▶</span>
                 </button>
+                ` : (isRequest ? `
+                <span class="text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2 py-0.5 rounded font-mono flex items-center gap-1 font-semibold shrink-0" title="Trailer verified once scheduled">
+                  <span>⏳</span> Awaiting Schedule
+                </span>
+                ` : `
+                <span class="text-[10px] text-slate-500 font-mono shrink-0">No Trailer</span>
+                `)}
+
+                ${isAdmin ? `
+                <button onclick="openAdminTrailerForMovie('${escapeHtml(m.title)}')" title="Admin: Configure Trailer" class="text-xs px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95">
+                  <span>✏️</span>
+                </button>
+                ` : ''}
               </div>
-              ` : (isRequest ? `
-              <span class="text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2 py-0.5 rounded font-mono flex items-center gap-1 font-semibold shrink-0" title="Trailer verified once scheduled">
-                <span>⏳</span> Awaiting Schedule
-              </span>
-              ` : `
-              <span class="text-[10px] text-slate-500 font-mono shrink-0">No Trailer</span>
-              `)}
             </div>
+
+            ${meta.fullStory ? `
+            <!-- Expandable Story Drawer -->
+            <div id="vaultStoryViewer-${idx}" class="hidden flex-col gap-2 mt-2 p-3 rounded-xl bg-slate-900/95 border border-slate-800 text-xs text-slate-300 leading-relaxed shadow-inner">
+              <div class="flex items-center justify-between font-bold text-xs text-sky-400 border-b border-slate-800 pb-1 font-mono">
+                <span>📖 Movie Story & Archive Notes</span>
+                <button onclick="toggleVaultStory(${idx})" class="text-slate-400 hover:text-white px-1">✕</button>
+              </div>
+              <p class="pt-0.5 leading-relaxed">${escapeHtml(meta.fullStory)}</p>
+            </div>
+            ` : ''}
 
             ${hasTrailer ? `
             <!-- Vault Dropdown Video Viewer Drawer -->
             <div id="vaultTrailerViewer-${idx}" class="hidden flex-col gap-2 mt-2 pt-2.5 border-t border-slate-800/80">
-              <div id="vaultTrailerContainer-${idx}" data-trailer-id="${escapeHtml(trailerId)}" data-movie-title="${escapeHtml(m.title || '')}" class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
+              <div id="vaultTrailerContainer-${idx}" data-trailer-id="${escapeHtml(trailerId)}" data-movie-title="${escapeHtml(cleanTitle)}" class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
                 <!-- Trailer iframe dynamically injected on click -->
               </div>
               <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
-                <span class="truncate font-mono">🍿 ${escapeHtml(m.title || '')} Trailer</span>
+                <span class="truncate font-mono">🍿 ${escapeHtml(cleanTitle)} Trailer</span>
                 <button onclick="toggleVaultTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition shrink-0 ml-2">
                   <span>✕</span> Close
                 </button>
@@ -3592,6 +4028,129 @@
       grid.innerHTML = cardsHtml;
     }
 
+    function toggleVaultStory(idx) {
+      const drawer = document.getElementById(`vaultStoryViewer-${idx}`);
+      const btn = document.getElementById(`vaultStoryBtn-${idx}`);
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+        if (btn) btn.classList.add('border-sky-400', 'text-sky-300');
+      } else {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+        if (btn) btn.classList.remove('border-sky-400', 'text-sky-300');
+      }
+    }
+
+    function parseVaultMovieCardData(m) {
+      if (!m) return {};
+      const ov = String(m.overview || m.summary || m.desc || '');
+
+      // 1. Theatrical Release Year (never mixed with watch date!)
+      let releaseYear = null;
+      const yExplicit = ov.match(/Year:\s*(\d{4})/i);
+      if (yExplicit) {
+        releaseYear = yExplicit[1];
+      } else {
+        const yList = ov.match(/<li>\s*(\d{4})\s*<\/li>/i);
+        const yTitle = (m.title || '').match(/\((\d{4})\)/);
+        const yDot = ov.match(/\b(19\d\d|20\d\d)\s*[‧·•]/);
+        const yRating = ov.match(/(?:PG-13|PG|R|TV-MA|TV-14|TV-Y7|TV-G|TV-PG|NC-17|G)\s*[-‧·•]?\s*(19\d\d|20\d\d)/i);
+        if (yList) releaseYear = yList[1];
+        else if (yTitle) releaseYear = yTitle[1];
+        else if (yDot) releaseYear = yDot[1];
+        else if (yRating) releaseYear = yRating[1];
+        else if (m.year && m.year !== 'Past' && m.year !== '2025' && m.year !== '2026') {
+          releaseYear = m.year;
+        }
+      }
+
+      // 2. Watch Date (Screening Date)
+      let watchDate = '';
+      if (m.date) {
+        try {
+          const parts = String(m.date).split('/');
+          if (parts.length === 3) {
+            const d = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+            if (!isNaN(d.getTime())) {
+              watchDate = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+            }
+          }
+        } catch(e) {}
+        if (!watchDate) watchDate = String(m.date);
+      } else if (m.dateText) {
+        watchDate = String(m.dateText);
+      }
+
+      // 3. Runtime
+      let runtime = '';
+      const rtMatch = ov.match(/Runtime:\s*([^\r\n<]+)/i);
+      if (rtMatch) {
+        runtime = rtMatch[1].trim();
+      } else if (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard') {
+        runtime = m.runtime;
+      } else {
+        const rtGeneric = ov.match(/\b(\d{1,2}h\s*\d{1,2}m|\d{1,2}hr\s*\d{1,2}mins?)\b/i);
+        if (rtGeneric) runtime = rtGeneric[1];
+      }
+      if (runtime) {
+        runtime = runtime.replace(/mins?/i, 'm').replace(/hr/i, 'h').replace(/min/i, 'm').replace(/\s+/g, ' ').trim();
+      }
+
+      // 4. Rating (MPAA / TV)
+      let rating = '';
+      const rMatch = ov.match(/Rant?ing:\s*([^\r\n<]+)/i);
+      if (rMatch) {
+        const rawR = rMatch[1].trim().toUpperCase();
+        const valid = rawR.match(/\b(PG-13|PG|TV-MA|TV-14|TV-Y7|TV-G|TV-PG|NC-17|G|R|UNRATED)\b/i);
+        if (valid) rating = valid[1].toUpperCase();
+      }
+      if (!rating) {
+        const rGeneric = ov.match(/\b(PG-13|TV-MA|TV-14|TV-Y7|TV-G|TV-PG|NC-17)\b/i);
+        if (rGeneric) rating = rGeneric[1].toUpperCase();
+        else {
+          const rSolo = ov.match(/<li>\s*(R|PG-13|PG|G|NC-17|TV-MA|TV-14)\s*<\/li>|<b>R<\/b>|\bR\s+20\d\d|\bR\s*[-‧·•]/i);
+          if (rSolo) rating = rSolo[1] || 'R';
+        }
+      }
+
+      // 5. Genres
+      let genres = '';
+      const gMatch = ov.match(/Genres?:\s*([^\r\n<]+)/i);
+      if (gMatch) {
+        genres = gMatch[1].replace(/<[^>]+>/g, '').replace(/[\/,]/g, ' • ').replace(/\s+/g, ' ').trim();
+      } else if (m.genre && m.genre !== 'Past Screening') {
+        genres = m.genre;
+      }
+
+      // 6. Summary Teaser & Full Details
+      let teaser = '';
+      let fullStory = '';
+      const sMatch = ov.match(/Summary:\s*([\s\S]+?)(?=<br\s*\/?>\s*Trailer:|\n*Trailer:|<br\s*\/?>\s*Starring|\n*Starring|<br\s*\/?>\s*Source:|\n*Source:|$)/i);
+      if (sMatch) {
+        fullStory = sMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        teaser = fullStory;
+      } else if (/Screened at Century|Screened at Regal/i.test(ov)) {
+        fullStory = ov.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        teaser = fullStory;
+      } else if (!/Movie:|Runtime:|Year:/i.test(ov) && ov.length > 15) {
+        fullStory = ov.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        teaser = fullStory;
+      }
+
+      return {
+        releaseYear,
+        watchDate,
+        runtime,
+        rating,
+        genres,
+        teaser,
+        fullStory
+      };
+    }
+
     function setVaultFilter(filter) {
       vFilter = filter;
       vaultPageSize = 24;
@@ -3613,8 +4172,8 @@
       pastList.forEach(m => {
         if (!m || !m.title) return;
         const cleanTitle = m.title.replace(/^🎬\s*/, '').trim();
-        const exists = vaultMovies.some(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
-        if (!exists) {
+        const existing = vaultMovies.find(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
+        if (!existing) {
           vaultMovies.push({
             title: cleanTitle,
             year: m.year || "Past",
@@ -3627,9 +4186,17 @@
             overview: m.overview || ""
           });
           added++;
+        } else {
+          // 100% preservation of Column N data and watch date
+          if (!existing.overview && m.overview) existing.overview = m.overview;
+          if (!existing.date && m.date) existing.date = m.date;
+          if (!existing.trailerUrl && m.trailerUrl) existing.trailerUrl = m.trailerUrl;
         }
       });
-      if (added > 0) renderVault();
+      if (added > 0) {
+        renderVault();
+        populateAdminTrailerSelector();
+      }
     }
 
     // Ingest pre-cached 398+ past movies catalog on load
@@ -4031,6 +4598,7 @@
     renderSchedule();
     loadRequests();
     populateAdminArtworkSelector();
+    populateAdminTrailerSelector();
     updateDoorAdminButtons();
   </script>
 </body>

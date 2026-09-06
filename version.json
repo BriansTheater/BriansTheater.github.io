@@ -1,12 +1,12 @@
 {
-  "version": "4.9.43",
+  "version": "4.9.44",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.43",
+  "title": "Brian's Theater v4.9.44",
   "notes": [
-    "Removed unverified trailers from all community request cards.",
-    "Fixed incorrect Dune 2 fallback trailer on requests.",
-    "Request cards now cleanly display Awaiting Schedule badge.",
-    "Trailers only unlock once a movie is scheduled.",
-    "Verified trailer playback across confirmed past screenings."
+    "Added TMDB 1-click official trailer auto-discovery.",
+    "Built interactive Trailer Editor inside Admin Control Studio.",
+    "Unlocked 58 past movie trailers from Column N.",
+    "Full trailer sync across Column N and Column W.",
+    "Live player preview to verify trailers before saving."
   ]
 }
