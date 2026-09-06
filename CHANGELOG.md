@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.47] - 2026-09-06
+
+### What's New
+- Built custom cinema front-end for Google Form movie requests.
+- Added live movie suggestions with poster previews as you type.
+- Integrated interactive streaming platform badges and selection chips.
+- Created gold digital ticket confirmation pass for submitted requests.
+- Direct seamless submission to Google Form and Google Sheets.
+
 ## [4.9.46] - 2026-09-05
 
 ### What's New

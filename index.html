@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.46 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.47 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -358,27 +358,198 @@
     </div>
 
     <!-- TAB 4: 📝 REQUEST -->
-    <div id="view-requests" class="tab-view hidden flex flex-col gap-4">
+    <div id="view-requests" class="tab-view hidden flex flex-col gap-6 max-w-3xl mx-auto w-full">
 
-      <div class="card rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden flex flex-col" style="height: 85vh; min-height: 800px; padding: 0;">
-        
-        <!-- Top Card Header (Exact wosBDC pattern) -->
-        <div class="px-5 py-4 sm:px-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/95 backdrop-blur-md">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">📝</span>
-            <div>
-              <h2 class="text-base sm:text-lg font-bold text-slate-100 m-0">Movie Requests</h2>
-              <p class="text-xs text-slate-400 mt-0.5">Suggest films & shows for upcoming screening nights</p>
-            </div>
+      <!-- Header & Google Form Toggle -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-xl shrink-0">
+            🍿
           </div>
-          <div class="flex items-center gap-2">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow">
-              <span>↗️</span> <span>Open in New Tab</span>
-            </a>
+          <div>
+            <h2 class="text-lg sm:text-xl font-black text-slate-100 m-0 tracking-wide">Movie Requests</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Suggest films & shows directly to Brian for upcoming screening nights</p>
           </div>
         </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnToggleRawGoogleForm" onclick="toggleRawGoogleFormView()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+            <span>📋</span> <span id="toggleRawGoogleFormLabel">Raw Google Form</span>
+          </button>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow">
+            <span>↗️</span> <span>Open in Tab</span>
+          </a>
+        </div>
+      </div>
 
-        <!-- Zero-Padding Absolute-Fill Iframe Container (Exact wosBDC technique) -->
+      <!-- NATIVE CINEMATIC REQUEST CARD -->
+      <div id="customRequestContainer" class="rounded-2xl bg-gradient-to-b from-slate-900 via-slate-900/95 to-[#0b1220] border border-slate-800 shadow-2xl p-5 sm:p-7 relative overflow-hidden">
+        <!-- Ambient Top Gold Flare -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500/0 via-amber-400 to-amber-500/0"></div>
+
+        <!-- HIDDEN FORM TARGET (Bypasses CORS completely and avoids page redirects) -->
+        <iframe name="googleFormSubmitTarget" id="googleFormSubmitTarget" style="display:none; width:0; height:0;" tabindex="-1"></iframe>
+
+        <!-- 1. ACTIVE INPUT FORM VIEW -->
+        <form id="customMovieRequestForm" target="googleFormSubmitTarget" action="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/formResponse" method="POST" onsubmit="handleCustomRequestSubmit(event)" class="flex flex-col gap-5">
+
+          <!-- Requester Name Field -->
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <label for="reqNameInput" class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+                <span>👤</span> <span>Your Name / Nickname</span> <span class="text-amber-400">*</span>
+              </label>
+              <span class="text-[11px] text-slate-500">Required</span>
+            </div>
+            <input 
+              type="text" 
+              id="reqNameInput" 
+              name="entry.2011388280" 
+              required 
+              placeholder="e.g. Brian, CinemaFan99..." 
+              class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition shadow-inner">
+            <p class="text-[11px] text-slate-400">Let Brian know who recommended this title for the lineup.</p>
+          </div>
+
+          <!-- Movie or Show Title Field with Live TMDB Lookup -->
+          <div class="flex flex-col gap-1.5 relative">
+            <div class="flex items-center justify-between">
+              <label for="reqMovieInput" class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+                <span>🎬</span> <span>What movie or show are you requesting?</span> <span class="text-amber-400">*</span>
+              </label>
+              <span class="text-[11px] text-slate-500">Required</span>
+            </div>
+
+            <div class="relative">
+              <input 
+                type="text" 
+                id="reqMovieInput" 
+                name="entry.655230611" 
+                required 
+                autocomplete="off" 
+                placeholder="Type movie or show title (e.g. Inception, Dune 2)..." 
+                oninput="onReqMovieInput(this.value)"
+                class="w-full px-4 py-3 pr-10 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition shadow-inner">
+              
+              <!-- Clear / Status Icon Button -->
+              <button type="button" id="btnReqClearMovie" onclick="clearReqMovieInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1 text-xs cursor-pointer">
+                ✕
+              </button>
+
+              <!-- Floating Live TMDB Suggestions Dropdown -->
+              <div id="reqMovieSuggestions" class="hidden absolute left-0 right-0 top-full mt-1.5 z-50 bg-slate-950/95 backdrop-blur-lg border border-slate-700/80 rounded-xl shadow-2xl overflow-hidden max-h-72 overflow-y-auto divide-y divide-slate-800/60">
+                <!-- Suggestions rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Selected Movie Poster Preview Card (shown when a TMDB movie is picked) -->
+            <div id="reqSelectedMoviePreview" class="hidden p-3 rounded-xl bg-slate-950/80 border border-amber-500/30 flex items-center gap-3 mt-1 shadow-md">
+              <img id="reqPreviewPosterImg" src="" alt="Movie Poster" class="w-12 h-16 rounded-lg object-cover border border-slate-700 bg-black shrink-0">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-amber-300 truncate" id="reqPreviewTitleText">Movie Title</div>
+                <div class="text-[11px] text-slate-400 mt-0.5" id="reqPreviewMetaText">2024 • Verified via TMDB</div>
+              </div>
+              <button type="button" onclick="clearReqMoviePreview()" class="text-xs text-slate-400 hover:text-amber-300 underline shrink-0 px-2 py-1 cursor-pointer">
+                Change
+              </button>
+            </div>
+
+            <p class="text-[11px] text-slate-400">Type any title, or select from live movie suggestions to auto-fill.</p>
+          </div>
+
+          <!-- Platform Selection Field -->
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+                <span>📺</span> <span>Where can Brian find it? (Platform / Source)</span>
+              </label>
+              <span class="text-[11px] text-slate-500">Optional</span>
+            </div>
+
+            <!-- Hidden input that submits to Google Form entry.1587670981 -->
+            <input type="hidden" id="reqPlatformInput" name="entry.1587670981" value="">
+
+            <!-- Interactive Platform Chips Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="reqPlatformChipsContainer">
+              <!-- Rendered with exact Google Form options: HBO Max, Disney+/ Hulu, Netflix, Tubi, Peacock, Parmount+, Starz, Theaters, Prime, I Dont Know -->
+            </div>
+            <p class="text-[11px] text-slate-400">Click a platform to help Brian locate where to stream it.</p>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              id="btnSubmitRequestForm" 
+              class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 transform active:scale-[0.99] cursor-pointer">
+              <span>🍿</span>
+              <span id="btnSubmitRequestLabel">Submit Movie Request</span>
+              <span>↗</span>
+            </button>
+          </div>
+
+        </form>
+
+        <!-- 2. SUCCESS TICKET RECEIPT VIEW (Initially Hidden) -->
+        <div id="customRequestSuccessCard" class="hidden flex-col items-center text-center gap-5 py-6 sm:py-8">
+          
+          <!-- Golden Pass Badge -->
+          <div class="px-3.5 py-1 rounded-full bg-amber-400/20 border border-amber-400/50 text-amber-300 text-xs font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+            <span>🎟️</span> <span>Official Request Pass</span>
+          </div>
+
+          <div class="flex flex-col items-center gap-1">
+            <h3 class="text-xl sm:text-2xl font-black text-slate-100 tracking-wide">🍿 Request Sent to Brian!</h3>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-md">Your movie suggestion was delivered straight to Brian's Google Form & Google Sheets queue.</p>
+          </div>
+
+          <!-- Ticket Card Summary -->
+          <div class="w-full max-w-md rounded-xl bg-slate-950/90 border border-slate-800 p-4 flex items-center gap-4 text-left shadow-xl relative overflow-hidden">
+            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-900 border border-slate-800"></div>
+            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-900 border border-slate-800"></div>
+
+            <img id="successTicketPosterImg" src="" alt="Movie Poster" class="w-16 h-24 rounded-lg object-cover bg-slate-900 border border-slate-700 shrink-0 hidden">
+            <div id="successTicketDefaultIcon" class="w-16 h-24 rounded-lg bg-gradient-to-tr from-amber-500/20 to-orange-500/10 border border-amber-500/30 flex items-center justify-center text-3xl shrink-0">
+              🎬
+            </div>
+
+            <div class="flex-1 min-w-0 pl-1">
+              <div class="text-sm sm:text-base font-black text-slate-100 truncate" id="successTicketMovieTitle">Movie Title</div>
+              <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 truncate">
+                <span>👤</span> <span id="successTicketRequesterName">Requester</span>
+              </div>
+              <div class="text-xs text-amber-300 font-semibold mt-1 flex items-center gap-1.5 truncate">
+                <span>📺</span> <span id="successTicketPlatformName">Platform</span>
+              </div>
+              <div class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span>✓</span> <span>Queue Status: Under Review</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md pt-2">
+            <button type="button" onclick="resetCustomRequestForm()" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+              <span>➕</span> <span>Request Another Movie</span>
+            </button>
+            <button type="button" onclick="switchTab('schedule')" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+              <span>📅</span> <span>View Schedule</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- OPTIONAL EMBEDDED GOOGLE FORM VIEW (Toggled if desired) -->
+      <div id="rawGoogleFormWrapper" class="hidden rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden flex flex-col" style="height: 80vh; min-height: 750px;">
+        <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/95">
+          <div class="flex items-center gap-2 text-xs text-slate-300 font-semibold">
+            <span>📋</span> <span>Standard Embedded Google Form View</span>
+          </div>
+          <button type="button" onclick="toggleRawGoogleFormView()" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-xs cursor-pointer">
+            ✕ Close
+          </button>
+        </div>
         <div style="flex: 1; width: 100%; position: relative; background: #0b0f19;">
           <iframe 
             id="googleFormIframe"
@@ -389,11 +560,10 @@
             marginwidth="0"
             title="Brian's Theater Movie Request Form"
             allow="autoplay; encrypted-media; fullscreen"
-            loading="eager">
+            loading="lazy">
             Loading Movie Request Form…
           </iframe>
         </div>
-
       </div>
 
     </div>
@@ -408,7 +578,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.46</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.47</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -691,7 +861,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.46</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.47</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -856,7 +1026,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.46</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.47</span>
     </div>
 
   </aside>
@@ -1070,7 +1240,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.46</span>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.47</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1105,7 +1275,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.46";
+    const APP_VERSION = "4.9.47";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1460,6 +1630,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.47": [
+        "Built custom cinema front-end for Google Form movie requests.",
+        "Added live movie suggestions with poster previews as you type.",
+        "Integrated interactive streaming platform badges and selection chips.",
+        "Created gold digital ticket confirmation pass for submitted requests.",
+        "Direct seamless submission to Google Form and Google Sheets."
+      ],
       "4.9.46": [
         "Hardened database security and resolved unauthorized access risks.",
         "Hidden top navigation bar on smartphones for clean space.",
@@ -1602,7 +1779,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.46"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.47"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4633,9 +4810,354 @@
       showTheaterToast("🗑️ Request dismissed.");
     }
 
+    // =========================================================================
+    // 📝 CUSTOM GOOGLE FORM REQUEST FRONTEND ENGINE
+    // =========================================================================
+    const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/formResponse";
+    const REQUEST_PLATFORMS = [
+      "HBO Max",
+      "Disney+/ Hulu",
+      "Netflix",
+      "Tubi",
+      "Peacock",
+      "Parmount+",
+      "Starz",
+      "Theaters",
+      "Prime",
+      "I Dont Know"
+    ];
+
+    let reqSearchDebounceTimer = null;
+    let selectedMovieMetadata = null;
+
+    function initCustomRequestForm() {
+      // 1. Populate platform chips
+      const chipsContainer = document.getElementById('reqPlatformChipsContainer');
+      if (chipsContainer) {
+        chipsContainer.innerHTML = REQUEST_PLATFORMS.map(platform => `
+          <button 
+            type="button" 
+            onclick="selectRequestPlatformChip('${escapeHtml(platform)}')" 
+            data-platform="${escapeHtml(platform)}"
+            class="platform-chip px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700 text-xs font-semibold cursor-pointer transition flex items-center justify-center text-center truncate active:scale-95">
+            ${escapeHtml(platform)}
+          </button>
+        `).join('');
+      }
+
+      // 2. Pre-fill requester name from localStorage if available
+      const savedName = localStorage.getItem('bt_requester_name') || '';
+      const nameInput = document.getElementById('reqNameInput');
+      if (nameInput && savedName) {
+        nameInput.value = savedName;
+      }
+    }
+
+    function selectRequestPlatformChip(platform) {
+      const platformInput = document.getElementById('reqPlatformInput');
+      if (!platformInput) return;
+
+      const chips = document.querySelectorAll('.platform-chip');
+      if (platformInput.value === platform) {
+        // Deselect
+        platformInput.value = '';
+        chips.forEach(chip => {
+          chip.className = "platform-chip px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700 text-xs font-semibold cursor-pointer transition flex items-center justify-center text-center truncate active:scale-95";
+        });
+      } else {
+        // Select
+        platformInput.value = platform;
+        chips.forEach(chip => {
+          const chipPlat = chip.getAttribute('data-platform');
+          if (chipPlat === platform) {
+            chip.className = "platform-chip px-3 py-2 rounded-xl bg-amber-400 text-slate-950 border border-amber-300 font-bold text-xs cursor-pointer shadow-lg shadow-amber-500/20 flex items-center justify-center text-center truncate active:scale-95";
+          } else {
+            chip.className = "platform-chip px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 border border-slate-800 hover:border-slate-700 text-xs font-semibold cursor-pointer transition flex items-center justify-center text-center truncate opacity-70";
+          }
+        });
+      }
+    }
+
+    function onReqMovieInput(value) {
+      const clearBtn = document.getElementById('btnReqClearMovie');
+      if (clearBtn) {
+        if (value && value.trim().length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+      }
+
+      // Debounce TMDB query
+      clearTimeout(reqSearchDebounceTimer);
+      const query = (value || '').trim();
+      if (query.length < 2) {
+        hideReqMovieSuggestions();
+        return;
+      }
+
+      reqSearchDebounceTimer = setTimeout(() => {
+        fetchTmdbSuggestionsForRequest(query);
+      }, 300);
+    }
+
+    function clearReqMovieInput() {
+      const input = document.getElementById('reqMovieInput');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      const clearBtn = document.getElementById('btnReqClearMovie');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      clearReqMoviePreview();
+      hideReqMovieSuggestions();
+    }
+
+    async function fetchTmdbSuggestionsForRequest(query) {
+      const container = document.getElementById('reqMovieSuggestions');
+      if (!container) return;
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(query)}&include_adult=false`);
+        if (!res.ok) {
+          hideReqMovieSuggestions();
+          return;
+        }
+        const data = await res.json();
+        const results = (data.results || []).slice(0, 5);
+
+        if (results.length === 0) {
+          hideReqMovieSuggestions();
+          return;
+        }
+
+        container.innerHTML = results.map(m => {
+          const year = (m.release_date || '').split('-')[0] || 'N/A';
+          const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : '';
+          const safeTitle = escapeHtml(m.title || '');
+          const safeEncoded = encodeURIComponent(JSON.stringify({
+            title: m.title || '',
+            year: year,
+            posterUrl: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : ''
+          }));
+
+          return `
+            <div 
+              onclick="selectReqMovieSuggestion('${safeEncoded}')" 
+              class="p-2.5 hover:bg-slate-900 flex items-center gap-3 cursor-pointer transition select-none">
+              ${poster ? `
+                <img src="${poster}" alt="${safeTitle}" class="w-8 h-12 object-cover rounded bg-slate-900 border border-slate-700 shrink-0">
+              ` : `
+                <div class="w-8 h-12 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-sm shrink-0">🎬</div>
+              `}
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-slate-100 truncate">${safeTitle}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">${year} • The Movie Database</div>
+              </div>
+              <span class="text-xs text-amber-400 shrink-0 font-bold">Select ↗</span>
+            </div>
+          `;
+        }).join('');
+
+        container.classList.remove('hidden');
+      } catch (e) {
+        hideReqMovieSuggestions();
+      }
+    }
+
+    function hideReqMovieSuggestions() {
+      const container = document.getElementById('reqMovieSuggestions');
+      if (container) container.classList.add('hidden');
+    }
+
+    function selectReqMovieSuggestion(encodedMovieStr) {
+      try {
+        const movie = JSON.parse(decodeURIComponent(encodedMovieStr));
+        selectedMovieMetadata = movie;
+
+        const input = document.getElementById('reqMovieInput');
+        if (input) input.value = movie.title;
+
+        // Show preview card
+        const preview = document.getElementById('reqSelectedMoviePreview');
+        const posterImg = document.getElementById('reqPreviewPosterImg');
+        const titleText = document.getElementById('reqPreviewTitleText');
+        const metaText = document.getElementById('reqPreviewMetaText');
+
+        if (preview && titleText) {
+          titleText.textContent = movie.title;
+          if (metaText) metaText.textContent = `${movie.year || 'Cinema'} • Verified via TMDB`;
+          if (posterImg) {
+            if (movie.posterUrl) {
+              posterImg.src = movie.posterUrl;
+              posterImg.classList.remove('hidden');
+            } else {
+              posterImg.classList.add('hidden');
+            }
+          }
+          preview.classList.remove('hidden');
+        }
+
+        hideReqMovieSuggestions();
+      } catch (err) {
+        console.error('Failed to parse movie suggestion', err);
+      }
+    }
+
+    function clearReqMoviePreview() {
+      selectedMovieMetadata = null;
+      const preview = document.getElementById('reqSelectedMoviePreview');
+      if (preview) preview.classList.add('hidden');
+    }
+
+    // Close suggestion dropdown if user clicks outside
+    document.addEventListener('click', function(e) {
+      const suggestions = document.getElementById('reqMovieSuggestions');
+      const movieInput = document.getElementById('reqMovieInput');
+      if (suggestions && !suggestions.contains(e.target) && e.target !== movieInput) {
+        hideReqMovieSuggestions();
+      }
+    });
+
+    async function handleCustomRequestSubmit(event) {
+      const nameInput = document.getElementById('reqNameInput');
+      const movieInput = document.getElementById('reqMovieInput');
+      const platformInput = document.getElementById('reqPlatformInput');
+      const submitBtn = document.getElementById('btnSubmitRequestForm');
+      const submitLabel = document.getElementById('btnSubmitRequestLabel');
+
+      const requesterName = (nameInput ? nameInput.value : '').trim();
+      const movieTitle = (movieInput ? movieInput.value : '').trim();
+      const platform = (platformInput ? platformInput.value : '').trim();
+
+      if (!requesterName || !movieTitle) {
+        showTheaterToast("⚠️ Please enter your name and movie title.");
+        return;
+      }
+
+      // Save requester name for future visits
+      localStorage.setItem('bt_requester_name', requesterName);
+
+      // Show submitting state
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+      }
+      if (submitLabel) submitLabel.textContent = "Submitting to Brian's Queue...";
+
+      // Redundant background fetch for standalone PWAs & iOS
+      try {
+        const formData = new FormData();
+        formData.append('entry.2011388280', requesterName);
+        formData.append('entry.655230611', movieTitle);
+        if (platform) formData.append('entry.1587670981', platform);
+
+        fetch(GOOGLE_FORM_ACTION_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        }).catch(() => {});
+      } catch (e) {}
+
+      // Add to in-memory requests list immediately so it shows up in UI
+      communityRequests.unshift({
+        title: movieTitle,
+        requester: requesterName,
+        genre: platform || 'Movie',
+        status: 'Under Review'
+      });
+      if (typeof loadRequests === 'function') {
+        loadRequests();
+      }
+
+      // Transition to ticket success receipt after smooth delay
+      setTimeout(() => {
+        // Reset submit button state
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+        if (submitLabel) submitLabel.textContent = "Submit Movie Request";
+
+        // Fill Ticket Success Card
+        const formEl = document.getElementById('customMovieRequestForm');
+        const successCard = document.getElementById('customRequestSuccessCard');
+        const ticketTitle = document.getElementById('successTicketMovieTitle');
+        const ticketRequester = document.getElementById('successTicketRequesterName');
+        const ticketPlatform = document.getElementById('successTicketPlatformName');
+        const ticketPoster = document.getElementById('successTicketPosterImg');
+        const ticketDefaultIcon = document.getElementById('successTicketDefaultIcon');
+
+        if (ticketTitle) ticketTitle.textContent = movieTitle;
+        if (ticketRequester) ticketRequester.textContent = `Requested by ${requesterName}`;
+        if (ticketPlatform) ticketPlatform.textContent = platform ? `Available on ${platform}` : 'Streaming / Theaters';
+
+        if (selectedMovieMetadata && selectedMovieMetadata.posterUrl) {
+          if (ticketPoster) {
+            ticketPoster.src = selectedMovieMetadata.posterUrl;
+            ticketPoster.classList.remove('hidden');
+          }
+          if (ticketDefaultIcon) ticketDefaultIcon.classList.add('hidden');
+        } else {
+          if (ticketPoster) ticketPoster.classList.add('hidden');
+          if (ticketDefaultIcon) ticketDefaultIcon.classList.remove('hidden');
+        }
+
+        if (formEl) formEl.classList.add('hidden');
+        if (successCard) {
+          successCard.classList.remove('hidden');
+          successCard.classList.add('flex');
+        }
+
+        showTheaterToast("🍿 Movie request sent to Brian!");
+      }, 700);
+    }
+
+    function resetCustomRequestForm() {
+      const formEl = document.getElementById('customMovieRequestForm');
+      const successCard = document.getElementById('customRequestSuccessCard');
+      const movieInput = document.getElementById('reqMovieInput');
+      const platformInput = document.getElementById('reqPlatformInput');
+
+      if (movieInput) movieInput.value = '';
+      if (platformInput) platformInput.value = '';
+      clearReqMoviePreview();
+      selectRequestPlatformChip('');
+
+      if (successCard) {
+        successCard.classList.add('hidden');
+        successCard.classList.remove('flex');
+      }
+      if (formEl) {
+        formEl.classList.remove('hidden');
+      }
+      if (movieInput) movieInput.focus();
+    }
+
+    function toggleRawGoogleFormView() {
+      const rawWrapper = document.getElementById('rawGoogleFormWrapper');
+      const customContainer = document.getElementById('customRequestContainer');
+      const label = document.getElementById('toggleRawGoogleFormLabel');
+      if (!rawWrapper || !customContainer) return;
+
+      if (rawWrapper.classList.contains('hidden')) {
+        rawWrapper.classList.remove('hidden');
+        rawWrapper.classList.add('flex');
+        customContainer.classList.add('hidden');
+        if (label) label.textContent = "Cinema Form View";
+      } else {
+        rawWrapper.classList.add('hidden');
+        rawWrapper.classList.remove('flex');
+        customContainer.classList.remove('hidden');
+        if (label) label.textContent = "Raw Google Form";
+      }
+    }
+
     renderVault();
     renderSchedule();
     loadRequests();
+    initCustomRequestForm();
     populateAdminArtworkSelector();
     populateAdminTrailerSelector();
     updateDoorAdminButtons();

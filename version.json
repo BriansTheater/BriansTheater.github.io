@@ -1,12 +1,12 @@
 {
-  "version": "4.9.46",
-  "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.46",
+  "version": "4.9.47",
+  "releaseDate": "2026-09-06",
+  "title": "Brian's Theater v4.9.47",
   "notes": [
-    "Hardened database security and resolved unauthorized access risks.",
-    "Hidden top navigation bar on smartphones for clean space.",
-    "Streamlined menu button label to Menu across header.",
-    "Permanently fixed update alert loop with hard cache purge.",
-    "Instant automatic update delivery with zero stale cache."
+    "Built custom cinematic front-end for Google Form movie requests.",
+    "Added real-time movie suggestions with live poster previews.",
+    "Integrated interactive streaming platform badges and selection chips.",
+    "Created official digital ticket confirmation pass for requests.",
+    "Enabled seamless CORS-free submission directly to Google Sheets."
   ]
 }
