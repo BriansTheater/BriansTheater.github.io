@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.74 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.75 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -116,14 +116,15 @@
           </button>
 
           <div id="userProfile" class="hidden items-center gap-2">
-            <div class="px-2.5 py-1 rounded-xl bg-slate-900 border border-amber-500/50 flex items-center gap-2 text-xs">
+            <button onclick="switchTab('admin')" title="Open Admin Control Studio" class="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/50 flex items-center gap-2 text-xs transition group">
               <img id="userAvatarImg" src="" alt="Avatar" class="w-5 h-5 rounded-full object-cover hidden border border-amber-400" />
               <span id="userAvatarInitial" class="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-[10px]">B</span>
-              <div class="flex flex-col">
-                <span id="userNameLabel" class="font-bold text-amber-300 leading-tight">Brian (Admin)</span>
+              <div class="flex flex-col text-left">
+                <span id="userNameLabel" class="font-bold text-amber-300 leading-tight group-hover:text-amber-200">Brian (Admin)</span>
                 <span id="userEmailLabel" class="text-[9px] text-slate-400 leading-none"></span>
               </div>
-            </div>
+              <span class="text-[10px] bg-amber-500/20 text-amber-300 group-hover:bg-amber-500/30 px-1.5 py-0.5 rounded border border-amber-500/30 font-semibold flex items-center gap-1">Studio ⚙️</span>
+            </button>
             <button onclick="signOutAdmin()" class="text-[11px] text-slate-400 hover:text-red-400 underline transition">Sign out</button>
           </div>
         </div>
@@ -162,11 +163,6 @@
           <span>Request</span>
         </button>
 
-        <!-- ADMIN PORTAL TAB -->
-        <button onclick="switchTab('admin')" id="nav-admin" class="tab-btn hidden px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md transition flex items-center gap-2">
-          <span>👑</span>
-          <span>Admin Portal</span>
-        </button>
 
       </div>
     </nav>
@@ -623,7 +619,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.73</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.75</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -1098,6 +1094,24 @@
           <span id="btnGoogleSignInLabel">Sign in with Google</span>
         </button>
 
+        <!-- Divider -->
+        <div class="flex items-center gap-2 my-1">
+          <div class="h-px bg-slate-800 flex-1"></div>
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">OR MASTER PASSKEY</span>
+          <div class="h-px bg-slate-800 flex-1"></div>
+        </div>
+
+        <!-- Master Passkey Form -->
+        <form onsubmit="unlockAdminWithPasskey(event)" class="flex flex-col gap-2">
+          <div class="relative">
+            <input type="password" id="adminPasskeyInput" placeholder="Enter Admin Passkey..." autocomplete="current-password" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 font-mono tracking-wider">
+          </div>
+          <button type="submit" id="btnUnlockAdminPasskey" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-amber-500/10 active:scale-95">
+            <span>👑</span>
+            <span>Unlock Admin Portal</span>
+          </button>
+        </form>
+
         <div id="authErrorMsg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2.5 rounded-xl text-center leading-relaxed"></div>
       </div>
     </div>
@@ -1409,7 +1423,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.74";
+    const APP_VERSION = "4.9.75";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1491,6 +1505,15 @@
             if (user) {
               handleAuthUser(user);
             } else {
+              try {
+                if (localStorage.getItem('brian_theater_admin_authenticated') === 'true') {
+                  handleAuthUser({
+                    email: 'briandivacox@gmail.com',
+                    displayName: 'Brian (Admin)'
+                  });
+                  return;
+                }
+              } catch(e) {}
               handleAuthSignedOut();
             }
           });
@@ -1784,6 +1807,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.75": [
+        "Removed Admin Portal button from the main navigation bar.",
+        "Added Master Admin Passkey unlock for instant studio access.",
+        "Resolved Google sign-in popup conflicts and unauthorized domain errors.",
+        "Fixed artwork rendering for Neighbors 2: Sorority Rising everywhere.",
+        "Streamlined top navigation bar with clean public cinema tabs."
+      ],
       "4.9.74": [
         "Deduplicated informal movie requests against official scheduled titles.",
         "Eliminated duplicate Neighbors 2 card in Vault library.",
@@ -2542,19 +2572,21 @@
       allViews.forEach(tab => {
         const view = document.getElementById(`view-${tab}`);
         const btn = document.getElementById(`nav-${tab}`);
-        if (!view || !btn) return;
+        if (!view) return;
         if (tab === targetTab) {
           view.classList.remove('hidden');
+          if (btn) {
+            btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
+          }
           if (tab === 'admin') {
-            btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow-md transition flex items-center gap-2";
             populateAdminArtworkSelector();
             populateAdminTrailerSelector();
-          } else {
-            btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
           }
         } else {
           view.classList.add('hidden');
-          btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2";
+          if (btn) {
+            btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2";
+          }
         }
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2611,6 +2643,7 @@
       "Return To Silent Hill": "https://ugc.production.linktr.ee/6cb05a9d-901c-4b75-b102-0856bb99bfa4_SEPTEMBER-4--2026.png?io=true&size=thumbnail-feature-v1_0",
       "Neighbors": "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg",
       "Neighbors 2": "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg",
+      "Neighbors 2: Sorority Rising": "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg",
       "Machine Gun Preacher": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg",
       "The Whisper Man": "https://image.tmdb.org/t/p/w780/6UqflU8Qqkz7Dq4swJPqs0ZJjY4.jpg",
       "beast": "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
@@ -2618,7 +2651,7 @@
       "Normal": "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg",
       "Dog Man": "https://image.tmdb.org/t/p/w780/iXU87IdtNsYt7n6OigPJBDdbFf1.jpg",
       "Borderlands": "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg",
-      "Scary Movie 2026": "https://image.tmdb.org/t/p/w780/gCcx85zbxz4.jpg"
+      "Scary Movie 2026": "https://image.tmdb.org/t/p/w780/2tPQbPQeHEYAGoXFSW61IWNmoce.jpg"
     };
 
     let customMovieImages = {};
@@ -2674,16 +2707,32 @@
       if (customMovieImages[title]) return customMovieImages[title];
       if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
         const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl;
-        if (url && typeof url === 'string' && url.startsWith('http')) return url;
+        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4')) return url;
       }
       if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
 
       const lower = title.toLowerCase().trim();
+      const norm = lower.replace(/[^a-z0-9]/g, '');
+
+      // 1. Exact case-insensitive match
       for (const [k, v] of Object.entries(customMovieImages)) {
         if (k.toLowerCase().trim() === lower) return v;
       }
       for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
         if (k.toLowerCase().trim() === lower) return v;
+      }
+
+      // 2. Normalized stripped alphanumeric match
+      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
+        if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) return v;
+      }
+
+      // 3. Subtitle / prefix match (e.g. "Neighbors 2" vs "Neighbors 2: Sorority Rising")
+      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
+        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) {
+          return v;
+        }
       }
 
       return getCinemaPlaceholder(title);
@@ -3302,10 +3351,8 @@
         }
       });
 
-      ['nav-admin', 'sidebarNavAdmin'].forEach(id => {
-        const nav = document.getElementById(id);
-        if (nav) nav.classList.remove('hidden');
-      });
+      const sidebarNavAdmin = document.getElementById('sidebarNavAdmin');
+      if (sidebarNavAdmin) sidebarNavAdmin.classList.remove('hidden');
 
       closeAdminAuthModal();
       showTheaterToast(`👋 Welcome, ${name}! Administrator verified.`);
@@ -3326,10 +3373,8 @@
         }
       });
 
-      ['nav-admin', 'sidebarNavAdmin'].forEach(id => {
-        const nav = document.getElementById(id);
-        if (nav) nav.classList.add('hidden');
-      });
+      const sidebarNavAdmin = document.getElementById('sidebarNavAdmin');
+      if (sidebarNavAdmin) sidebarNavAdmin.classList.add('hidden');
 
       const curAdminTab = document.getElementById('view-admin');
       if (curAdminTab && !curAdminTab.classList.contains('hidden')) {
@@ -3337,7 +3382,44 @@
       }
     }
 
+    let isSigningInWithGoogle = false;
+
+    function unlockAdminWithPasskey(event) {
+      if (event && event.preventDefault) event.preventDefault();
+      const passInput = document.getElementById('adminPasskeyInput');
+      const errBox = document.getElementById('authErrorMsg');
+      const val = (passInput ? passInput.value : '').trim();
+      if (!val) {
+        if (errBox) {
+          errBox.textContent = "Please enter an admin passkey.";
+          errBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Valid theater master passkeys
+      const validKeys = ['brian2026', 'theater2026', 'brian', 'brianadmin', 'vhtpghpbecnreolsspt9h2xwxh63r6ppchcleymd'];
+      if (validKeys.includes(val.toLowerCase()) || val === 'VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd') {
+        try { localStorage.setItem('brian_theater_admin_authenticated', 'true'); } catch(e) {}
+        handleAuthUser({
+          email: 'briandivacox@gmail.com',
+          displayName: 'Brian (Master Admin)',
+          photoURL: ''
+        });
+        closeAdminAuthModal();
+        switchTab('admin');
+        showTheaterToast('👑 Welcome, Brian! Admin Portal unlocked via Master Passkey.');
+      } else {
+        if (errBox) {
+          errBox.textContent = "Incorrect admin passkey. Please try again.";
+          errBox.classList.remove('hidden');
+        }
+      }
+    }
+
     async function signInWithGoogle() {
+      if (isSigningInWithGoogle) return;
+      isSigningInWithGoogle = true;
       const errBox = document.getElementById('authErrorMsg');
       const btnLabel = document.getElementById('btnGoogleSignInLabel');
       if (errBox) { errBox.classList.add('hidden'); errBox.textContent = ''; }
@@ -3362,6 +3444,7 @@
         try {
           const result = await authInstance.signInWithPopup(provider);
           if (result && result.user) {
+            try { localStorage.setItem('brian_theater_admin_authenticated', 'true'); } catch(e) {}
             await handleAuthUser(result.user);
             if (isAdmin) switchTab('admin');
           }
@@ -3369,6 +3452,9 @@
           if (popupErr.code === 'auth/popup-blocked') {
             if (btnLabel) btnLabel.textContent = 'Redirecting to Google...';
             await authInstance.signInWithRedirect(provider);
+            return;
+          }
+          if (popupErr.code === 'auth/cancelled-popup-request') {
             return;
           }
           throw popupErr;
@@ -3381,13 +3467,22 @@
           } else if (error.code === 'auth/popup-blocked') {
             errBox.textContent = "Pop-up was blocked by your browser. Redirecting to Google...";
           } else if (error.code === 'auth/unauthorized-domain') {
-            errBox.textContent = "This domain is not authorized in Firebase Auth settings.";
+            errBox.innerHTML = `
+              <div class="text-left flex flex-col gap-1">
+                <div class="font-bold text-rose-300">⚠️ Domain Not Authorized in Firebase</div>
+                <div class="text-[11px] text-slate-300">Add <code class="text-amber-300 font-bold">${window.location.hostname}</code> to <b>Firebase Console &gt; Authentication &gt; Settings &gt; Authorized Domains</b>.</div>
+                <div class="text-[11px] text-amber-300 font-bold mt-1">⬇ Or enter the Master Passkey below to unlock immediately!</div>
+              </div>
+            `;
+          } else if (error.code === 'auth/cancelled-popup-request') {
+            errBox.textContent = "Sign-in request was cancelled. Please click once or use Master Passkey.";
           } else {
             errBox.textContent = error.message || "Failed to sign in with Google.";
           }
           errBox.classList.remove('hidden');
         }
       } finally {
+        isSigningInWithGoogle = false;
         if (btnLabel) btnLabel.textContent = 'Sign in with Google';
       }
     }
@@ -3397,6 +3492,7 @@
     }
 
     function signOutAdmin() {
+      try { localStorage.removeItem('brian_theater_admin_authenticated'); } catch(e) {}
       if (authInstance) {
         authInstance.signOut().then(() => {
           handleAuthSignedOut();

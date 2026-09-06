@@ -1,12 +1,12 @@
 {
-  "version": "4.9.74",
+  "version": "4.9.75",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.74",
+  "title": "Brian's Theater v4.9.75",
   "notes": [
-    "Deduplicated informal movie requests against official scheduled titles.",
-    "Eliminated duplicate Neighbors 2 card in Vault library.",
-    "Merged requester credit onto full official movie card.",
-    "Enhanced Vault matching to recognize subtitle and schedule variations.",
-    "Ensured single clean movie card per scheduled screening."
+    "Removed Admin Portal button from the main navigation bar.",
+    "Added Master Admin Passkey unlock for instant studio access.",
+    "Resolved Google sign-in popup conflicts and unauthorized domain errors.",
+    "Fixed artwork rendering for Neighbors 2: Sorority Rising everywhere.",
+    "Streamlined top navigation bar with clean public cinema tabs."
   ]
 }

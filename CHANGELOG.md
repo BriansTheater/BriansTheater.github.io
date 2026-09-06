@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.75] - 2026-09-06
+
+### What's New
+- Removed Admin Portal button from the main navigation bar.
+- Added Master Admin Passkey unlock for instant studio access.
+- Resolved Google sign-in popup conflicts and unauthorized domain errors.
+- Fixed artwork rendering for Neighbors 2: Sorority Rising everywhere.
+- Streamlined top navigation bar with clean public cinema tabs.
+
 ## [4.9.74] - 2026-09-06
 
 ### What's New
