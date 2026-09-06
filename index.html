@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.58 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.59 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -309,7 +309,7 @@
         <span id="schedNextTitle">🎬 Neighbors 2</span>
         <span id="schedNextDate">Sunday, Sept 6 • 7:00 PM PST</span>
         <div id="schedNextPosterContainer">
-          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/jzb9X0f2P1tH2e8964d4Lz14e0B.jpg" alt="" />
+          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="" />
         </div>
         <div id="schedCountdownGrid">
           <div id="schedColDays"><div id="countDays">00</div></div>
@@ -347,38 +347,47 @@
     <!-- TAB 3: 🔍 MOVIE VAULT -->
     <div id="view-vault" class="tab-view hidden flex flex-col gap-6">
       
-      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-3.5 sm:p-6 shadow-2xl flex flex-col gap-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3 sm:pb-4">
           <div>
-            <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <h3 class="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
               <span>🔍</span> Movie Vault & Archive
             </h3>
-            <p class="text-xs text-slate-400">Full archive of past screenings and requested films & shows from Brian's Google Sheet</p>
+            <p class="text-xs text-slate-400 mt-0.5">Full archive of past screenings and requested films & shows</p>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Responsive Filter Pills: Clean 3-col grid on phones, horizontal on desktop -->
+          <div class="grid grid-cols-1 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
             <!-- Media Type Filter: All Types vs Movies vs TV Shows -->
-            <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner">
-              <button onclick="setVaultMediaType('all')" id="vTypeAll" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm">All Types</button>
-              <button onclick="setVaultMediaType('movie')" id="vTypeMovie" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">🎬 Movies</button>
-              <button onclick="setVaultMediaType('tv')" id="vTypeTv" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">📺 TV Shows</button>
+            <div class="grid grid-cols-3 sm:flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto">
+              <button onclick="setVaultMediaType('all')" id="vTypeAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm text-center">All Types</button>
+              <button onclick="setVaultMediaType('movie')" id="vTypeMovie" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">🎬 Movies</button>
+              <button onclick="setVaultMediaType('tv')" id="vTypeTv" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">📺 TV</button>
             </div>
 
             <!-- Source Filter: All vs Past vs Requests -->
-            <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner">
-              <button onclick="setVaultFilter('all')" id="vTabAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm">All Sources</button>
-              <button onclick="setVaultFilter('past')" id="vTabPast" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">Past</button>
-              <button onclick="setVaultFilter('request')" id="vTabReq" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">Requests</button>
+            <div class="grid grid-cols-3 sm:flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto">
+              <button onclick="setVaultFilter('all')" id="vTabAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm text-center">All Sources</button>
+              <button onclick="setVaultFilter('past')" id="vTabPast" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">⚡ Past</button>
+              <button onclick="setVaultFilter('request')" id="vTabReq" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">⏳ Requests</button>
             </div>
           </div>
         </div>
 
-        <div class="relative">
-          <input type="text" id="vaultSearch" oninput="handleVaultSearchInput()" placeholder="Type movie title, genre, year, or actor..." class="w-full px-4 py-3 text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-400">
-          <span id="vaultCount" class="absolute right-4 top-3.5 text-xs text-slate-400 font-mono">Loading library...</span>
+        <!-- Search Input & Info Bar (Zero-Collision Responsive Layout) -->
+        <div class="flex flex-col gap-2">
+          <div class="relative flex items-center">
+            <span class="absolute left-3.5 text-slate-400 pointer-events-none text-sm">🔍</span>
+            <input type="text" id="vaultSearch" oninput="handleVaultSearchInput()" placeholder="Search movie, genre, year, or actor..." class="w-full pl-9 pr-10 py-2.5 sm:py-3 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-400 transition">
+            <button id="vaultSearchClearBtn" onclick="clearVaultSearch()" class="hidden absolute right-3 text-slate-400 hover:text-slate-200 p-1 rounded-lg text-xs transition" title="Clear search">✕</button>
+          </div>
+          <div class="flex items-center justify-between px-1 text-[11px] sm:text-xs text-slate-400 font-mono">
+            <span id="vaultCount">Loading library...</span>
+            <span id="vaultFilterStatus" class="text-sky-400/90 font-medium">All Types • All Sources</span>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-h-[750px] overflow-y-auto pr-1" id="vaultGrid"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5" id="vaultGrid"></div>
       </div>
 
     </div>
@@ -1311,7 +1320,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.58";
+    const APP_VERSION = "4.9.59";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1598,7 +1607,7 @@
         startTime: "7:00 PM",
         runtime: "1h 32m",
         trailerId: "X2i9Zz_AqTg",
-        posterUrl: typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl("Neighbors 2") : "https://image.tmdb.org/t/p/w780/jzb9X0f2P1tH2e8964d4Lz14e0B.jpg"
+        posterUrl: typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl("Neighbors 2") : "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg"
       };
     }
 
@@ -1686,6 +1695,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.59": [
+        "Redesigned Vault search and counter with zero mobile text collision.",
+        "Optimized movie filter tabs for one-tap mobile phone tapping.",
+        "Polished mobile card layout and eliminated duplicate date overlays.",
+        "Expanded trailer buttons to full width for responsive mobile viewing.",
+        "Removed inner scroll trap for smooth natural page scrolling."
+      ],
       "4.9.58": [
         "Added one-click Past Movies auto-fill to Google Sheets.",
         "Automatically populates missing movie runtimes and plot summaries.",
@@ -1913,7 +1929,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.58"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.59"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4085,6 +4101,12 @@
     let vaultSearchTimer = null;
 
     function handleVaultSearchInput() {
+      const input = document.getElementById('vaultSearch');
+      const clearBtn = document.getElementById('vaultSearchClearBtn');
+      if (clearBtn) {
+        if (input && input.value.trim()) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
       clearTimeout(vaultSearchTimer);
       vaultSearchTimer = setTimeout(() => {
         vaultPageSize = 24;
@@ -4161,6 +4183,8 @@
     function clearVaultSearch() {
       const input = document.getElementById('vaultSearch');
       if (input) input.value = '';
+      const clearBtn = document.getElementById('vaultSearchClearBtn');
+      if (clearBtn) clearBtn.classList.add('hidden');
       vaultPageSize = 24;
       renderVault();
     }
@@ -4229,8 +4253,14 @@
       });
 
       const countEl = document.getElementById('vaultCount');
-      const typeLabel = vMediaType === 'movie' ? 'movies' : (vMediaType === 'tv' ? 'TV episodes/shows' : 'titles');
+      const typeLabel = vMediaType === 'movie' ? 'movies' : (vMediaType === 'tv' ? 'TV shows' : 'titles');
       if (countEl) countEl.textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} ${typeLabel}`;
+      const statusEl = document.getElementById('vaultFilterStatus');
+      if (statusEl) {
+        const typeStr = vMediaType === 'movie' ? 'Movies' : (vMediaType === 'tv' ? 'TV' : 'All Types');
+        const srcStr = vFilter === 'past' ? 'Past Screenings' : (vFilter === 'request' ? 'Requests' : 'All Sources');
+        statusEl.textContent = `${typeStr} • ${srcStr}`;
+      }
 
       if (currentFilteredVault.length === 0) {
         grid.innerHTML = `
@@ -4259,7 +4289,7 @@
         const posterUrl = getMovieArtworkUrl(m);
 
         return `
-        <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
+        <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
           <div>
             <!-- Movie Poster / Artwork Thumbnail Banner (16:9 Aspect Ratio) -->
             <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
@@ -4282,13 +4312,13 @@
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
-              <!-- Bottom Overlay on Banner: Date and Start Time -->
+              <!-- Bottom Overlay on Banner: Genre and Start Time (No duplicate date) -->
               <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
-                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
-                  <span>🗓️</span> ${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}
+                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px] sm:max-w-[200px]">
+                  <span>🎭</span> <span class="truncate">${escapeHtml(m.genre || m.genres || 'Feature Film')}</span>
                 </span>
-                <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
-                  ${escapeHtml(d.startTime)}
+                <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 shrink-0">
+                  🕒 ${escapeHtml(d.startTime)}
                 </span>
               </div>
             </div>
@@ -4301,11 +4331,11 @@
             <!-- Google Sheets Formatted Details Table (2x2 Grid Identical to Schedule Tab) -->
             <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
               <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">🕒 Start Time:</span>
+                <span class="text-slate-400">🕒 Start:</span>
                 <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
               </div>
               <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">🏁 End Time:</span>
+                <span class="text-slate-400">🏁 End:</span>
                 <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
               </div>
               <div class="flex items-center justify-between px-1">
@@ -4330,7 +4360,7 @@
             ${isRequest ? `
             <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
               <div class="font-semibold text-amber-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
-                <span>⏳</span> REQUEST STATUS
+                <span>⏳</span> STATUS
               </div>
               <span class="font-mono font-bold text-amber-300 text-[11px]">Awaiting Screening</span>
             </div>
@@ -4346,24 +4376,24 @@
 
           <!-- Trailer Controls & Dropdown Video Viewer Drawer -->
           <div class="flex flex-col gap-2 pt-2.5 border-t border-slate-900">
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
               ${hasTrailer ? `
-              <button onclick="toggleCardTrailer('vault-${idx}')" id="trailerBtn-vault-${idx}" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+              <button onclick="toggleCardTrailer('vault-${idx}')" id="trailerBtn-vault-${idx}" class="flex-1 text-xs font-semibold px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
                 <span>🎬</span> <span id="trailerBtnText-vault-${idx}">Watch Trailer ▾</span>
               </button>
-              <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1.5 active:scale-95">
+              <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="flex-1 sm:flex-initial text-xs font-semibold px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center justify-center gap-1.5 active:scale-95">
                 <span>▶</span> YouTube ↗
               </button>
               ` : (isRequest ? `
-              <span class="text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-1.5 rounded-lg font-mono flex items-center gap-1 font-semibold" title="Trailer verified once scheduled">
+              <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Trailer verified once scheduled">
                 <span>⏳</span> Awaiting Schedule
               </span>
               ` : `
-              <span class="text-xs text-slate-500 font-mono px-2 py-1">No Trailer</span>
+              <span class="flex-1 text-xs text-slate-500 font-mono py-1.5 text-center">No Trailer</span>
               `)}
 
               ${isAdmin ? `
-              <button onclick="openAdminTrailerForMovie('${escapeHtml(cleanTitle)}')" title="Admin: Configure Trailer" class="text-xs px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95 shrink-0 ml-auto">
+              <button onclick="openAdminTrailerForMovie('${escapeHtml(cleanTitle)}')" title="Admin: Configure Trailer" class="text-xs px-2.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95 shrink-0 ml-auto">
                 <span>✏️</span>
               </button>
               ` : ''}

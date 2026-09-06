@@ -1,12 +1,12 @@
 {
-  "version": "4.9.58",
+  "version": "4.9.59",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.58",
+  "title": "Brian's Theater v4.9.59",
   "notes": [
-    "Added one-click Past Movies auto-fill to Google Sheets.",
-    "Automatically populates missing movie runtimes and plot summaries.",
-    "Gemini AI fallback enriches titles missing from TMDB.",
-    "Writes detailed overviews and official YouTube trailer links.",
-    "Removed redundant Community Requests section from mobile phones."
+    "Redesigned Vault search and counter with zero mobile text collision.",
+    "Optimized movie filter tabs for one-tap mobile phone tapping.",
+    "Polished mobile card layout and eliminated duplicate date overlays.",
+    "Expanded trailer buttons to full width for responsive mobile viewing.",
+    "Removed inner scroll trap for smooth natural page scrolling."
   ]
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.59] - 2026-09-06
+
+### What's New
+- Redesigned Vault search and counter with zero mobile text collision.
+- Optimized movie filter tabs for one-tap mobile phone tapping.
+- Polished mobile card layout and eliminated duplicate date overlays.
+- Expanded trailer buttons to full width for responsive mobile viewing.
+- Removed inner scroll trap for smooth natural page scrolling.
+
 ## [4.9.58] - 2026-09-06
 
 ### What's New
