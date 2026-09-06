@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.95] - 2026-09-06
+
+### What's New
+- Reordered Vault header with stats bar positioned at the top.
+- Dedicated full-width second row for media and source filters.
+- Positioned annual years and festival theme shortcuts below filters.
+- Streamlined responsive spacing across mobile, tablet, and desktop screens.
+- Zero console errors and seamless filter interactions fully verified.
+
 ## [4.9.94] - 2026-09-06
 
 ### What's New

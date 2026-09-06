@@ -397,33 +397,14 @@
     <div id="view-vault" class="tab-view hidden flex flex-col gap-6">
       
       <div class="rounded-2xl bg-slate-900 border border-slate-800 p-3.5 sm:p-6 shadow-2xl flex flex-col gap-4">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3 sm:pb-4">
-          <div>
-            <h3 class="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
-              <span>🔍</span> Movie Vault & Archive
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Full archive of past screenings and requested films & shows</p>
-          </div>
-
-          <!-- Responsive Filter Pills: Clean 3-col grid on phones, horizontal on desktop -->
-          <div class="grid grid-cols-1 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
-            <!-- Media Type Filter: All Types vs Movies vs TV Shows -->
-            <div class="grid grid-cols-3 sm:flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto">
-              <button onclick="setVaultMediaType('all')" id="vTypeAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm text-center">All Types</button>
-              <button onclick="setVaultMediaType('movie')" id="vTypeMovie" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">🎬 Movies</button>
-              <button onclick="setVaultMediaType('tv')" id="vTypeTv" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">📺 TV</button>
-            </div>
-
-            <!-- Source Filter: All vs Past vs Requests -->
-            <div class="grid grid-cols-3 sm:flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto">
-              <button onclick="setVaultFilter('all')" id="vTabAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm text-center">All Sources</button>
-              <button onclick="setVaultFilter('past')" id="vTabPast" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">⚡ Past</button>
-              <button onclick="setVaultFilter('request')" id="vTabReq" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">⏳ Requests</button>
-            </div>
-          </div>
+        <div class="border-b border-slate-800 pb-3">
+          <h3 class="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
+            <span>🔍</span> Movie Vault & Archive
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Full archive of past screenings and requested films & shows</p>
         </div>
 
-        <!-- Restored Theater Stats Overview Bar (Streamlined 3-Column: Movies, TV Shows, Days Serving) -->
+        <!-- Theater Stats Overview Bar (Top Row) -->
         <div class="grid grid-cols-3 gap-2 sm:gap-4 p-2.5 sm:p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 shadow-inner">
           <div class="flex flex-col items-center sm:items-start px-2 py-1">
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🍿 Movies</span>
@@ -436,6 +417,23 @@
           <div class="flex flex-col items-center sm:items-start px-2 py-1">
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🗓️ Days Serving</span>
             <span id="vaultStatDays" class="text-xs sm:text-sm font-black text-purple-300 font-mono truncate max-w-full">1 yr, 6 mos, 2 days</span>
+          </div>
+        </div>
+
+        <!-- Responsive Filter Pills (Second Row: All Types | Movies | TV & All Sources | Past | Requests) -->
+        <div class="grid grid-cols-1 sm:flex sm:flex-wrap items-center gap-2 w-full">
+          <!-- Media Type Filter: All Types vs Movies vs TV Shows -->
+          <div class="grid grid-cols-3 sm:flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto">
+            <button onclick="setVaultMediaType('all')" id="vTypeAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm text-center">All Types</button>
+            <button onclick="setVaultMediaType('movie')" id="vTypeMovie" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">🎬 Movies</button>
+            <button onclick="setVaultMediaType('tv')" id="vTypeTv" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">📺 TV</button>
+          </div>
+
+          <!-- Source Filter: All vs Past vs Requests -->
+          <div class="grid grid-cols-3 sm:flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto">
+            <button onclick="setVaultFilter('all')" id="vTabAll" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm text-center">All Sources</button>
+            <button onclick="setVaultFilter('past')" id="vTabPast" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">⚡ Past</button>
+            <button onclick="setVaultFilter('request')" id="vTabReq" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition text-center">⏳ Requests</button>
           </div>
         </div>
 
@@ -1895,7 +1893,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.94";
+    const APP_VERSION = "4.9.95";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2272,6 +2270,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.95": [
+        "Reordered Vault header with stats bar positioned at the top.",
+        "Dedicated full-width second row for media and source filters.",
+        "Positioned annual years and festival theme shortcuts below filters.",
+        "Streamlined responsive spacing across mobile, tablet, and desktop screens.",
+        "Zero console errors and seamless filter interactions fully verified."
+      ],
       "4.9.94": [
         "Moved festival date badges down into metadata pill rows.",
         "Opened top-right sky for unblocked living motion animations.",
