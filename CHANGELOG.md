@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.76] - 2026-09-06
+
+### What's New
+- Completely removed PIN and passkey inputs from admin authentication.
+- Restored pure one-click Google Sign-In for administrator portal.
+- Cleaned up admin modal to eliminate unwanted passkey forms.
+- Retained streamlined top navigation bar with public cinema tabs.
+- Ensured authorized Google accounts remain exclusive admin access method.
+
 ## [4.9.75] - 2026-09-06
 
 ### What's New

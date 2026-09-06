@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.75 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.76 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -619,7 +619,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.75</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.76</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -1094,23 +1094,6 @@
           <span id="btnGoogleSignInLabel">Sign in with Google</span>
         </button>
 
-        <!-- Divider -->
-        <div class="flex items-center gap-2 my-1">
-          <div class="h-px bg-slate-800 flex-1"></div>
-          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">OR MASTER PASSKEY</span>
-          <div class="h-px bg-slate-800 flex-1"></div>
-        </div>
-
-        <!-- Master Passkey Form -->
-        <form onsubmit="unlockAdminWithPasskey(event)" class="flex flex-col gap-2">
-          <div class="relative">
-            <input type="password" id="adminPasskeyInput" placeholder="Enter Admin Passkey..." autocomplete="current-password" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 font-mono tracking-wider">
-          </div>
-          <button type="submit" id="btnUnlockAdminPasskey" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-amber-500/10 active:scale-95">
-            <span>👑</span>
-            <span>Unlock Admin Portal</span>
-          </button>
-        </form>
 
         <div id="authErrorMsg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2.5 rounded-xl text-center leading-relaxed"></div>
       </div>
@@ -1423,7 +1406,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.75";
+    const APP_VERSION = "4.9.76";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1505,15 +1488,6 @@
             if (user) {
               handleAuthUser(user);
             } else {
-              try {
-                if (localStorage.getItem('brian_theater_admin_authenticated') === 'true') {
-                  handleAuthUser({
-                    email: 'briandivacox@gmail.com',
-                    displayName: 'Brian (Admin)'
-                  });
-                  return;
-                }
-              } catch(e) {}
               handleAuthSignedOut();
             }
           });
@@ -1807,6 +1781,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.76": [
+        "Completely removed PIN and passkey inputs from admin authentication.",
+        "Restored pure one-click Google Sign-In for administrator portal.",
+        "Cleaned up admin modal to eliminate unwanted passkey forms.",
+        "Retained streamlined top navigation bar with public cinema tabs.",
+        "Ensured authorized Google accounts remain exclusive admin access method."
+      ],
       "4.9.75": [
         "Removed Admin Portal button from the main navigation bar.",
         "Added Master Admin Passkey unlock for instant studio access.",
@@ -3384,39 +3365,6 @@
 
     let isSigningInWithGoogle = false;
 
-    function unlockAdminWithPasskey(event) {
-      if (event && event.preventDefault) event.preventDefault();
-      const passInput = document.getElementById('adminPasskeyInput');
-      const errBox = document.getElementById('authErrorMsg');
-      const val = (passInput ? passInput.value : '').trim();
-      if (!val) {
-        if (errBox) {
-          errBox.textContent = "Please enter an admin passkey.";
-          errBox.classList.remove('hidden');
-        }
-        return;
-      }
-
-      // Valid theater master passkeys
-      const validKeys = ['brian2026', 'theater2026', 'brian', 'brianadmin', 'vhtpghpbecnreolsspt9h2xwxh63r6ppchcleymd'];
-      if (validKeys.includes(val.toLowerCase()) || val === 'VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd') {
-        try { localStorage.setItem('brian_theater_admin_authenticated', 'true'); } catch(e) {}
-        handleAuthUser({
-          email: 'briandivacox@gmail.com',
-          displayName: 'Brian (Master Admin)',
-          photoURL: ''
-        });
-        closeAdminAuthModal();
-        switchTab('admin');
-        showTheaterToast('👑 Welcome, Brian! Admin Portal unlocked via Master Passkey.');
-      } else {
-        if (errBox) {
-          errBox.textContent = "Incorrect admin passkey. Please try again.";
-          errBox.classList.remove('hidden');
-        }
-      }
-    }
-
     async function signInWithGoogle() {
       if (isSigningInWithGoogle) return;
       isSigningInWithGoogle = true;
@@ -3444,7 +3392,6 @@
         try {
           const result = await authInstance.signInWithPopup(provider);
           if (result && result.user) {
-            try { localStorage.setItem('brian_theater_admin_authenticated', 'true'); } catch(e) {}
             await handleAuthUser(result.user);
             if (isAdmin) switchTab('admin');
           }
@@ -3470,12 +3417,11 @@
             errBox.innerHTML = `
               <div class="text-left flex flex-col gap-1">
                 <div class="font-bold text-rose-300">⚠️ Domain Not Authorized in Firebase</div>
-                <div class="text-[11px] text-slate-300">Add <code class="text-amber-300 font-bold">${window.location.hostname}</code> to <b>Firebase Console &gt; Authentication &gt; Settings &gt; Authorized Domains</b>.</div>
-                <div class="text-[11px] text-amber-300 font-bold mt-1">⬇ Or enter the Master Passkey below to unlock immediately!</div>
+                <div class="text-[11px] text-slate-300">Add <code class="text-amber-300 font-bold">${window.location.hostname}</code> to <b>Firebase Console &gt; Authentication &gt; Settings &gt; Authorized Domains</b> to sign in.</div>
               </div>
             `;
           } else if (error.code === 'auth/cancelled-popup-request') {
-            errBox.textContent = "Sign-in request was cancelled. Please click once or use Master Passkey.";
+            errBox.textContent = "Sign-in request was cancelled. Please try clicking once.";
           } else {
             errBox.textContent = error.message || "Failed to sign in with Google.";
           }
@@ -3492,7 +3438,6 @@
     }
 
     function signOutAdmin() {
-      try { localStorage.removeItem('brian_theater_admin_authenticated'); } catch(e) {}
       if (authInstance) {
         authInstance.signOut().then(() => {
           handleAuthSignedOut();
