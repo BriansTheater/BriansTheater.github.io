@@ -1,12 +1,12 @@
 {
-  "version": "4.9.64",
+  "version": "4.9.65",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.64",
+  "title": "Brian's Theater v4.9.65",
   "notes": [
-    "Moved live movie, TV, and unsorted stats to search popup.",
-    "Added one-click type filtering across past movies catalog.",
-    "Added color-coded classification badges to all result cards.",
-    "Enabled instant type reclassification directly from the modal.",
-    "Deployed updated backend and search dialog to Apps Script."
+    "Added instant one-click row deletion to search popup.",
+    "Added confirmation alert preventing accidental movie row deletion.",
+    "Enabled real-time DOM card removal on row deletion.",
+    "Synchronized live stats decrementing immediately on deleted titles.",
+    "Deployed updated backend deletion endpoint to Google Sheets."
   ]
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.65] - 2026-09-06
+
+### What's New
+- Added instant one-click row deletion to search popup.
+- Added confirmation alert preventing accidental movie row deletion.
+- Enabled real-time DOM card removal on row deletion.
+- Synchronized live stats decrementing immediately on deleted titles.
+- Deployed updated backend deletion endpoint to Google Sheets.
+
 ## [4.9.64] - 2026-09-06
 
 ### What's New
