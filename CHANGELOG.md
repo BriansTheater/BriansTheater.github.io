@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.66] - 2026-09-06
+
+### What's New
+- Reorganized Brian's Theater Google Sheets menus with clean hierarchy.
+- Eliminated redundant duplicate actions across all submenus.
+- Purged obsolete in-sheet search tab menu options.
+- Grouped tools into five focused and logical submenus.
+- Positioned Search & Edit Past Movies at top level.
+
 ## [4.9.65] - 2026-09-06
 
 ### What's New

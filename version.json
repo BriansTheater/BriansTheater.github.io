@@ -1,12 +1,12 @@
 {
-  "version": "4.9.65",
+  "version": "4.9.66",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.65",
+  "title": "Brian's Theater v4.9.66",
   "notes": [
-    "Added instant one-click row deletion to search popup.",
-    "Added confirmation alert preventing accidental movie row deletion.",
-    "Enabled real-time DOM card removal on row deletion.",
-    "Synchronized live stats decrementing immediately on deleted titles.",
-    "Deployed updated backend deletion endpoint to Google Sheets."
+    "Reorganized Brian's Theater Google Sheets menus with clean hierarchy.",
+    "Eliminated redundant duplicate actions across all submenus.",
+    "Purged obsolete in-sheet search tab menu options.",
+    "Grouped tools into five focused and logical submenus.",
+    "Positioned Search & Edit Past Movies at top level."
   ]
 }
