@@ -1,12 +1,12 @@
 {
-  "version": "4.9.67",
+  "version": "4.9.70",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.67",
+  "title": "Brian's Theater v4.9.70",
   "notes": [
-    "Added TMDB franchise collection detection to movie requests.",
-    "Introduced interactive bulk selection modal for movie sagas.",
-    "Enabled one-click requesting for all franchise installments.",
-    "Added select all and individual toggle controls for sagas.",
-    "Automated batch submission straight into Google Sheets queue."
+    "Eliminated automatic Enter Theater popup on normal page loads.",
+    "Update alerts now strictly appear only for newer versions.",
+    "Preserved What's New modal exclusively for manual clicks.",
+    "Removed premature service worker waiting prompts on startup.",
+    "Ensured clean theater viewing with zero unexpected popups."
   ]
 }

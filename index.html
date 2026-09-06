@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.67 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.70 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -623,7 +623,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.53</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.70</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -906,9 +906,9 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.53</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.68</span>
           <span>•</span>
-          <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
+          <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
           </button>
           <span>•</span>
@@ -1064,14 +1064,14 @@
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <div class="flex items-center gap-2">
         <span>Brian's Theater</span>
-        <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false }); toggleSidebar(false);" class="text-[10px] text-amber-400 hover:text-amber-300 font-sans font-bold flex items-center gap-1 cursor-pointer transition">
+        <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true }); toggleSidebar(false);" class="text-[10px] text-amber-400 hover:text-amber-300 font-sans font-bold flex items-center gap-1 cursor-pointer transition">
           <span>✨</span> <span>What's New</span>
         </button>
         <button type="button" onclick="manualCheckForUpdates(); toggleSidebar(false);" class="text-[10px] text-sky-400 hover:text-sky-300 font-sans font-bold flex items-center gap-1 cursor-pointer transition">
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.53</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.68</span>
     </div>
 
   </aside>
@@ -1409,7 +1409,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.67";
+    const APP_VERSION = "4.9.69";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1784,6 +1784,20 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.69": [
+        "Added script to send past movies to Google Calendar.",
+        "Automatically discovers Google Calendar named movies with smart fallback.",
+        "Synchronizes past screening dates, showtimes, synopses, and trailers.",
+        "Updates existing calendar events and links newly created ones.",
+        "Added 1-click execution to Google Sheets calendar submenu."
+      ],
+      "4.9.68": [
+        "Eliminated automatic Enter Theater popup on normal page loads.",
+        "Update alerts now strictly appear only for newer versions.",
+        "Preserved What's New modal exclusively for manual clicks.",
+        "Removed premature service worker waiting prompts on startup.",
+        "Ensured clean theater viewing with zero unexpected popups."
+      ],
       "4.9.67": [
         "Added TMDB franchise collection detection to movie requests.",
         "Introduced interactive bulk selection modal for movie sagas.",
@@ -2053,6 +2067,19 @@
       ]
     };
 
+    function isNewerVersion(remoteVer, currentVer) {
+      if (!remoteVer || !currentVer) return false;
+      const r = remoteVer.toString().replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+      const c = currentVer.toString().replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+      for (let i = 0; i < Math.max(r.length, c.length); i++) {
+        const rv = r[i] || 0;
+        const cv = c[i] || 0;
+        if (rv > cv) return true;
+        if (rv < cv) return false;
+      }
+      return false;
+    }
+
     function showAppUpdateToast(options = {}) {
       const toast = document.getElementById('appUpdateToast');
       const titleEl = document.getElementById('updateToastTitle');
@@ -2065,16 +2092,18 @@
 
       if (!toast) return;
 
+      const isUserInitiated = options.isUserInitiated === true;
       const version = options.version || APP_VERSION;
-      let isAvailable = options.isUpdateAvailable !== false;
+      const isAvailable = options.isUpdateAvailable === true && isNewerVersion(version, APP_VERSION);
 
-      // CRITICAL LOOP BREAKER: If version matches currently running APP_VERSION,
-      // the user already has this version installed! Never start a countdown/reload loop!
-      if (isAvailable && version === APP_VERSION) {
-        isAvailable = false;
+      // STRICT USER RULE: Never show the automatic "Enter Theater" / "What's New" modal on normal page loads or background checks!
+      // The modal is ONLY displayed automatically if there is a genuine newer version available (isAvailable === true).
+      // Otherwise, it is strictly displayed only when the user manually clicks "What's New" (isUserInitiated === true).
+      if (!isUserInitiated && !isAvailable) {
+        return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.66"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.68"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -2192,9 +2221,6 @@
         // Layer 1: Check if a worker is already waiting in browser
         if (window.swRegistration && window.swRegistration.waiting) {
           waitingServiceWorker = window.swRegistration.waiting;
-          showAppUpdateToast({ isUpdateAvailable: true });
-          isCheckingForUpdate = false;
-          return;
         }
 
         // Layer 2: Trigger service worker background check
@@ -2207,7 +2233,7 @@
           const res = await fetch(`./version.json?_t=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
             const vData = await res.json();
-            if (vData && vData.version && vData.version !== APP_VERSION) {
+            if (vData && vData.version && isNewerVersion(vData.version, APP_VERSION)) {
               // Loop breaker: if user recently reloaded within 15 seconds, give browser time to breathe
               const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
               if (Date.now() - lastReload < 15000) {
@@ -2233,7 +2259,7 @@
           if (swRes.ok) {
             const swText = await swRes.text();
             const match = swText.match(/\/\/\s*VERSION:\s*([0-9.]+)/i);
-            if (match && match[1] && match[1] !== APP_VERSION) {
+            if (match && match[1] && isNewerVersion(match[1], APP_VERSION)) {
               const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
               if (Date.now() - lastReload < 15000) {
                 isCheckingForUpdate = false;
@@ -2276,10 +2302,10 @@
             console.log('PWA Service Worker registered:', reg.scope);
             window.swRegistration = reg;
 
-            // 1. If an updated worker is already waiting, prompt immediately
+            // 1. If an updated worker is already waiting, verify version before prompting
             if (reg.waiting) {
               waitingServiceWorker = reg.waiting;
-              showAppUpdateToast({ isUpdateAvailable: true });
+              checkForAppUpdate();
             }
 
             // 2. When a new service worker is installing/found
@@ -2289,7 +2315,7 @@
                 newWorker.addEventListener('statechange', () => {
                   if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                     waitingServiceWorker = newWorker;
-                    showAppUpdateToast({ isUpdateAvailable: true });
+                    checkForAppUpdate();
                   }
                 });
               }
@@ -2301,8 +2327,8 @@
         navigator.serviceWorker.addEventListener('message', event => {
           if (event.data && (event.data.type === 'APP_VERSION_UPDATED' || event.data.type === 'VERSION_UPDATE')) {
             const newVer = event.data.version;
-            // ONLY show update if the version is genuinely newer/different than what is currently running!
-            if (newVer && newVer !== APP_VERSION) {
+            // ONLY show update if the version is genuinely newer than what is currently running!
+            if (newVer && isNewerVersion(newVer, APP_VERSION)) {
               showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
             }
           }
@@ -4005,7 +4031,7 @@
       }
 
       // Check if Firebase broadcasts a newer app version
-      if (data.appVersion && data.appVersion !== APP_VERSION) {
+      if (data.appVersion && isNewerVersion(data.appVersion, APP_VERSION)) {
         showAppUpdateToast({ version: data.appVersion, isUpdateAvailable: true });
       }
 
