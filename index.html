@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.56 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.57 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -575,43 +575,6 @@
 
       </div>
 
-      <!-- 3. COMMUNITY REQUESTS QUEUE (Live Queue Display) -->
-      <div id="communityRequestsContainer" class="morphic-panel rounded-3xl p-6 sm:p-7 relative overflow-hidden flex flex-col gap-4">
-        <!-- Ambient multi-color glow -->
-        <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-teal-400/10 blur-3xl pointer-events-none"></div>
-
-        <!-- Header & Search -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-900/90 border border-teal-500/30 flex items-center justify-center text-xl shrink-0 shadow-sm">
-              🎬
-            </div>
-            <div>
-              <h3 class="text-sm sm:text-base font-black text-slate-100 uppercase tracking-wider flex items-center gap-2 m-0">
-                <span>Community Requests</span>
-                <span id="communityQueueCount" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">0 Queued</span>
-              </h3>
-              <p class="text-[11px] text-slate-400 mt-0.5">Live film & show suggestions queued for upcoming Brian's Theater screenings</p>
-            </div>
-          </div>
-          
-          <!-- Live Filter Search -->
-          <div class="relative w-full sm:w-64">
-            <input 
-              type="text" 
-              id="communityRequestSearch" 
-              placeholder="Filter queue..." 
-              oninput="searchCommunityRequests(this.value)"
-              class="w-full px-3.5 py-2 pr-8 rounded-xl bg-slate-950/70 border border-white/10 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-teal-400/50 transition">
-            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">🔍</span>
-          </div>
-        </div>
-
-        <!-- Scrollable Requests List -->
-        <div id="communityRequestsList" class="flex flex-col gap-2.5 max-h-[520px] overflow-y-auto pr-1">
-          <!-- Populated dynamically by renderCommunityRequests() -->
-        </div>
-      </div>
 
       <!-- OPTIONAL EMBEDDED GOOGLE FORM VIEW (Toggled if desired) -->
       <div id="rawGoogleFormWrapper" class="hidden rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden flex flex-col" style="height: 80vh; min-height: 750px;">
@@ -1348,7 +1311,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.56";
+    const APP_VERSION = "4.9.57";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1723,6 +1686,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.57": [
+        "Completely removed redundant Community Requests section from phones.",
+        "Eliminated mobile screen clutter and saved phone resources.",
+        "Preserved streamlined Morphic ticket submission receipt stub.",
+        "Maintained background anti-spam rate limiting and validation defenses."
+      ],
       "4.9.56": [
         "Enriched all 459 past Vault movies with official TMDB posters.",
         "Added verified widescreen cinema backdrops across the entire catalog.",
@@ -1937,7 +1906,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.56"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.57"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -5022,38 +4991,8 @@
       }
     }
 
-    function renderCommunityRequests(items) {
-      const list = document.getElementById('communityRequestsList');
-      const countBadge = document.getElementById('communityQueueCount');
-      if (countBadge) countBadge.textContent = `${items.length} ${items.length === 1 ? 'Queued' : 'Queued'}`;
-      if (!list) return;
-
-      if (!items || items.length === 0) {
-        list.innerHTML = `
-          <div class="p-8 text-center text-slate-500 text-xs bg-slate-950/40 rounded-xl border border-slate-800/60 flex flex-col items-center gap-2">
-            <span class="text-2xl opacity-60">🎬</span>
-            <span>No requests found matching your search.</span>
-          </div>
-        `;
-        return;
-      }
-
-      list.innerHTML = items.map(r => `
-        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700 transition flex items-center justify-between gap-3 shadow-sm">
-          <div class="min-w-0 flex-1">
-            <div class="text-xs sm:text-sm font-bold text-slate-100 truncate">${escapeHtml(r.title)}</div>
-            <div class="text-[11px] text-slate-400 mt-0.5 truncate">
-              Requested by <span class="text-slate-300 font-medium">${escapeHtml(r.requester)}</span> • <span class="text-slate-400">${escapeHtml(r.genre || 'Movie')}</span>
-            </div>
-          </div>
-          <span class="flex-shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-            r.status === 'Scheduled' 
-              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
-              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-          }">${escapeHtml(r.status || 'Under Review')}</span>
-        </div>
-      `).join('');
-    }
+    function renderCommunityRequests() {}
+    function searchCommunityRequests() {}
 
     function adminScheduleMovieByIndex(idx) {
       if (!isAdmin) {

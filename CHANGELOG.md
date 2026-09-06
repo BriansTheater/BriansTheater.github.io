@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.57] - 2026-09-06
+
+### What's New
+- Removed redundant Community Requests section from mobile screen.
+- Eliminated clutter and saved mobile phone rendering resources.
+- Preserved clean Morphic ticket submission receipt stub summary.
+- Maintained background anti-spam rate limiting and sanitization checks.
+
 ## [4.9.56] - 2026-09-06
 
 ### What's New
