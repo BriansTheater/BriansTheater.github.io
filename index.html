@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.26 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.27 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -438,7 +438,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.26</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.27</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -638,7 +638,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.26</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.27</span>
         </div>
       </div>
 
@@ -787,7 +787,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.26</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.27</span>
     </div>
 
   </aside>
@@ -829,56 +829,172 @@
         </div>
       </div>
     </div>
-  <!-- APP INSTALL MODAL (Google Android & Apple iOS) -->
-  <div id="installAppModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative flex flex-col gap-4">
+  </div>
+
+  <!-- UPGRADED PWA APP INSTALL MODAL & SMART PLATFORM GUIDE -->
+  <div id="installAppModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-200" onclick="handleInstallModalBackdrop(event)">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl relative flex flex-col gap-4 text-slate-200">
+      
+      <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-sm">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow-md">
             🎬
           </div>
           <div>
-            <h3 class="text-base font-bold text-slate-100">Install Brian's Theater</h3>
-            <p class="text-[11px] text-slate-400 font-mono">Google Android & Apple iOS App</p>
+            <h3 class="text-base font-extrabold text-slate-100 flex items-center gap-2">
+              <span>Install Brian's Theater</span>
+              <span id="installStatusBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">PWA App</span>
+            </h3>
+            <p class="text-[11px] text-slate-400">Fast launcher • Offline catalog • Fullscreen cinema</p>
           </div>
         </div>
-        <button onclick="closeInstallAppModal()" class="text-slate-400 hover:text-white text-xl p-1">&times;</button>
+        <button onclick="closeInstallAppModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition" aria-label="Close">&times;</button>
       </div>
 
-      <div class="flex flex-col gap-3">
-        <!-- Native Google / Chrome / Android 1-Click Install -->
-        <div id="pwaGoogleInstallSection" class="p-4 rounded-xl bg-slate-950 border border-sky-500/30 flex flex-col gap-2.5">
-          <div class="flex items-center gap-2 text-xs font-bold text-sky-300">
-            <span>🤖</span> <span>Google Android & Desktop App</span>
+      <!-- 1-Click Native Install Banner (Visible only when browser supports prompt) -->
+      <div id="pwaDirectPromptBanner" class="hidden p-3.5 rounded-xl bg-gradient-to-r from-sky-500/20 via-teal-500/20 to-amber-500/20 border border-sky-400/40 flex flex-col gap-2 shadow-inner">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-sky-300">
+            <span>⚡</span> <span>1-Click Install Ready!</span>
           </div>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Install Brian's Theater as a standalone app on your Android device or computer with instant access from your home screen.
-          </p>
-          <button onclick="performPwaInstall()" id="btnPerformPwaInstall" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:opacity-95 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
-            <span>📥</span> <span>Install Google App</span>
-          </button>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">Recommended</span>
         </div>
+        <p class="text-xs text-slate-300 leading-snug">
+          Click below to prompt your browser's native 1-click app install dialog immediately.
+        </p>
+        <button onclick="performPwaInstall()" id="btnPerformPwaInstall" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-teal-400 to-amber-400 hover:opacity-95 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+          <span>📥</span> <span>Install App Directly</span>
+        </button>
+      </div>
 
-        <!-- Apple iOS (iPhone & iPad) Safari Install Guide -->
-        <div id="pwaIosInstallSection" class="p-4 rounded-xl bg-slate-950 border border-amber-500/30 flex flex-col gap-2.5">
-          <div class="flex items-center gap-2 text-xs font-bold text-amber-300">
-            <span>🍏</span> <span>Apple iOS (iPhone / iPad) App</span>
+      <!-- Standalone already active banner -->
+      <div id="pwaAlreadyInstalledBanner" class="hidden p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-center gap-2.5 text-xs text-emerald-300">
+        <span class="text-base">✅</span>
+        <span>Brian's Theater is currently running in standalone app mode!</span>
+      </div>
+
+      <!-- Platform Selection Tabs -->
+      <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs font-bold">
+        <button type="button" id="tabInstallIos" onclick="switchInstallTab('ios')" class="flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200">
+          <span>🍏</span> <span>iOS Safari</span>
+        </button>
+        <button type="button" id="tabInstallDesktop" onclick="switchInstallTab('desktop')" class="flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200">
+          <span>💻</span> <span>Chrome / Edge</span>
+        </button>
+        <button type="button" id="tabInstallAndroid" onclick="switchInstallTab('android')" class="flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200">
+          <span>🤖</span> <span>Android</span>
+        </button>
+      </div>
+
+      <!-- TAB CONTENT: Apple iOS (iPhone & iPad) Safari -->
+      <div id="paneInstallIos" class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col gap-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-amber-300 flex items-center gap-1.5">
+            <span>🍏</span> <span>Apple iPhone & iPad (Safari)</span>
+          </span>
+          <span class="text-[10px] text-slate-500 font-mono">No App Store needed</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Apple iOS requires Safari's built-in Home Screen installer:
+        </p>
+        <div class="space-y-2 text-xs text-slate-300 font-sans">
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-[11px] shrink-0">1</span>
+            <div class="leading-snug">
+              Tap the <b class="text-sky-400">Share button ( <svg class="inline w-3.5 h-3.5 mb-0.5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg> ⎋ )</b> in the bottom Safari toolbar (or top bar on iPad).
+            </div>
           </div>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            To install on iOS Safari without the App Store:
-          </p>
-          <ol class="text-xs text-slate-300 space-y-1.5 pl-1 list-decimal list-inside font-mono">
-            <li>Tap the <b class="text-sky-400">Share button ( ⎋ )</b> in the Safari toolbar</li>
-            <li>Scroll down and tap <b class="text-amber-300">"Add to Home Screen" ( ⊞ )</b></li>
-            <li>Tap <b class="text-emerald-400">"Add"</b> in the top-right corner</li>
-          </ol>
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-[11px] shrink-0">2</span>
+            <div class="leading-snug">
+              Scroll down and tap <b class="text-amber-300">"Add to Home Screen" ( ⊞ )</b>.
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
+            <div class="leading-snug">
+              Tap <b class="text-emerald-400">"Add"</b> in the top right corner. The app icon will appear on your Home Screen!
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-        <span>Instant launch • Offline capable</span>
-        <button onclick="closeInstallAppModal()" class="text-slate-400 hover:text-slate-200 text-xs font-semibold">Done</button>
+      <!-- TAB CONTENT: Desktop Chrome & Edge (Mac, PC, Linux) -->
+      <div id="paneInstallDesktop" class="hidden p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col gap-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-sky-300 flex items-center gap-1.5">
+            <span>💻</span> <span>Desktop Chrome, Edge & Brave</span>
+          </span>
+          <span class="text-[10px] text-slate-500 font-mono">Windows / Mac / Linux</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Install as a desktop window with taskbar pinning and cinema fullscreen:
+        </p>
+        <div class="space-y-2 text-xs text-slate-300 font-sans">
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-sky-400/20 text-sky-400 flex items-center justify-center font-bold text-[11px] shrink-0">1</span>
+            <div class="leading-snug">
+              Look at the right side of the <b class="text-sky-300">URL Address Bar</b> at the top of your browser for the <b class="text-amber-300">Install icon ( ⊕ or 💻⬇️ )</b>.
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-sky-400/20 text-sky-400 flex items-center justify-center font-bold text-[11px] shrink-0">2</span>
+            <div class="leading-snug">
+              Or click your browser's <b class="text-sky-300">Menu ( ⋮ or ⋯ )</b> in the top right corner, then select <b class="text-amber-300">"Save and share" ➔ "Install Brian's Theater"</b> (or <b class="text-amber-300">"Install Brian's Theater..."</b>).
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-sky-400/20 text-sky-400 flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
+            <div class="leading-snug">
+              Click <b class="text-emerald-400">"Install"</b>. Brian's Theater opens in its own borderless window!
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- TAB CONTENT: Android Google Chrome -->
+      <div id="paneInstallAndroid" class="hidden p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col gap-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-teal-300 flex items-center gap-1.5">
+            <span>🤖</span> <span>Google Chrome for Android</span>
+          </span>
+          <span class="text-[10px] text-slate-500 font-mono">1-Click Home Screen</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Install from Chrome's browser menu if prompt didn't appear automatically:
+        </p>
+        <div class="space-y-2 text-xs text-slate-300 font-sans">
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-teal-400/20 text-teal-400 flex items-center justify-center font-bold text-[11px] shrink-0">1</span>
+            <div class="leading-snug">
+              Tap the Chrome <b class="text-sky-300">Menu button ( ⋮ )</b> in the top-right corner.
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-teal-400/20 text-teal-400 flex items-center justify-center font-bold text-[11px] shrink-0">2</span>
+            <div class="leading-snug">
+              Select <b class="text-amber-300">"Install app"</b> or <b class="text-amber-300">"Add to Home screen"</b>.
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800/60">
+            <span class="w-5 h-5 rounded-full bg-teal-400/20 text-teal-400 flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
+            <div class="leading-snug">
+              Confirm by tapping <b class="text-emerald-400">"Install"</b>. The app icon will be added to your home screen.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Fast launch • Offline cache ready</span>
+        </span>
+        <button onclick="closeInstallAppModal()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition active:scale-95">Done</button>
+      </div>
+
     </div>
   </div>
 
@@ -886,7 +1002,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.26";
+    const APP_VERSION = "4.9.27";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -962,17 +1078,88 @@
     let isAdmin = false;
 
     // ========================================================
-    // PROGRESSIVE WEB APP (PWA): GOOGLE AND IOS APP SUPPORT
+    // PROGRESSIVE WEB APP (PWA): DIRECT 1-CLICK & SMART GUIDE
     // ========================================================
     let deferredInstallPrompt = null;
+    window.deferredInstallPrompt = null;
+
+    function getInstallPrompt() {
+      return deferredInstallPrompt || window.deferredInstallPrompt || null;
+    }
+
+    function setInstallPrompt(val) {
+      deferredInstallPrompt = val;
+      window.deferredInstallPrompt = val;
+    }
+
     const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isAndroid = /android/i.test(navigator.userAgent);
+
+    function checkIsStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches ||
+             window.navigator.standalone === true ||
+             Boolean(document.referrer && document.referrer.includes('android-app://'));
+    }
+
+    function updateInstallButtonVisibility(forceHide = false) {
+      const isStandaloneMode = forceHide || checkIsStandalone();
+      const btnInstall = document.getElementById('btnInstallApp');
+      const sidebarBtn = document.getElementById('sidebarBtnInstall');
+      const alreadyBanner = document.getElementById('pwaAlreadyInstalledBanner');
+      const directBanner = document.getElementById('pwaDirectPromptBanner');
+      const activePrompt = getInstallPrompt();
+
+      if (isStandaloneMode) {
+        if (btnInstall) {
+          btnInstall.classList.add('hidden');
+          btnInstall.classList.remove('flex');
+        }
+        if (sidebarBtn) {
+          sidebarBtn.classList.add('hidden');
+        }
+        if (alreadyBanner) alreadyBanner.classList.remove('hidden');
+        if (directBanner) {
+          directBanner.classList.add('hidden');
+          directBanner.classList.remove('flex');
+        }
+      } else {
+        if (btnInstall) {
+          btnInstall.classList.remove('hidden');
+          btnInstall.classList.add('flex');
+        }
+        if (sidebarBtn) {
+          sidebarBtn.classList.remove('hidden');
+        }
+        if (alreadyBanner) alreadyBanner.classList.add('hidden');
+        if (directBanner) {
+          if (activePrompt) {
+            directBanner.classList.remove('hidden');
+            directBanner.classList.add('flex');
+          } else {
+            directBanner.classList.add('hidden');
+            directBanner.classList.remove('flex');
+          }
+        }
+      }
+    }
 
     // Register Service Worker for offline caching & PWA eligibility
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+          .then(reg => {
+            console.log('PWA Service Worker registered:', reg.scope);
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log("New Brian's Theater PWA Service Worker activated.");
+                  }
+                });
+              }
+            });
+          })
           .catch(err => console.warn('PWA Service Worker error:', err));
       });
     }
@@ -980,42 +1167,68 @@
     // Capture Android / Chrome PWA install banner prompt
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
-      deferredInstallPrompt = e;
-      const btnInstall = document.getElementById('btnInstallApp');
-      if (btnInstall && !isStandalone) {
-        btnInstall.classList.remove('hidden');
-        btnInstall.classList.add('flex');
-      }
+      setInstallPrompt(e);
+      console.log('PWA beforeinstallprompt captured!');
+      updateInstallButtonVisibility();
     });
 
-    // Reveal install button if not running in standalone mode
+    // Listen for successful installation
+    window.addEventListener('appinstalled', () => {
+      console.log("PWA installed successfully");
+      setInstallPrompt(null);
+      closeInstallAppModal();
+      updateInstallButtonVisibility(true);
+      showTheaterToast("🎉 Brian's Theater installed to your Home Screen!");
+    });
+
+    // Initialize button visibility on DOM ready
     window.addEventListener('DOMContentLoaded', () => {
-      if (!isStandalone) {
-        const btnInstall = document.getElementById('btnInstallApp');
-        if (btnInstall) {
-          btnInstall.classList.remove('hidden');
-          btnInstall.classList.add('flex');
+      updateInstallButtonVisibility();
+    });
+
+    async function triggerAppInstall() {
+      const activePrompt = getInstallPrompt();
+      // 1. If native 1-click prompt is ready, trigger it immediately!
+      if (activePrompt) {
+        try {
+          showTheaterToast("📱 Launching App Install...");
+          activePrompt.prompt();
+          const choiceResult = await activePrompt.userChoice;
+          console.log('PWA Install choice outcome:', choiceResult?.outcome);
+          if (choiceResult && choiceResult.outcome === 'accepted') {
+            showTheaterToast("🎉 Brian's Theater added to Home Screen!");
+            setInstallPrompt(null);
+            updateInstallButtonVisibility(true);
+          } else {
+            showTheaterToast("Installation postponed.");
+          }
+          return;
+        } catch (err) {
+          console.warn("Direct PWA prompt error, opening device guide modal:", err);
         }
       }
-    });
 
-    function triggerAppInstall() {
+      // 2. If prompt is not available, open the visual device guide modal
+      openInstallAppModal();
+    }
+
+    function openInstallAppModal() {
       const modal = document.getElementById('installAppModal');
-      const googleSection = document.getElementById('pwaGoogleInstallSection');
-      const iosSection = document.getElementById('pwaIosInstallSection');
+      if (!modal) return;
 
+      // Auto-select tab matching user device
       if (isIos) {
-        if (googleSection) googleSection.classList.add('hidden');
-        if (iosSection) iosSection.classList.remove('hidden');
+        switchInstallTab('ios');
+      } else if (isAndroid) {
+        switchInstallTab('android');
       } else {
-        if (googleSection) googleSection.classList.remove('hidden');
-        if (iosSection) iosSection.classList.add('hidden');
+        switchInstallTab('desktop');
       }
 
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-      }
+      updateInstallButtonVisibility();
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeInstallAppModal() {
@@ -1026,19 +1239,66 @@
       }
     }
 
-    async function performPwaInstall() {
-      if (deferredInstallPrompt) {
-        deferredInstallPrompt.prompt();
-        const { outcome } = await deferredInstallPrompt.userChoice;
-        console.log(`PWA Install prompt outcome: ${outcome}`);
-        deferredInstallPrompt = null;
+    function handleInstallModalBackdrop(event) {
+      if (event.target && event.target.id === 'installAppModal') {
         closeInstallAppModal();
-        if (outcome === 'accepted') {
-          const btnInstall = document.getElementById('btnInstallApp');
-          if (btnInstall) btnInstall.classList.add('hidden');
+      }
+    }
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('installAppModal');
+        if (modal && !modal.classList.contains('hidden')) {
+          closeInstallAppModal();
+        }
+      }
+    });
+
+    function switchInstallTab(platform) {
+      const tabs = {
+        ios: { btn: document.getElementById('tabInstallIos'), pane: document.getElementById('paneInstallIos') },
+        desktop: { btn: document.getElementById('tabInstallDesktop'), pane: document.getElementById('paneInstallDesktop') },
+        android: { btn: document.getElementById('tabInstallAndroid'), pane: document.getElementById('paneInstallAndroid') }
+      };
+
+      Object.keys(tabs).forEach(p => {
+        const item = tabs[p];
+        if (!item.btn || !item.pane) return;
+        if (p === platform) {
+          item.btn.className = "flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 to-amber-400 text-slate-950 font-black shadow-md";
+          item.pane.classList.remove('hidden');
+          item.pane.classList.add('flex');
+        } else {
+          item.btn.className = "flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-bold";
+          item.pane.classList.add('hidden');
+          item.pane.classList.remove('flex');
+        }
+      });
+    }
+
+    async function performPwaInstall() {
+      const activePrompt = getInstallPrompt();
+      if (activePrompt) {
+        try {
+          showTheaterToast("📱 Launching App Install...");
+          activePrompt.prompt();
+          const { outcome } = await activePrompt.userChoice;
+          console.log(`PWA Install prompt outcome: ${outcome}`);
+          setInstallPrompt(null);
+          closeInstallAppModal();
+          if (outcome === 'accepted') {
+            showTheaterToast("🎉 Brian's Theater added to Home Screen!");
+            updateInstallButtonVisibility(true);
+          } else {
+            showTheaterToast("Installation postponed.");
+          }
+        } catch (e) {
+          console.warn("performPwaInstall error:", e);
+          showTheaterToast("ℹ️ Follow the on-screen steps to install on your device.");
         }
       } else {
-        alert("To install on your browser, click your browser menu (⋮ or ⎋) and select 'Install Brian\\'s Theater' or 'Add to Home screen'.");
+        showTheaterToast("ℹ️ Please follow the on-screen steps for your browser.");
       }
     }
 

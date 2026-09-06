@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.27] - 2026-09-05
+
+### What's New
+- Directly triggers native browser 1-click app install prompt.
+- Added smart multi-tab guide for iOS, Android, and Desktop.
+- Auto-detects device platform on opening install guide modal.
+- Eliminated intrusive browser alerts during app installation.
+- Added real-time status banner for active standalone mode.
+- Added instant theater toast feedback on install status.
+- Synchronized header and mobile sidebar install buttons.
+- Updated Service Worker cache to version 4.9.27.
+
 ## [4.9.26] - 2026-09-05
 
 ### What's New
