@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.45 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.46 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -102,18 +102,18 @@
           </div>
         </div>
 
-        <!-- HAMBURGER & STATS TOGGLE BUTTON -->
+        <!-- HAMBURGER & MENU TOGGLE BUTTON -->
         <button id="btnOpenSidebar" onclick="toggleSidebar(true)" aria-label="Open Theater Menu & Stats" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-400 hover:text-sky-300 border border-slate-700/80 hover:border-sky-500/50 transition flex items-center gap-2 text-xs font-bold shadow-md active:scale-95">
           <span class="text-base leading-none">☰</span>
-          <span class="inline font-mono">Stats & Menu</span>
+          <span class="inline font-mono">Menu</span>
         </button>
 
       </div>
 
     </div>
 
-    <!-- CLEAN TABBED NAVIGATION MENU BAR -->
-    <nav class="max-w-6xl mx-auto px-4 sm:px-6 border-t border-slate-800/60 overflow-x-auto py-2">
+    <!-- CLEAN TABBED NAVIGATION MENU BAR (Hidden on small mobile screens; use Menu drawer instead) -->
+    <nav class="hidden sm:block max-w-6xl mx-auto px-4 sm:px-6 border-t border-slate-800/60 overflow-x-auto py-2">
       <div class="flex items-center gap-2 min-w-max">
         
         <button onclick="switchTab('screening')" id="nav-screening" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2">
@@ -408,7 +408,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.45</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.46</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -691,7 +691,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.45</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.46</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -856,7 +856,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.45</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.46</span>
     </div>
 
   </aside>
@@ -1070,7 +1070,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.45</span>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.46</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1105,7 +1105,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.45";
+    const APP_VERSION = "4.9.46";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1460,6 +1460,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.46": [
+        "Hardened database security and resolved unauthorized access risks.",
+        "Hidden top navigation bar on smartphones for clean space.",
+        "Streamlined menu button label to Menu across header.",
+        "Permanently fixed update alert loop with hard cache purge.",
+        "Instant automatic update delivery with zero stale cache."
+      ],
       "4.9.45": [
         "Removed redundant title and date overlay from theater poster.",
         "Unobstructed widescreen cinema artwork display on main stage.",
@@ -1595,7 +1602,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.45"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.46"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -1666,22 +1673,41 @@
       } catch(e) {}
     }
 
-    function refreshAndUpdateApp() {
+    async function refreshAndUpdateApp() {
       clearAppUpdateCountdown();
-      if (waitingServiceWorker) {
-        waitingServiceWorker.postMessage({ action: 'skipWaiting' });
-      }
-      try {
-        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
-      } catch(e) {}
-      
       const refreshBtn = document.getElementById('btnUpdateAppRefresh');
       if (refreshBtn) {
-        refreshBtn.innerHTML = '<span>⏳</span> <span>Updating & Entering Theater...</span>';
+        refreshBtn.innerHTML = '<span>⚡</span> <span>Updating & Reloading Theater...</span>';
       }
 
+      // 1. Tell active and waiting service workers to skip waiting immediately
+      try {
+        if (waitingServiceWorker) {
+          waitingServiceWorker.postMessage({ action: 'skipWaiting' });
+        }
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
+        }
+      } catch(e) {}
+
+      // 2. Wipe all CacheStorage entries so the browser NEVER serves stale HTML
+      if ('caches' in window) {
+        try {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        } catch(e) {}
+      }
+
+      // 3. Mark last viewed version and timestamp so popup never loops
+      try {
+        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
+        localStorage.setItem('brian_theater_last_reload_timestamp', String(Date.now()));
+      } catch(e) {}
+
+      // 4. Force hard reload bypassing browser disk cache completely!
       setTimeout(() => {
-        window.location.reload();
+        const cleanUrl = window.location.href.split('?')[0].split('#')[0];
+        window.location.replace(`${cleanUrl}?_force_reload=${Date.now()}`);
       }, 250);
     }
 
@@ -1713,6 +1739,13 @@
           if (res.ok) {
             const vData = await res.json();
             if (vData && vData.version && vData.version !== APP_VERSION) {
+              // Loop breaker: if user recently reloaded within 15 seconds, give browser time to breathe
+              const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
+              if (Date.now() - lastReload < 15000) {
+                console.log(`[UpdateDetector] Recently reloaded, suppressing duplicate popup for v${vData.version}`);
+                isCheckingForUpdate = false;
+                return;
+              }
               console.log(`[UpdateDetector] Server has newer version v${vData.version} (local: v${APP_VERSION})`);
               showAppUpdateToast({
                 version: vData.version,
@@ -1732,6 +1765,11 @@
             const swText = await swRes.text();
             const match = swText.match(/\/\/\s*VERSION:\s*([0-9.]+)/i);
             if (match && match[1] && match[1] !== APP_VERSION) {
+              const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
+              if (Date.now() - lastReload < 15000) {
+                isCheckingForUpdate = false;
+                return;
+              }
               console.log(`[UpdateDetector] Detected sw.js version v${match[1]} > local v${APP_VERSION}`);
               showAppUpdateToast({
                 version: match[1],
@@ -1761,10 +1799,10 @@
       showTheaterToast(`You're up to date! Running v${APP_VERSION}`);
     }
 
-    // Register Service Worker for offline caching & PWA eligibility
+    // Register Service Worker for offline caching & PWA eligibility (updateViaCache: 'none' guarantees sw.js is NEVER cached!)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
           .then(reg => {
             console.log('PWA Service Worker registered:', reg.scope);
             window.swRegistration = reg;

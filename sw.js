@@ -1,11 +1,11 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.45
+// VERSION: 4.9.46
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.45';
+const CACHE_NAME = 'brian-theater-v4.9.46';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -62,7 +62,7 @@ self.addEventListener('fetch', event => {
   // 2. Network-First for HTML navigation so reloads always fetch fresh HTML from server!
   if (event.request.mode === 'navigate' || event.request.destination === 'document') {
     return event.respondWith(
-      fetch(event.request).then(networkResponse => {
+      fetch(event.request, { cache: 'no-cache' }).then(networkResponse => {
         if (networkResponse && networkResponse.status === 200) {
           const clone = networkResponse.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));

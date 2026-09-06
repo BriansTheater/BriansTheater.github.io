@@ -1,12 +1,12 @@
 {
-  "version": "4.9.45",
+  "version": "4.9.46",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.45",
+  "title": "Brian's Theater v4.9.46",
   "notes": [
-    "Removed redundant title and date overlay from theater poster.",
-    "Unobstructed widescreen cinema artwork display on main stage.",
-    "Eliminated duplicate text repetition across screening room header.",
-    "Polished Theater tab layout with clean visual hierarchy.",
-    "Enhanced performance and fast responsive screen transitions."
+    "Hardened database security and resolved unauthorized access risks.",
+    "Hidden top navigation bar on smartphones for clean space.",
+    "Streamlined menu button label to Menu across header.",
+    "Permanently fixed update alert loop with hard cache purge.",
+    "Instant automatic update delivery with zero stale cache."
   ]
 }

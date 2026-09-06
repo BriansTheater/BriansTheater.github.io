@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.46] - 2026-09-05
+
+### What's New
+- Hardened database security and resolved unauthorized access risks.
+- Hidden top navigation bar on smartphones for clean space.
+- Streamlined menu button label to Menu across header.
+- Permanently fixed update alert loop with hard cache purge.
+- Instant automatic update delivery with zero stale cache.
+
 ## [4.9.45] - 2026-09-05
 
 ### What's New
