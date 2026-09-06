@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.79] - 2026-09-06
+
+### What's New
+- Fixed trailer dropdown resetting to top movie during background sync.
+- Preserved selected movie and query during live catalog updates.
+- Prevented background sync from wiping active trailer search candidates.
+- Safe indexed candidate cards prevent special character parsing bugs.
+- Disabled intrusive autoplay audio on initial candidate auto-selection.
+
 ## [4.9.78] - 2026-09-06
 
 ### What's New

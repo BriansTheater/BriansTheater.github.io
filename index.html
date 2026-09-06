@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.78 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.79 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -623,7 +623,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.78</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.79</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -994,7 +994,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.78</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.79</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1159,7 +1159,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.78</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.79</span>
     </div>
 
   </aside>
@@ -1498,8 +1498,10 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.78";
+    const APP_VERSION = "4.9.79";
     window.APP_VERSION = APP_VERSION;
+    var vaultMovies = [];
+    var communityRequests = [];
 
     function syncAppVersionBadges() {
       try {
@@ -1873,6 +1875,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.79": [
+        "Fixed trailer dropdown resetting to top movie during background sync.",
+        "Preserved selected movie and query during live catalog updates.",
+        "Prevented background sync from wiping active trailer search candidates.",
+        "Safe indexed candidate cards prevent special character parsing bugs.",
+        "Disabled intrusive autoplay audio on initial candidate auto-selection."
+      ],
       "4.9.78": [
         "Added title correction input to Movie Trailers Preview Manager.",
         "Introduced interactive visual TMDB candidate gallery for trailers.",
@@ -2255,7 +2264,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.78"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.79"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4003,25 +4012,48 @@
     }
 
     // 🎬 Movie Trailers & Preview Manager Engine
-    function populateAdminTrailerSelector() {
+    window.currentAdminTrailerCandidates = [];
+
+    function populateAdminTrailerSelector(force = false) {
       const select = document.getElementById('adminTrailerMovieSelect');
       const countBadge = document.getElementById('adminTrailerMovieCount');
       if (!select) return;
 
       const titleSet = new Set();
-      if (Array.isArray(sampleSchedule)) {
-        sampleSchedule.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
-      }
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      schedSource.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
       if (Array.isArray(vaultMovies)) {
         vaultMovies.forEach(v => { if (v && v.title) titleSet.add(v.title.replace(/^🎬\s*/, '').trim()); });
       }
+      if (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests)) {
+        communityRequests.forEach(r => { if (r && r.title) titleSet.add(r.title.replace(/^🎬\s*/, '').trim()); });
+      }
 
-      const allTitles = Array.from(titleSet).sort((a, b) => a.localeCompare(b));
-      select.innerHTML = allTitles.map(title => `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`).join('');
+      const allTitles = Array.from(titleSet).filter(Boolean).sort((a, b) => a.localeCompare(b));
+      const catalogSig = allTitles.length + ':' + (allTitles[0] || '') + ':' + (allTitles[allTitles.length - 1] || '');
+
+      // Avoid re-rendering if titles haven't changed and not forced
+      if (!force && select.dataset.catalogSig === catalogSig) {
+        return;
+      }
+      select.dataset.catalogSig = catalogSig;
+
+      const currentVal = select.value;
+      let html = '<option value="">-- Choose Movie to Configure --</option>';
+      html += allTitles.map(title => `<option value="${escapeHtml(title)}"${title === currentVal ? ' selected' : ''}>${escapeHtml(title)}</option>`).join('');
+      select.innerHTML = html;
 
       if (countBadge) countBadge.textContent = `${allTitles.length} Titles`;
 
-      onAdminSelectTrailerMovie();
+      if (currentVal && allTitles.includes(currentVal)) {
+        select.value = currentVal;
+      } else if (!select.value && allTitles.length > 0) {
+        select.value = allTitles[0];
+        onAdminSelectTrailerMovie();
+      }
     }
 
     function onAdminSelectTrailerMovie() {
@@ -4074,7 +4106,13 @@
       if (grid) grid.innerHTML = '';
     }
 
-    function applyAdminCandidateTrailer(videoKey, title, videoName, showToast = true) {
+    function selectAdminTrailerCandidate(idx) {
+      const ct = window.currentAdminTrailerCandidates && window.currentAdminTrailerCandidates[idx];
+      if (!ct) return;
+      applyAdminCandidateTrailer(ct.videoKey, ct.mediaTitle, ct.videoName, true, true);
+    }
+
+    function applyAdminCandidateTrailer(videoKey, title, videoName, showToast = true, autoplay = true) {
       const input = document.getElementById('adminTrailerCustomUrlInput');
       const previewIframe = document.getElementById('adminTrailerPreviewIframe');
       const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
@@ -4084,7 +4122,7 @@
       if (input) input.value = `https://www.youtube.com/watch?v=${videoKey}`;
 
       if (previewIframe) {
-        previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoKey)}?autoplay=1&rel=0`;
+        previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoKey)}${autoplay ? '?autoplay=1&rel=0' : '?rel=0'}`;
         previewIframe.classList.remove('hidden');
       }
       if (placeholder) placeholder.classList.add('hidden');
@@ -4294,14 +4332,14 @@
           return;
         }
 
+        window.currentAdminTrailerCandidates = candidateTrailers;
+
         if (countBadge) countBadge.textContent = `${candidateTrailers.length} Trailer${candidateTrailers.length > 1 ? 's' : ''}`;
 
         if (grid) {
-          grid.innerHTML = candidateTrailers.map(ct => {
+          grid.innerHTML = candidateTrailers.map((ct, idx) => {
             const safeMediaTitle = escapeHtml(ct.mediaTitle);
-            const jsMediaTitle = ct.mediaTitle.replace(/'/g, "\\'");
             const safeVideoName = escapeHtml(ct.videoName);
-            const jsVideoName = ct.videoName.replace(/'/g, "\\'");
             const thumbUrl = `https://img.youtube.com/vi/${ct.videoKey}/mqdefault.jpg`;
             const mediaBadge = ct.isTv ? '<span class="text-[9px] px-1 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono">TV</span>' : '<span class="text-[9px] px-1 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">Movie</span>';
             const officialBadge = ct.official ? '<span class="text-[9px] px-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">Official</span>' : '';
@@ -4317,7 +4355,7 @@
                   </div>
                 </div>
 
-                <button type="button" onclick="applyAdminCandidateTrailer('${ct.videoKey}', '${jsMediaTitle}', '${jsVideoName}')" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-rose-400 transition flex flex-col items-center justify-end p-1.5 text-left bg-black shadow-inner">
+                <button type="button" onclick="selectAdminTrailerCandidate(${idx})" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-rose-400 transition flex flex-col items-center justify-end p-1.5 text-left bg-black shadow-inner">
                   <img src="${thumbUrl}" alt="${safeMediaTitle}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition" loading="lazy">
                   <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
                   
@@ -4340,10 +4378,10 @@
           container.classList.add('flex');
         }
 
-        // Auto-select the top result
+        // Auto-select the top result ready for preview without blasting autoplay audio
         const top = candidateTrailers[0];
         if (top && top.videoKey) {
-          applyAdminCandidateTrailer(top.videoKey, top.mediaTitle, top.videoName, false);
+          applyAdminCandidateTrailer(top.videoKey, top.mediaTitle, top.videoName, false, false);
         }
 
         showTheaterToast(`🎬 Found ${candidateTrailers.length} TMDB trailer${candidateTrailers.length > 1 ? 's' : ''} for "${query}"!`);
@@ -4387,6 +4425,8 @@
       // Refresh schedule cards, vault cards, and preview
       renderSchedule();
       renderVault();
+      populateAdminTrailerSelector(true);
+      if (select && title) select.value = title;
       onAdminSelectTrailerMovie();
 
       showTheaterToast(`🎉 Success! Saved official trailer for "${title}".`);
@@ -4709,7 +4749,7 @@
     setInterval(syncFromFirebase, 15000);
 
     // Initial Vault Library & Community Requests
-    let vaultMovies = [
+    vaultMovies = [
       { title: "The interview", year: "2014", source: "request", genre: "Comedy", runtime: "1h 52m" },
       { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "1h 52m" },
       { title: "The Mandalorian and Grogu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "2h 12m" },
@@ -4982,6 +5022,7 @@
 
     function mergeScheduleIntoVault(scheduleItems) {
       if (!Array.isArray(scheduleItems)) return;
+      let added = 0;
       scheduleItems.forEach(s => {
         if (!s || !s.title) return;
         const cleanTitle = s.title.replace(/^🎬\s*/, '').trim();
@@ -5038,6 +5079,7 @@
             existing.overview = details.summary || s.desc;
           }
         } else {
+          added++;
           vaultMovies.push({
             title: cleanTitle,
             year: details.year || s.year || "2026",
@@ -5064,7 +5106,9 @@
         }
       });
       renderVault();
-      populateAdminTrailerSelector();
+      if (added > 0) {
+        populateAdminTrailerSelector();
+      }
     }
 
     function renderVault() {
@@ -5900,7 +5944,7 @@
       }
     }
 
-    let communityRequests = [
+    communityRequests = [
       { title: "The interview", requester: "Dwarf", genre: "Disney+ / Hulu", status: "Under Review" },
       { title: "Pineapple Express", requester: "Dwarf", genre: "Netflix", status: "Under Review" },
       { title: "The Mandalorian and Grogu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },

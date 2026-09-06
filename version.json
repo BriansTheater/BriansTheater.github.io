@@ -1,12 +1,12 @@
 {
-  "version": "4.9.78",
+  "version": "4.9.79",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.78",
+  "title": "Brian's Theater v4.9.79",
   "notes": [
-    "Added title correction input to Movie Trailers Preview Manager.",
-    "Introduced interactive visual TMDB candidate gallery for trailers.",
-    "Added one-click YouTube video preview to trailer candidate cards.",
-    "Added one-click reset to default trailer in admin studio.",
-    "Upgraded trailer search to multi-search with TV show fallback."
+    "Fixed trailer dropdown resetting to top movie during background sync.",
+    "Preserved selected movie and query during live catalog updates.",
+    "Prevented background sync from wiping active trailer search candidates.",
+    "Safe indexed candidate cards prevent special character parsing bugs.",
+    "Disabled intrusive autoplay audio on initial candidate auto-selection."
   ]
 }
