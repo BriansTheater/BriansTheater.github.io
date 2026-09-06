@@ -1,12 +1,15 @@
 {
-  "version": "4.9.89",
+  "version": "4.9.90",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.89",
+  "title": "Brian's Theater v4.9.90",
   "notes": [
-    "Restored verified high-res TMDB artwork for holiday festival films.",
-    "Eliminated 404 placeholder fallbacks across 2024 Christmas lineup.",
-    "Added official poster artwork for all community movie requests.",
-    "Enhanced artwork dictionary to prevent missing poster canvas displays.",
-    "Synchronized verified poster paths across web app and catalog."
+    "Unified Movie Media Studio into one single screen.",
+    "Preview posters and official YouTube trailers side-by-side.",
+    "Added 1-click master save button for all movie media.",
+    "Integrated inline movie title editor to fix typos instantly.",
+    "Renamed movie titles sync to Google Sheets and site.",
+    "Added direct Google Sheets sync button to refresh catalog.",
+    "Protected Google Sheets movie titles from automatic overwriting.",
+    "Fixed 2025 Scary Movie Marathon row name and details."
   ]
 }

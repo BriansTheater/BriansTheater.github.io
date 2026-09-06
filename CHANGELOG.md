@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.90] - 2026-09-06
+
+### What's New
+- Unified Movie Media Studio into one single screen.
+- Preview posters and official YouTube trailers side-by-side.
+- Added 1-click master save button for all movie media.
+- Integrated inline movie title editor to fix typos instantly.
+- Renamed movie titles sync to Google Sheets and site.
+- Added direct Google Sheets sync button to refresh catalog.
+- Protected Google Sheets movie titles from automatic overwriting.
+- Fixed 2025 Scary Movie Marathon row name and details.
+
 ## [4.9.89] - 2026-09-06
 
 ### What's New

@@ -803,9 +803,9 @@
             </div>
           </div>
 
-          <!-- Master Movie Selector & Search Bar (Single selection for Artwork, Trailers, and Summary!) -->
+          <!-- Master Movie Selector, Title Rename & Live Google Sheets Sync Bar -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner">
-            <div class="md:col-span-6 flex flex-col gap-1">
+            <div class="md:col-span-4 flex flex-col gap-1">
               <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                 <span>🍿</span> Select Movie to Configure
               </label>
@@ -817,19 +817,37 @@
               <select id="adminTrailerMovieSelect" class="hidden"></select>
             </div>
 
-            <div class="md:col-span-6 flex flex-col gap-1">
+            <div class="md:col-span-4 flex flex-col gap-1">
               <div class="flex items-center justify-between">
-                <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                  <span>✏️</span> Search Query / Correct Title
+                <label class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span>✏️</span> Movie Title Editor
                 </label>
-                <span class="text-[10px] text-slate-400 font-mono">Auto-discovers All Media via TMDB</span>
+                <span class="text-[10px] text-slate-400 font-mono">Rename / Fix Typos</span>
               </div>
               <div class="flex gap-2 mt-0.5">
-                <input type="text" id="adminMediaSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbAllMediaForSelectedMovie();}" placeholder="e.g. Neighbors 2, The Batman (2022)..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                <input type="text" id="adminMediaEditTitleInput" placeholder="Edit movie title here..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-emerald-500/50 text-slate-100 font-medium focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400">
+                <button type="button" onclick="renameCurrentMovieTitle()" id="btnRenameMovieTitle" class="py-2.5 px-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1 transition active:scale-95 shrink-0" title="Rename this movie across website and Google Sheets">
+                  <span>✏️</span> Rename
+                </button>
+              </div>
+            </div>
+
+            <div class="md:col-span-4 flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <span>🔍</span> Search TMDB & Sync
+                </label>
+                <span class="text-[10px] text-slate-400 font-mono">Auto-Fill All</span>
+              </div>
+              <div class="flex gap-2 mt-0.5">
+                <input type="text" id="adminMediaSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbAllMediaForSelectedMovie();}" placeholder="Search TMDB..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                 <input type="hidden" id="adminArtworkSearchTitleInput">
                 <input type="hidden" id="adminTrailerSearchTitleInput">
-                <button type="button" onclick="fetchTmdbAllMediaForSelectedMovie()" id="btnFetchTmdbMediaAll" class="py-2.5 px-4 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:opacity-95 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
-                  <span>🔍</span> Search TMDB
+                <button type="button" onclick="fetchTmdbAllMediaForSelectedMovie()" id="btnFetchTmdbMediaAll" class="py-2.5 px-3 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:opacity-95 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1 transition active:scale-95 shrink-0">
+                  <span>🔍</span> Search
+                </button>
+                <button type="button" onclick="syncDirectlyFromGoogleSheets()" id="btnSyncGoogleSheets" class="py-2.5 px-2.5 bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/40 text-xs font-bold rounded-xl shadow transition active:scale-95 shrink-0" title="Pull latest updates directly from Google Sheets now">
+                  <span>🔄</span> Sheets
                 </button>
               </div>
             </div>
@@ -840,7 +858,7 @@
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
               <div class="flex items-center gap-2">
                 <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                  <span>✨</span> TMDB Matches Found (Click to Auto-Apply Poster, Trailer & Summary)
+                  <span>✨</span> TMDB Matches Found (Select Any Candidate to Load Poster, Trailer & Synopsis)
                 </span>
                 <span id="adminMediaCandidateCount" class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">0</span>
                 <span class="hidden" id="adminArtworkCandidateCount"></span>
@@ -857,209 +875,205 @@
             <div id="adminTrailerCandidateContainer" class="hidden"></div>
           </div>
 
-          <!-- Sub-Tab Navigation Bar -->
-          <div class="flex items-center gap-2 border-b border-slate-800 pb-2.5">
-            <button type="button" onclick="switchMediaSubTab('artwork')" id="mediaSubTabBtn-artwork" class="media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow transition flex items-center gap-1.5">
-              <span>🖼️</span> Poster & Artwork
-            </button>
-            <button type="button" onclick="switchMediaSubTab('trailers')" id="mediaSubTabBtn-trailers" class="media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-1.5">
-              <span>🎬</span> Official Trailer
-            </button>
-            <button type="button" onclick="switchMediaSubTab('summary')" id="mediaSubTabBtn-summary" class="media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-1.5">
-              <span>📝</span> Summary & Synopsis
-            </button>
+          <!-- Master Save & Control Bar (Sticky & Prominent) -->
+          <div class="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-900/95 border border-amber-500/40 shadow-xl">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <span>⚡</span> Studio Control Center
+              </span>
+              <span class="text-[11px] text-slate-300 font-mono bg-slate-950 px-2 py-0.5 rounded border border-slate-800 truncate max-w-[200px] sm:max-w-xs" id="adminStudioActiveMovieLabel">Select a movie</span>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="applySelectedArtworkToStageNow()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95">
+                <span>⭐</span> Stage Spotlight
+              </button>
+              <button type="button" onclick="resetSelectedMovieAllToDefault()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-400 hover:text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 active:scale-95">
+                <span>🔄</span> Reset to Defaults
+              </button>
+              <button type="button" onclick="saveSelectedMovieMediaBundle()" id="btnSaveMediaBundle" class="py-2.5 px-5 rounded-xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:opacity-95 text-slate-950 font-black text-xs sm:text-sm shadow-xl transition flex items-center gap-2 active:scale-95">
+                <span>🚀</span> Push All to Site & Sheets (Save Media Bundle)
+              </button>
+            </div>
           </div>
 
-          <!-- Sub-Panel 1: Poster & Artwork -->
-          <div id="mediaSubPanel-artwork" class="media-subpanel flex flex-col gap-4">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div class="lg:col-span-7 flex flex-col gap-4">
-                <div>
-                  <label class="text-xs font-semibold text-slate-300">Custom Image URL</label>
-                  <div class="flex gap-2 mt-1">
-                    <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, Discord, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
-                    <button type="button" onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
-                      Preview
-                    </button>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <label class="cursor-pointer py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-2 transition active:scale-95 text-center">
-                    <span>📁</span> Browse Local File
-                    <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
-                  </label>
-
-                  <button type="button" onclick="resetSelectedMovieArtworkToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95">
-                    <span>🔄</span> Reset to Default
-                  </button>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-slate-850">
-                  <button type="button" onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
-                    <span>💾</span> Save Movie Image
-                  </button>
-                  <button type="button" onclick="applySelectedArtworkToStageNow()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 active:scale-95 shrink-0">
-                    <span>⭐</span> Set on Stage Now
-                  </button>
-                </div>
-              </div>
-
-              <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 self-start flex items-center gap-1.5">
-                  <span>👁️</span> Artwork Preview
+          <!-- Unified Dual-Stage: Poster/Artwork & Official Trailer Together -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Left: Poster & Artwork Controls & Live Preview -->
+            <div class="lg:col-span-6 flex flex-col gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <span>🖼️</span> Poster & Artwork
                 </span>
-                <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border-2 border-slate-750 bg-black shadow-inner flex items-center justify-center">
-                  <img id="adminArtworkPreviewImg" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Artwork Preview" class="w-full h-full object-cover">
-                  <div class="absolute bottom-1.5 left-2 right-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-sm text-[10px] font-mono text-amber-300 truncate" id="adminArtworkPreviewCaption">
-                    Neighbors (2014)
-                  </div>
+                <span class="text-[10px] text-slate-400 font-mono">Custom Image or TMDB</span>
+              </div>
+
+              <div>
+                <label class="text-[11px] font-semibold text-slate-300">Image URL</label>
+                <div class="flex gap-2 mt-1">
+                  <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-950 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                  <button type="button" onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
+                    Preview
+                  </button>
                 </div>
-                <div class="w-full mt-2 text-[11px] text-slate-400 text-center font-mono truncate" id="adminArtworkPreviewUrl">
-                  https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg
+              </div>
+
+              <!-- Quick Choice Chips (Backdrop vs Poster) -->
+              <div class="flex items-center gap-2" id="adminArtworkQuickChips">
+                <button type="button" onclick="useAdminCandidateArtwork('backdrop')" id="btnUseBackdropChip" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-mono text-slate-300 transition border border-slate-700">Use 16:9 Backdrop</button>
+                <button type="button" onclick="useAdminCandidateArtwork('poster')" id="btnUsePosterChip" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-mono text-slate-300 transition border border-slate-700">Use Vertical Poster</button>
+              </div>
+
+              <!-- Live Artwork Preview Card -->
+              <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border-2 border-slate-750 bg-black shadow-inner flex items-center justify-center">
+                <img id="adminArtworkPreviewImg" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Artwork Preview" class="w-full h-full object-cover">
+                <div class="absolute bottom-1.5 left-2 right-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-sm text-[10px] font-mono text-amber-300 truncate" id="adminArtworkPreviewCaption">
+                  Select a movie
                 </div>
+              </div>
+              <div class="w-full text-[10px] text-slate-400 text-center font-mono truncate" id="adminArtworkPreviewUrl">
+                --
+              </div>
+
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
+                <label class="cursor-pointer py-2 px-3 bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95 text-center flex-1">
+                  <span>📁</span> Browse Local
+                  <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
+                </label>
+                <button type="button" onclick="resetSelectedMovieArtworkToDefault()" class="py-2 px-3 bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-lg border border-slate-750 transition active:scale-95">
+                  <span>🔄</span> Reset
+                </button>
+                <button type="button" onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="py-2 px-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-lg transition active:scale-95 shadow">
+                  <span>💾</span> Save Image
+                </button>
               </div>
             </div>
 
-            <!-- Schedule Artwork Mini-Gallery -->
-            <div class="mt-2 pt-4 border-t border-slate-850">
-              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <span>🖼️</span> Upcoming Lineup Artwork Gallery (Click to Edit)
-              </h4>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="adminArtworkGalleryGrid">
-                <!-- Rendered dynamically -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Sub-Panel 2: Official Trailer -->
-          <div id="mediaSubPanel-trailers" class="media-subpanel hidden flex flex-col gap-4">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div class="lg:col-span-7 flex flex-col gap-4">
-                <div>
-                  <label class="text-xs font-semibold text-slate-300">YouTube Trailer URL or Video ID</label>
-                  <div class="flex gap-2 mt-1">
-                    <input type="text" id="adminTrailerCustomUrlInput" placeholder="https://www.youtube.com/watch?v=... or YouTube ID" class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-red-400 font-mono">
-                    <button type="button" onclick="previewCustomTrailerInput()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
-                      Preview
-                    </button>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  <button type="button" onclick="testSelectedMovieTrailerInTheater()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                    <span>⚡</span> Test Player
-                  </button>
-
-                  <button type="button" onclick="resetSelectedMovieTrailerToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                    <span>🔄</span> Reset to Default
-                  </button>
-
-                  <button type="button" onclick="clearSelectedMovieTrailer()" class="py-2.5 px-3 bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-700/50 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                    <span>🗑️</span> Clear Trailer
-                  </button>
-                </div>
-
-                <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
-                  <button type="button" onclick="saveSelectedMovieTrailer()" id="btnSaveTrailer" class="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
-                    <span>💾</span> Save Trailer
-                  </button>
-                </div>
-
-                <p class="text-[11px] text-slate-400 leading-normal">
-                  Saves trailer to website and automatically updates Google Sheets <strong>Column W</strong> and <strong>Column N</strong>.
-                </p>
-              </div>
-
-              <div class="lg:col-span-5 flex flex-col gap-2">
-                <div class="text-xs font-semibold text-slate-400 flex items-center justify-between">
-                  <span>Interactive Player Preview</span>
-                  <span class="text-[10px] text-slate-500 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
-                </div>
-
-                <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl relative flex items-center justify-center">
-                  <div id="adminTrailerPreviewPlaceholder" class="flex flex-col items-center justify-center p-4 text-center text-slate-500 text-xs gap-1.5">
-                    <span class="text-2xl">🎬</span>
-                    <span>Select a movie or click Auto-Find to preview trailer</span>
-                  </div>
-                  <iframe id="adminTrailerPreviewIframe" class="w-full h-full hidden" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-
-                <div class="text-[11px] text-slate-400 truncate font-mono mt-1" id="adminTrailerCurrentIdDisplay">
-                  Trailer: <span class="text-slate-500">None</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sub-Panel 3: Summary & Synopsis (NEW) -->
-          <div id="mediaSubPanel-summary" class="media-subpanel hidden flex flex-col gap-4">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div class="lg:col-span-7 flex flex-col gap-3.5">
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                      <span>💬</span> Plot Summary / Overview
-                    </label>
-                    <span class="text-[10px] text-slate-400 font-mono">Editable synopsis shown on cards</span>
-                  </div>
-                  <textarea id="adminMediaSummaryInput" rows="5" placeholder="Enter movie overview or search TMDB above to auto-fill..." class="w-full mt-1.5 p-3.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 leading-relaxed focus:border-amber-400 focus:ring-1 focus:ring-amber-400 scrollbar-thin"></textarea>
-                </div>
-
-                <!-- Secondary Metadata Controls (Year, Runtime, Genres) -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div>
-                    <label class="text-[11px] font-semibold text-slate-400">Release Year</label>
-                    <input type="text" id="adminMediaYearInput" placeholder="e.g. 2025" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
-                  </div>
-                  <div>
-                    <label class="text-[11px] font-semibold text-slate-400">Runtime</label>
-                    <input type="text" id="adminMediaRuntimeInput" placeholder="e.g. 1h 45m" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
-                  </div>
-                  <div>
-                    <label class="text-[11px] font-semibold text-slate-400">Genres</label>
-                    <input type="text" id="adminMediaGenreInput" placeholder="e.g. Horror, Mystery" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
-                  <button type="button" onclick="saveSelectedMovieSummary()" id="btnSaveMediaSummary" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
-                    <span>💾</span> Save Summary & Info
-                  </button>
-                  <button type="button" onclick="resetSelectedMovieSummaryToDefault()" class="py-3 px-4 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                    <span>🔄</span> Reset
-                  </button>
-                </div>
-
-                <p class="text-[11px] text-slate-400 leading-normal">
-                  Saves custom summary and metadata to local cache and syncs to Google Sheets.
-                </p>
-              </div>
-
-              <!-- Right: Live Card Summary Preview -->
-              <div class="lg:col-span-5 flex flex-col gap-2.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <span>👁️</span> Card Summary Preview
+            <!-- Right: Official Trailer Controls & Interactive Player Preview -->
+            <div class="lg:col-span-6 flex flex-col gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
+                  <span>🎬</span> Official Trailer
                 </span>
+                <span class="text-[10px] text-slate-400 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
+              </div>
 
-                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-2 shadow-inner">
-                  <div class="flex items-center justify-between border-b border-slate-850 pb-2">
-                    <span class="text-xs font-bold text-slate-200 truncate" id="adminSummaryPreviewTitle">Selected Movie</span>
-                    <span class="text-[10px] font-mono text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/60" id="adminSummaryPreviewYear">Year</span>
-                  </div>
-                  <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1">
-                    <span>💬</span> SUMMARY
-                  </div>
-                  <div class="text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-1.5 whitespace-pre-line scrollbar-thin font-sans select-text" id="adminSummaryPreviewText">
-                    Select a movie to preview and edit its summary.
-                  </div>
-                  <div class="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-850 font-mono">
-                    <span id="adminSummaryPreviewRuntime">Runtime: --</span>
-                    <span id="adminSummaryPreviewGenres">Genres: --</span>
-                  </div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-300">YouTube Trailer URL or Video ID</label>
+                <div class="flex gap-2 mt-1">
+                  <input type="text" id="adminTrailerCustomUrlInput" placeholder="https://www.youtube.com/watch?v=... or Video ID" class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-950 border border-slate-700 text-slate-100 focus:border-sky-400 font-mono">
+                  <button type="button" onclick="previewCustomTrailerInput()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
+                    Preview
+                  </button>
                 </div>
               </div>
+
+              <!-- Quick Trailer Status / ID Display -->
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span id="adminTrailerCurrentIdDisplay">Trailer: <span class="text-slate-500">None</span></span>
+                <button type="button" onclick="testSelectedMovieTrailerInTheater()" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 text-xs">
+                  <span>⚡</span> Test in Theater Player
+                </button>
+              </div>
+
+              <!-- Live Interactive Player / Placeholder -->
+              <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black border-2 border-slate-750 shadow-inner flex items-center justify-center">
+                <div id="adminTrailerPreviewPlaceholder" class="flex flex-col items-center justify-center p-4 text-center text-slate-500 text-xs gap-1.5">
+                  <span class="text-2xl">🎬</span>
+                  <span>Select a movie or search TMDB to preview trailer</span>
+                </div>
+                <iframe id="adminTrailerPreviewIframe" class="w-full h-full hidden" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div class="w-full text-[10px] text-slate-500 text-center font-mono">
+                Embedded YouTube Player with No-Cookie Privacy
+              </div>
+
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
+                <button type="button" onclick="resetSelectedMovieTrailerToDefault()" class="py-2 px-3 bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg border border-slate-750 transition active:scale-95 flex-1">
+                  <span>🔄</span> Reset to Default
+                </button>
+                <button type="button" onclick="clearSelectedMovieTrailer()" class="py-2 px-3 bg-slate-950 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 text-xs font-semibold rounded-lg border border-slate-750 transition active:scale-95">
+                  <span>🗑️</span> Clear
+                </button>
+                <button type="button" onclick="saveSelectedMovieTrailer()" id="btnSaveTrailer" class="py-2 px-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-lg transition active:scale-95 shadow">
+                  <span>💾</span> Save Trailer
+                </button>
+              </div>
             </div>
+          </div>
+
+          <!-- Bottom: Synopsis & Card Metadata (All on Same Page!) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow">
+            <div class="lg:col-span-7 flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <span>📝</span> Plot Summary / Overview
+                </label>
+                <span class="text-[10px] text-slate-400 font-mono">Editable Synopsis Shown on Cards</span>
+              </div>
+              <textarea id="adminMediaSummaryInput" rows="4" placeholder="Enter movie overview or search TMDB above to auto-fill..." class="w-full p-3 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 leading-relaxed focus:border-amber-400 scrollbar-thin"></textarea>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div>
+                  <label class="text-[11px] font-semibold text-slate-400">Release Year</label>
+                  <input type="text" id="adminMediaYearInput" placeholder="e.g. 2025" class="w-full mt-1 px-3 py-1.5 text-xs rounded-lg bg-slate-950 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                </div>
+                <div>
+                  <label class="text-[11px] font-semibold text-slate-400">Runtime</label>
+                  <input type="text" id="adminMediaRuntimeInput" placeholder="e.g. 1h 45m" class="w-full mt-1 px-3 py-1.5 text-xs rounded-lg bg-slate-950 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                </div>
+                <div>
+                  <label class="text-[11px] font-semibold text-slate-400">Genres</label>
+                  <input type="text" id="adminMediaGenreInput" placeholder="e.g. Horror, Mystery" class="w-full mt-1 px-3 py-1.5 text-xs rounded-lg bg-slate-950 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
+                <button type="button" onclick="saveSelectedMovieSummary()" id="btnSaveMediaSummary" class="py-2 px-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-lg transition active:scale-95 shadow">
+                  <span>💾</span> Save Summary
+                </button>
+                <button type="button" onclick="resetSelectedMovieSummaryToDefault()" class="py-2 px-3 bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg border border-slate-750 transition active:scale-95">
+                  <span>🔄</span> Reset Summary
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Live Card Summary Preview -->
+            <div class="lg:col-span-5 flex flex-col gap-2 p-3.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>👁️</span> Card Summary Preview
+              </span>
+              <div class="flex items-center justify-between border-b border-slate-850 pb-1.5">
+                <span class="text-xs font-bold text-slate-200 truncate" id="adminSummaryPreviewTitle">Selected Movie</span>
+                <span class="text-[10px] font-mono text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/60" id="adminSummaryPreviewYear">Year</span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                <span id="adminSummaryPreviewRuntime">Runtime: --</span>
+                <span id="adminSummaryPreviewGenres">Genres: --</span>
+              </div>
+              <div class="text-xs text-slate-300 leading-relaxed max-h-36 overflow-y-auto pr-1 whitespace-pre-line scrollbar-thin font-sans select-text" id="adminSummaryPreviewText">
+                Select a movie to preview and edit its summary.
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Upcoming Lineup Mini-Gallery -->
+          <div class="mt-1 pt-3 border-t border-slate-850">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+              <span>🖼️</span> Upcoming Lineup Gallery (Click to Edit Movie)
+            </h4>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="adminArtworkGalleryGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Hidden Backward-Compatibility Sub-Tab Elements -->
+          <div class="hidden">
+            <button type="button" id="mediaSubTabBtn-artwork"></button>
+            <button type="button" id="mediaSubTabBtn-trailers"></button>
+            <button type="button" id="mediaSubTabBtn-summary"></button>
+            <div id="mediaSubPanel-artwork"></div>
+            <div id="mediaSubPanel-trailers"></div>
+            <div id="mediaSubPanel-summary"></div>
           </div>
         </div>
 
@@ -1785,7 +1799,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.89";
+    const APP_VERSION = "4.9.90";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2162,6 +2176,16 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.90": [
+        "Unified Movie Media Studio into one single screen.",
+        "Preview posters and official YouTube trailers side-by-side.",
+        "Added 1-click master save button for all movie media.",
+        "Integrated inline movie title editor to fix typos instantly.",
+        "Renamed movie titles sync to Google Sheets and site.",
+        "Added direct Google Sheets sync button to refresh catalog.",
+        "Protected Google Sheets movie titles from automatic overwriting.",
+        "Fixed 2025 Scary Movie Marathon row name and details."
+      ],
       "4.9.89": [
         "Restored verified high-res TMDB artwork for holiday festival films.",
         "Eliminated 404 placeholder fallbacks across 2024 Christmas lineup.",
@@ -3133,6 +3157,12 @@
     try {
       const storedMeta = localStorage.getItem('brian_movie_metadata_map');
       if (storedMeta) customMovieMetadata = JSON.parse(storedMeta);
+    } catch(e) {}
+
+    let customMovieTitles = {};
+    try {
+      const storedTitles = localStorage.getItem('brian_movie_titles_map');
+      if (storedTitles) customMovieTitles = JSON.parse(storedTitles);
     } catch(e) {}
 
     function getCinemaPlaceholder(title) {
@@ -4217,6 +4247,12 @@
       const searchInput = document.getElementById('adminMediaSearchTitleInput');
       if (searchInput && title) searchInput.value = cleanTitle;
 
+      // Update Title Editor Input & Studio Active Label
+      const titleInput = document.getElementById('adminMediaEditTitleInput');
+      if (titleInput) titleInput.value = cleanTitle;
+      const activeLbl = document.getElementById('adminStudioActiveMovieLabel');
+      if (activeLbl) activeLbl.textContent = cleanTitle || 'Selected Movie';
+
       // 1. Update Artwork Sub-Panel
       const artUrlInput = document.getElementById('adminArtworkUrlInput');
       const previewImg = document.getElementById('adminArtworkPreviewImg');
@@ -4631,8 +4667,249 @@
       if (prevRuntime) prevRuntime.textContent = `Runtime: ${candidate.runtime || '--'}`;
       if (prevGenres) prevGenres.textContent = `Genres: ${candidate.genres || '--'}`;
 
+      window.currentAdminSelectedCandidate = candidate;
+
       if (showToast) {
         showTheaterToast(`⚡ Applied TMDB media for "${candidate.title}". Click Save in any tab to apply!`);
+      }
+    }
+
+    function useAdminCandidateArtwork(type) {
+      const c = window.currentAdminSelectedCandidate || (window.currentAdminMediaCandidates && window.currentAdminMediaCandidates[0]);
+      if (!c) {
+        showTheaterToast("⚠️ Search TMDB first to select a backdrop or poster.");
+        return;
+      }
+      const url = (type === 'poster') ? (c.posterUrl || c.backdropUrl) : (c.backdropUrl || c.posterUrl);
+      if (!url) return;
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+      if (urlInput) urlInput.value = url;
+      if (previewImg) previewImg.src = url;
+      if (urlText) urlText.textContent = url;
+      showTheaterToast(`🖼️ Switched to ${type === 'poster' ? 'Vertical Poster' : '16:9 Backdrop'} for "${c.title}".`);
+    }
+
+    async function saveSelectedMovieMediaBundle() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
+      if (!title) {
+        showTheaterToast("⚠️ Please select a movie to save.");
+        return;
+      }
+
+      const artUrl = document.getElementById('adminArtworkUrlInput')?.value.trim() || '';
+      const rawTrailer = document.getElementById('adminTrailerCustomUrlInput')?.value.trim() || '';
+      const trailerId = extractYouTubeId(rawTrailer) || (/^[\w-]{11}$/.test(rawTrailer) ? rawTrailer : null);
+      const trailerUrl = trailerId ? `https://www.youtube.com/watch?v=${trailerId}` : '';
+      const summary = (document.getElementById('adminMediaSummaryInput')?.value || '').trim();
+      const year = (document.getElementById('adminMediaYearInput')?.value || '').trim();
+      const runtime = (document.getElementById('adminMediaRuntimeInput')?.value || '').trim();
+      const genres = (document.getElementById('adminMediaGenreInput')?.value || '').trim();
+
+      const btn = document.getElementById('btnSaveMediaBundle');
+      if (btn) btn.innerHTML = '<span>⏳</span> Pushing to Site & Sheets...';
+
+      // 1. Update local cache
+      if (artUrl) customMovieImages[title] = artUrl;
+      if (trailerUrl) customMovieTrailers[title] = trailerUrl;
+      if (summary) customMovieSummaries[title] = summary;
+      customMovieMetadata[title] = { year, runtime, genres, summary };
+
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+        localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries));
+        localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
+      } catch(e) {}
+
+      // 2. Dispatch to Google Apps Script / Sheets backend
+      const p1 = artUrl ? fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(artUrl)}`, { mode: 'no-cors' }) : Promise.resolve();
+      const p2 = trailerUrl ? fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=${encodeURIComponent(trailerUrl)}`, { mode: 'no-cors' }) : Promise.resolve();
+      const p3 = (summary || year || runtime || genres) ? fetch(`${API_BASE_URL}?action=set_movie_summary&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}&year=${encodeURIComponent(year)}&runtime=${encodeURIComponent(runtime)}&genres=${encodeURIComponent(genres)}`, { mode: 'no-cors' }) : Promise.resolve();
+
+      await Promise.allSettled([p1, p2, p3]);
+
+      // 3. Update UI
+      renderSchedule();
+      renderVault();
+      populateAdminMediaStudio(true);
+      if (select && title) select.value = title;
+      onAdminSelectMediaMovie();
+
+      updateStageArtwork(false, document.getElementById('nowPlayingHeading')?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
+
+      if (btn) btn.innerHTML = '<span>🚀</span> Push All to Site & Sheets (Save Media Bundle)';
+      showTheaterToast(`🎉 Master bundle saved for "${title}"! Poster, trailer, and summary are live.`);
+    }
+
+    function resetSelectedMovieAllToDefault() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const title = select?.value.trim();
+      if (!title) return;
+
+      delete customMovieImages[title];
+      delete customMovieTrailers[title];
+      delete customMovieSummaries[title];
+      delete customMovieMetadata[title];
+
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+        localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries));
+        localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
+      } catch(e) {}
+
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+
+      renderSchedule();
+      renderVault();
+      onAdminSelectMediaMovie();
+      showTheaterToast(`🔄 Reset all media for "${title}" to system defaults.`);
+    }
+
+    async function renameCurrentMovieTitle() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const oldTitle = (select?.value.trim() || "").replace(/^🎬\s*/, '').trim();
+      const newTitle = (document.getElementById('adminMediaEditTitleInput')?.value.trim() || "").replace(/^🎬\s*/, '').trim();
+
+      if (!oldTitle) {
+        showTheaterToast("⚠️ Please select a movie to rename.");
+        return;
+      }
+      if (!newTitle) {
+        showTheaterToast("⚠️ Please enter a new movie title.");
+        return;
+      }
+      if (oldTitle.toLowerCase() === newTitle.toLowerCase()) {
+        showTheaterToast("ℹ️ Movie title is unchanged.");
+        return;
+      }
+
+      const btn = document.getElementById('btnRenameMovieTitle');
+      if (btn) btn.innerHTML = '<span>⏳</span> Renaming...';
+
+      // 1. Record in customMovieTitles map & localStorage
+      customMovieTitles[oldTitle] = newTitle;
+      try {
+        localStorage.setItem('brian_movie_titles_map', JSON.stringify(customMovieTitles));
+      } catch(e) {}
+
+      // 2. Migrate custom overrides from oldTitle to newTitle
+      if (customMovieImages[oldTitle]) {
+        customMovieImages[newTitle] = customMovieImages[oldTitle];
+        delete customMovieImages[oldTitle];
+        try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+      }
+      if (customMovieTrailers[oldTitle]) {
+        customMovieTrailers[newTitle] = customMovieTrailers[oldTitle];
+        delete customMovieTrailers[oldTitle];
+        try { localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers)); } catch(e) {}
+      }
+      if (customMovieSummaries[oldTitle]) {
+        customMovieSummaries[newTitle] = customMovieSummaries[oldTitle];
+        delete customMovieSummaries[oldTitle];
+        try { localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries)); } catch(e) {}
+      }
+      if (customMovieMetadata[oldTitle]) {
+        customMovieMetadata[newTitle] = customMovieMetadata[oldTitle];
+        delete customMovieMetadata[oldTitle];
+        try { localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata)); } catch(e) {}
+      }
+
+      // 3. Rename in in-memory schedule and vault
+      const lowerOld = oldTitle.toLowerCase();
+      if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
+        window.theaterScheduleCache.forEach(s => {
+          if (s && s.title && s.title.toLowerCase().trim() === lowerOld) {
+            s.title = newTitle;
+          }
+        });
+      }
+      if (typeof sampleSchedule !== 'undefined' && Array.isArray(sampleSchedule)) {
+        sampleSchedule.forEach(s => {
+          if (s && s.title && s.title.toLowerCase().trim() === lowerOld) {
+            s.title = newTitle;
+          }
+        });
+      }
+      if (Array.isArray(vaultMovies)) {
+        vaultMovies.forEach(v => {
+          if (v && v.title && v.title.toLowerCase().trim() === lowerOld) {
+            v.title = newTitle;
+          }
+          if (v && v.marathonCollection && v.marathonCollection.toLowerCase().trim() === lowerOld) {
+            v.marathonCollection = newTitle;
+          }
+        });
+      }
+      if (typeof window !== 'undefined' && Array.isArray(window.INITIAL_PAST_MOVIES)) {
+        window.INITIAL_PAST_MOVIES.forEach(p => {
+          if (p && p.title && p.title.toLowerCase().trim() === lowerOld) {
+            p.title = newTitle;
+          }
+          if (p && p.marathonCollection && p.marathonCollection.toLowerCase().trim() === lowerOld) {
+            p.marathonCollection = newTitle;
+          }
+        });
+      }
+
+      // 4. Send action to Google Sheets backend
+      try {
+        await fetch(`${API_BASE_URL}?action=rename_movie_title&oldTitle=${encodeURIComponent(oldTitle)}&newTitle=${encodeURIComponent(newTitle)}`, { mode: 'no-cors' });
+      } catch(e) {}
+
+      // 5. Re-render UI and refresh Admin Studio
+      renderSchedule();
+      renderVault();
+      populateAdminMediaStudio(true);
+
+      if (select) select.value = newTitle;
+      onAdminSelectMediaMovie();
+
+      if (btn) btn.innerHTML = '<span>✏️</span> Rename';
+      showTheaterToast(`🎉 Successfully renamed "${oldTitle}" to "${newTitle}"!`);
+    }
+
+    async function syncDirectlyFromGoogleSheets() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const btn = document.getElementById('btnSyncGoogleSheets');
+      if (btn) btn.innerHTML = '<span>⏳</span> Syncing...';
+
+      showTheaterToast("🔄 Pulling live catalog from Google Sheets...");
+
+      try {
+        await fetch(`${API_BASE_URL}?action=force_sync&force=true`, { mode: 'no-cors' });
+        setTimeout(async () => {
+          await syncFromFirebase();
+          populateAdminMediaStudio(true);
+          if (btn) btn.innerHTML = '<span>🔄</span> Sheets';
+          showTheaterToast("✅ Google Sheets data synchronized successfully!");
+        }, 1500);
+      } catch(e) {
+        if (btn) btn.innerHTML = '<span>🔄</span> Sheets';
+        showTheaterToast("⚠️ Sheets sync trigger sent: " + e.message);
       }
     }
 
