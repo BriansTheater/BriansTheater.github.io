@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.33] - 2026-09-05
+
+### What's New
+- Added Movie Vault filter to separate movies from TV shows.
+- Fixed search crowding so Avatar movie displays cleanly.
+- Added TV show and movie badges on all vault cards.
+- Added active multi-layer update detection with popup toast.
+- Updated Service Worker cache to version 4.9.33.
+
 ## [4.9.32] - 2026-09-05
 
 ### What's New

@@ -1,11 +1,11 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.32
+// VERSION: 4.9.33
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.32';
+const CACHE_NAME = 'brian-theater-v4.9.33';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -41,15 +41,22 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()).then(() => {
+      return self.clients.matchAll({ type: 'window' }).then(clientList => {
+        clientList.forEach(client => {
+          client.postMessage({ type: 'APP_VERSION_UPDATED', version: '4.9.33' });
+        });
+      });
+    })
   );
 });
 
 self.addEventListener('fetch', event => {
   const requestUrl = new URL(event.request.url);
 
-  // Network-only for live Firebase real-time database and Google Apps Script API calls
+  // Network-only for version.json, Firebase real-time database, and external APIs
   if (
+    requestUrl.pathname.endsWith('version.json') ||
     requestUrl.hostname.includes('firebaseio.com') ||
     requestUrl.hostname.includes('script.google.com') ||
     requestUrl.hostname.includes('youtube.com') ||
