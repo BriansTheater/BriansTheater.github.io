@@ -1,12 +1,13 @@
 {
-  "version": "4.9.53",
+  "version": "4.9.54",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.53",
+  "title": "Brian's Theater v4.9.54",
   "notes": [
-    "Permanently eliminated automated reload countdown loop on update alerts.",
-    "Service worker stops caching HTML documents to prevent stale views.",
-    "Added full service worker unregistration on manual app reload.",
-    "Guaranteed instant clean HTML load from server on reload.",
-    "Resolved browser cache lock and synchronized live versions cleanly."
+    "Restored live Community Requests Queue on Requests tab.",
+    "Dynamically synchronized user movie requests into Vault tab.",
+    "Added honeypot trap to silently block automated spam bots.",
+    "Enforced thirty second request cooldown to prevent rapid spam.",
+    "Blocked external URL links and promo spam in requests.",
+    "Added backend duplicate filtering to keep spreadsheet clean."
   ]
 }

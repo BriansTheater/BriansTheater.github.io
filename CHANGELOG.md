@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.54] - 2026-09-06
+
+### What's New
+- Restored live Community Requests Queue on Requests tab.
+- Dynamically synchronized user movie requests into Vault tab.
+- Added honeypot trap to silently block automated spam bots.
+- Enforced thirty second request cooldown to prevent rapid spam.
+- Blocked external URL links and promo spam in requests.
+- Added backend duplicate filtering to keep spreadsheet clean.
+
 ## [4.9.53] - 2026-09-06
 
 ### What's New

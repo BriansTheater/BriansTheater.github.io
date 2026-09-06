@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.53 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.54 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -424,6 +424,8 @@
         <form id="customMovieRequestForm" target="googleFormSubmitTarget" action="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/formResponse" method="POST" onsubmit="handleCustomRequestSubmit(event)" class="relative z-10 flex flex-col gap-6">
           <input type="hidden" name="fvv" value="1">
           <input type="hidden" name="pageHistory" value="0">
+          <!-- Anti-Spam Bot Honeypot Trap (Hidden from human users) -->
+          <input type="text" name="theater_bot_honey" id="reqHoneyInput" style="display:none !important; position:absolute; left:-9999px;" tabindex="-1" autocomplete="off" aria-hidden="true">
 
           <!-- Requester Name Field -->
           <div class="flex flex-col gap-1.5">
@@ -571,6 +573,44 @@
 
         </div>
 
+      </div>
+
+      <!-- 3. COMMUNITY REQUESTS QUEUE (Live Queue Display) -->
+      <div id="communityRequestsContainer" class="morphic-panel rounded-3xl p-6 sm:p-7 relative overflow-hidden flex flex-col gap-4">
+        <!-- Ambient multi-color glow -->
+        <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-teal-400/10 blur-3xl pointer-events-none"></div>
+
+        <!-- Header & Search -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-900/90 border border-teal-500/30 flex items-center justify-center text-xl shrink-0 shadow-sm">
+              🎬
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-black text-slate-100 uppercase tracking-wider flex items-center gap-2 m-0">
+                <span>Community Requests</span>
+                <span id="communityQueueCount" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">0 Queued</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Live film & show suggestions queued for upcoming Brian's Theater screenings</p>
+            </div>
+          </div>
+          
+          <!-- Live Filter Search -->
+          <div class="relative w-full sm:w-64">
+            <input 
+              type="text" 
+              id="communityRequestSearch" 
+              placeholder="Filter queue..." 
+              oninput="searchCommunityRequests(this.value)"
+              class="w-full px-3.5 py-2 pr-8 rounded-xl bg-slate-950/70 border border-white/10 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-teal-400/50 transition">
+            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">🔍</span>
+          </div>
+        </div>
+
+        <!-- Scrollable Requests List -->
+        <div id="communityRequestsList" class="flex flex-col gap-2.5 max-h-[520px] overflow-y-auto pr-1">
+          <!-- Populated dynamically by renderCommunityRequests() -->
+        </div>
       </div>
 
       <!-- OPTIONAL EMBEDDED GOOGLE FORM VIEW (Toggled if desired) -->
@@ -1308,7 +1348,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.53";
+    const APP_VERSION = "4.9.54";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1683,6 +1723,14 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.54": [
+        "Restored live Community Requests Queue on Requests tab.",
+        "Dynamically synchronized user movie requests into Vault tab.",
+        "Added honeypot trap to silently block automated spam bots.",
+        "Enforced thirty second request cooldown to prevent rapid spam.",
+        "Blocked external URL links and promo spam in requests.",
+        "Added backend duplicate filtering to keep spreadsheet clean."
+      ],
       "4.9.53": [
         "Permanently eliminated automated reload countdown loop on update alerts.",
         "Service worker stops caching HTML documents to prevent stale views.",
@@ -1875,7 +1923,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.53"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.54"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4892,6 +4940,9 @@
     function loadRequests() {
       renderCommunityRequests(communityRequests);
 
+      // Synchronize requests dynamically with Vault tab
+      syncRequestsToVault();
+
       const adminCount = document.getElementById('adminQueueCount');
       if (adminCount) adminCount.textContent = `${communityRequests.length} Pending in Google Sheet`;
 
@@ -4909,6 +4960,31 @@
             </div>
           </div>
         `).join('');
+      }
+    }
+
+    function syncRequestsToVault() {
+      if (!Array.isArray(communityRequests) || !Array.isArray(vaultMovies)) return;
+      // Filter out previously synced requests to avoid duplicates
+      vaultMovies = vaultMovies.filter(m => m.source !== 'request');
+
+      communityRequests.forEach(r => {
+        if (!r || !r.title) return;
+        vaultMovies.push({
+          title: r.title,
+          year: r.year || (r.date ? r.date.split('/')[2] || '2026' : '2026'),
+          source: 'request',
+          genre: r.genre || r.platform || 'Movie',
+          runtime: r.runtime || 'Pending Review',
+          requester: r.requester || 'Community',
+          overview: r.overview || `Requested by ${r.requester || 'Guest'} (${r.genre || r.platform || 'Movie'})`,
+          posterUrl: r.posterUrl || '',
+          status: r.status || 'Under Review'
+        });
+      });
+
+      if (typeof renderVault === 'function') {
+        renderVault();
       }
     }
 
@@ -5018,6 +5094,9 @@
       if (nameInput && savedName) {
         nameInput.value = savedName;
       }
+
+      // 3. Record interaction timestamp for anti-bot speed check
+      window.formInitTimestamp = Date.now();
     }
 
     function selectRequestPlatformChip(platform) {
@@ -5200,8 +5279,56 @@
 
       if (!requesterName || !movieTitle) {
         showTheaterToast("⚠️ Please enter your name and movie title.");
+        if (event && event.preventDefault) event.preventDefault();
         return;
       }
+
+      // Anti-Spam Layer 1: Honeypot Trap Check (Silent drop for bots)
+      const honeyInput = document.getElementById('reqHoneyInput');
+      if (honeyInput && honeyInput.value.trim() !== '') {
+        console.warn('Bot detected via honeypot trap.');
+        if (event && event.preventDefault) event.preventDefault();
+        return;
+      }
+
+      // Anti-Spam Layer 2: Human Interaction Time & Rate-Limiting Cooldown
+      const now = Date.now();
+      if (window.formInitTimestamp && (now - window.formInitTimestamp < 1200)) {
+        console.warn('Instant bot submission blocked.');
+        if (event && event.preventDefault) event.preventDefault();
+        return;
+      }
+
+      const lastReqTime = parseInt(localStorage.getItem('bt_last_request_time') || '0', 10);
+      const cooldownMs = 30 * 1000;
+      if (now - lastReqTime < cooldownMs) {
+        const remaining = Math.ceil((cooldownMs - (now - lastReqTime)) / 1000);
+        showTheaterToast(`⏳ Please wait ${remaining}s before requesting another title.`);
+        if (event && event.preventDefault) event.preventDefault();
+        return;
+      }
+
+      // Anti-Spam Layer 3: Link/URL Spam & Character Length Sanitization
+      const urlPattern = /(https?:\/\/|www\.|\.com|\.ru|\.xyz|\.top|\.click|\.link|\.biz)/i;
+      if (urlPattern.test(requesterName) || urlPattern.test(movieTitle)) {
+        showTheaterToast('⚠️ Links and promo URLs are not allowed in requests.');
+        if (event && event.preventDefault) event.preventDefault();
+        return;
+      }
+
+      if (requesterName.length > 50) {
+        showTheaterToast('⚠️ Requester name cannot exceed 50 characters.');
+        if (event && event.preventDefault) event.preventDefault();
+        return;
+      }
+      if (movieTitle.length > 120) {
+        showTheaterToast('⚠️ Movie title cannot exceed 120 characters.');
+        if (event && event.preventDefault) event.preventDefault();
+        return;
+      }
+
+      // Record successful request time
+      localStorage.setItem('bt_last_request_time', String(now));
 
       // Save requester name for future visits
       localStorage.setItem('bt_requester_name', requesterName);
