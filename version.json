@@ -1,12 +1,12 @@
 {
-  "version": "4.9.71",
+  "version": "4.9.72",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.71",
+  "title": "Brian's Theater v4.9.72",
   "notes": [
-    "Removed redundant Watched badge from Vault movie poster artwork.",
-    "Preserved clean, unobstructed widescreen artwork across all past titles.",
-    "Kept dedicated screening date section intact at card bottom.",
-    "Retained Request and TV badges for relevant catalog items.",
-    "Streamlined Vault card layout for cleaner cinema browsing experience."
+    "Added verified runtimes for scheduled and requested cinema titles.",
+    "Vault cards now highlight Scheduled status with screening dates.",
+    "Eliminated duplicate status tags to preserve clean card layout.",
+    "Merged live theater schedule details directly into catalog movies.",
+    "Streamlined card UI to a single unified status section."
   ]
 }

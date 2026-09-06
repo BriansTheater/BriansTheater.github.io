@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.71 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.72 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -623,7 +623,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.71</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.72</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -906,7 +906,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.71</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.72</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1071,7 +1071,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.71</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.72</span>
     </div>
 
   </aside>
@@ -1409,7 +1409,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.71";
+    const APP_VERSION = "4.9.72";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1784,6 +1784,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.72": [
+        "Added verified runtimes for scheduled and requested cinema titles.",
+        "Vault cards now highlight Scheduled status with screening dates.",
+        "Eliminated duplicate status tags to preserve clean card layout.",
+        "Merged live theater schedule details directly into catalog movies.",
+        "Streamlined card UI to a single unified status section."
+      ],
       "4.9.71": [
         "Removed redundant Watched badge from Vault movie poster artwork.",
         "Preserved clean, unobstructed widescreen artwork across all past titles.",
@@ -2117,7 +2124,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.71"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.72"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4141,18 +4148,18 @@
 
     // Initial Vault Library & Community Requests
     let vaultMovies = [
-      { title: "The interview", year: "2014", source: "request", genre: "Comedy", runtime: "Pending" },
-      { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "Pending" },
-      { title: "The Mandalorian and Grogu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
-      { title: "The President's Cake", year: "2026", source: "request", genre: "Netflix", runtime: "Pending" },
-      { title: "Fuze", year: "2026", source: "request", genre: "HBO Max", runtime: "Pending" },
-      { title: "Signal One", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
-      { title: "Rich Flu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
-      { title: "In the Grey", year: "2026", source: "request", genre: "Starz", runtime: "Pending" },
-      { title: "Stop! That! Murder!", year: "2026", source: "request", genre: "Comedy", runtime: "Pending" },
-      { title: "Lifehack", year: "2026", source: "request", genre: "Netflix", runtime: "Pending" },
-      { title: "Toy Story 5", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "Pending" },
-      { title: "Backrooms", year: "2026", source: "request", genre: "Horror", runtime: "Pending" }
+      { title: "The interview", year: "2014", source: "request", genre: "Comedy", runtime: "1h 52m" },
+      { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "1h 52m" },
+      { title: "The Mandalorian and Grogu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "2h 12m" },
+      { title: "The President's Cake", year: "2026", source: "request", genre: "Netflix", runtime: "1h 46m" },
+      { title: "Fuze", year: "2026", source: "request", genre: "HBO Max", runtime: "1h 36m" },
+      { title: "Signal One", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "1h 27m" },
+      { title: "Rich Flu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "1h 56m" },
+      { title: "In the Grey", year: "2026", source: "request", genre: "Starz", runtime: "1h 48m" },
+      { title: "Stop! That! Murder!", year: "2026", source: "request", genre: "Comedy", runtime: "1h 40m" },
+      { title: "Lifehack", year: "2026", source: "request", genre: "Netflix", runtime: "1h 38m" },
+      { title: "Toy Story 5", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "1h 42m" },
+      { title: "Backrooms", year: "2026", source: "request", genre: "Horror", runtime: "1h 45m" }
     ];
 
     let vFilter = 'all';
@@ -4379,29 +4386,75 @@
       scheduleItems.forEach(s => {
         if (!s || !s.title) return;
         const cleanTitle = s.title.replace(/^🎬\s*/, '').trim();
-        const exists = vaultMovies.some(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
-        if (!exists) {
-          const details = parseMovieScheduleDetails(s);
-          const artworkUrl = s.posterUrl || s.imageUrl || s.backdropUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(s) : "");
+        const details = parseMovieScheduleDetails(s);
+        const artworkUrl = s.posterUrl || s.imageUrl || s.backdropUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(s) : "");
+        const descMovieMatch = (s.desc || '').match(/Movie:\s*([^\r\n]+)/i);
+        const descTitle = descMovieMatch ? descMovieMatch[1].replace(/^🎬\s*/, '').toLowerCase().trim() : "";
+        const normClean = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        const existingIdx = vaultMovies.findIndex(v => {
+          const vTitle = String(v.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+          if (vTitle === cleanTitle.toLowerCase().trim()) return true;
+          if (descTitle && vTitle === descTitle) return true;
+          const vNorm = vTitle.replace(/[^a-z0-9]/g, '');
+          if (normClean && vNorm === normClean) return true;
+          if (descTitle && vNorm === descTitle.replace(/[^a-z0-9]/g, '')) return true;
+          return false;
+        });
+
+        const schedRuntime = s.runtime || details.runtime || "";
+        const schedStartTime = details.startTime || s.startTime || s.time || "7:00 PM";
+        const schedEndTime = details.endTime || s.endTime || "8:45 PM";
+        const schedDate = s.date || "";
+
+        if (existingIdx >= 0) {
+          const existing = vaultMovies[existingIdx];
+          existing.isScheduled = true;
+          existing.scheduledDate = schedDate || existing.scheduledDate || "";
+          if (schedRuntime && schedRuntime !== 'Pending' && schedRuntime !== 'Standard') {
+            existing.runtime = schedRuntime;
+          }
+          if (schedDate) {
+            existing.date = schedDate;
+            existing.watchDate = schedDate;
+            existing.dateText = schedDate;
+          }
+          if (schedStartTime) existing.startTime = schedStartTime;
+          if (schedEndTime) existing.endTime = schedEndTime;
+          if (details.year || s.year) existing.year = details.year || s.year;
+          if (artworkUrl && (!existing.posterUrl || existing.posterUrl.includes('placeholder') || existing.posterUrl.includes('svg'))) {
+            existing.posterUrl = artworkUrl;
+            existing.imageUrl = artworkUrl;
+            existing.backdropUrl = s.backdropUrl || artworkUrl;
+          }
+          if (s.trailerUrl) existing.trailerUrl = s.trailerUrl;
+          if (s.trailerId) existing.trailerId = s.trailerId;
+          if ((!existing.summary || existing.summary.length < 10) && (details.summary || s.desc)) {
+            existing.summary = details.summary || s.desc;
+            existing.overview = details.summary || s.desc;
+          }
+        } else {
           vaultMovies.push({
             title: cleanTitle,
-            year: details.year || "2026",
-            date: s.date || "",
-            watchDate: s.date || "",
-            dateText: s.date || "",
-            startTime: details.startTime || "7:00 PM",
-            endTime: details.endTime || "8:45 PM",
+            year: details.year || s.year || "2026",
+            date: schedDate,
+            watchDate: schedDate,
+            dateText: schedDate,
+            scheduledDate: schedDate,
+            isScheduled: true,
+            startTime: schedStartTime,
+            endTime: schedEndTime,
             source: "past",
-            genre: s.genre || "Featured Film",
-            genres: s.genre || "Featured Film",
-            runtime: details.runtime || "Standard",
+            genre: s.genre || details.genre || "Featured Film",
+            genres: s.genre || details.genre || "Featured Film",
+            runtime: schedRuntime || "Standard",
             posterUrl: artworkUrl,
             imageUrl: artworkUrl,
             backdropUrl: s.backdropUrl || artworkUrl,
             trailerUrl: s.trailerUrl || "",
             trailerId: s.trailerId || "",
-            summary: details.summary || "",
-            overview: details.summary || ""
+            summary: details.summary || s.desc || "",
+            overview: details.summary || s.desc || ""
           });
         }
       });
@@ -4472,6 +4525,7 @@
         const d = parseVaultMovieCardData(m);
         const cleanTitle = String(m.title || '').replace(/^🎬\s*/, '').trim();
         const posterUrl = getMovieArtworkUrl(m);
+        const isScheduled = d.isScheduled;
 
         return `
         <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
@@ -4481,21 +4535,15 @@
               <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(cleanTitle)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
               <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
               
-              <!-- Top-Left Tag Badge: Exact Schedule Tab Style -->
+              <!-- Top-Left Tag Badge: TV Indicator Only (No Duplicate Status) -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                ${isRequest ? `
-                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span>⏳ REQUEST</span>
-                </span>
-                ` : ''}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
               <!-- Bottom Overlay on Banner: Genre and Start Time (No duplicate date) -->
               <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
                 <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px] sm:max-w-[200px]">
-                  <span>🎭</span> <span class="truncate">${escapeHtml(m.genre || m.genres || 'Feature Film')}</span>
+                  <span>🎭</span> <span class="truncate">${escapeHtml(m.genre || m.genres || d.genres || 'Feature Film')}</span>
                 </span>
                 <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 shrink-0">
                   🕒 ${escapeHtml(d.startTime)}
@@ -4536,22 +4584,29 @@
               <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
             </div>
 
-            <!-- Dedicated Watched Section -->
-            ${isRequest ? `
-            <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
+            <!-- Dedicated Status Section: Exactly 1 Clean Status -->
+            ${isScheduled ? `
+            <div class="mt-2.5 text-xs bg-slate-900/50 border border-amber-500/30 p-2.5 rounded-xl flex items-center justify-between">
               <div class="font-semibold text-amber-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
-                <span>⏳</span> STATUS
+                <span>🗓️</span> SCHEDULED
               </div>
-              <span class="font-mono font-bold text-amber-300 text-[11px]">Awaiting Screening</span>
+              <span class="font-mono font-bold text-amber-300 text-[11px] truncate max-w-[200px]" title="${escapeHtml(d.scheduledDate || 'Upcoming Screening')}">${escapeHtml(d.scheduledDate || 'Upcoming Screening')}</span>
+            </div>
+            ` : (isRequest ? `
+            <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
+              <div class="font-semibold text-sky-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                <span>⏳</span> REQUEST
+              </div>
+              <span class="font-mono font-bold text-sky-300 text-[11px]">${escapeHtml(m.status || 'Under Review')}</span>
             </div>
             ` : `
             <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
               <div class="font-semibold text-sky-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
                 <span>🗓️</span> WATCHED
               </div>
-              <span class="font-mono font-bold text-sky-300 text-[11px]">${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}</span>
+              <span class="font-mono font-bold text-sky-300 text-[11px] truncate max-w-[200px]" title="${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}">${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}</span>
             </div>
-            `}
+            `)}
           </div>
 
           <!-- Trailer Controls & Dropdown Video Viewer Drawer -->
@@ -4564,13 +4619,17 @@
               <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="flex-1 sm:flex-initial text-xs font-semibold px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center justify-center gap-1.5 active:scale-95">
                 <span>▶</span> YouTube ↗
               </button>
+              ` : (isScheduled ? `
+              <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Scheduled screening">
+                <span>🗓️</span> Scheduled Screening
+              </span>
               ` : (isRequest ? `
               <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Trailer verified once scheduled">
                 <span>⏳</span> Awaiting Schedule
               </span>
               ` : `
               <span class="flex-1 text-xs text-slate-500 font-mono py-1.5 text-center">No Trailer</span>
-              `)}
+              `))}
 
               ${isAdmin ? `
               <button onclick="openAdminTrailerForMovie('${escapeHtml(cleanTitle)}')" title="Admin: Configure Trailer" class="text-xs px-2.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95 shrink-0 ml-auto">
@@ -4631,13 +4690,82 @@
       }
     }
 
+    function findScheduleItemForMovie(item) {
+      if (!item) return null;
+      const rawTitle = typeof item === 'string' ? item : (item.title || '');
+      const title = rawTitle.replace(/^🎬\s*/, '').toLowerCase().trim();
+      if (!title) return null;
+      const schedList = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache))
+        ? window.theaterScheduleCache
+        : [];
+      
+      // 1. Exact match on schedule item title
+      const exact = schedList.find(s => {
+        if (!s || !s.title) return false;
+        const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
+        return sTitle === title;
+      });
+      if (exact) return exact;
+
+      // 2. Exact match on desc "Movie: <Title>"
+      const descExact = schedList.find(s => {
+        if (!s || !s.desc) return false;
+        const dMatch = s.desc.match(/Movie:\s*([^\r\n]+)/i);
+        if (dMatch) {
+          const dTitle = dMatch[1].replace(/^🎬\s*/, '').toLowerCase().trim();
+          return dTitle === title;
+        }
+        return false;
+      });
+      if (descExact) return descExact;
+
+      // 3. Normalized alphanumeric equality
+      const normTitle = title.replace(/[^a-z0-9]/g, '');
+      const normExact = schedList.find(s => {
+        if (!s) return false;
+        const sNorm = String(s.title || '').replace(/^🎬\s*/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (sNorm && sNorm === normTitle) return true;
+        const dMatch = (s.desc || '').match(/Movie:\s*([^\r\n]+)/i);
+        if (dMatch) {
+          const dNorm = dMatch[1].replace(/^🎬\s*/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (dNorm && dNorm === normTitle) return true;
+        }
+        return false;
+      });
+      if (normExact) return normExact;
+
+      // 4. Substring matches, preferring the longest matching title to prevent false collisions
+      const partials = schedList.filter(s => {
+        if (!s) return false;
+        const sTitle = String(s.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+        const dMatch = (s.desc || '').match(/Movie:\s*([^\r\n]+)/i);
+        const dTitle = dMatch ? dMatch[1].replace(/^🎬\s*/, '').toLowerCase().trim() : '';
+        return (sTitle && (sTitle.includes(title) || title.includes(sTitle))) ||
+               (dTitle && (dTitle.includes(title) || title.includes(dTitle)));
+      }).sort((a, b) => {
+        const lenA = Math.max((a.title || '').length, ((a.desc || '').match(/Movie:\s*([^\r\n]+)/i)?.[1] || '').length);
+        const lenB = Math.max((b.title || '').length, ((b.desc || '').match(/Movie:\s*([^\r\n]+)/i)?.[1] || '').length);
+        return lenB - lenA;
+      });
+
+      return partials[0] || null;
+    }
+
     function parseVaultMovieCardData(m) {
       if (!m) return {};
       const ov = String(m.overview || m.summary || m.desc || '');
+      const cleanT = String(m.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+
+      // Check live schedule linkage
+      const sched = findScheduleItemForMovie(m);
+      const isScheduled = Boolean(m.isScheduled || (sched && sched.status !== 'CONCLUDED') || (sched && sched.date));
+      const scheduledDate = (sched && sched.date) || m.scheduledDate || (m.isScheduled ? (m.date || m.watchDate) : '');
 
       // 1. Theatrical Release Year (never mixed with watch date!)
       let releaseYear = null;
-      if (m.releaseYear && /^\d{4}$/.test(String(m.releaseYear))) {
+      if (sched && sched.year && /^\d{4}$/.test(String(sched.year))) {
+        releaseYear = String(sched.year);
+      } else if (m.releaseYear && /^\d{4}$/.test(String(m.releaseYear))) {
         releaseYear = String(m.releaseYear);
       }
       if (!releaseYear) {
@@ -4662,7 +4790,7 @@
       // 2. Watch Date (Screening Date)
       let watchDate = '';
       let watchDateFormatted = '';
-      const rawDate = m.watchDate || m.date || m.dateText || '';
+      const rawDate = m.watchDate || m.date || m.dateText || (sched && sched.date) || '';
       if (rawDate && !rawDate.includes('@')) {
         try {
           const parts = String(rawDate).split('/');
@@ -4684,21 +4812,38 @@
         if (!watchDateFormatted) watchDateFormatted = watchDate;
       }
 
-      // 3. Runtime
+      // 3. Runtime: Priority to Schedule -> Overview match -> item runtime -> INITIAL_PAST_MOVIES -> TMDB/fallback
       let runtime = '';
-      const rtMatch = ov.match(/Runtime:\s*([^\r\n<]+)/i);
-      if (rtMatch) {
-        runtime = rtMatch[1].trim();
-      } else if (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard' && !m.runtime.includes(':')) {
-        runtime = m.runtime;
-      } else {
-        const rtGeneric = ov.match(/\b(\d{1,2}h\s*\d{1,2}m|\d{1,2}hr\s*\d{1,2}mins?)\b/i);
-        if (rtGeneric) runtime = rtGeneric[1];
+      if (sched && sched.runtime && sched.runtime !== 'Pending' && sched.runtime !== 'Standard') {
+        runtime = sched.runtime;
+      }
+      if (!runtime) {
+        const rtMatch = ov.match(/Runtime:\s*([^\r\n<]+)/i);
+        if (rtMatch) {
+          runtime = rtMatch[1].trim();
+        } else if (m.runtime && m.runtime !== 'Full Feature' && m.runtime !== 'Standard' && m.runtime !== 'Pending' && !m.runtime.includes(':')) {
+          runtime = m.runtime;
+        } else {
+          const rtGeneric = ov.match(/\b(\d{1,2}h\s*\d{1,2}m|\d{1,2}hr\s*\d{1,2}mins?)\b/i);
+          if (rtGeneric) runtime = rtGeneric[1];
+        }
+      }
+      // If still missing or Pending, search window.INITIAL_PAST_MOVIES catalog
+      if (!runtime || runtime === 'Pending' || runtime === 'Standard' || runtime === 'Full Feature') {
+        if (typeof window !== 'undefined' && Array.isArray(window.INITIAL_PAST_MOVIES)) {
+          const matchCatalog = window.INITIAL_PAST_MOVIES.find(p => {
+            const pTitle = String(p.title || '').toLowerCase().trim();
+            return pTitle === cleanT || pTitle.includes(cleanT) || cleanT.includes(pTitle);
+          });
+          if (matchCatalog && matchCatalog.runtime && matchCatalog.runtime !== 'Pending' && matchCatalog.runtime !== 'Standard') {
+            runtime = matchCatalog.runtime;
+          }
+        }
       }
       if (runtime) {
         runtime = runtime.replace(/mins?/i, 'm').replace(/hr/i, 'h').replace(/min/i, 'm').replace(/\s+/g, ' ').trim();
       }
-      if (!runtime) runtime = '1h 45m';
+      if (!runtime || runtime === 'Pending') runtime = '1h 45m';
 
       // 4. Rating (MPAA / TV)
       let rating = '';
@@ -4722,6 +4867,8 @@
       const gMatch = ov.match(/Genres?:\s*([^\r\n<]+)/i);
       if (gMatch) {
         genres = gMatch[1].replace(/<[^>]+>/g, '').replace(/[\/,]/g, ' • ').replace(/\s+/g, ' ').trim();
+      } else if (sched && sched.genre) {
+        genres = sched.genre;
       } else if (m.genre && m.genre !== 'Past Screening') {
         genres = m.genre;
       }
@@ -4740,11 +4887,11 @@
         fullStory = ov.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
         teaser = fullStory;
       }
-      const summary = teaser || fullStory || m.summary || m.overview || "Virtual cinema screening at Brian's Theater.";
+      const summary = teaser || fullStory || (sched && sched.desc) || m.summary || m.overview || "Virtual cinema screening at Brian's Theater.";
 
       // 7. Start Time & End Time
-      let startTime = cleanTimeString(m.startTime || m.time, false);
-      let endTime = cleanTimeString(m.endTime, false);
+      let startTime = cleanTimeString((sched && sched.startTime) || m.startTime || m.time, false);
+      let endTime = cleanTimeString((sched && sched.endTime) || m.endTime, false);
       if (!startTime) {
         const timeMatch = ov.match(/\b(\d{1,2}:\d{2}\s*(?:AM|PM)?)\s*[–-]\s*(\d{1,2}:\d{2}\s*(?:AM|PM)?)/i);
         if (timeMatch) {
@@ -4762,6 +4909,8 @@
         year: finalYear,
         watchDate,
         watchDateFormatted: watchDateFormatted || watchDate,
+        isScheduled,
+        scheduledDate: scheduledDate || watchDateFormatted || watchDate,
         location: m.location || '',
         runtime,
         rating,
@@ -4838,7 +4987,7 @@
           }
           if ((!existing.startTime || existing.startTime === "7:00 PM") && m.startTime) existing.startTime = m.startTime;
           if ((!existing.endTime || existing.endTime === "8:45 PM") && m.endTime) existing.endTime = m.endTime;
-          if ((!existing.runtime || existing.runtime === "Full Feature") && m.runtime) existing.runtime = m.runtime;
+          if ((!existing.runtime || existing.runtime === "Full Feature" || existing.runtime === "Pending" || existing.runtime === "Standard") && m.runtime) existing.runtime = m.runtime;
           if ((!existing.year || existing.year === "Past") && (m.releaseYear || m.year)) existing.year = m.releaseYear || m.year;
           if (!existing.releaseYear && (m.releaseYear || m.year)) existing.releaseYear = m.releaseYear || m.year;
           if (!existing.trailerUrl && m.trailerUrl) existing.trailerUrl = m.trailerUrl;
@@ -5190,6 +5339,21 @@
 
       communityRequests.forEach(r => {
         if (!r || !r.title) return;
+        const cleanRTitle = String(r.title).replace(/^🎬\s*/, '').toLowerCase().trim();
+        const normR = cleanRTitle.replace(/[^a-z0-9]/g, '');
+
+        const existing = vaultMovies.find(v => {
+          const vTitle = String(v.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+          if (vTitle === cleanRTitle) return true;
+          if (normR && vTitle.replace(/[^a-z0-9]/g, '') === normR) return true;
+          return false;
+        });
+
+        if (existing) {
+          if (r.requester) existing.requester = r.requester;
+          return;
+        }
+
         vaultMovies.push({
           title: r.title,
           year: r.year || (r.date ? r.date.split('/')[2] || '2026' : '2026'),

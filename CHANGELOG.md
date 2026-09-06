@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.72] - 2026-09-06
+
+### What's New
+- Added verified runtimes for scheduled and requested cinema titles.
+- Vault cards now highlight Scheduled status with screening dates.
+- Eliminated duplicate status tags to preserve clean card layout.
+- Merged live theater schedule details directly into catalog movies.
+- Streamlined card UI to a single unified status section.
+
 ## [4.9.71] - 2026-09-06
 
 ### What's New
