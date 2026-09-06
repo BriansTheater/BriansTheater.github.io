@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.33 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.34 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -426,7 +426,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.33</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.34</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -626,7 +626,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.33</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.34</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -791,7 +791,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.33</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.34</span>
     </div>
 
   </aside>
@@ -1002,7 +1002,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h4 id="updateToastTitle" class="text-sm font-bold text-slate-100">Update Available</h4>
-            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.33</span>
+            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.34</span>
           </div>
           <p id="updateToastSubtitle" class="text-[11px] text-slate-400 mt-0.5">What's New in this release:</p>
         </div>
@@ -1033,7 +1033,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.33";
+    const APP_VERSION = "4.9.34";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1379,6 +1379,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.34": [
+        "Update popup now shows automatically on every visit.",
+        "Fixed missing toast for new and returning visitors.",
+        "Movie Vault now filters movies vs TV shows.",
+        "Each vault card shows a Movie or TV badge.",
+        "Multi-layer update detection running in background."
+      ],
       "4.9.33": [
         "Added Movie Vault filter to separate movies from TV shows.",
         "Fixed search crowding so Avatar movie displays cleanly.",
@@ -1423,7 +1430,7 @@
 
       const version = options.version || APP_VERSION;
       const isAvailable = options.isUpdateAvailable !== false;
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.33"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.34"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "New Version Available" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -1606,13 +1613,16 @@
     });
     window.addEventListener('focus', checkForAppUpdate);
 
-    // Check for What's New on initial startup if updated
+    // Show "What's New" on startup for any visitor who hasn't seen this version yet
+    // This fires for: brand-new visitors, returning visitors who got an update, and anyone who cleared storage
     try {
       const lastViewed = localStorage.getItem('brian_theater_last_viewed_version');
-      if (lastViewed && lastViewed !== APP_VERSION) {
+      if (lastViewed !== APP_VERSION) {
+        // Give the page 1.5s to fully render, then show the update/new-version toast
         setTimeout(() => {
-          showAppUpdateToast({ version: APP_VERSION, isUpdateAvailable: false });
-        }, 1200);
+          const isActualUpdate = lastViewed !== null; // true = returning user got an update, false = new visitor
+          showAppUpdateToast({ version: APP_VERSION, isUpdateAvailable: isActualUpdate });
+        }, 1500);
       }
     } catch(e) {}
 
@@ -3428,22 +3438,26 @@
       let cardsHtml = visibleMovies.map((m, idx) => {
         const trailerId = getTrailerIdForMovie(m);
         const isTv = isTvShowItem(m);
+        const runtimeText = m.runtime || m.dateText || 'Standard';
         return `
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between group shadow-lg">
           <div>
-            <div class="flex items-center justify-between text-xs mb-1.5 gap-2">
-              <span class="font-bold text-slate-100 group-hover:text-amber-300 transition text-sm truncate" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</span>
-              <div class="flex items-center gap-1 shrink-0">
-                <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${isTv ? 'bg-purple-950/80 text-purple-300 border border-purple-800/80' : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/80'}">${isTv ? '📺 TV' : '🎬 Movie'}</span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded ${m.source === 'request' ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-sky-950/60 text-sky-400 border border-sky-800/60'} font-semibold">${m.source === 'request' ? 'Request' : 'Past'}</span>
-              </div>
+            <!-- Title: 2-line clamp so long names wrap cleanly instead of cutting mid-word -->
+            <p class="font-bold text-slate-100 group-hover:text-amber-300 transition text-sm leading-snug mb-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</p>
+
+            <!-- Badges row: Media type + Source — always has full room now -->
+            <div class="flex items-center flex-wrap gap-1 mb-1.5">
+              <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${isTv ? 'bg-purple-950/80 text-purple-300 border border-purple-800/80' : 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/80'}">${isTv ? '📺 TV' : '🎬 Movie'}</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${m.source === 'request' ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-sky-950/60 text-sky-400 border border-sky-800/60'}">${m.source === 'request' ? 'Request' : 'Past'}</span>
+              ${m.year ? `<span class="text-[10px] text-slate-500 font-mono">${escapeHtml(m.year)}</span>` : ''}
             </div>
-            <div class="text-[11px] text-slate-400">${escapeHtml(m.genre || (isTv ? 'TV Series' : 'Feature Film'))} ${m.year ? '(' + escapeHtml(m.year) + ')' : ''}</div>
+
+            <div class="text-[11px] text-slate-500 leading-tight">${escapeHtml(m.genre || (isTv ? 'TV Series' : 'Feature Film'))}</div>
           </div>
 
           <div class="flex flex-col gap-2 mt-3 pt-2.5 border-t border-slate-900">
             <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2">
-              <span class="truncate font-mono">⏱️ ${escapeHtml(m.runtime || m.dateText || 'Standard')}</span>
+              <span class="font-mono text-slate-500 shrink-0 text-[10px]">⏱️ ${escapeHtml(runtimeText)}</span>
               <div class="flex items-center gap-1.5 shrink-0">
                 <button onclick="toggleVaultTrailer(${idx})" id="vaultTrailerBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95">
                   <span>🎬</span> <span id="vaultTrailerBtnText-${idx}">Watch Trailer ▾</span>
@@ -3461,7 +3475,7 @@
               </div>
               <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
                 <span class="truncate font-mono">🍿 ${escapeHtml(m.title || '')} Trailer</span>
-                <button onclick="toggleVaultTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition">
+                <button onclick="toggleVaultTrailer(${idx})" class="text-slate-400 hover:text-rose-400 flex items-center gap-1 transition shrink-0 ml-2">
                   <span>✕</span> Close
                 </button>
               </div>

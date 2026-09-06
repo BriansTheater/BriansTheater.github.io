@@ -1,12 +1,12 @@
 {
-  "version": "4.9.33",
+  "version": "4.9.34",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.33",
+  "title": "Brian's Theater v4.9.34",
   "notes": [
-    "Added Movie Vault filter to separate movies from TV shows.",
-    "Fixed search crowding so Avatar movie displays cleanly.",
-    "Added TV show and movie badges on all vault cards.",
-    "Added active multi-layer update detection with popup toast.",
-    "Updated Service Worker cache to version 4.9.33."
+    "Update popup now shows automatically on every visit.",
+    "Fixed missing toast for new and returning visitors.",
+    "Movie Vault now filters movies vs TV shows.",
+    "Each vault card shows a Movie or TV badge.",
+    "Multi-layer update detection running in background."
   ]
 }

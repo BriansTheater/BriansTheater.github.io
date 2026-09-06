@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.34] - 2026-09-05
+
+### What's New
+- Update popup now shows automatically on every visit.
+- Fixed missing toast for first-time and returning visitors.
+- New visitors see What's New on their very first load.
+- Update badge shows correct "New Update" vs "What's New" label.
+
 ## [4.9.33] - 2026-09-05
 
 ### What's New
