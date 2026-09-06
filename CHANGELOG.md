@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.45] - 2026-09-05
+
+### What's New
+- Removed redundant title and date overlay from theater poster.
+- Unobstructed widescreen cinema artwork display on main stage.
+- Eliminated duplicate text repetition across screening room header.
+- Polished Theater tab layout with clean visual hierarchy.
+- Enhanced performance and fast responsive screen transitions.
+
 ## [4.9.44] - 2026-09-05
 
 ### What's New

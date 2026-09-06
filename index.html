@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.44 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.45 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -171,16 +171,10 @@
           <p id="nowPlayingDate" class="text-xs sm:text-sm text-slate-400 font-mono">Sunday, Sept 6 • 7:00 PM PST</p>
         </div>
 
-        <!-- 4. PIC (The Stage Poster - Widescreen 16:9 Banner) -->
+        <!-- 4. PIC (The Stage Poster - Clean Edge-to-Edge Cinema Banner) -->
         <div class="relative z-10 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl w-full max-w-lg aspect-[16/9] flex items-center justify-center group my-1">
           <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none"></div>
-          <div id="stagePosterBadge" class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-700/80 flex items-center justify-between text-xs font-mono shadow-lg">
-            <span id="stagePosterBadgeLabel" class="font-bold text-amber-300 flex items-center gap-1.5 truncate">
-              <span>⭐</span> <span id="stagePosterBadgeTitle">NEXT PREMIERE: Neighbors 2</span>
-            </span>
-            <span id="stagePosterBadgeDate" class="text-sky-300 text-[11px] font-semibold shrink-0">Sunday, Sept 6 • 7:00 PM PST</span>
-          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
         </div>
 
         <!-- 5. PRIMARY STAGE ENTRANCE SLOT (COUNTDOWN WHEN CLOSED -> REPLACED BY ENTER BUTTON WHEN OPEN) -->
@@ -414,7 +408,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.44</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.45</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -697,7 +691,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.44</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.45</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -862,7 +856,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.44</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.45</span>
     </div>
 
   </aside>
@@ -1076,7 +1070,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.44</span>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.45</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1111,7 +1105,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.44";
+    const APP_VERSION = "4.9.45";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1466,6 +1460,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.45": [
+        "Removed redundant title and date overlay from theater poster.",
+        "Unobstructed widescreen cinema artwork display on main stage.",
+        "Eliminated duplicate text repetition across screening room header.",
+        "Polished Theater tab layout with clean visual hierarchy.",
+        "Enhanced performance and fast responsive screen transitions."
+      ],
       "4.9.44": [
         "Added TMDB 1-click official trailer auto-discovery.",
         "Built interactive Trailer Editor inside Admin Control Studio.",
@@ -1594,7 +1595,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.44"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.45"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
