@@ -1,11 +1,11 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.36
+// VERSION: 4.9.37
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.36';
+const CACHE_NAME = 'brian-theater-v4.9.37';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -41,20 +41,14 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    }).then(() => self.clients.claim()).then(() => {
-      return self.clients.matchAll({ type: 'window' }).then(clientList => {
-        clientList.forEach(client => {
-          client.postMessage({ type: 'APP_VERSION_UPDATED', version: '4.9.36' });
-        });
-      });
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
   const requestUrl = new URL(event.request.url);
 
-  // Network-only for version.json, Firebase real-time database, and external APIs
+  // 1. Network-only for version.json, Firebase real-time database, and external APIs
   if (
     requestUrl.pathname.endsWith('version.json') ||
     requestUrl.hostname.includes('firebaseio.com') ||
@@ -65,7 +59,20 @@ self.addEventListener('fetch', event => {
     return event.respondWith(fetch(event.request));
   }
 
-  // Cache-first, fallback to network for static files
+  // 2. Network-First for HTML navigation so reloads always fetch fresh HTML from server!
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    return event.respondWith(
+      fetch(event.request).then(networkResponse => {
+        if (networkResponse && networkResponse.status === 200) {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return networkResponse;
+      }).catch(() => caches.match('./index.html'))
+    );
+  }
+
+  // 3. Cache-first, fallback to network for static files
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) {

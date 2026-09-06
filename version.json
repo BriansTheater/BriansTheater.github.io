@@ -1,12 +1,12 @@
 {
-  "version": "4.9.36",
+  "version": "4.9.37",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.36",
+  "title": "Brian's Theater v4.9.37",
   "notes": [
-    "Update button now displays Update Now.",
-    "Added automated countdown timer to auto-apply updates.",
-    "Button shows live remaining seconds before updating.",
-    "Instantly applies update when countdown hits zero.",
-    "Countdown cancels cleanly if user dismisses toast."
+    "Fixed update loop with strict current-version check.",
+    "Startup What's New prompt never auto-reloads page.",
+    "HTML navigation requests now fetch fresh from network.",
+    "Countdown timer safely disabled when running latest version.",
+    "Cleaned Service Worker activation hooks to stop loop."
   ]
 }

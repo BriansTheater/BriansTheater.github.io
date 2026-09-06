@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.37] - 2026-09-05
+
+### What's New
+- Fixed update loop with strict current-version check.
+- Startup What's New prompt never auto-reloads page.
+- HTML navigation requests now fetch fresh from network.
+- Countdown timer safely disabled when running latest version.
+- Cleaned Service Worker activation hooks to stop loop.
+
 ## [4.9.36] - 2026-09-05
 
 ### What's New

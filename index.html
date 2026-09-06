@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.36 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.37 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -426,7 +426,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.36</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.37</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -626,7 +626,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.36</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.37</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -791,7 +791,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.36</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.37</span>
     </div>
 
   </aside>
@@ -1002,7 +1002,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h4 id="updateToastTitle" class="text-sm font-bold text-slate-100">Update Available</h4>
-            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.36</span>
+            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.37</span>
           </div>
           <p id="updateToastSubtitle" class="text-[11px] text-slate-400 mt-0.5">What's New in this release:</p>
         </div>
@@ -1033,7 +1033,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.36";
+    const APP_VERSION = "4.9.37";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1388,6 +1388,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.37": [
+        "Fixed update loop with strict current-version check.",
+        "Startup What's New prompt never auto-reloads page.",
+        "HTML navigation requests now fetch fresh from network.",
+        "Countdown timer safely disabled when running latest version.",
+        "Cleaned Service Worker activation hooks to stop loop."
+      ],
       "4.9.36": [
         "Update button now displays Update Now.",
         "Added automated countdown timer to auto-apply updates.",
@@ -1452,8 +1459,15 @@
       if (!toast) return;
 
       const version = options.version || APP_VERSION;
-      const isAvailable = options.isUpdateAvailable !== false;
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.36"] || [];
+      let isAvailable = options.isUpdateAvailable !== false;
+
+      // CRITICAL LOOP BREAKER: If version matches currently running APP_VERSION,
+      // the user already has this version installed! Never start a countdown/reload loop!
+      if (isAvailable && version === APP_VERSION) {
+        isAvailable = false;
+      }
+
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.37"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "New Version Available" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -1641,8 +1655,11 @@
         // Listen for direct broadcast from newly activated service worker
         navigator.serviceWorker.addEventListener('message', event => {
           if (event.data && (event.data.type === 'APP_VERSION_UPDATED' || event.data.type === 'VERSION_UPDATE')) {
-            const newVer = event.data.version || APP_VERSION;
-            showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
+            const newVer = event.data.version;
+            // ONLY show update if the version is genuinely newer/different than what is currently running!
+            if (newVer && newVer !== APP_VERSION) {
+              showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
+            }
           }
         });
       });
@@ -1656,16 +1673,19 @@
     });
     window.addEventListener('focus', checkForAppUpdate);
 
-    // Show "What's New" on startup for any visitor who hasn't seen this version yet
-    // This fires for: brand-new visitors, returning visitors who got an update, and anyone who cleared storage
+    // Informative "What's New" on startup for returning visitors who just upgraded
     try {
       const lastViewed = localStorage.getItem('brian_theater_last_viewed_version');
-      if (lastViewed !== APP_VERSION) {
-        // Give the page 1.5s to fully render, then show the update/new-version toast
+      if (lastViewed && lastViewed !== APP_VERSION) {
+        // Record immediately so it only shows once
+        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
+        // Show What's New as an announcement only — NEVER with an auto-reload countdown!
         setTimeout(() => {
-          const isActualUpdate = lastViewed !== null; // true = returning user got an update, false = new visitor
-          showAppUpdateToast({ version: APP_VERSION, isUpdateAvailable: isActualUpdate });
+          showAppUpdateToast({ version: APP_VERSION, isUpdateAvailable: false });
         }, 1500);
+      } else if (!lastViewed) {
+        // First visit: store version silently
+        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
       }
     } catch(e) {}
 
