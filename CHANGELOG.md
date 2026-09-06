@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.28] - 2026-09-05
+
+### What's New
+- Streamlined Admin Authentication popup to focus on Sign In.
+- Removed excessive explanation paragraphs and security details card.
+- Kept clean header and official Google Sign In button.
+- Added backdrop click and Escape key dismissal for login.
+- Updated Service Worker cache to version 4.9.28.
+
 ## [4.9.27] - 2026-09-05
 
 ### What's New
