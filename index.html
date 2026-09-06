@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.70 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.71 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -623,7 +623,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.70</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.71</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -906,7 +906,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.70</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.71</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1071,7 +1071,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.70</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.71</span>
     </div>
 
   </aside>
@@ -1409,7 +1409,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.70";
+    const APP_VERSION = "4.9.71";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1784,6 +1784,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.71": [
+        "Removed redundant Watched badge from Vault movie poster artwork.",
+        "Preserved clean, unobstructed widescreen artwork across all past titles.",
+        "Kept dedicated screening date section intact at card bottom.",
+        "Retained Request and TV badges for relevant catalog items.",
+        "Streamlined Vault card layout for cleaner cinema browsing experience."
+      ],
       "4.9.70": [
         "Eliminated automatic Enter Theater popup on normal page loads.",
         "Update alerts now strictly appear only for newer versions.",
@@ -2110,7 +2117,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.70"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.71"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4481,12 +4488,7 @@
                   <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                   <span>⏳ REQUEST</span>
                 </span>
-                ` : `
-                <span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]"></span>
-                  <span>⚡ WATCHED</span>
-                </span>
-                `}
+                ` : ''}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 

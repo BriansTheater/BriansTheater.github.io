@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.71] - 2026-09-06
+
+### What's New
+- Removed redundant Watched badge from Vault movie poster artwork.
+- Preserved clean, unobstructed widescreen artwork across all past titles.
+- Kept dedicated screening date section intact at card bottom.
+- Retained Request and TV badges for relevant catalog items.
+- Streamlined Vault card layout for cleaner cinema browsing experience.
+
 ## [4.9.70] - 2026-09-06
 
 ### What's New

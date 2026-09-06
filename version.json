@@ -1,12 +1,12 @@
 {
-  "version": "4.9.70",
+  "version": "4.9.71",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.70",
+  "title": "Brian's Theater v4.9.71",
   "notes": [
-    "Eliminated automatic Enter Theater popup on normal page loads.",
-    "Update alerts now strictly appear only for newer versions.",
-    "Preserved What's New modal exclusively for manual clicks.",
-    "Removed premature service worker waiting prompts on startup.",
-    "Ensured clean theater viewing with zero unexpected popups."
+    "Removed redundant Watched badge from Vault movie poster artwork.",
+    "Preserved clean, unobstructed widescreen artwork across all past titles.",
+    "Kept dedicated screening date section intact at card bottom.",
+    "Retained Request and TV badges for relevant catalog items.",
+    "Streamlined Vault card layout for cleaner cinema browsing experience."
   ]
 }
