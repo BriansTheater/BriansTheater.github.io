@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.74] - 2026-09-06
+
+### What's New
+- Deduplicated informal movie requests against official scheduled titles.
+- Eliminated duplicate Neighbors 2 card in Vault library.
+- Merged requester credit onto full official movie card.
+- Enhanced Vault matching to recognize subtitle and schedule variations.
+- Ensured single clean movie card per scheduled screening.
+
 ## [4.9.73] - 2026-09-06
 
 ### What's New

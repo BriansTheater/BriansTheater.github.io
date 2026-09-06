@@ -1,12 +1,12 @@
 {
-  "version": "4.9.73",
+  "version": "4.9.74",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.73",
+  "title": "Brian's Theater v4.9.74",
   "notes": [
-    "Concluded screenings now accurately display as Watched in Vault.",
-    "Past screening dates properly format under clean Watched status.",
-    "Active and upcoming screenings retain their Scheduled status banner.",
-    "Enhanced Vault filtering across past movies and active requests.",
-    "Synchronized live schedule status checks with current date thresholds."
+    "Deduplicated informal movie requests against official scheduled titles.",
+    "Eliminated duplicate Neighbors 2 card in Vault library.",
+    "Merged requester credit onto full official movie card.",
+    "Enhanced Vault matching to recognize subtitle and schedule variations.",
+    "Ensured single clean movie card per scheduled screening."
   ]
 }

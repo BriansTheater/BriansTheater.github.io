@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.73 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.74 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1409,7 +1409,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.73";
+    const APP_VERSION = "4.9.74";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1784,6 +1784,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.74": [
+        "Deduplicated informal movie requests against official scheduled titles.",
+        "Eliminated duplicate Neighbors 2 card in Vault library.",
+        "Merged requester credit onto full official movie card.",
+        "Enhanced Vault matching to recognize subtitle and schedule variations.",
+        "Ensured single clean movie card per scheduled screening."
+      ],
       "4.9.73": [
         "Concluded screenings now accurately display as Watched in Vault.",
         "Past screening dates properly format under clean Watched status.",
@@ -5359,7 +5366,7 @@
       { title: "Toy Story 5", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
       { title: "Backrooms", requester: "Brian", genre: "HBO Max", status: "Under Review" },
       { title: "Neighbors", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
-      { title: "Neighbors 2", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
+      { title: "Neighbors 2: Sorority Rising", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
       { title: "Return to silent hill", requester: "Brian", genre: "plex", status: "Scheduled" }
     ];
 
@@ -5398,16 +5405,31 @@
         if (!r || !r.title) return;
         const cleanRTitle = String(r.title).replace(/^🎬\s*/, '').toLowerCase().trim();
         const normR = cleanRTitle.replace(/[^a-z0-9]/g, '');
+        const reqSched = (typeof findScheduleItemForMovie === 'function') ? findScheduleItemForMovie(r) : null;
 
         const existing = vaultMovies.find(v => {
           const vTitle = String(v.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
           if (vTitle === cleanRTitle) return true;
-          if (normR && vTitle.replace(/[^a-z0-9]/g, '') === normR) return true;
+          const vNorm = vTitle.replace(/[^a-z0-9]/g, '');
+          if (normR && vNorm === normR) return true;
+
+          // 1. Subtitle / prefix match (e.g. "Neighbors 2" vs "Neighbors 2: Sorority Rising")
+          if (normR && vNorm && (vNorm.startsWith(normR) || normR.startsWith(vNorm))) {
+            return true;
+          }
+
+          // 2. Both match the exact same scheduled screening item
+          if (reqSched) {
+            const vSched = (typeof findScheduleItemForMovie === 'function') ? findScheduleItemForMovie(v) : null;
+            if (vSched && (vSched === reqSched || vSched.title === reqSched.title || (vSched.date && vSched.date === reqSched.date && vSched.time === reqSched.time))) {
+              return true;
+            }
+          }
           return false;
         });
 
         if (existing) {
-          if (r.requester) existing.requester = r.requester;
+          if (r.requester && !existing.requester) existing.requester = r.requester;
           return;
         }
 
