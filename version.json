@@ -1,12 +1,12 @@
 {
-  "version": "4.9.86",
+  "version": "4.9.87",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.86",
+  "title": "Brian's Theater v4.9.87",
   "notes": [
-    "Added annual screening archive browser with quick year selector pills.",
-    "Added dedicated Halloween and Christmas annual holiday collection filters.",
-    "Added interactive Annual Collections and Holiday Hub showcase modal.",
-    "Themed collection banners highlight yearly archives and holiday festivals.",
-    "One-click reset returns to full vault movie archive effortlessly."
+    "Dynamically indexed collection movie order and total film count.",
+    "Sequenced Christmas screening festival films from 1 to 22.",
+    "Preserved sequential marathon film numbering from 1 to 11.",
+    "Added themed emerald holiday badges for Christmas festival films.",
+    "Eliminated static fallback causing all collection cards showing 1."
   ]
 }

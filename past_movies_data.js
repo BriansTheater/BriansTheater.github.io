@@ -6595,7 +6595,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 1,
+    "marathonTotal": 22
   },
   {
     "title": "F9",
@@ -6687,7 +6689,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "zLuOjCbDuwY",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 2,
+    "marathonTotal": 22
   },
   {
     "title": "The Best Christmas Pageant Ever",
@@ -6712,7 +6716,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "SlB3K_PS7Hc",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 3,
+    "marathonTotal": 22
   },
   {
     "title": "Champagne Problems",
@@ -6737,7 +6743,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "eba-EoMPBX8",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 4,
+    "marathonTotal": 22
   },
   {
     "title": "In Your Dreams",
@@ -6785,7 +6793,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "AAEzB2LzFfM",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 5,
+    "marathonTotal": 22
   },
   {
     "title": "It: Welcome to Derry s1 e7",
@@ -6831,7 +6841,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "I9Y5qYp8ro8",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 6,
+    "marathonTotal": 22
   },
   {
     "title": "Christmas Under the Northern Lights",
@@ -6856,7 +6868,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "-7CI9ENQU-g",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 7,
+    "marathonTotal": 22
   },
   {
     "title": "Home Sweet Home Alone",
@@ -6881,7 +6895,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "FOXW8ur2jr4",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 8,
+    "marathonTotal": 22
   },
   {
     "title": "Home Alone 2: Lost in New York",
@@ -6906,7 +6922,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "k0kJieJ1k6k",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 9,
+    "marathonTotal": 22
   },
   {
     "title": "Joy to the World",
@@ -6953,7 +6971,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "aX3of3WAJoQ",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 10,
+    "marathonTotal": 22
   },
   {
     "title": "A Very Jonas Christmas Movie",
@@ -6978,7 +6998,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "oOOdswIJJYU",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 11,
+    "marathonTotal": 22
   },
   {
     "title": "My Christmas Hero",
@@ -7003,7 +7025,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "2iCXEZm4CLs",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 12,
+    "marathonTotal": 22
   },
   {
     "title": "The Night My Dad Saved Christmas 2",
@@ -7028,7 +7052,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "7Zrtw25-iHM",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 13,
+    "marathonTotal": 22
   },
   {
     "title": "Enchanting Christmas",
@@ -7053,7 +7079,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "T5TNvyRUTAw",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 14,
+    "marathonTotal": 22
   },
   {
     "title": "Tyler Perry's Finding Joy",
@@ -7078,7 +7106,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "60befdTWmG8",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 15,
+    "marathonTotal": 22
   },
   {
     "title": "IT: Welcome to Derry s1 e8",
@@ -7124,7 +7154,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "HYi1EDnpy9M",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 16,
+    "marathonTotal": 22
   },
   {
     "title": "Oh. What. Fun.",
@@ -7149,7 +7181,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "FRfj0OHlcvo",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 17,
+    "marathonTotal": 22
   },
   {
     "title": "Christmas in the Ballroom",
@@ -7174,7 +7208,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "quINYRZftNo",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 18,
+    "marathonTotal": 22
   },
   {
     "title": "The Nightmare Before Christmas",
@@ -7199,7 +7235,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "IoYahD_xNR0",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 19,
+    "marathonTotal": 22
   },
   {
     "title": "The Polar Express",
@@ -7246,7 +7284,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "releaseYear": "1994",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 20,
+    "marathonTotal": 22
   },
   {
     "title": "The Great Christmas Snow-In",
@@ -7271,7 +7311,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "e04xQvRDrjk",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 21,
+    "marathonTotal": 22
   },
   {
     "title": "Tinsel Town",
@@ -7296,7 +7338,9 @@ window.PAST_MOVIES_DATA = window.INITIAL_PAST_MOVIES = [
     "trailerId": "ObrcqCxZlPg",
     "screeningYear": 2025,
     "holidayCategory": "christmas",
-    "marathonCollection": "2025 Christmas & Holiday Festival"
+    "marathonCollection": "2025 Christmas & Holiday Festival",
+    "marathonOrder": 22,
+    "marathonTotal": 22
   },
   {
     "title": "Dora and the Search for Sol Dorado",

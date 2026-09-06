@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.87] - 2026-09-06
+
+### What's New
+- Dynamically indexed collection movie order and total film count.
+- Sequenced Christmas screening festival films from 1 to 22.
+- Preserved sequential marathon film numbering from 1 to 11.
+- Added themed emerald holiday badges for Christmas festival films.
+- Eliminated static fallback causing all collection cards showing 1.
+
 ## [4.9.86] - 2026-09-06
 
 ### What's New

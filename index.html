@@ -1746,7 +1746,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.86";
+    const APP_VERSION = "4.9.87";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2123,6 +2123,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.87": [
+        "Dynamically indexed collection movie order and total film count.",
+        "Sequenced Christmas screening festival films from 1 to 22.",
+        "Preserved sequential marathon film numbering from 1 to 11.",
+        "Added themed emerald holiday badges for Christmas festival films.",
+        "Eliminated static fallback causing all collection cards showing 1."
+      ],
       "4.9.86": [
         "Added annual screening archive browser with quick year selector pills.",
         "Added dedicated Halloween and Christmas annual holiday collection filters.",
@@ -5539,6 +5546,30 @@
       }
     }
 
+    function getCollectionFilmOrderAndTotal(m) {
+      if (!m || !m.marathonCollection) return { order: 1, total: 1 };
+      if (typeof m.marathonOrder === 'number' && m.marathonOrder > 0 && typeof m.marathonTotal === 'number' && m.marathonTotal > 0) {
+        return { order: m.marathonOrder, total: m.marathonTotal };
+      }
+      const colName = m.marathonCollection;
+      const siblings = (Array.isArray(vaultMovies) ? vaultMovies : []).filter(v => v && v.marathonCollection === colName);
+      if (siblings.length === 0) return { order: 1, total: 1 };
+
+      siblings.sort((a, b) => {
+        if (typeof a.marathonOrder === 'number' && typeof b.marathonOrder === 'number') return a.marathonOrder - b.marathonOrder;
+        const dateA = new Date(a.watchDate || a.date || '1/1/2000').getTime();
+        const dateB = new Date(b.watchDate || b.date || '1/1/2000').getTime();
+        if (dateA !== dateB) return dateA - dateB;
+        return (a.startTime || '').localeCompare(b.startTime || '');
+      });
+
+      const cleanMTitle = String(m.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+      const idx = siblings.findIndex(s => String(s.title || '').replace(/^🎬\s*/, '').toLowerCase().trim() === cleanMTitle);
+      const order = idx >= 0 ? (idx + 1) : (m.marathonOrder || 1);
+      const total = siblings.length || m.marathonTotal || 1;
+      return { order, total };
+    }
+
     function closeActiveCardTrailer() {
       if (activeCardTrailerIdx !== null) {
         const prevViewer = document.getElementById(`trailerViewer-${activeCardTrailerIdx}`);
@@ -5864,6 +5895,15 @@
           })
         );
 
+        const colBadgeInfo = m.marathonCollection ? getCollectionFilmOrderAndTotal(m) : null;
+        const isXmasCol = Boolean(m.marathonCollection && /christmas|holiday/i.test(m.marathonCollection));
+        const isHorrorCol = Boolean(m.marathonCollection && /scary|horror|halloween|freddy/i.test(m.marathonCollection));
+        const colIcon = isXmasCol ? '🎄' : '🎟️';
+        const colPrefix = isXmasCol ? 'Holiday' : (isHorrorCol ? 'Marathon' : 'Collection');
+        const colBtnClass = isXmasCol 
+          ? 'bg-gradient-to-r from-emerald-950 to-teal-950 text-emerald-300 hover:text-white border border-emerald-700/80 hover:border-emerald-400' 
+          : 'bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400';
+
         return `
         <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
           <div>
@@ -5874,7 +5914,7 @@
               
               <!-- Top-Left Tag Badge: Marathon Sub-Card, Parent Hub, or TV Indicator -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                ${m.marathonCollection ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(m.marathonCollection)}')" title="Filter to this Marathon Collection" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎟️ Marathon • Film ${m.marathonOrder || 1} of ${m.marathonTotal || 11} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Mystery Scary Movie Marathon')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎟️ Marathon Hub • ${marathonInfo.count} Films ↗</button>` : '')}
+                ${m.marathonCollection ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(m.marathonCollection)}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Mystery Scary Movie Marathon')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎟️ Marathon Hub • ${marathonInfo.count} Films ↗</button>` : '')}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
