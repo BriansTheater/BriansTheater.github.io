@@ -31,9 +31,9 @@
   "categories": ["entertainment", "movies"],
   "shortcuts": [
     {
-      "name": "Screening Room",
+      "name": "Theater",
       "url": "./index.html#screening",
-      "description": "Open live screening room"
+      "description": "Open live virtual theater"
     },
     {
       "name": "Movie Vault",

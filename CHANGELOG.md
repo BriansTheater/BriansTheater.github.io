@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.39] - 2026-09-05
+
+### What's New
+- Renamed Screening Room tab to Theater across entire app.
+- Updated main menu navigation bar with Theater label.
+- Updated mobile sidebar drawer link to Theater.
+- Updated home screen PWA shortcut title to Theater.
+- Streamlined navigation naming for cleaner browsing experience.
+
 ## [4.9.38] - 2026-09-05
 
 ### What's New

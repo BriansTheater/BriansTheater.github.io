@@ -1,12 +1,12 @@
 {
-  "version": "4.9.38",
+  "version": "4.9.39",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.38",
+  "title": "Brian's Theater v4.9.39",
   "notes": [
-    "Front-and-center update modal with backdrop blur.",
-    "Users click Update & Enter Theater to proceed.",
-    "Removed cluttered Theater Status banner from mobile.",
-    "Screening room hero marquee is the top focus.",
-    "Optimized responsive mobile design for iOS and Android."
+    "Renamed Screening Room tab to Theater across entire app.",
+    "Updated main menu navigation bar with Theater label.",
+    "Updated mobile sidebar drawer link to Theater.",
+    "Updated home screen PWA shortcut title to Theater.",
+    "Streamlined navigation naming for cleaner browsing experience."
   ]
 }
