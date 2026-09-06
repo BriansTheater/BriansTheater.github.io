@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.79 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.80 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -623,7 +623,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.79</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.80</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -636,11 +636,8 @@
           <button type="button" onclick="setAdminSectionFilter('stage')" id="adminSecBtn-stage" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>🎛️</span> Stage & Doors
           </button>
-          <button type="button" onclick="setAdminSectionFilter('artwork')" id="adminSecBtn-artwork" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
-            <span>🖼️</span> Posters & Artwork
-          </button>
-          <button type="button" onclick="setAdminSectionFilter('trailers')" id="adminSecBtn-trailers" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
-            <span>🎬</span> Trailers & Previews
+          <button type="button" onclick="setAdminSectionFilter('media')" id="adminSecBtn-media" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
+            <span>🎬</span> Movie Media Studio
           </button>
           <button type="button" onclick="setAdminSectionFilter('requests')" id="adminSecBtn-requests" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>📥</span> Review Queue
@@ -727,240 +724,277 @@
           </div>
         </div>
 
-        <!-- 3. Movie Posters & Artwork Manager -->
-        <div id="adminSection-artwork" class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-amber-500/50 flex flex-col gap-5 shadow-2xl admin-section">
+        <!-- 3. Unified Movie Media & Metadata Studio (Posters, Trailers & Summaries) -->
+        <div id="adminSection-unified-media" class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-amber-500/50 flex flex-col gap-5 shadow-2xl admin-section">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <div>
               <h3 class="text-sm sm:text-base font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                <span>🖼️</span> Movie Posters & Artwork Manager
+                <span>🎬</span> Unified Movie Media & Metadata Studio
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Correct movie titles, auto-search high-definition 16:9 backdrops or posters via TMDB, and set custom stage artwork.</p>
+              <p class="text-xs text-slate-400 mt-0.5">Select any movie once to configure posters & artwork, official trailers, and plot summaries all in one place.</p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono" id="adminArtworkMovieCount">Loading Titles...</span>
+              <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono" id="adminMediaMovieCount">Loading Titles...</span>
+              <span class="hidden" id="adminArtworkMovieCount"></span>
+              <span class="hidden" id="adminTrailerMovieCount"></span>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left: Artwork Editor & Tools (7 cols) -->
-            <div class="lg:col-span-7 flex flex-col gap-4">
-              <div>
-                <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <span>🎬</span> Select Movie to Configure
+          <!-- Master Movie Selector & Search Bar (Single selection for Artwork, Trailers, and Summary!) -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner">
+            <div class="md:col-span-6 flex flex-col gap-1">
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <span>🍿</span> Select Movie to Configure
+              </label>
+              <select id="adminMediaMovieSelect" onchange="onAdminSelectMediaMovie()" class="w-full mt-0.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 font-semibold focus:border-amber-400">
+                <!-- Populated dynamically with schedule + vault movies -->
+              </select>
+              <!-- Hidden compatibility mirrors -->
+              <select id="adminArtworkMovieSelect" class="hidden"></select>
+              <select id="adminTrailerMovieSelect" class="hidden"></select>
+            </div>
+
+            <div class="md:col-span-6 flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <span>✏️</span> Search Query / Correct Title
                 </label>
-                <select id="adminArtworkMovieSelect" onchange="onAdminSelectArtworkMovie()" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-semibold focus:border-amber-400">
-                  <!-- Populated dynamically with all schedule + vault movies -->
-                </select>
+                <span class="text-[10px] text-slate-400 font-mono">Auto-discovers All Media via TMDB</span>
               </div>
-
-              <!-- Editable Search Title / Query (Allows Correcting Titles) -->
-              <div>
-                <div class="flex items-center justify-between">
-                  <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                    <span>✏️</span> Search Title / Query (Editable)
-                  </label>
-                  <span class="text-[10px] text-slate-400 font-mono">Correct typos, add year, or search any title</span>
-                </div>
-                <div class="flex gap-2 mt-1.5">
-                  <input type="text" id="adminArtworkSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbArtworkForSelectedMovie();}" placeholder="e.g. Neighbors, Neighbors 2, The Batman (2022)..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
-                  <button type="button" onclick="fetchTmdbArtworkForSelectedMovie()" id="btnFetchTmdbArtwork" class="py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
-                    <span>🔍</span> Search TMDB
-                  </button>
-                </div>
+              <div class="flex gap-2 mt-0.5">
+                <input type="text" id="adminMediaSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbAllMediaForSelectedMovie();}" placeholder="e.g. Neighbors 2, The Batman (2022)..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                <input type="hidden" id="adminArtworkSearchTitleInput">
+                <input type="hidden" id="adminTrailerSearchTitleInput">
+                <button type="button" onclick="fetchTmdbAllMediaForSelectedMovie()" id="btnFetchTmdbMediaAll" class="py-2.5 px-4 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:opacity-95 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
+                  <span>🔍</span> Search TMDB
+                </button>
               </div>
+            </div>
+          </div>
 
-              <!-- Interactive Visual TMDB Candidate Results Gallery Container -->
-              <div id="adminArtworkCandidateContainer" class="hidden flex-col gap-2.5 p-3.5 rounded-xl bg-slate-900/95 border border-amber-500/40 shadow-xl">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                      <span>✨</span> TMDB Matches Found (Click to Preview & Apply)
-                    </span>
-                    <span id="adminArtworkCandidateCount" class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">0</span>
+          <!-- Interactive TMDB Candidates Results Gallery -->
+          <div id="adminMediaCandidateContainer" class="hidden flex-col gap-2.5 p-3.5 rounded-xl bg-slate-900/95 border border-amber-500/40 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>✨</span> TMDB Matches Found (Click to Auto-Apply Poster, Trailer & Summary)
+                </span>
+                <span id="adminMediaCandidateCount" class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">0</span>
+                <span class="hidden" id="adminArtworkCandidateCount"></span>
+                <span class="hidden" id="adminTrailerCandidateCount"></span>
+              </div>
+              <button type="button" onclick="closeAdminMediaCandidates()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1 transition px-1.5 py-0.5 rounded hover:bg-slate-800">
+                <span>✕</span> Close
+              </button>
+            </div>
+            <div id="adminMediaCandidateGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
+              <!-- Injected dynamically -->
+            </div>
+            <div id="adminArtworkCandidateContainer" class="hidden"></div>
+            <div id="adminTrailerCandidateContainer" class="hidden"></div>
+          </div>
+
+          <!-- Sub-Tab Navigation Bar -->
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-2.5">
+            <button type="button" onclick="switchMediaSubTab('artwork')" id="mediaSubTabBtn-artwork" class="media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow transition flex items-center gap-1.5">
+              <span>🖼️</span> Poster & Artwork
+            </button>
+            <button type="button" onclick="switchMediaSubTab('trailers')" id="mediaSubTabBtn-trailers" class="media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-1.5">
+              <span>🎬</span> Official Trailer
+            </button>
+            <button type="button" onclick="switchMediaSubTab('summary')" id="mediaSubTabBtn-summary" class="media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-1.5">
+              <span>📝</span> Summary & Synopsis
+            </button>
+          </div>
+
+          <!-- Sub-Panel 1: Poster & Artwork -->
+          <div id="mediaSubPanel-artwork" class="media-subpanel flex flex-col gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-7 flex flex-col gap-4">
+                <div>
+                  <label class="text-xs font-semibold text-slate-300">Custom Image URL</label>
+                  <div class="flex gap-2 mt-1">
+                    <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, Discord, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                    <button type="button" onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
+                      Preview
+                    </button>
                   </div>
-                  <button type="button" onclick="closeAdminArtworkCandidates()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1 transition px-1.5 py-0.5 rounded hover:bg-slate-800">
-                    <span>✕</span> Close
-                  </button>
                 </div>
-                <div id="adminArtworkCandidateGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
-                  <!-- Injected dynamically -->
-                </div>
-              </div>
 
-              <div>
-                <label class="text-xs font-semibold text-slate-300">Custom Image URL</label>
-                <div class="flex gap-2 mt-1">
-                  <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, Discord, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
-                  <button type="button" onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
-                    Preview
-                  </button>
-                </div>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <label class="cursor-pointer py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-2 transition active:scale-95 text-center">
-                  <span>📁</span> Browse Local File
-                  <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
-                </label>
-
-                <button type="button" onclick="resetSelectedMovieArtworkToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95">
-                  <span>🔄</span> Reset to Default
-                </button>
-              </div>
-
-              <!-- Save & Stage Buttons -->
-              <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-slate-850">
-                <button type="button" onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
-                  <span>💾</span> Save Movie Image
-                </button>
-                <button type="button" onclick="applySelectedArtworkToStageNow()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 active:scale-95 shrink-0">
-                  <span>⭐</span> Set on Stage Now
-                </button>
-              </div>
-            </div>
-
-            <!-- Right: Live Selected Artwork Preview (5 cols) -->
-            <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 self-start flex items-center gap-1.5">
-                <span>👁️</span> Artwork Preview
-              </span>
-              <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border-2 border-slate-750 bg-black shadow-inner flex items-center justify-center">
-                <img id="adminArtworkPreviewImg" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Artwork Preview" class="w-full h-full object-cover">
-                <div class="absolute bottom-1.5 left-2 right-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-sm text-[10px] font-mono text-amber-300 truncate" id="adminArtworkPreviewCaption">
-                  Neighbors (2014)
-                </div>
-              </div>
-              <div class="w-full mt-2 text-[11px] text-slate-400 text-center font-mono truncate" id="adminArtworkPreviewUrl">
-                https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg
-              </div>
-            </div>
-          </div>
-
-          <!-- Schedule Artwork Mini-Gallery -->
-          <div class="mt-3 pt-4 border-t border-slate-850">
-            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-              <span>🖼️</span> Upcoming Lineup Artwork Gallery (Click to Edit)
-            </h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="adminArtworkGalleryGrid">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Movie Trailers & Preview Manager -->
-        <div id="adminSection-trailers" class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-red-500/50 flex flex-col gap-5 shadow-2xl admin-section">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-            <div>
-              <h3 class="text-sm sm:text-base font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
-                <span>🎬</span> Movie Trailers & Preview Manager
-              </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Auto-discover official studio YouTube trailers via TMDB or edit custom trailer URLs for any movie.</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs px-2.5 py-1 rounded bg-red-500/20 text-red-300 font-mono" id="adminTrailerMovieCount">Loading Titles...</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left: Trailer Controls & Links (7 cols) -->
-            <div class="lg:col-span-7 flex flex-col gap-4">
-              <div>
-                <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <span>🍿</span> Select Movie to Configure
-                </label>
-                <select id="adminTrailerMovieSelect" onchange="onAdminSelectTrailerMovie()" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-semibold focus:border-red-400">
-                  <!-- Populated dynamically with scheduled movies + vault movies -->
-                </select>
-              </div>
-
-              <!-- Editable Search Title / Query for Trailers -->
-              <div>
-                <div class="flex items-center justify-between">
-                  <label class="text-xs font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
-                    <span>✏️</span> Search Title / Query (Editable)
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <label class="cursor-pointer py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-2 transition active:scale-95 text-center">
+                    <span>📁</span> Browse Local File
+                    <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
                   </label>
-                  <span class="text-[10px] text-slate-400 font-mono">Correct title to auto-find trailer</span>
+
+                  <button type="button" onclick="resetSelectedMovieArtworkToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95">
+                    <span>🔄</span> Reset to Default
+                  </button>
                 </div>
-                <div class="flex gap-2 mt-1.5">
-                  <input type="text" id="adminTrailerSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbTrailerForSelectedMovie();}" placeholder="e.g. Neighbors 2, The Batman (2022)..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-rose-500/40 text-slate-100 font-medium focus:border-red-400 focus:ring-1 focus:ring-red-400">
-                  <button type="button" onclick="fetchTmdbTrailerForSelectedMovie()" id="btnFetchTmdbTrailer" class="py-2.5 px-4 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 hover:opacity-90 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
-                    <span>🔍</span> Search TMDB
+
+                <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-slate-850">
+                  <button type="button" onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
+                    <span>💾</span> Save Movie Image
+                  </button>
+                  <button type="button" onclick="applySelectedArtworkToStageNow()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 active:scale-95 shrink-0">
+                    <span>⭐</span> Set on Stage Now
                   </button>
                 </div>
               </div>
 
-              <!-- Interactive Visual TMDB Candidate Results Gallery Container for Trailers -->
-              <div id="adminTrailerCandidateContainer" class="hidden flex-col gap-2.5 p-3.5 rounded-xl bg-slate-900/95 border border-rose-500/40 shadow-xl">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
-                      <span>🎬</span> TMDB Trailers Found (Click to Preview & Apply)
-                    </span>
-                    <span id="adminTrailerCandidateCount" class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono">0</span>
+              <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 self-start flex items-center gap-1.5">
+                  <span>👁️</span> Artwork Preview
+                </span>
+                <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border-2 border-slate-750 bg-black shadow-inner flex items-center justify-center">
+                  <img id="adminArtworkPreviewImg" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Artwork Preview" class="w-full h-full object-cover">
+                  <div class="absolute bottom-1.5 left-2 right-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-sm text-[10px] font-mono text-amber-300 truncate" id="adminArtworkPreviewCaption">
+                    Neighbors (2014)
                   </div>
-                  <button type="button" onclick="closeAdminTrailerCandidates()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1 transition px-1.5 py-0.5 rounded hover:bg-slate-800">
-                    <span>✕</span> Close
-                  </button>
                 </div>
-                <div id="adminTrailerCandidateGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
-                  <!-- Injected dynamically -->
+                <div class="w-full mt-2 text-[11px] text-slate-400 text-center font-mono truncate" id="adminArtworkPreviewUrl">
+                  https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg
                 </div>
               </div>
-
-              <div>
-                <label class="text-xs font-semibold text-slate-300">YouTube Trailer URL or ID</label>
-                <div class="flex gap-2 mt-1">
-                  <input type="text" id="adminTrailerCustomUrlInput" placeholder="https://www.youtube.com/watch?v=... or YouTube ID" class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-red-400 font-mono">
-                  <button type="button" onclick="previewCustomTrailerInput()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
-                    Preview
-                  </button>
-                </div>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button type="button" onclick="testSelectedMovieTrailerInTheater()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                  <span>⚡</span> Test Player
-                </button>
-
-                <button type="button" onclick="resetSelectedMovieTrailerToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                  <span>🔄</span> Reset to Default
-                </button>
-
-                <button type="button" onclick="clearSelectedMovieTrailer()" class="py-2.5 px-3 bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-700/50 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
-                  <span>🗑️</span> Clear Trailer
-                </button>
-              </div>
-
-              <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
-                <button type="button" onclick="saveSelectedMovieTrailer()" id="btnSaveTrailer" class="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
-                  <span>💾</span> Save Trailer
-                </button>
-              </div>
-
-              <p class="text-[11px] text-slate-400 leading-normal">
-                Saves trailer to website and automatically updates Google Sheets <strong>Column W</strong> and <strong>Column N</strong>.
-              </p>
             </div>
 
-            <!-- Right: Live Trailer Video Preview (5 cols) -->
-            <div class="lg:col-span-5 flex flex-col gap-2">
-              <div class="text-xs font-semibold text-slate-400 flex items-center justify-between">
-                <span>Interactive Player Preview</span>
-                <span class="text-[10px] text-slate-500 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
+            <!-- Schedule Artwork Mini-Gallery -->
+            <div class="mt-2 pt-4 border-t border-slate-850">
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <span>🖼️</span> Upcoming Lineup Artwork Gallery (Click to Edit)
+              </h4>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="adminArtworkGalleryGrid">
+                <!-- Rendered dynamically -->
               </div>
+            </div>
+          </div>
 
-              <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl relative flex items-center justify-center">
-                <div id="adminTrailerPreviewPlaceholder" class="flex flex-col items-center justify-center p-4 text-center text-slate-500 text-xs gap-1.5">
-                  <span class="text-2xl">🎬</span>
-                  <span>Select a movie or click Auto-Find to preview trailer</span>
+          <!-- Sub-Panel 2: Official Trailer -->
+          <div id="mediaSubPanel-trailers" class="media-subpanel hidden flex flex-col gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-7 flex flex-col gap-4">
+                <div>
+                  <label class="text-xs font-semibold text-slate-300">YouTube Trailer URL or Video ID</label>
+                  <div class="flex gap-2 mt-1">
+                    <input type="text" id="adminTrailerCustomUrlInput" placeholder="https://www.youtube.com/watch?v=... or YouTube ID" class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-red-400 font-mono">
+                    <button type="button" onclick="previewCustomTrailerInput()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
+                      Preview
+                    </button>
+                  </div>
                 </div>
-                <iframe id="adminTrailerPreviewIframe" class="w-full h-full hidden" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <button type="button" onclick="testSelectedMovieTrailerInTheater()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+                    <span>⚡</span> Test Player
+                  </button>
+
+                  <button type="button" onclick="resetSelectedMovieTrailerToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+                    <span>🔄</span> Reset to Default
+                  </button>
+
+                  <button type="button" onclick="clearSelectedMovieTrailer()" class="py-2.5 px-3 bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-700/50 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+                    <span>🗑️</span> Clear Trailer
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
+                  <button type="button" onclick="saveSelectedMovieTrailer()" id="btnSaveTrailer" class="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
+                    <span>💾</span> Save Trailer
+                  </button>
+                </div>
+
+                <p class="text-[11px] text-slate-400 leading-normal">
+                  Saves trailer to website and automatically updates Google Sheets <strong>Column W</strong> and <strong>Column N</strong>.
+                </p>
               </div>
 
-              <div class="text-[11px] text-slate-400 truncate font-mono mt-1" id="adminTrailerCurrentIdDisplay">
-                Trailer: <span class="text-slate-500">None</span>
+              <div class="lg:col-span-5 flex flex-col gap-2">
+                <div class="text-xs font-semibold text-slate-400 flex items-center justify-between">
+                  <span>Interactive Player Preview</span>
+                  <span class="text-[10px] text-slate-500 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
+                </div>
+
+                <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl relative flex items-center justify-center">
+                  <div id="adminTrailerPreviewPlaceholder" class="flex flex-col items-center justify-center p-4 text-center text-slate-500 text-xs gap-1.5">
+                    <span class="text-2xl">🎬</span>
+                    <span>Select a movie or click Auto-Find to preview trailer</span>
+                  </div>
+                  <iframe id="adminTrailerPreviewIframe" class="w-full h-full hidden" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <div class="text-[11px] text-slate-400 truncate font-mono mt-1" id="adminTrailerCurrentIdDisplay">
+                  Trailer: <span class="text-slate-500">None</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sub-Panel 3: Summary & Synopsis (NEW) -->
+          <div id="mediaSubPanel-summary" class="media-subpanel hidden flex flex-col gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-7 flex flex-col gap-3.5">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                      <span>💬</span> Plot Summary / Overview
+                    </label>
+                    <span class="text-[10px] text-slate-400 font-mono">Editable synopsis shown on cards</span>
+                  </div>
+                  <textarea id="adminMediaSummaryInput" rows="5" placeholder="Enter movie overview or search TMDB above to auto-fill..." class="w-full mt-1.5 p-3.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 leading-relaxed focus:border-amber-400 focus:ring-1 focus:ring-amber-400"></textarea>
+                </div>
+
+                <!-- Secondary Metadata Controls (Year, Runtime, Genres) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div>
+                    <label class="text-[11px] font-semibold text-slate-400">Release Year</label>
+                    <input type="text" id="adminMediaYearInput" placeholder="e.g. 2025" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                  </div>
+                  <div>
+                    <label class="text-[11px] font-semibold text-slate-400">Runtime</label>
+                    <input type="text" id="adminMediaRuntimeInput" placeholder="e.g. 1h 45m" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                  </div>
+                  <div>
+                    <label class="text-[11px] font-semibold text-slate-400">Genres</label>
+                    <input type="text" id="adminMediaGenreInput" placeholder="e.g. Horror, Mystery" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
+                  <button type="button" onclick="saveSelectedMovieSummary()" id="btnSaveMediaSummary" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
+                    <span>💾</span> Save Summary & Info
+                  </button>
+                  <button type="button" onclick="resetSelectedMovieSummaryToDefault()" class="py-3 px-4 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+                    <span>🔄</span> Reset
+                  </button>
+                </div>
+
+                <p class="text-[11px] text-slate-400 leading-normal">
+                  Saves custom summary and metadata to local cache and syncs to Google Sheets.
+                </p>
+              </div>
+
+              <!-- Right: Live Card Summary Preview -->
+              <div class="lg:col-span-5 flex flex-col gap-2.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>👁️</span> Card Summary Preview
+                </span>
+
+                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-2 shadow-inner">
+                  <div class="flex items-center justify-between border-b border-slate-850 pb-2">
+                    <span class="text-xs font-bold text-slate-200 truncate" id="adminSummaryPreviewTitle">Selected Movie</span>
+                    <span class="text-[10px] font-mono text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/60" id="adminSummaryPreviewYear">Year</span>
+                  </div>
+                  <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1">
+                    <span>💬</span> SUMMARY
+                  </div>
+                  <p class="text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-1 font-sans" id="adminSummaryPreviewText">
+                    Select a movie to preview and edit its summary.
+                  </p>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-850 font-mono">
+                    <span id="adminSummaryPreviewRuntime">Runtime: --</span>
+                    <span id="adminSummaryPreviewGenres">Genres: --</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -994,7 +1028,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.79</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.80</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1159,7 +1193,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.79</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.80</span>
     </div>
 
   </aside>
@@ -1498,7 +1532,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.79";
+    const APP_VERSION = "4.9.80";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -1875,6 +1909,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.80": [
+        "Unified movie media studio consolidates posters, trailers, and plot summaries.",
+        "Added editable plot summary, year, runtime, and genre controls.",
+        "Corrected 2025 Mystery Scary Movie Marathon date and time.",
+        "Prevented past marathon titles from colliding with upcoming schedule.",
+        "Removed redundant scheduled status badges from vault trailer row."
+      ],
       "4.9.79": [
         "Fixed trailer dropdown resetting to top movie during background sync.",
         "Preserved selected movie and query during live catalog updates.",
@@ -2264,7 +2305,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.79"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.80"] || APP_STORE_RELEASES["4.9.79"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -2760,6 +2801,18 @@
     try {
       const storedTrailers = localStorage.getItem('brian_movie_trailers_map');
       if (storedTrailers) customMovieTrailers = JSON.parse(storedTrailers);
+    } catch(e) {}
+
+    let customMovieSummaries = {};
+    try {
+      const storedSummaries = localStorage.getItem('brian_movie_summaries_map');
+      if (storedSummaries) customMovieSummaries = JSON.parse(storedSummaries);
+    } catch(e) {}
+
+    let customMovieMetadata = {};
+    try {
+      const storedMeta = localStorage.getItem('brian_movie_metadata_map');
+      if (storedMeta) customMovieMetadata = JSON.parse(storedMeta);
     } catch(e) {}
 
     function getCinemaPlaceholder(title) {
@@ -3650,42 +3703,80 @@
 
     // 🎛️ Admin Section Navigation Filter
     function setAdminSectionFilter(section) {
-      const valid = ['all', 'stage', 'artwork', 'trailers', 'requests'];
-      const current = valid.includes(section) ? section : 'all';
+      const valid = ['all', 'stage', 'media', 'artwork', 'trailers', 'summary', 'requests'];
+      const raw = valid.includes(section) ? section : 'all';
+      const isMediaSub = ['media', 'artwork', 'trailers', 'summary'].includes(raw);
+      const activeNavKey = isMediaSub ? 'media' : raw;
 
-      valid.forEach(s => {
+      ['all', 'stage', 'media', 'requests'].forEach(s => {
         const btn = document.getElementById(`adminSecBtn-${s}`);
         if (!btn) return;
-        if (s === current) {
+        if (s === activeNavKey) {
           btn.className = "admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shadow transition shrink-0 flex items-center gap-1.5";
         } else {
           btn.className = "admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5";
         }
       });
 
-      const sections = {
-        stage: document.getElementById('adminSection-stage'),
-        artwork: document.getElementById('adminSection-artwork'),
-        trailers: document.getElementById('adminSection-trailers'),
-        requests: document.getElementById('adminSection-requests')
-      };
+      const stageEl = document.getElementById('adminSection-stage');
+      const mediaEl = document.getElementById('adminSection-unified-media');
+      const reqEl = document.getElementById('adminSection-requests');
 
-      Object.entries(sections).forEach(([key, el]) => {
-        if (!el) return;
-        if (current === 'all' || current === key) {
-          el.classList.remove('hidden');
-        } else {
-          el.classList.add('hidden');
+      if (raw === 'all') {
+        if (stageEl) stageEl.classList.remove('hidden');
+        if (mediaEl) mediaEl.classList.remove('hidden');
+        if (reqEl) reqEl.classList.remove('hidden');
+      } else if (raw === 'stage') {
+        if (stageEl) stageEl.classList.remove('hidden');
+        if (mediaEl) mediaEl.classList.add('hidden');
+        if (reqEl) reqEl.classList.add('hidden');
+      } else if (isMediaSub) {
+        if (stageEl) stageEl.classList.add('hidden');
+        if (mediaEl) mediaEl.classList.remove('hidden');
+        if (reqEl) reqEl.classList.add('hidden');
+        if (raw === 'artwork' || raw === 'trailers' || raw === 'summary') {
+          switchMediaSubTab(raw);
+        }
+      } else if (raw === 'requests') {
+        if (stageEl) stageEl.classList.add('hidden');
+        if (mediaEl) mediaEl.classList.add('hidden');
+        if (reqEl) reqEl.classList.remove('hidden');
+      }
+    }
+
+    // 🎛️ Unified Movie Media Studio Sub-Tab Switcher
+    function switchMediaSubTab(subTab) {
+      const valid = ['artwork', 'trailers', 'summary'];
+      const current = valid.includes(subTab) ? subTab : 'artwork';
+
+      valid.forEach(t => {
+        const btn = document.getElementById(`mediaSubTabBtn-${t}`);
+        const panel = document.getElementById(`mediaSubPanel-${t}`);
+        if (btn) {
+          if (t === current) {
+            btn.className = "media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow transition flex items-center gap-1.5";
+          } else {
+            btn.className = "media-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-1.5";
+          }
+        }
+        if (panel) {
+          if (t === current) {
+            panel.classList.remove('hidden');
+          } else {
+            panel.classList.add('hidden');
+          }
         }
       });
     }
 
-    // 🎬 Movie Posters & Artwork Manager Engine
-    function populateAdminArtworkSelector() {
-      const select = document.getElementById('adminArtworkMovieSelect');
+    // 🎬 Unified Movie Media & Metadata Studio Engine
+    window.currentAdminMediaCandidates = [];
+
+    function populateAdminMediaStudio(force = false) {
+      const masterSelect = document.getElementById('adminMediaMovieSelect');
+      const countBadge = document.getElementById('adminMediaMovieCount');
       const gallery = document.getElementById('adminArtworkGalleryGrid');
-      const countBadge = document.getElementById('adminArtworkMovieCount');
-      if (!select) return;
+      if (!masterSelect) return;
 
       const titleSet = new Set();
       const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
@@ -3699,13 +3790,28 @@
       if (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests)) {
         communityRequests.forEach(r => { if (r && r.title) titleSet.add(r.title.replace(/^🎬\s*/, '').trim()); });
       }
+      if (typeof window !== 'undefined' && Array.isArray(window.INITIAL_PAST_MOVIES)) {
+        window.INITIAL_PAST_MOVIES.forEach(p => { if (p && p.title) titleSet.add(p.title.replace(/^🎬\s*/, '').trim()); });
+      }
 
       const allTitles = Array.from(titleSet).filter(Boolean).sort((a, b) => a.localeCompare(b));
-      
-      const currentVal = select.value;
-      let html = '<option value="">-- Choose Movie or Type Custom Below --</option>';
+      const catalogSig = allTitles.length + ':' + (allTitles[0] || '') + ':' + (allTitles[allTitles.length - 1] || '');
+
+      if (!force && masterSelect.dataset.catalogSig === catalogSig && masterSelect.options.length > 1) {
+        return;
+      }
+      masterSelect.dataset.catalogSig = catalogSig;
+
+      const currentVal = masterSelect.value;
+      let html = '<option value="">-- Choose Movie to Configure --</option>';
       html += allTitles.map(title => `<option value="${escapeHtml(title)}"${title === currentVal ? ' selected' : ''}>${escapeHtml(title)}</option>`).join('');
-      select.innerHTML = html;
+      masterSelect.innerHTML = html;
+
+      // Keep hidden legacy selects in sync
+      const legacyArt = document.getElementById('adminArtworkMovieSelect');
+      const legacyTr = document.getElementById('adminTrailerMovieSelect');
+      if (legacyArt) legacyArt.innerHTML = html;
+      if (legacyTr) legacyTr.innerHTML = html;
 
       if (countBadge) countBadge.textContent = `${allTitles.length} Titles`;
 
@@ -3713,7 +3819,7 @@
         gallery.innerHTML = schedSource.slice(0, 15).map(s => {
           const artUrl = getMovieArtworkUrl(s.title);
           return `
-            <div onclick="selectMovieFromGallery('${escapeHtml(s.title)}')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/60 transition flex flex-col gap-1.5 shadow-md">
+            <div onclick="selectMovieFromMediaStudio('${escapeHtml(s.title)}', 'artwork')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/60 transition flex flex-col gap-1.5 shadow-md">
               <div class="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-black border border-slate-800">
                 <img src="${escapeHtml(artUrl)}" alt="${escapeHtml(s.title)}" class="w-full h-full object-cover group-hover/art:scale-105 transition duration-200" loading="lazy">
                 <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-slate-950/80 text-[9px] font-mono text-amber-300">${s.status || 'SET'}</div>
@@ -3724,357 +3830,75 @@
         }).join('');
       }
 
-      if (!select.value && allTitles.length > 0) {
-        select.value = allTitles[0];
+      if (currentVal && allTitles.includes(currentVal)) {
+        masterSelect.value = currentVal;
+      } else if (!masterSelect.value && allTitles.length > 0) {
+        masterSelect.value = allTitles[0];
       }
 
-      onAdminSelectArtworkMovie();
+      onAdminSelectMediaMovie();
     }
 
-    function selectMovieFromGallery(title) {
-      const select = document.getElementById('adminArtworkMovieSelect');
-      if (select) {
-        select.value = title;
-        onAdminSelectArtworkMovie();
+    function selectMovieFromMediaStudio(title, subtab = 'artwork') {
+      const select = document.getElementById('adminMediaMovieSelect');
+      if (select && title) {
+        const clean = title.replace(/^🎬\s*/, '').trim();
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value.toLowerCase() === clean.toLowerCase()) {
+            select.selectedIndex = i;
+            break;
+          }
+        }
+        if (subtab) switchMediaSubTab(subtab);
+        onAdminSelectMediaMovie();
         select.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
 
-    function onAdminSelectArtworkMovie() {
-      const select = document.getElementById('adminArtworkMovieSelect');
-      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
-      const urlInput = document.getElementById('adminArtworkUrlInput');
-      const previewImg = document.getElementById('adminArtworkPreviewImg');
-      const caption = document.getElementById('adminArtworkPreviewCaption');
-      const urlText = document.getElementById('adminArtworkPreviewUrl');
+    function selectMovieFromGallery(title) {
+      selectMovieFromMediaStudio(title, 'artwork');
+    }
+
+    function onAdminSelectMediaMovie() {
+      const select = document.getElementById('adminMediaMovieSelect');
       if (!select) return;
 
       const title = select.value.trim();
-      const currentUrl = title ? getMovieArtworkUrl(title) : getCinemaPlaceholder("Brian's Theater");
+      const cleanTitle = title.replace(/^🎬\s*/, '').trim();
+      const lowerClean = cleanTitle.toLowerCase();
 
-      if (searchInput && title) searchInput.value = title;
-      if (urlInput) urlInput.value = currentUrl;
-      if (previewImg) previewImg.src = currentUrl;
-      if (caption) caption.textContent = title || "Cinema Stage";
-      if (urlText) urlText.textContent = currentUrl;
+      // Mirror value to legacy select dropdowns
+      const legacyArt = document.getElementById('adminArtworkMovieSelect');
+      const legacyTr = document.getElementById('adminTrailerMovieSelect');
+      if (legacyArt) legacyArt.value = title;
+      if (legacyTr) legacyTr.value = title;
 
-      closeAdminArtworkCandidates();
-    }
+      // Update Search Query Input
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      if (searchInput && title) searchInput.value = cleanTitle;
 
-    function closeAdminArtworkCandidates() {
-      const container = document.getElementById('adminArtworkCandidateContainer');
-      const grid = document.getElementById('adminArtworkCandidateGrid');
-      if (container) {
-        container.classList.add('hidden');
-        container.classList.remove('flex');
-      }
-      if (grid) grid.innerHTML = '';
-    }
-
-    function previewCustomArtworkUrl() {
-      const url = document.getElementById('adminArtworkUrlInput')?.value.trim();
-      const previewImg = document.getElementById('adminArtworkPreviewImg');
-      const urlText = document.getElementById('adminArtworkPreviewUrl');
-      if (url && previewImg) {
-        previewImg.src = url;
-        if (urlText) urlText.textContent = url;
-      }
-    }
-
-    function applyAdminCandidateArtwork(url, title, type, showToast = true) {
-      const urlInput = document.getElementById('adminArtworkUrlInput');
+      // 1. Update Artwork Sub-Panel
+      const artUrlInput = document.getElementById('adminArtworkUrlInput');
       const previewImg = document.getElementById('adminArtworkPreviewImg');
       const caption = document.getElementById('adminArtworkPreviewCaption');
       const urlText = document.getElementById('adminArtworkPreviewUrl');
+      const currentArtUrl = cleanTitle ? getMovieArtworkUrl(cleanTitle) : getCinemaPlaceholder("Brian's Theater");
 
-      if (urlInput) urlInput.value = url;
-      if (previewImg) previewImg.src = url;
-      if (caption) caption.textContent = `${title} (${type})`;
-      if (urlText) urlText.textContent = url;
+      if (artUrlInput) artUrlInput.value = currentArtUrl;
+      if (previewImg) previewImg.src = currentArtUrl;
+      if (caption) caption.textContent = cleanTitle || "Cinema Stage";
+      if (urlText) urlText.textContent = currentArtUrl;
 
-      if (showToast) {
-        showTheaterToast(`✨ Selected ${type} for "${title}". Click 'Save Movie Image' to save!`);
-      }
-    }
-
-    function resetSelectedMovieArtworkToDefault() {
-      if (!isAdmin) {
-        openAdminAuthModal();
-        return;
-      }
-      const select = document.getElementById('adminArtworkMovieSelect');
-      if (!select) return;
-      const title = select.value.trim();
-      if (!title) return;
-
-      delete customMovieImages[title];
-      try {
-        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
-      } catch(e) {}
-
-      onAdminSelectArtworkMovie();
-      renderSchedule();
-      showTheaterToast(`🔄 Reset artwork for "${title}" to default.`);
-    }
-
-    async function fetchTmdbArtworkForSelectedMovie() {
-      if (!isAdmin) {
-        openAdminAuthModal();
-        showTheaterToast("🔒 Admin authentication required.");
-        return;
-      }
-      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
-      const select = document.getElementById('adminArtworkMovieSelect');
-      const btn = document.getElementById('btnFetchTmdbArtwork');
-      const container = document.getElementById('adminArtworkCandidateContainer');
-      const grid = document.getElementById('adminArtworkCandidateGrid');
-      const countBadge = document.getElementById('adminArtworkCandidateCount');
-
-      const rawQuery = (searchInput ? searchInput.value.trim() : '') || (select ? select.value.trim() : '');
-      const query = rawQuery.replace(/^🎬\s*/, '').trim();
-
-      if (!query) {
-        showTheaterToast("⚠️ Please enter or select a movie title to search.");
-        return;
-      }
-
-      if (btn) btn.innerHTML = '<span>⏳</span> Searching...';
-
-      try {
-        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
-
-        let searchTitle = query;
-        let searchYear = null;
-        const yearMatch = query.match(/\b(19\d\d|20\d\d)\b/);
-        if (yearMatch) {
-          searchYear = yearMatch[1];
-          searchTitle = query.replace(/\b(19\d\d|20\d\d)\b/, '').replace(/[()]/g, '').trim();
-        }
-
-        let movieSearchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`;
-        if (searchYear) {
-          movieSearchUrl += `&primary_release_year=${searchYear}`;
-        }
-        let res = await fetch(movieSearchUrl);
-        let results = [];
-        if (res.ok) {
-          const data = await res.json();
-          results = data.results || [];
-        }
-
-        if (results.length === 0 && searchYear) {
-          res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`);
-          if (res.ok) {
-            const data = await res.json();
-            results = data.results || [];
-          }
-        }
-
-        if (results.length === 0 || /\b(tv|season|series|show)\b/i.test(query)) {
-          const tvRes = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`);
-          if (tvRes.ok) {
-            const tvData = await tvRes.json();
-            if (tvData.results && tvData.results.length > 0) {
-              results = [...results, ...tvData.results.map(t => ({ ...t, title: t.name, release_date: t.first_air_date, isTv: true }))];
-            }
-          }
-        }
-
-        const candidates = results.filter(r => r.backdrop_path || r.poster_path).slice(0, 6);
-
-        if (candidates.length === 0) {
-          showTheaterToast(`❌ No TMDB images found for "${query}". Try adjusting keywords.`);
-          closeAdminArtworkCandidates();
-          return;
-        }
-
-        if (countBadge) countBadge.textContent = `${candidates.length} Match${candidates.length > 1 ? 'es' : ''}`;
-
-        if (grid) {
-          grid.innerHTML = candidates.map(c => {
-            const cTitle = c.title || c.name || "Movie";
-            const cYear = (c.release_date || c.first_air_date || '').split('-')[0] || 'N/A';
-            const backdropUrl = c.backdrop_path ? `https://image.tmdb.org/t/p/w780${c.backdrop_path}` : null;
-            const posterUrl = c.poster_path ? `https://image.tmdb.org/t/p/w500${c.poster_path}` : null;
-            const mediaBadge = c.isTv ? '<span class="text-[9px] px-1 rounded bg-purple-950 text-purple-300 border border-purple-800">TV</span>' : '<span class="text-[9px] px-1 rounded bg-sky-950 text-sky-300 border border-sky-800">Movie</span>';
-
-            const safeTitle = escapeHtml(cTitle);
-            const jsTitle = cTitle.replace(/'/g, "\\'");
-
-            return `
-              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 transition flex flex-col gap-2 shadow">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold text-slate-100 truncate max-w-[170px]" title="${safeTitle}">${safeTitle}</span>
-                  <div class="flex items-center gap-1">
-                    ${mediaBadge}
-                    <span class="text-[10px] text-amber-400 font-mono">${escapeHtml(cYear)}</span>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                  ${backdropUrl ? `
-                    <button type="button" onclick="applyAdminCandidateArtwork('${backdropUrl}', '${jsTitle}', '16:9 Backdrop')" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-amber-400 transition flex flex-col items-center justify-end p-1 text-left bg-black shadow-inner">
-                      <img src="${backdropUrl}" alt="${safeTitle}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition" loading="lazy">
-                      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent pointer-events-none"></div>
-                      <span class="relative z-10 text-[9px] font-bold text-amber-300 font-mono truncate w-full text-center">🖼️ 16:9 Backdrop</span>
-                    </button>
-                  ` : `<div class="aspect-video rounded-lg border border-slate-800 flex items-center justify-center text-[10px] text-slate-600">No Backdrop</div>`}
-
-                  ${posterUrl ? `
-                    <button type="button" onclick="applyAdminCandidateArtwork('${posterUrl}', '${jsTitle}', 'Poster')" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-sky-400 transition flex flex-col items-center justify-end p-1 text-left bg-black shadow-inner">
-                      <img src="${posterUrl}" alt="${safeTitle}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition" loading="lazy">
-                      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent pointer-events-none"></div>
-                      <span class="relative z-10 text-[9px] font-bold text-sky-300 font-mono truncate w-full text-center">📜 Poster</span>
-                    </button>
-                  ` : `<div class="aspect-video rounded-lg border border-slate-800 flex items-center justify-center text-[10px] text-slate-600">No Poster</div>`}
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-
-        if (container) {
-          container.classList.remove('hidden');
-          container.classList.add('flex');
-        }
-
-        const top = candidates[0];
-        const topImg = top.backdrop_path ? `https://image.tmdb.org/t/p/w780${top.backdrop_path}` : `https://image.tmdb.org/t/p/w500${top.poster_path}`;
-        if (topImg) {
-          applyAdminCandidateArtwork(topImg, top.title || top.name || query, top.backdrop_path ? '16:9 Backdrop' : 'Poster', false);
-        }
-
-        showTheaterToast(`✨ Found ${candidates.length} TMDB match${candidates.length > 1 ? 'es' : ''} for "${query}"!`);
-
-      } catch(e) {
-        showTheaterToast("❌ TMDB search failed: " + e.message);
-      } finally {
-        if (btn) btn.innerHTML = '<span>🔍</span> Search TMDB';
-      }
-    }
-
-    function saveSelectedMovieArtwork() {
-      if (!isAdmin) {
-        openAdminAuthModal();
-        showTheaterToast("🔒 Admin authentication required.");
-        return;
-      }
-      const select = document.getElementById('adminArtworkMovieSelect');
-      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
-      const urlInput = document.getElementById('adminArtworkUrlInput');
-      if (!urlInput) return;
-
-      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
-      const url = urlInput.value.trim();
-      if (!title || !url) {
-        showTheaterToast("⚠️ Please select a movie and provide an image URL.");
-        return;
-      }
-
-      customMovieImages[title] = url;
-      try {
-        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
-      } catch(e) {}
-
-      fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
-
-      renderSchedule();
-      populateAdminArtworkSelector();
-
-      updateStageArtwork(false, document.getElementById('nowPlayingHeading')?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
-
-      showTheaterToast(`🎉 Success! Saved custom image for "${title}".`);
-    }
-
-    function applySelectedArtworkToStageNow() {
-      if (!isAdmin) {
-        openAdminAuthModal();
-        showTheaterToast("🔒 Admin authentication required.");
-        return;
-      }
-      const urlInput = document.getElementById('adminArtworkUrlInput');
-      const select = document.getElementById('adminArtworkMovieSelect');
-      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
-      const url = urlInput?.value.trim();
-      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "Featured Movie";
-      if (!url) {
-        showTheaterToast("⚠️ Please specify an image URL first.");
-        return;
-      }
-
-      const stagePoster = document.getElementById('stagePoster');
-      const stagePosterBadgeTitle = document.getElementById('stagePosterBadgeTitle');
-      if (stagePoster) stagePoster.src = url;
-      if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `FEATURED: ${title}`;
-
-      showTheaterToast(`⭐ Updated Theater stage poster with "${title}" image!`);
-      switchTab('screening');
-    }
-
-    // 🎬 Movie Trailers & Preview Manager Engine
-    window.currentAdminTrailerCandidates = [];
-
-    function populateAdminTrailerSelector(force = false) {
-      const select = document.getElementById('adminTrailerMovieSelect');
-      const countBadge = document.getElementById('adminTrailerMovieCount');
-      if (!select) return;
-
-      const titleSet = new Set();
-      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
-        ? window.theaterScheduleCache
-        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
-
-      schedSource.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
-      if (Array.isArray(vaultMovies)) {
-        vaultMovies.forEach(v => { if (v && v.title) titleSet.add(v.title.replace(/^🎬\s*/, '').trim()); });
-      }
-      if (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests)) {
-        communityRequests.forEach(r => { if (r && r.title) titleSet.add(r.title.replace(/^🎬\s*/, '').trim()); });
-      }
-
-      const allTitles = Array.from(titleSet).filter(Boolean).sort((a, b) => a.localeCompare(b));
-      const catalogSig = allTitles.length + ':' + (allTitles[0] || '') + ':' + (allTitles[allTitles.length - 1] || '');
-
-      // Avoid re-rendering if titles haven't changed and not forced
-      if (!force && select.dataset.catalogSig === catalogSig) {
-        return;
-      }
-      select.dataset.catalogSig = catalogSig;
-
-      const currentVal = select.value;
-      let html = '<option value="">-- Choose Movie to Configure --</option>';
-      html += allTitles.map(title => `<option value="${escapeHtml(title)}"${title === currentVal ? ' selected' : ''}>${escapeHtml(title)}</option>`).join('');
-      select.innerHTML = html;
-
-      if (countBadge) countBadge.textContent = `${allTitles.length} Titles`;
-
-      if (currentVal && allTitles.includes(currentVal)) {
-        select.value = currentVal;
-      } else if (!select.value && allTitles.length > 0) {
-        select.value = allTitles[0];
-        onAdminSelectTrailerMovie();
-      }
-    }
-
-    function onAdminSelectTrailerMovie() {
-      const select = document.getElementById('adminTrailerMovieSelect');
-      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
-      const input = document.getElementById('adminTrailerCustomUrlInput');
+      // 2. Update Trailer Sub-Panel
+      const trInput = document.getElementById('adminTrailerCustomUrlInput');
       const previewIframe = document.getElementById('adminTrailerPreviewIframe');
       const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
       const statusText = document.getElementById('adminTrailerPreviewStatus');
       const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
-      if (!select) return;
+      const currentTrailerId = cleanTitle ? getTrailerIdForMovie({ title: cleanTitle }) : null;
 
-      closeAdminTrailerCandidates();
-
-      const title = select.value.trim();
-      const currentTrailerId = getTrailerIdForMovie({ title: title });
-
-      if (searchInput && title) searchInput.value = title;
-
-      if (input) {
-        input.value = currentTrailerId ? `https://www.youtube.com/watch?v=${currentTrailerId}` : '';
+      if (trInput) {
+        trInput.value = currentTrailerId ? `https://www.youtube.com/watch?v=${currentTrailerId}` : '';
       }
 
       if (currentTrailerId) {
@@ -4094,11 +3918,118 @@
         if (statusText) statusText.textContent = `No Trailer Set`;
         if (idDisplay) idDisplay.innerHTML = `Trailer: <span class="text-amber-400 font-semibold">None</span>`;
       }
+
+      // 3. Update Summary & Metadata Sub-Panel
+      const summaryInput = document.getElementById('adminMediaSummaryInput');
+      const yearInput = document.getElementById('adminMediaYearInput');
+      const runtimeInput = document.getElementById('adminMediaRuntimeInput');
+      const genreInput = document.getElementById('adminMediaGenreInput');
+
+      const prevTitle = document.getElementById('adminSummaryPreviewTitle');
+      const prevYear = document.getElementById('adminSummaryPreviewYear');
+      const prevText = document.getElementById('adminSummaryPreviewText');
+      const prevRuntime = document.getElementById('adminSummaryPreviewRuntime');
+      const prevGenres = document.getElementById('adminSummaryPreviewGenres');
+
+      // Resolve metadata: custom overrides > schedule item > vault item > past catalog
+      let resolvedSummary = customMovieSummaries[cleanTitle] || customMovieSummaries[lowerClean] || '';
+      let resolvedMeta = customMovieMetadata[cleanTitle] || customMovieMetadata[lowerClean] || {};
+      let resolvedYear = resolvedMeta.year || '';
+      let resolvedRuntime = resolvedMeta.runtime || '';
+      let resolvedGenres = resolvedMeta.genres || '';
+
+      if (!resolvedSummary || !resolvedYear || !resolvedRuntime || !resolvedGenres) {
+        // Look up in schedule
+        const schedList = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) ? window.theaterScheduleCache : sampleSchedule;
+        const sMatch = schedList.find(s => s && s.title && s.title.toLowerCase().trim() === lowerClean);
+        if (sMatch) {
+          const sParsed = parseMovieScheduleDetails(sMatch);
+          if (!resolvedSummary) resolvedSummary = sParsed.summary;
+          if (!resolvedYear) resolvedYear = sParsed.year;
+          if (!resolvedRuntime) resolvedRuntime = sParsed.runtime;
+          if (!resolvedGenres) resolvedGenres = sMatch.genre || '';
+        }
+      }
+
+      if (!resolvedSummary || !resolvedYear || !resolvedRuntime || !resolvedGenres) {
+        // Look up in vault
+        if (Array.isArray(vaultMovies)) {
+          const vMatch = vaultMovies.find(v => v && v.title && v.title.toLowerCase().trim() === lowerClean);
+          if (vMatch) {
+            const vParsed = parseVaultMovieCardData(vMatch);
+            if (!resolvedSummary) resolvedSummary = vParsed.summary;
+            if (!resolvedYear) resolvedYear = vParsed.year;
+            if (!resolvedRuntime) resolvedRuntime = vParsed.runtime;
+            if (!resolvedGenres) resolvedGenres = vParsed.genres || vMatch.genre || '';
+          }
+        }
+      }
+
+      if (!resolvedSummary || !resolvedYear || !resolvedRuntime || !resolvedGenres) {
+        // Look up in INITIAL_PAST_MOVIES
+        if (typeof window !== 'undefined' && Array.isArray(window.INITIAL_PAST_MOVIES)) {
+          const pMatch = window.INITIAL_PAST_MOVIES.find(p => p && p.title && p.title.toLowerCase().trim() === lowerClean);
+          if (pMatch) {
+            if (!resolvedSummary) resolvedSummary = pMatch.summary || pMatch.overview || '';
+            if (!resolvedYear) resolvedYear = pMatch.year || pMatch.releaseYear || '';
+            if (!resolvedRuntime) resolvedRuntime = pMatch.runtime || '';
+            if (!resolvedGenres) resolvedGenres = pMatch.genre || '';
+          }
+        }
+      }
+
+      if (!resolvedSummary) resolvedSummary = "Virtual cinema screening at Brian's Theater.";
+      if (!resolvedYear) resolvedYear = "2026";
+      if (!resolvedRuntime) resolvedRuntime = "1h 45m";
+      if (!resolvedGenres) resolvedGenres = "Feature Film";
+
+      if (summaryInput) summaryInput.value = resolvedSummary;
+      if (yearInput) yearInput.value = resolvedYear;
+      if (runtimeInput) runtimeInput.value = resolvedRuntime;
+      if (genreInput) genreInput.value = resolvedGenres;
+
+      if (prevTitle) prevTitle.textContent = cleanTitle || "Selected Movie";
+      if (prevYear) prevYear.textContent = resolvedYear;
+      if (prevText) prevText.textContent = resolvedSummary;
+      if (prevRuntime) prevRuntime.textContent = `Runtime: ${resolvedRuntime}`;
+      if (prevGenres) prevGenres.textContent = `Genres: ${resolvedGenres}`;
+
+      // Wire real-time live preview event listeners
+      if (summaryInput && !summaryInput.dataset.boundPreview) {
+        summaryInput.dataset.boundPreview = "true";
+        summaryInput.addEventListener('input', () => {
+          const el = document.getElementById('adminSummaryPreviewText');
+          if (el) el.textContent = summaryInput.value || "No summary text.";
+        });
+      }
+      if (yearInput && !yearInput.dataset.boundPreview) {
+        yearInput.dataset.boundPreview = "true";
+        yearInput.addEventListener('input', () => {
+          const el = document.getElementById('adminSummaryPreviewYear');
+          if (el) el.textContent = yearInput.value || "N/A";
+        });
+      }
+      if (runtimeInput && !runtimeInput.dataset.boundPreview) {
+        runtimeInput.dataset.boundPreview = "true";
+        runtimeInput.addEventListener('input', () => {
+          const el = document.getElementById('adminSummaryPreviewRuntime');
+          if (el) el.textContent = `Runtime: ${runtimeInput.value || '--'}`;
+        });
+      }
+      if (genreInput && !genreInput.dataset.boundPreview) {
+        genreInput.dataset.boundPreview = "true";
+        genreInput.addEventListener('input', () => {
+          const el = document.getElementById('adminSummaryPreviewGenres');
+          if (el) el.textContent = `Genres: ${genreInput.value || '--'}`;
+        });
+      }
+
+      closeAdminMediaCandidates();
     }
 
-    function closeAdminTrailerCandidates() {
-      const container = document.getElementById('adminTrailerCandidateContainer');
-      const grid = document.getElementById('adminTrailerCandidateGrid');
+    function closeAdminMediaCandidates() {
+      const container = document.getElementById('adminMediaCandidateContainer');
+      const grid = document.getElementById('adminMediaCandidateGrid');
       if (container) {
         container.classList.add('hidden');
         container.classList.remove('flex');
@@ -4106,142 +4037,24 @@
       if (grid) grid.innerHTML = '';
     }
 
-    function selectAdminTrailerCandidate(idx) {
-      const ct = window.currentAdminTrailerCandidates && window.currentAdminTrailerCandidates[idx];
-      if (!ct) return;
-      applyAdminCandidateTrailer(ct.videoKey, ct.mediaTitle, ct.videoName, true, true);
-    }
-
-    function applyAdminCandidateTrailer(videoKey, title, videoName, showToast = true, autoplay = true) {
-      const input = document.getElementById('adminTrailerCustomUrlInput');
-      const previewIframe = document.getElementById('adminTrailerPreviewIframe');
-      const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
-      const statusText = document.getElementById('adminTrailerPreviewStatus');
-      const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
-
-      if (input) input.value = `https://www.youtube.com/watch?v=${videoKey}`;
-
-      if (previewIframe) {
-        previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoKey)}${autoplay ? '?autoplay=1&rel=0' : '?rel=0'}`;
-        previewIframe.classList.remove('hidden');
-      }
-      if (placeholder) placeholder.classList.add('hidden');
-      if (statusText) statusText.textContent = `Selected (${videoName || 'Trailer'})`;
-      if (idDisplay) idDisplay.innerHTML = `Preview ID: <span class="text-emerald-400 font-bold">${escapeHtml(videoKey)}</span>`;
-
-      if (showToast) {
-        showTheaterToast(`🎬 Selected ${videoName || 'Trailer'} for "${title}"! Click 'Save Trailer' to apply.`);
-      }
-    }
-
-    function resetSelectedMovieTrailerToDefault() {
+    async function fetchTmdbAllMediaForSelectedMovie() {
       if (!isAdmin) {
         openAdminAuthModal();
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
-      const select = document.getElementById('adminTrailerMovieSelect');
-      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
-      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
-      if (!title) return;
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const select = document.getElementById('adminMediaMovieSelect');
+      const btn = document.getElementById('btnFetchTmdbMediaAll');
+      const container = document.getElementById('adminMediaCandidateContainer');
+      const grid = document.getElementById('adminMediaCandidateGrid');
+      const countBadge = document.getElementById('adminMediaCandidateCount');
 
-      delete customMovieTrailers[title];
-      try {
-        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
-      } catch(e) {}
-
-      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
-
-      renderSchedule();
-      renderVault();
-      onAdminSelectTrailerMovie();
-      closeAdminTrailerCandidates();
-      showTheaterToast(`🔄 Reset trailer for "${title}" to default.`);
-    }
-
-    function previewCustomTrailerInput() {
-      const input = document.getElementById('adminTrailerCustomUrlInput');
-      const previewIframe = document.getElementById('adminTrailerPreviewIframe');
-      const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
-      const statusText = document.getElementById('adminTrailerPreviewStatus');
-      const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
-      if (!input) return;
-
-      const raw = input.value.trim();
-      const ytid = extractYouTubeId(raw) || (/^[\w-]{11}$/.test(raw) ? raw : null);
-
-      if (!ytid) {
-        showTheaterToast("⚠️ Please enter a valid YouTube video URL or 11-character video ID.");
-        return;
-      }
-
-      if (previewIframe) {
-        previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytid)}?autoplay=1&rel=0`;
-        previewIframe.classList.remove('hidden');
-      }
-      if (placeholder) placeholder.classList.add('hidden');
-      if (statusText) statusText.textContent = `Previewing (${ytid})`;
-      if (idDisplay) idDisplay.innerHTML = `Preview ID: <span class="text-emerald-400 font-bold">${escapeHtml(ytid)}</span>`;
-    }
-
-    async function fetchTmdbTrailerForMovie(title, year) {
-      const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
-      const clean = title.replace(/^🎬\s*/, '').trim();
-      let searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(clean)}`;
-      if (year && /^\d{4}$/.test(year)) {
-        searchUrl += `&primary_release_year=${year}`;
-      }
-      const res = await fetch(searchUrl);
-      if (!res.ok) throw new Error("TMDB search request failed");
-      const data = await res.json();
-      if (!data.results || data.results.length === 0) {
-        if (year) {
-          return fetchTmdbTrailerForMovie(title, null);
-        }
-        return null;
-      }
-
-      const top = data.results[0];
-      const vRes = await fetch(`https://api.themoviedb.org/3/movie/${top.id}/videos?api_key=${_k}`);
-      if (!vRes.ok) throw new Error("TMDB videos request failed");
-      const vData = await vRes.json();
-      const results = vData.results || [];
-
-      const trailer = results.find(v => v.site === 'YouTube' && v.type === 'Trailer' && v.official)
-                   || results.find(v => v.site === 'YouTube' && v.type === 'Trailer')
-                   || results.find(v => v.site === 'YouTube' && (v.type === 'Teaser' || v.type === 'Clip'))
-                   || results.find(v => v.site === 'YouTube');
-
-      if (!trailer || !trailer.key) return null;
-
-      return {
-        id: top.id,
-        title: top.title,
-        releaseDate: top.release_date || '',
-        videoKey: trailer.key,
-        videoName: trailer.name || 'Official Trailer',
-        url: `https://www.youtube.com/watch?v=${trailer.key}`
-      };
-    }
-
-    async function fetchTmdbTrailerForSelectedMovie() {
-      if (!isAdmin) {
-        openAdminAuthModal();
-        showTheaterToast("🔒 Admin authentication required.");
-        return;
-      }
-      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
-      const select = document.getElementById('adminTrailerMovieSelect');
-      const btn = document.getElementById('btnFetchTmdbTrailer');
-      const container = document.getElementById('adminTrailerCandidateContainer');
-      const grid = document.getElementById('adminTrailerCandidateGrid');
-      const countBadge = document.getElementById('adminTrailerCandidateCount');
-
-      const rawTitle = (searchInput ? searchInput.value.trim() : '') || (select ? select.value.trim() : '');
-      const query = rawTitle.replace(/^🎬\s*/, '').trim();
+      const rawQuery = (searchInput ? searchInput.value.trim() : '') || (select ? select.value.trim() : '');
+      const query = rawQuery.replace(/^🎬\s*/, '').trim();
 
       if (!query) {
-        showTheaterToast("⚠️ Please enter or select a title to search.");
+        showTheaterToast("⚠️ Please enter or select a movie title to search.");
         return;
       }
 
@@ -4288,86 +4101,107 @@
         }
 
         if (results.length === 0) {
-          showTheaterToast(`❌ No TMDB matches found for "${query}". Try correcting the title.`);
-          closeAdminTrailerCandidates();
+          showTheaterToast(`❌ No TMDB matches found for "${query}". Try refining search keywords.`);
+          closeAdminMediaCandidates();
           return;
         }
 
-        // Fetch YouTube videos for top 4 media matches
-        const mediaMatches = results.slice(0, 4);
-        const candidateTrailers = [];
+        // Fetch videos and details for the top 6 matches
+        const candidateMedia = [];
+        const topSlice = results.slice(0, 6);
 
-        for (const media of mediaMatches) {
-          const endpoint = media.isTv ? `https://api.themoviedb.org/3/tv/${media.id}/videos?api_key=${_k}` : `https://api.themoviedb.org/3/movie/${media.id}/videos?api_key=${_k}`;
+        for (const m of topSlice) {
+          const endpoint = m.isTv
+            ? `https://api.themoviedb.org/3/tv/${m.id}?api_key=${_k}&append_to_response=videos`
+            : `https://api.themoviedb.org/3/movie/${m.id}?api_key=${_k}&append_to_response=videos`;
+
+          let videoKey = null;
+          let videoName = 'Official Trailer';
+          let genres = '';
+          let runtime = '';
+
           try {
-            const vRes = await fetch(endpoint);
-            if (vRes.ok) {
-              const vData = await vRes.json();
-              const vList = (vData.results || []).filter(v => v.site === 'YouTube' && v.key);
+            const dRes = await fetch(endpoint);
+            if (dRes.ok) {
+              const dData = await dRes.json();
+              if (dData.genres && Array.isArray(dData.genres)) {
+                genres = dData.genres.map(g => g.name).join(', ');
+              }
+              if (dData.runtime) {
+                const h = Math.floor(dData.runtime / 60);
+                const min = dData.runtime % 60;
+                runtime = `${h > 0 ? h + 'h ' : ''}${min}m`;
+              }
+              const vList = (dData.videos && dData.videos.results) ? dData.videos.results.filter(v => v.site === 'YouTube' && v.key) : [];
               vList.sort((a, b) => {
                 const aScore = (a.type === 'Trailer' ? 2 : 0) + (a.official ? 1 : 0);
                 const bScore = (b.type === 'Trailer' ? 2 : 0) + (b.official ? 1 : 0);
                 return bScore - aScore;
               });
-
-              vList.slice(0, 2).forEach(v => {
-                candidateTrailers.push({
-                  mediaId: media.id,
-                  mediaTitle: media.title || media.name || query,
-                  mediaYear: (media.release_date || media.first_air_date || '').split('-')[0] || 'N/A',
-                  isTv: !!media.isTv,
-                  videoKey: v.key,
-                  videoName: v.name || v.type || 'Trailer',
-                  videoType: v.type || 'Trailer',
-                  official: !!v.official
-                });
-              });
+              if (vList.length > 0) {
+                videoKey = vList[0].key;
+                videoName = vList[0].name || vList[0].type || 'Trailer';
+              }
             }
           } catch(e) {}
+
+          const backdropUrl = m.backdrop_path ? `https://image.tmdb.org/t/p/w780${m.backdrop_path}` : null;
+          const posterUrl = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : null;
+          const cYear = (m.release_date || m.first_air_date || '').split('-')[0] || 'N/A';
+
+          candidateMedia.push({
+            id: m.id,
+            title: m.title || m.name || query,
+            year: cYear,
+            overview: m.overview || '',
+            backdropUrl: backdropUrl || posterUrl || '',
+            posterUrl: posterUrl || backdropUrl || '',
+            videoKey: videoKey,
+            videoName: videoName,
+            genres: genres,
+            runtime: runtime,
+            isTv: !!m.isTv
+          });
         }
 
-        if (candidateTrailers.length === 0) {
-          showTheaterToast(`⚠️ No YouTube trailers found on TMDB for "${query}". You can paste any YouTube link manually.`);
-          closeAdminTrailerCandidates();
-          return;
-        }
+        window.currentAdminMediaCandidates = candidateMedia;
 
-        window.currentAdminTrailerCandidates = candidateTrailers;
-
-        if (countBadge) countBadge.textContent = `${candidateTrailers.length} Trailer${candidateTrailers.length > 1 ? 's' : ''}`;
+        if (countBadge) countBadge.textContent = `${candidateMedia.length} Match${candidateMedia.length > 1 ? 'es' : ''}`;
 
         if (grid) {
-          grid.innerHTML = candidateTrailers.map((ct, idx) => {
-            const safeMediaTitle = escapeHtml(ct.mediaTitle);
-            const safeVideoName = escapeHtml(ct.videoName);
-            const thumbUrl = `https://img.youtube.com/vi/${ct.videoKey}/mqdefault.jpg`;
-            const mediaBadge = ct.isTv ? '<span class="text-[9px] px-1 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono">TV</span>' : '<span class="text-[9px] px-1 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">Movie</span>';
-            const officialBadge = ct.official ? '<span class="text-[9px] px-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">Official</span>' : '';
+          grid.innerHTML = candidateMedia.map((c, idx) => {
+            const safeTitle = escapeHtml(c.title);
+            const thumbUrl = c.backdropUrl || c.posterUrl || (c.videoKey ? `https://img.youtube.com/vi/${c.videoKey}/mqdefault.jpg` : '');
+            const mediaBadge = c.isTv
+              ? '<span class="text-[9px] px-1 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono">TV</span>'
+              : '<span class="text-[9px] px-1 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">Movie</span>';
+            const trailerBadge = c.videoKey
+              ? '<span class="text-[9px] px-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">Trailer ✓</span>'
+              : '<span class="text-[9px] px-1 rounded bg-slate-900 text-slate-500 border border-slate-800 font-mono">No Trailer</span>';
 
             return `
-              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-rose-500/50 transition flex flex-col gap-2 shadow">
+              <div onclick="selectAdminMediaCandidate(${idx})" class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-400/80 transition flex flex-col gap-2 shadow cursor-pointer group">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold text-slate-100 truncate max-w-[170px]" title="${safeMediaTitle}">${safeMediaTitle}</span>
+                  <span class="text-xs font-bold text-slate-100 truncate group-hover:text-amber-300 transition max-w-[170px]" title="${safeTitle}">${safeTitle}</span>
                   <div class="flex items-center gap-1">
                     ${mediaBadge}
-                    ${officialBadge}
-                    <span class="text-[10px] text-amber-400 font-mono">${escapeHtml(ct.mediaYear)}</span>
+                    ${trailerBadge}
+                    <span class="text-[10px] text-amber-400 font-mono">${escapeHtml(c.year)}</span>
                   </div>
                 </div>
 
-                <button type="button" onclick="selectAdminTrailerCandidate(${idx})" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-rose-400 transition flex flex-col items-center justify-end p-1.5 text-left bg-black shadow-inner">
-                  <img src="${thumbUrl}" alt="${safeMediaTitle}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition" loading="lazy">
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
-                  
-                  <div class="absolute inset-0 flex items-center justify-center opacity-70 group-hover:opacity-100 transition">
-                    <span class="w-8 h-8 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition text-xs">▶</span>
+                <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-slate-750 bg-black shadow-inner">
+                  ${thumbUrl ? `<img src="${escapeHtml(thumbUrl)}" alt="${safeTitle}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" loading="lazy">` : `<div class="w-full h-full flex items-center justify-center text-xs text-slate-600">No Image</div>`}
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent"></div>
+                  <div class="absolute bottom-1.5 left-2 right-2 flex items-center justify-between">
+                    <span class="text-[9px] font-bold text-amber-300 font-mono">Apply Poster, Trailer & Summary</span>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 font-black">Select ⚡</span>
                   </div>
+                </div>
 
-                  <div class="relative z-10 flex items-center justify-between w-full px-1">
-                    <span class="text-[10px] font-bold text-rose-300 font-sans truncate max-w-[160px]">${safeVideoName}</span>
-                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-200 border border-rose-800 font-mono font-bold shrink-0">Select 🎬</span>
-                  </div>
-                </button>
+                <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                  ${escapeHtml(c.overview || "No TMDB overview available.")}
+                </p>
               </div>
             `;
           }).join('');
@@ -4378,19 +4212,178 @@
           container.classList.add('flex');
         }
 
-        // Auto-select the top result ready for preview without blasting autoplay audio
-        const top = candidateTrailers[0];
-        if (top && top.videoKey) {
-          applyAdminCandidateTrailer(top.videoKey, top.mediaTitle, top.videoName, false, false);
+        // Auto-populate top match into all inputs without playing audio
+        if (candidateMedia.length > 0) {
+          applyAdminCandidateMedia(candidateMedia[0], false);
         }
 
-        showTheaterToast(`🎬 Found ${candidateTrailers.length} TMDB trailer${candidateTrailers.length > 1 ? 's' : ''} for "${query}"!`);
+        showTheaterToast(`✨ Found ${candidateMedia.length} TMDB match${candidateMedia.length > 1 ? 'es' : ''} for "${query}"!`);
 
       } catch(e) {
-        showTheaterToast("❌ TMDB trailer search failed: " + e.message);
+        showTheaterToast("❌ TMDB search failed: " + e.message);
       } finally {
         if (btn) btn.innerHTML = '<span>🔍</span> Search TMDB';
       }
+    }
+
+    function selectAdminMediaCandidate(idx) {
+      const candidate = window.currentAdminMediaCandidates && window.currentAdminMediaCandidates[idx];
+      if (!candidate) return;
+      applyAdminCandidateMedia(candidate, true);
+    }
+
+    function applyAdminCandidateMedia(candidate, showToast = true) {
+      if (!candidate) return;
+
+      // 1. Artwork Sub-Panel
+      const artUrl = candidate.backdropUrl || candidate.posterUrl;
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const caption = document.getElementById('adminArtworkPreviewCaption');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+
+      if (artUrl) {
+        if (urlInput) urlInput.value = artUrl;
+        if (previewImg) previewImg.src = artUrl;
+        if (caption) caption.textContent = `${candidate.title} (${candidate.year})`;
+        if (urlText) urlText.textContent = artUrl;
+      }
+
+      // 2. Trailer Sub-Panel
+      const trInput = document.getElementById('adminTrailerCustomUrlInput');
+      const previewIframe = document.getElementById('adminTrailerPreviewIframe');
+      const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
+      const statusText = document.getElementById('adminTrailerPreviewStatus');
+      const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
+
+      if (candidate.videoKey) {
+        const fullTrUrl = `https://www.youtube.com/watch?v=${candidate.videoKey}`;
+        if (trInput) trInput.value = fullTrUrl;
+        if (previewIframe) {
+          previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(candidate.videoKey)}?rel=0`;
+          previewIframe.classList.remove('hidden');
+        }
+        if (placeholder) placeholder.classList.add('hidden');
+        if (statusText) statusText.textContent = `Selected (${candidate.videoName || 'Trailer'})`;
+        if (idDisplay) idDisplay.innerHTML = `Preview ID: <span class="text-emerald-400 font-bold">${escapeHtml(candidate.videoKey)}</span>`;
+      }
+
+      // 3. Summary & Synopsis Sub-Panel
+      const summaryInput = document.getElementById('adminMediaSummaryInput');
+      const yearInput = document.getElementById('adminMediaYearInput');
+      const runtimeInput = document.getElementById('adminMediaRuntimeInput');
+      const genreInput = document.getElementById('adminMediaGenreInput');
+
+      const prevTitle = document.getElementById('adminSummaryPreviewTitle');
+      const prevYear = document.getElementById('adminSummaryPreviewYear');
+      const prevText = document.getElementById('adminSummaryPreviewText');
+      const prevRuntime = document.getElementById('adminSummaryPreviewRuntime');
+      const prevGenres = document.getElementById('adminSummaryPreviewGenres');
+
+      if (candidate.overview && summaryInput) summaryInput.value = candidate.overview;
+      if (candidate.year && candidate.year !== 'N/A' && yearInput) yearInput.value = candidate.year;
+      if (candidate.runtime && runtimeInput) runtimeInput.value = candidate.runtime;
+      if (candidate.genres && genreInput) genreInput.value = candidate.genres;
+
+      if (prevTitle) prevTitle.textContent = candidate.title || "Selected Movie";
+      if (prevYear) prevYear.textContent = candidate.year || "N/A";
+      if (prevText) prevText.textContent = candidate.overview || "No summary text.";
+      if (prevRuntime) prevRuntime.textContent = `Runtime: ${candidate.runtime || '--'}`;
+      if (prevGenres) prevGenres.textContent = `Genres: ${candidate.genres || '--'}`;
+
+      if (showToast) {
+        showTheaterToast(`⚡ Applied TMDB media for "${candidate.title}". Click Save in any tab to apply!`);
+      }
+    }
+
+    function saveSelectedMovieArtwork() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      if (!urlInput) return;
+
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
+      const url = urlInput.value.trim();
+      if (!title || !url) {
+        showTheaterToast("⚠️ Please select a movie and provide an image URL.");
+        return;
+      }
+
+      customMovieImages[title] = url;
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+      } catch(e) {}
+
+      fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
+
+      renderSchedule();
+      renderVault();
+      populateAdminMediaStudio(true);
+
+      updateStageArtwork(false, document.getElementById('nowPlayingHeading')?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
+
+      showTheaterToast(`🎉 Success! Saved custom image for "${title}".`);
+    }
+
+    function resetSelectedMovieArtworkToDefault() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      if (!select) return;
+      const title = select.value.trim();
+      if (!title) return;
+
+      delete customMovieImages[title];
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+      } catch(e) {}
+
+      onAdminSelectMediaMovie();
+      renderSchedule();
+      renderVault();
+      showTheaterToast(`🔄 Reset artwork for "${title}" to default.`);
+    }
+
+    function previewCustomArtworkUrl() {
+      const url = document.getElementById('adminArtworkUrlInput')?.value.trim();
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+      if (url && previewImg) {
+        previewImg.src = url;
+        if (urlText) urlText.textContent = url;
+      }
+    }
+
+    function applySelectedArtworkToStageNow() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const url = urlInput?.value.trim();
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "Featured Movie";
+      if (!url) {
+        showTheaterToast("⚠️ Please specify an image URL first.");
+        return;
+      }
+
+      const stagePoster = document.getElementById('stagePoster');
+      const stagePosterBadgeTitle = document.getElementById('stagePosterBadgeTitle');
+      if (stagePoster) stagePoster.src = url;
+      if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `FEATURED: ${title}`;
+
+      showTheaterToast(`⭐ Updated Theater stage poster with "${title}" image!`);
+      switchTab('screening');
     }
 
     function saveSelectedMovieTrailer() {
@@ -4399,8 +4392,8 @@
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
-      const select = document.getElementById('adminTrailerMovieSelect');
-      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
       const input = document.getElementById('adminTrailerCustomUrlInput');
       if (!input) return;
 
@@ -4422,24 +4415,23 @@
       // Sync to Google Apps Script and Firebase
       fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' });
 
-      // Refresh schedule cards, vault cards, and preview
       renderSchedule();
       renderVault();
-      populateAdminTrailerSelector(true);
+      populateAdminMediaStudio(true);
       if (select && title) select.value = title;
-      onAdminSelectTrailerMovie();
+      onAdminSelectMediaMovie();
 
       showTheaterToast(`🎉 Success! Saved official trailer for "${title}".`);
     }
 
-    function clearSelectedMovieTrailer() {
+    function resetSelectedMovieTrailerToDefault() {
       if (!isAdmin) {
         openAdminAuthModal();
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
-      const select = document.getElementById('adminTrailerMovieSelect');
-      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
       const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
       if (!title) return;
 
@@ -4452,12 +4444,62 @@
 
       renderSchedule();
       renderVault();
-      onAdminSelectTrailerMovie();
+      onAdminSelectMediaMovie();
+      closeAdminMediaCandidates();
+      showTheaterToast(`🔄 Reset trailer for "${title}" to default.`);
+    }
+
+    function clearSelectedMovieTrailer() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
+      if (!title) return;
+
+      delete customMovieTrailers[title];
+      try {
+        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+      } catch(e) {}
+
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+
+      renderSchedule();
+      renderVault();
+      onAdminSelectMediaMovie();
       showTheaterToast(`🗑️ Cleared custom trailer for "${title}".`);
     }
 
+    function previewCustomTrailerInput() {
+      const input = document.getElementById('adminTrailerCustomUrlInput');
+      const previewIframe = document.getElementById('adminTrailerPreviewIframe');
+      const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
+      const statusText = document.getElementById('adminTrailerPreviewStatus');
+      const idDisplay = document.getElementById('adminTrailerCurrentIdDisplay');
+      if (!input) return;
+
+      const raw = input.value.trim();
+      const ytid = extractYouTubeId(raw) || (/^[\w-]{11}$/.test(raw) ? raw : null);
+
+      if (!ytid) {
+        showTheaterToast("⚠️ Please enter a valid YouTube video URL or 11-character video ID.");
+        return;
+      }
+
+      if (previewIframe) {
+        previewIframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytid)}?autoplay=1&rel=0`;
+        previewIframe.classList.remove('hidden');
+      }
+      if (placeholder) placeholder.classList.add('hidden');
+      if (statusText) statusText.textContent = `Previewing (${ytid})`;
+      if (idDisplay) idDisplay.innerHTML = `Preview ID: <span class="text-emerald-400 font-bold">${escapeHtml(ytid)}</span>`;
+    }
+
     function testSelectedMovieTrailerInTheater() {
-      const select = document.getElementById('adminTrailerMovieSelect');
+      const select = document.getElementById('adminMediaMovieSelect');
       const input = document.getElementById('adminTrailerCustomUrlInput');
       const title = select ? select.value.trim() : "Movie";
       const raw = input ? input.value.trim() : "";
@@ -4471,23 +4513,96 @@
       sendToScreeningRoom(ytid, title);
     }
 
-    function openAdminTrailerForMovie(title) {
+    function saveSelectedMovieSummary() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
+      if (!title) {
+        showTheaterToast("⚠️ Please select or specify a movie title first.");
+        return;
+      }
+
+      const summary = (document.getElementById('adminMediaSummaryInput')?.value || '').trim();
+      const year = (document.getElementById('adminMediaYearInput')?.value || '').trim();
+      const runtime = (document.getElementById('adminMediaRuntimeInput')?.value || '').trim();
+      const genres = (document.getElementById('adminMediaGenreInput')?.value || '').trim();
+
+      customMovieSummaries[title] = summary;
+      customMovieMetadata[title] = {
+        year: year,
+        runtime: runtime,
+        genres: genres,
+        summary: summary
+      };
+
+      try {
+        localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries));
+        localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
+      } catch(e) {}
+
+      // Sync summary & metadata to backend Google Apps Script
+      fetch(`${API_BASE_URL}?action=set_movie_summary&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}&year=${encodeURIComponent(year)}&runtime=${encodeURIComponent(runtime)}&genres=${encodeURIComponent(genres)}`, { mode: 'no-cors' });
+
+      renderSchedule();
+      renderVault();
+      onAdminSelectMediaMovie();
+
+      showTheaterToast(`🎉 Saved summary and metadata for "${title}"!`);
+    }
+
+    function resetSelectedMovieSummaryToDefault() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
+      if (!title) return;
+
+      delete customMovieSummaries[title];
+      delete customMovieMetadata[title];
+
+      try {
+        localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries));
+        localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
+      } catch(e) {}
+
+      renderSchedule();
+      renderVault();
+      onAdminSelectMediaMovie();
+
+      showTheaterToast(`🔄 Reset summary and metadata for "${title}" to default.`);
+    }
+
+    function openAdminMediaStudioForMovie(title, subtab = 'artwork') {
       if (!title) return;
       switchTab('admin');
+      setAdminSectionFilter('media');
+      if (subtab) switchMediaSubTab(subtab);
       setTimeout(() => {
-        const select = document.getElementById('adminTrailerMovieSelect');
-        if (select) {
-          const clean = title.replace(/^🎬\s*/, '').trim();
-          for (let i = 0; i < select.options.length; i++) {
-            if (select.options[i].value.toLowerCase() === clean.toLowerCase()) {
-              select.selectedIndex = i;
-              onAdminSelectTrailerMovie();
-              select.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              break;
-            }
-          }
-        }
+        selectMovieFromMediaStudio(title, subtab);
       }, 150);
+    }
+
+    // Compatibility Aliases for Legacy Handlers
+    function populateAdminArtworkSelector(force = false) {
+      populateAdminMediaStudio(force);
+    }
+    function populateAdminTrailerSelector(force = false) {
+      populateAdminMediaStudio(force);
+    }
+    function openAdminArtworkForMovie(title) {
+      openAdminMediaStudioForMovie(title, 'artwork');
+    }
+    function openAdminTrailerForMovie(title) {
+      openAdminMediaStudioForMovie(title, 'trailers');
     }
 
     async function handleFormSubmit(e) {
@@ -5229,8 +5344,15 @@
 
             <!-- Summary Section (Identical to Schedule Tab) -->
             <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
-              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <span>💬</span> SUMMARY
+              <div class="flex items-center justify-between mb-1">
+                <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                  <span>💬</span> SUMMARY
+                </div>
+                ${isAdmin ? `
+                <button type="button" onclick="openAdminMediaStudioForMovie('${escapeHtml(cleanTitle)}', 'summary')" title="Admin: Edit Summary" class="text-[10px] text-amber-400 hover:text-amber-300 px-1.5 py-0.5 rounded bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 transition flex items-center gap-1">
+                  <span>✏️</span> Edit
+                </button>
+                ` : ''}
               </div>
               <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
             </div>
@@ -5270,17 +5392,9 @@
               <button onclick="window.open('https://www.youtube.com/watch?v=${escapeHtml(trailerId)}', '_blank')" title="Watch on YouTube" class="flex-1 sm:flex-initial text-xs font-semibold px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center justify-center gap-1.5 active:scale-95">
                 <span>▶</span> YouTube ↗
               </button>
-              ` : (isScheduled ? `
-              <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Scheduled screening">
-                <span>🗓️</span> Scheduled Screening
-              </span>
-              ` : ((isRequest && !d.isConcluded && !d.watchDate) ? `
-              <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Trailer verified once scheduled">
-                <span>⏳</span> Awaiting Schedule
-              </span>
               ` : `
               <span class="flex-1 text-xs text-slate-500 font-mono py-1.5 text-center">No Trailer</span>
-              `))}
+              `}
 
               ${isAdmin ? `
               <button onclick="openAdminTrailerForMovie('${escapeHtml(cleanTitle)}')" title="Admin: Configure Trailer" class="text-xs px-2.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition active:scale-95 shrink-0 ml-auto">
@@ -5385,14 +5499,39 @@
       });
       if (normExact) return normExact;
 
+      // Check if item is an archived past screening: do not allow loose substring matching to link past archive movies to future schedule items!
+      const isPastArchive = (typeof item === 'object') && (
+        item.source === 'past' ||
+        !!item.watchDate ||
+        !!item.watchedDate ||
+        item.isConcluded ||
+        (item.year && parseInt(item.year, 10) < 2026 && !item.scheduledDate)
+      );
+      if (isPastArchive) {
+        return null;
+      }
+
       // 4. Substring matches, preferring the longest matching title to prevent false collisions
       const partials = schedList.filter(s => {
         if (!s) return false;
         const sTitle = String(s.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
         const dMatch = (s.desc || '').match(/Movie:\s*([^\r\n]+)/i);
         const dTitle = dMatch ? dMatch[1].replace(/^🎬\s*/, '').toLowerCase().trim() : '';
-        return (sTitle && (sTitle.includes(title) || title.includes(sTitle))) ||
-               (dTitle && (dTitle.includes(title) || title.includes(dTitle)));
+
+        // Disallow matching if one title is significantly longer than the other without a colon delimiter
+        const matchTitle = (cand) => {
+          if (!cand) return false;
+          if (cand === title) return true;
+          if (cand.includes(':') || title.includes(':')) {
+            const candBase = cand.split(':')[0].trim();
+            const titleBase = title.split(':')[0].trim();
+            if (candBase === titleBase) return true;
+          }
+          if (Math.abs(cand.length - title.length) > 10) return false;
+          return cand.includes(title) || title.includes(cand);
+        };
+
+        return matchTitle(sTitle) || (dTitle && matchTitle(dTitle));
       }).sort((a, b) => {
         const lenA = Math.max((a.title || '').length, ((a.desc || '').match(/Movie:\s*([^\r\n]+)/i)?.[1] || '').length);
         const lenB = Math.max((b.title || '').length, ((b.desc || '').match(/Movie:\s*([^\r\n]+)/i)?.[1] || '').length);
@@ -5556,21 +5695,31 @@
 
       const finalYear = releaseYear || (m.year && m.year !== 'Past' ? m.year : (watchDate ? (watchDate.match(/\b(19\d\d|20\d\d)\b/) ? watchDate.match(/\b(19\d\d|20\d\d)\b/)[1] : '2026') : '2026'));
 
+      // Check custom metadata and summary overrides
+      const cleanLower = cleanT.toLowerCase();
+      const customSummary = (typeof customMovieSummaries !== 'undefined') ? (customMovieSummaries[m.title] || customMovieSummaries[cleanT] || customMovieSummaries[cleanLower]) : null;
+      const customMeta = (typeof customMovieMetadata !== 'undefined') ? (customMovieMetadata[m.title] || customMovieMetadata[cleanT] || customMovieMetadata[cleanLower]) : null;
+
+      const finalSummary = customSummary || summary;
+      const finalYearResult = (customMeta && customMeta.year) ? customMeta.year : finalYear;
+      const finalRuntime = (customMeta && customMeta.runtime) ? customMeta.runtime : runtime;
+      const finalGenres = (customMeta && customMeta.genres) ? customMeta.genres : genres;
+
       return {
-        releaseYear: finalYear,
-        year: finalYear,
+        releaseYear: finalYearResult,
+        year: finalYearResult,
         watchDate,
         watchDateFormatted: watchDateFormatted || watchDate,
         isScheduled,
         isConcluded,
         scheduledDate: scheduledDate || watchDateFormatted || watchDate,
         location: m.location || '',
-        runtime,
+        runtime: finalRuntime,
         rating,
-        genres,
+        genres: finalGenres,
         teaser,
         fullStory,
-        summary,
+        summary: finalSummary,
         startTime,
         endTime
       };
@@ -5769,10 +5918,20 @@
       }
       if (!endTime) endTime = "8:45 PM";
 
+      // Check custom overrides for schedule movie
+      const cleanTitle = (s.title || '').replace(/^🎬\s*/, '').trim();
+      const lowerClean = cleanTitle.toLowerCase();
+      const customSummary = (typeof customMovieSummaries !== 'undefined') ? (customMovieSummaries[s.title] || customMovieSummaries[cleanTitle] || customMovieSummaries[lowerClean]) : null;
+      const customMeta = (typeof customMovieMetadata !== 'undefined') ? (customMovieMetadata[s.title] || customMovieMetadata[cleanTitle] || customMovieMetadata[lowerClean]) : null;
+
+      const finalSummary = customSummary || summary;
+      const finalYear = (customMeta && customMeta.year) ? customMeta.year : year;
+      const finalRuntime = (customMeta && customMeta.runtime) ? customMeta.runtime : runtime;
+
       return {
-        year,
-        runtime,
-        summary,
+        year: finalYear,
+        runtime: finalRuntime,
+        summary: finalSummary,
         startTime,
         endTime
       };
@@ -5863,8 +6022,15 @@
 
           <!-- Summary Section -->
           <div class="mt-2.5 text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-850">
-            <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <span>💬</span> SUMMARY
+            <div class="flex items-center justify-between mb-1">
+              <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                <span>💬</span> SUMMARY
+              </div>
+              ${isAdmin ? `
+              <button type="button" onclick="openAdminMediaStudioForMovie('${escapeHtml(s.title || '')}', 'summary')" title="Admin: Edit Summary" class="text-[10px] text-amber-400 hover:text-amber-300 px-1.5 py-0.5 rounded bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 transition flex items-center gap-1">
+                <span>✏️</span> Edit
+              </button>
+              ` : ''}
             </div>
             <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
           </div>

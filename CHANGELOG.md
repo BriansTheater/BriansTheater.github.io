@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.80] - 2026-09-06
+
+### What's New
+- Unified movie media studio consolidates posters, trailers, and summaries.
+- Added editable plot summary, year, runtime, and genre controls.
+- Corrected 2025 Mystery Scary Movie Marathon date and time.
+- Prevented past marathon titles from colliding with upcoming schedule.
+- Removed redundant scheduled status badges from vault trailer row.
+
 ## [4.9.79] - 2026-09-06
 
 ### What's New

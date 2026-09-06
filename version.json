@@ -1,12 +1,12 @@
 {
-  "version": "4.9.79",
+  "version": "4.9.80",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.79",
+  "title": "Brian's Theater v4.9.80",
   "notes": [
-    "Fixed trailer dropdown resetting to top movie during background sync.",
-    "Preserved selected movie and query during live catalog updates.",
-    "Prevented background sync from wiping active trailer search candidates.",
-    "Safe indexed candidate cards prevent special character parsing bugs.",
-    "Disabled intrusive autoplay audio on initial candidate auto-selection."
+    "Unified movie media studio consolidates posters, trailers, and summaries.",
+    "Added editable plot summary, year, runtime, and genre controls.",
+    "Corrected 2025 Mystery Scary Movie Marathon date and time.",
+    "Prevented past marathon titles from colliding with upcoming schedule.",
+    "Removed redundant scheduled status badges from vault trailer row."
   ]
 }
