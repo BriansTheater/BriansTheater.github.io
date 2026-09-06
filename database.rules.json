@@ -1,6 +1,34 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    ".read": false,
+    ".write": "auth != null",
+    "accountQuota": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "theaterSync": {
+      ".read": true,
+      ".write": "auth != null",
+      "doorMode": {
+        ".read": true,
+        ".write": "auth != null || (newData.isString() && (newData.val() == 'force_open' || newData.val() == 'force_closed' || newData.val() == 'auto'))"
+      },
+      "pendingRequests": {
+        ".read": true,
+        ".write": "auth != null",
+        "$reqId": {
+          ".write": "auth != null || (!data.exists() && newData.exists())",
+          ".validate": "!newData.exists() || (newData.hasChildren(['id', 'title', 'requester', 'timestamp']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 200)"
+        }
+      },
+      "requests": {
+        ".read": true,
+        ".write": "auth != null",
+        "$reqId": {
+          ".write": "auth != null || !data.exists() || !newData.exists()",
+          ".validate": "!newData.exists() || (newData.hasChildren(['title', 'requester']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 200)"
+        }
+      }
+    }
   }
 }
