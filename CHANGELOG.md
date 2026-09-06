@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.94] - 2026-09-06
+
+### What's New
+- Moved festival date badges down into metadata pill rows.
+- Opened top-right sky for unblocked living motion animations.
+- Fluttering bat and ghost now move freely without obstruction.
+- Drifting snowflakes and sparkles glide across open card headers.
+- Harmonized badge hierarchy across all Halloween and Christmas cards.
+- Verified clean responsive layouts and zero console errors.
+
 ## [4.9.93] - 2026-09-06
 
 ### What's New

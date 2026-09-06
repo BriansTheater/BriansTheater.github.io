@@ -1,13 +1,13 @@
 {
-  "version": "4.9.93",
+  "version": "4.9.94",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.93",
+  "title": "Brian's Theater v4.9.94",
   "notes": [
-    "Pumpkin Ember morphic card for 2025 Halloween Marathon.",
-    "Added animated fluttering bat and floating spectral ghost wisp.",
-    "Pulsing candlelight ambient glow with purple graveyard fog backdrop.",
-    "Glossy molten amber-orange gradient action button with active styling.",
-    "Added companion swaying snow and twinkling stars to Christmas.",
-    "Full interactive vault filtering and responsive layout verified."
+    "Moved festival date badges down into metadata pill rows.",
+    "Opened top-right sky for unblocked living motion animations.",
+    "Fluttering bat and ghost now move freely without obstruction.",
+    "Drifting snowflakes and sparkles glide across open card headers.",
+    "Harmonized badge hierarchy across all Halloween and Christmas cards.",
+    "Verified clean responsive layouts and zero console errors."
   ]
 }
