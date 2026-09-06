@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.48] - 2026-09-06
+
+### What's New
+- Transformed movie request tab into multi-color morphic theme.
+- Integrated glassmorphic frosted cards with ambient color glows.
+- Updated platform badges with signature iridescent brand gradient.
+- Enhanced TMDb movie suggestions with frosted glass styling.
+- Redesigned digital request pass with glowing holographic accents.
+
 ## [4.9.47] - 2026-09-06
 
 ### What's New

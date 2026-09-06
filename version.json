@@ -1,12 +1,12 @@
 {
-  "version": "4.9.47",
+  "version": "4.9.48",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.47",
+  "title": "Brian's Theater v4.9.48",
   "notes": [
-    "Built custom cinematic front-end for Google Form movie requests.",
-    "Added real-time movie suggestions with live poster previews.",
-    "Integrated interactive streaming platform badges and selection chips.",
-    "Created official digital ticket confirmation pass for requests.",
-    "Enabled seamless CORS-free submission directly to Google Sheets."
+    "Transformed movie request tab into multi-color morphic theme.",
+    "Integrated glassmorphic frosted cards with ambient color glows.",
+    "Updated platform badges with signature iridescent brand gradient.",
+    "Enhanced TMDb movie suggestions with frosted glass styling.",
+    "Redesigned digital request pass with glowing holographic accents."
   ]
 }
