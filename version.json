@@ -1,12 +1,12 @@
 {
-  "version": "4.9.40",
+  "version": "4.9.41",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.40",
+  "title": "Brian's Theater v4.9.41",
   "notes": [
-    "Renamed Movie Vault tab to Vault across entire app.",
-    "Updated main menu navigation bar with Vault label.",
-    "Updated mobile sidebar drawer link to Vault.",
-    "Updated home screen PWA shortcut title to Vault.",
-    "Cleaned navigation bar layout for streamlined theater browsing."
+    "Consolidated update alert into single popup with summary.",
+    "Eliminated duplicate post-reload popup so page loads cleanly.",
+    "Renamed Vault archive title to Movie Vault & Archive.",
+    "Simplified update alerts modal title and update summary.",
+    "Enhanced theater loading speed and smooth navigation flow."
   ]
 }

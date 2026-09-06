@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.41] - 2026-09-05
+
+### What's New
+- Consolidated update alert into single popup with summary.
+- Eliminated duplicate post-reload popup so page loads cleanly.
+- Renamed Vault archive title to Movie Vault & Archive.
+- Simplified update alerts modal title and update summary.
+- Enhanced theater loading speed and smooth navigation flow.
+
 ## [4.9.40] - 2026-09-05
 
 ### What's New
