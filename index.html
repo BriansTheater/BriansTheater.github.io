@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.30 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.31 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -446,7 +446,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.30</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.31</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -641,12 +641,16 @@
     <div class="max-w-5xl mx-auto flex flex-col gap-6">
 
       <div class="flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 gap-2">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <span>🎬 Brian's Theater</span>
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.30</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.31</span>
+          <span>•</span>
+          <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
+            <span>✨</span> <span>What's New</span>
+          </button>
         </div>
       </div>
 
@@ -794,8 +798,13 @@
 
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-      <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.30</span>
+      <div class="flex items-center gap-2">
+        <span>Brian's Theater</span>
+        <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false }); toggleSidebar(false);" class="text-[10px] text-amber-400 hover:text-amber-300 font-sans font-bold flex items-center gap-1 cursor-pointer transition">
+          <span>✨</span> <span>What's New</span>
+        </button>
+      </div>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.31</span>
     </div>
 
   </aside>
@@ -994,11 +1003,50 @@
     </div>
   </div>
 
+  <!-- NEW VERSION POPUP TOASTER ALERT WITH APP STORE SUMMARY -->
+  <div id="appUpdateToast" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 max-w-sm sm:max-w-md w-[calc(100%-2rem)] bg-slate-950/95 backdrop-blur-xl border border-sky-500/50 rounded-2xl p-4 sm:p-5 shadow-2xl transition-all transform duration-300 pointer-events-none opacity-0 translate-y-6 flex flex-col gap-3.5">
+    
+    <!-- Header -->
+    <div class="flex items-start justify-between gap-2.5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow-md shrink-0">
+          ✨
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h4 id="updateToastTitle" class="text-sm font-bold text-slate-100">Update Available</h4>
+            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.31</span>
+          </div>
+          <p id="updateToastSubtitle" class="text-[11px] text-slate-400 mt-0.5">What's New in this release:</p>
+        </div>
+      </div>
+      <button type="button" onclick="dismissAppUpdateToast()" class="text-slate-400 hover:text-slate-200 text-lg leading-none p-1 rounded-lg hover:bg-slate-900 transition" aria-label="Dismiss">&times;</button>
+    </div>
+
+    <!-- App Store Style Feature Bullet Points -->
+    <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800/80 max-h-48 overflow-y-auto custom-scrollbar">
+      <ul id="updateToastList" class="space-y-1.5 text-xs text-slate-300 font-medium">
+        <!-- Dynamically populated release notes -->
+      </ul>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="flex items-center gap-2 pt-1">
+      <button type="button" id="btnUpdateAppRefresh" onclick="refreshAndUpdateApp()" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-sky-500 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-sky-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
+        <span>🔄</span> <span id="btnUpdateAppRefreshLabel">Refresh & Update Now</span>
+      </button>
+      <button type="button" id="btnUpdateAppDismiss" onclick="dismissAppUpdateToast()" class="py-2.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold transition active:scale-95">
+        Later
+      </button>
+    </div>
+
+  </div>
+
   <!-- Pre-cached 398+ Past Movies Catalog Data for Instant Offline/Direct Vault Search -->
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.30";
+    const APP_VERSION = "4.9.31";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1337,18 +1385,125 @@
       }
     }
 
+    // ========================================================
+    // APP STORE STYLE UPDATE TOASTER & SERVICE WORKER CONTROLLER
+    // ========================================================
+    let waitingServiceWorker = null;
+
+    // App Store Style Release Notes for Brian's Theater
+    const APP_STORE_RELEASES = {
+      "4.9.31": [
+        "Popup toaster alerts for new app versions.",
+        "One-click refresh button to instantly install updates.",
+        "App Store style What's New feature release notes.",
+        "On-demand What's New viewer in sidebar and footer.",
+        "Smooth slide-in glassmorphism animations for updates."
+      ],
+      "4.9.30": [
+        "Next movie automatically rolls over when screening concludes.",
+        "Stage now features next premiere artwork and date display.",
+        "Added working trailer player and YouTube button on stage.",
+        "Added Add to Calendar reminder button on main stage.",
+        "Synchronized live changes in real time via Firebase stream.",
+        "Renamed Schedule and Next Up menu tab to Schedule."
+      ]
+    };
+
+    function showAppUpdateToast(options = {}) {
+      const toast = document.getElementById('appUpdateToast');
+      const titleEl = document.getElementById('updateToastTitle');
+      const badgeEl = document.getElementById('updateToastBadge');
+      const subtitleEl = document.getElementById('updateToastSubtitle');
+      const listEl = document.getElementById('updateToastList');
+      const refreshBtn = document.getElementById('btnUpdateAppRefresh');
+      const refreshLabel = document.getElementById('btnUpdateAppRefreshLabel');
+      const dismissBtn = document.getElementById('btnUpdateAppDismiss');
+
+      if (!toast) return;
+
+      const version = options.version || APP_VERSION;
+      const isAvailable = options.isUpdateAvailable !== false;
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.31"] || [];
+
+      if (titleEl) titleEl.textContent = isAvailable ? "New Version Available" : "What's New";
+      if (badgeEl) badgeEl.textContent = `v${version}`;
+      if (subtitleEl) subtitleEl.textContent = isAvailable ? "Fresh improvements ready to install:" : `Shipped in version ${version}:`;
+
+      if (listEl) {
+        listEl.innerHTML = changes.map(bullet => `
+          <li class="flex items-start gap-2 leading-relaxed">
+            <span class="text-sky-400 shrink-0 mt-0.5">•</span>
+            <span>${escapeHtml(bullet)}</span>
+          </li>
+        `).join('');
+      }
+
+      if (refreshBtn && refreshLabel) {
+        if (isAvailable) {
+          refreshLabel.textContent = "Refresh & Update Now";
+          refreshBtn.onclick = refreshAndUpdateApp;
+          if (dismissBtn) dismissBtn.classList.remove('hidden');
+        } else {
+          refreshLabel.textContent = "Got it! 👍";
+          refreshBtn.onclick = dismissAppUpdateToast;
+          if (dismissBtn) dismissBtn.classList.add('hidden');
+        }
+      }
+
+      toast.classList.remove('opacity-0', 'translate-y-6', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+    }
+
+    function dismissAppUpdateToast() {
+      const toast = document.getElementById('appUpdateToast');
+      if (toast) {
+        toast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+        toast.classList.add('opacity-0', 'translate-y-6', 'pointer-events-none');
+      }
+      try {
+        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
+      } catch(e) {}
+    }
+
+    function refreshAndUpdateApp() {
+      if (waitingServiceWorker) {
+        waitingServiceWorker.postMessage({ action: 'skipWaiting' });
+      }
+      try {
+        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
+      } catch(e) {}
+      
+      const refreshBtn = document.getElementById('btnUpdateAppRefresh');
+      if (refreshBtn) {
+        refreshBtn.innerHTML = '<span>⏳</span> <span>Updating App...</span>';
+      }
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 250);
+    }
+
     // Register Service Worker for offline caching & PWA eligibility
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
           .then(reg => {
             console.log('PWA Service Worker registered:', reg.scope);
+
+            // 1. If an updated worker is already waiting, prompt immediately
+            if (reg.waiting) {
+              waitingServiceWorker = reg.waiting;
+              showAppUpdateToast({ isUpdateAvailable: true });
+            }
+
+            // 2. When a new service worker is installing/found
             reg.addEventListener('updatefound', () => {
               const newWorker = reg.installing;
               if (newWorker) {
                 newWorker.addEventListener('statechange', () => {
                   if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    console.log("New Brian's Theater PWA Service Worker activated.");
+                    waitingServiceWorker = newWorker;
+                    showAppUpdateToast({ isUpdateAvailable: true });
                   }
                 });
               }
@@ -1357,6 +1512,16 @@
           .catch(err => console.warn('PWA Service Worker error:', err));
       });
     }
+
+    // Check for What's New on initial startup if updated
+    try {
+      const lastViewed = localStorage.getItem('brian_theater_last_viewed_version');
+      if (lastViewed && lastViewed !== APP_VERSION) {
+        setTimeout(() => {
+          showAppUpdateToast({ version: APP_VERSION, isUpdateAvailable: false });
+        }, 1200);
+      }
+    } catch(e) {}
 
     // Capture Android / Chrome PWA install banner prompt
     window.addEventListener('beforeinstallprompt', e => {
@@ -2803,6 +2968,11 @@
         doorOverrideMode = data.doorMode;
         try { localStorage.setItem('brian_theater_door_mode', doorOverrideMode); } catch(e) {}
         updateDoorAdminButtons();
+      }
+
+      // Check if Firebase broadcasts a newer app version
+      if (data.appVersion && data.appVersion !== APP_VERSION) {
+        showAppUpdateToast({ version: data.appVersion, isUpdateAvailable: true });
       }
 
       updateStageArtwork(isLive, data.nowPlaying, data.nextTitle, data);

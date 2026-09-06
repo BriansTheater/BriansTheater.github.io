@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.31] - 2026-09-05
+
+### What's New
+- Added popup toaster alert for new app updates.
+- Added one-click button to refresh and apply updates.
+- Displays App Store style summary of new features.
+- Added on-demand What's New viewer in mobile menu.
+- Added What's New link beside footer version badge.
+- Updated Service Worker cache to version 4.9.31.
+
 ## [4.9.30] - 2026-09-05
 
 ### What's New

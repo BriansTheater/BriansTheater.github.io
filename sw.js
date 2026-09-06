@@ -1,11 +1,11 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.30
+// VERSION: 4.9.31
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.30';
+const CACHE_NAME = 'brian-theater-v4.9.31';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -16,6 +16,12 @@ const STATIC_ASSETS = [
   './icons/icon-maskable.png',
   './icons/apple-touch-icon.png'
 ];
+
+self.addEventListener('message', event => {
+  if (event.data && (event.data.action === 'skipWaiting' || event.data.type === 'SKIP_WAITING')) {
+    self.skipWaiting();
+  }
+});
 
 self.addEventListener('install', event => {
   event.waitUntil(
