@@ -1,12 +1,12 @@
 {
-  "version": "4.9.77",
+  "version": "4.9.78",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.77",
+  "title": "Brian's Theater v4.9.78",
   "notes": [
-    "Added title correction input to Movie Posters Artwork Manager.",
-    "Introduced interactive visual TMDB candidate gallery for custom artwork.",
-    "Added quick navigation section switcher to Admin Control Studio.",
-    "Populated movie selector with all scheduled and vault titles.",
-    "Replaced blocking browser alerts with sleek inline status toasts."
+    "Added title correction input to Movie Trailers Preview Manager.",
+    "Introduced interactive visual TMDB candidate gallery for trailers.",
+    "Added one-click YouTube video preview to trailer candidate cards.",
+    "Added one-click reset to default trailer in admin studio.",
+    "Upgraded trailer search to multi-search with TV show fallback."
   ]
 }

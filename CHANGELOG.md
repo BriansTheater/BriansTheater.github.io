@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.78] - 2026-09-06
+
+### What's New
+- Added title correction input to Movie Trailers Preview Manager.
+- Introduced interactive visual TMDB candidate gallery for trailers.
+- Added one-click YouTube video preview to trailer candidate cards.
+- Added one-click reset to default trailer in admin studio.
+- Upgraded trailer search to multi-search with TV show fallback.
+
 ## [4.9.77] - 2026-09-06
 
 ### What's New
