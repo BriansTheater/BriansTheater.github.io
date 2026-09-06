@@ -1,12 +1,12 @@
 {
-  "version": "4.9.63",
+  "version": "4.9.64",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.63",
+  "title": "Brian's Theater v4.9.64",
   "notes": [
-    "Built sleek Search & Edit Movies popup modal for sheets.",
-    "Added real-time debounced title search across past movies catalog.",
-    "Implemented instant row jumping and title renaming capabilities.",
-    "Integrated Search & Edit Movies into primary theater menus.",
-    "Pushed updated Apps Script backend across project environments."
+    "Moved live movie, TV, and unsorted stats to search popup.",
+    "Added one-click type filtering across past movies catalog.",
+    "Added color-coded classification badges to all result cards.",
+    "Enabled instant type reclassification directly from the modal.",
+    "Deployed updated backend and search dialog to Apps Script."
   ]
 }

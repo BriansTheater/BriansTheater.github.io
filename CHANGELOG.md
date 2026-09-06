@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.64] - 2026-09-06
+
+### What's New
+- Moved live movie, TV, and unsorted stats to search popup.
+- Added one-click type filtering across past movies catalog.
+- Added color-coded classification badges to all result cards.
+- Enabled instant type reclassification directly from the modal.
+- Deployed updated backend and search dialog to Apps Script.
+
 ## [4.9.63] - 2026-09-06
 
 ### What's New
