@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.81] - 2026-09-06
+
+### What's New
+- Added styled scrollbars to movie card plot summaries.
+- Preserved clean multi-line breaks across all movie summaries.
+- Formatted 2025 Mystery Scary Movie Marathon full lineup.
+- Enhanced admin media studio summary preview with scrollbars.
+- Supported scrollable synopsis in both Schedule and Vault cards.
+
 ## [4.9.80] - 2026-09-06
 
 ### What's New

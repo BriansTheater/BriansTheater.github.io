@@ -1,12 +1,12 @@
 {
-  "version": "4.9.80",
+  "version": "4.9.81",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.80",
+  "title": "Brian's Theater v4.9.81",
   "notes": [
-    "Unified movie media studio consolidates posters, trailers, and summaries.",
-    "Added editable plot summary, year, runtime, and genre controls.",
-    "Corrected 2025 Mystery Scary Movie Marathon date and time.",
-    "Prevented past marathon titles from colliding with upcoming schedule.",
-    "Removed redundant scheduled status badges from vault trailer row."
+    "Added styled scrollbars to movie card plot summaries.",
+    "Preserved clean multi-line breaks across all movie summaries.",
+    "Formatted 2025 Mystery Scary Movie Marathon full lineup.",
+    "Enhanced admin media studio summary preview with scrollbars.",
+    "Supported scrollable synopsis in both Schedule and Vault cards."
   ]
 }

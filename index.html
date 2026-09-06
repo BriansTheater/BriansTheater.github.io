@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.80 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.81 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -43,6 +43,27 @@
     }
     .tab-view {
       transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    }
+    /* Sleek Custom Scrollbars */
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 4px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.65);
+    }
+    .scrollbar-thin {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.35) rgba(15, 23, 42, 0.6);
     }
     /* Morphic Multi-Color Theme (Glassmorphism & Iridescent Gradients) */
     .morphic-panel {
@@ -623,7 +644,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.80</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.81</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -940,7 +961,7 @@
                     </label>
                     <span class="text-[10px] text-slate-400 font-mono">Editable synopsis shown on cards</span>
                   </div>
-                  <textarea id="adminMediaSummaryInput" rows="5" placeholder="Enter movie overview or search TMDB above to auto-fill..." class="w-full mt-1.5 p-3.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 leading-relaxed focus:border-amber-400 focus:ring-1 focus:ring-amber-400"></textarea>
+                  <textarea id="adminMediaSummaryInput" rows="5" placeholder="Enter movie overview or search TMDB above to auto-fill..." class="w-full mt-1.5 p-3.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 leading-relaxed focus:border-amber-400 focus:ring-1 focus:ring-amber-400 scrollbar-thin"></textarea>
                 </div>
 
                 <!-- Secondary Metadata Controls (Year, Runtime, Genres) -->
@@ -987,9 +1008,9 @@
                   <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1">
                     <span>💬</span> SUMMARY
                   </div>
-                  <p class="text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-1 font-sans" id="adminSummaryPreviewText">
+                  <div class="text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-1.5 whitespace-pre-line scrollbar-thin font-sans select-text" id="adminSummaryPreviewText">
                     Select a movie to preview and edit its summary.
-                  </p>
+                  </div>
                   <div class="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-850 font-mono">
                     <span id="adminSummaryPreviewRuntime">Runtime: --</span>
                     <span id="adminSummaryPreviewGenres">Genres: --</span>
@@ -1028,7 +1049,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.80</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.81</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1193,7 +1214,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.80</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.81</span>
     </div>
 
   </aside>
@@ -1532,7 +1553,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.80";
+    const APP_VERSION = "4.9.81";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -1909,6 +1930,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.81": [
+        "Added styled scrollbars to movie card plot summaries.",
+        "Preserved clean multi-line breaks across all movie summaries.",
+        "Formatted 2025 Mystery Scary Movie Marathon full lineup.",
+        "Enhanced admin media studio summary preview with scrollbars.",
+        "Supported scrollable synopsis in both Schedule and Vault cards."
+      ],
       "4.9.80": [
         "Unified movie media studio consolidates posters, trailers, and plot summaries.",
         "Added editable plot summary, year, runtime, and genre controls.",
@@ -2305,7 +2333,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.80"] || APP_STORE_RELEASES["4.9.79"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.81"] || APP_STORE_RELEASES["4.9.80"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -5354,7 +5382,7 @@
                 </button>
                 ` : ''}
               </div>
-              <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
+              <div class="text-slate-300 text-xs whitespace-pre-line leading-relaxed max-h-32 sm:max-h-36 overflow-y-auto pr-1.5 scrollbar-thin select-text">${escapeHtml(d.summary)}</div>
             </div>
 
             <!-- Dedicated Status Section: Exactly 1 Clean Status -->
@@ -5541,6 +5569,18 @@
       return partials[0] || null;
     }
 
+    function cleanSummaryText(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/(?:p|li|div|h\d)>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\r\n/g, '\n')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n\s*\n\s*\n+/g, '\n\n')
+        .trim();
+    }
+
     function parseVaultMovieCardData(m) {
       if (!m) return {};
       const ov = String(m.overview || m.summary || m.desc || '');
@@ -5669,16 +5709,17 @@
       let fullStory = '';
       const sMatch = ov.match(/Summary:\s*([\s\S]+?)(?=<br\s*\/?>\s*Trailer:|\n*Trailer:|<br\s*\/?>\s*Starring|\n*Starring|<br\s*\/?>\s*Source:|\n*Source:|$)/i);
       if (sMatch) {
-        fullStory = sMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        fullStory = cleanSummaryText(sMatch[1]);
         teaser = fullStory;
       } else if (/Screened at Century|Screened at Regal/i.test(ov)) {
-        fullStory = ov.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        fullStory = cleanSummaryText(ov);
         teaser = fullStory;
       } else if (!/Movie:|Runtime:|Year:/i.test(ov) && ov.length > 15) {
-        fullStory = ov.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        fullStory = cleanSummaryText(ov);
         teaser = fullStory;
       }
-      const summary = teaser || fullStory || (sched && sched.desc) || m.summary || m.overview || "Virtual cinema screening at Brian's Theater.";
+      const rawSummary = teaser || fullStory || (sched && sched.desc) || m.summary || m.overview || "Virtual cinema screening at Brian's Theater.";
+      const summary = cleanSummaryText(rawSummary);
 
       // 7. Start Time & End Time
       let startTime = cleanTimeString((sched && sched.startTime) || m.startTime || m.time, false);
@@ -5700,7 +5741,7 @@
       const customSummary = (typeof customMovieSummaries !== 'undefined') ? (customMovieSummaries[m.title] || customMovieSummaries[cleanT] || customMovieSummaries[cleanLower]) : null;
       const customMeta = (typeof customMovieMetadata !== 'undefined') ? (customMovieMetadata[m.title] || customMovieMetadata[cleanT] || customMovieMetadata[cleanLower]) : null;
 
-      const finalSummary = customSummary || summary;
+      const finalSummary = customSummary ? cleanSummaryText(customSummary) : summary;
       const finalYearResult = (customMeta && customMeta.year) ? customMeta.year : finalYear;
       const finalRuntime = (customMeta && customMeta.runtime) ? customMeta.runtime : runtime;
       const finalGenres = (customMeta && customMeta.genres) ? customMeta.genres : genres;
@@ -5906,6 +5947,7 @@
       if (!summary) {
         summary = "Virtual cinema screening at Brian's Theater.";
       }
+      summary = cleanSummaryText(summary);
 
       // 4. Start Time & End Time
       let startTime = cleanTimeString(s.startTime || s.time, false) || "7:00 PM";
@@ -5924,7 +5966,7 @@
       const customSummary = (typeof customMovieSummaries !== 'undefined') ? (customMovieSummaries[s.title] || customMovieSummaries[cleanTitle] || customMovieSummaries[lowerClean]) : null;
       const customMeta = (typeof customMovieMetadata !== 'undefined') ? (customMovieMetadata[s.title] || customMovieMetadata[cleanTitle] || customMovieMetadata[lowerClean]) : null;
 
-      const finalSummary = customSummary || summary;
+      const finalSummary = customSummary ? cleanSummaryText(customSummary) : summary;
       const finalYear = (customMeta && customMeta.year) ? customMeta.year : year;
       const finalRuntime = (customMeta && customMeta.runtime) ? customMeta.runtime : runtime;
 
@@ -6032,7 +6074,7 @@
               </button>
               ` : ''}
             </div>
-            <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed">${escapeHtml(d.summary)}</p>
+            <div class="text-slate-300 text-xs whitespace-pre-line leading-relaxed max-h-32 sm:max-h-36 overflow-y-auto pr-1.5 scrollbar-thin select-text">${escapeHtml(d.summary)}</div>
           </div>
 
           ${s.afterShow ? `
