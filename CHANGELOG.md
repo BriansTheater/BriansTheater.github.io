@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.35] - 2026-09-05
+
+### What's New
+- Renamed installed app name to Brian's Theater.
+- Fixed home screen launcher icon name.
+- Long movie titles wrap across two lines cleanly.
+- Movie badges and year moved to separate row.
+- Multi-layer update detection runs reliably in background.
+
 ## [4.9.34] - 2026-09-05
 
 ### What's New

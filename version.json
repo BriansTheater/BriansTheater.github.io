@@ -1,12 +1,12 @@
 {
-  "version": "4.9.34",
+  "version": "4.9.35",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.34",
+  "title": "Brian's Theater v4.9.35",
   "notes": [
-    "Update popup now shows automatically on every visit.",
-    "Fixed missing toast for new and returning visitors.",
-    "Movie Vault now filters movies vs TV shows.",
-    "Each vault card shows a Movie or TV badge.",
-    "Multi-layer update detection running in background."
+    "Renamed app to Brian's Theater.",
+    "Installed app on home screen shows Brian's Theater.",
+    "Long movie titles now wrap across two lines cleanly.",
+    "Badges and years moved to separate dedicated row.",
+    "Multi-layer update detection runs reliably in background."
   ]
 }
