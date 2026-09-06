@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.84] - 2026-09-06
+
+### What's New
+- Added interactive expandable marathon movie cards with multi-film lineups.
+- Introduced dedicated Marathon badge with total film count indicator.
+- One-click YouTube trailer search for individual marathon titles.
+- Smart search automatically finds and expands matching marathon films.
+
 ## [4.9.83] - 2026-09-06
 
 ### What's New

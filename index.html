@@ -1569,7 +1569,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.83";
+    const APP_VERSION = "4.9.84";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5374,7 +5374,11 @@
         const overview = String(m.overview || m.summary || m.desc || '').toLowerCase();
         const requester = String(m.requester || '').toLowerCase();
 
-        return title.includes(q) || genre.includes(q) || year.includes(q) || overview.includes(q) || requester.includes(q);
+        const normQ = q.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+        const normOverview = overview.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+        const normTitle = title.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+
+        return title.includes(q) || genre.includes(q) || year.includes(q) || overview.includes(q) || requester.includes(q) || (Boolean(normQ) && (normTitle.includes(normQ) || normOverview.includes(normQ)));
       });
 
       const countEl = document.getElementById('vaultCount');
@@ -5413,6 +5417,17 @@
         const cleanTitle = String(m.title || '').replace(/^🎬\s*/, '').trim();
         const posterUrl = getMovieArtworkUrl(m);
         const isScheduled = d.isScheduled;
+        const marathonInfo = parseMarathonInfo(m);
+        const isMarathon = marathonInfo.isMarathon;
+        const marathonCardKey = `marathon-${idx}`;
+        const normQ = q ? q.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim() : '';
+        const shouldAutoExpand = Boolean(
+          q && isMarathon && marathonInfo.movies.some(film => {
+            const fLow = film.toLowerCase();
+            const normF = fLow.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+            return fLow.includes(q) || (Boolean(normQ) && normF.includes(normQ));
+          })
+        );
 
         return `
         <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
@@ -5422,8 +5437,9 @@
               <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(cleanTitle)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
               <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
               
-              <!-- Top-Left Tag Badge: TV Indicator Only (No Duplicate Status) -->
+              <!-- Top-Left Tag Badge: Marathon or TV Indicator -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
+                ${isMarathon ? `<span class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 border border-rose-700/80 font-extrabold text-[10px] flex items-center gap-1 shadow-md">🎟️ Marathon • ${marathonInfo.count} Films</span>` : ''}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
@@ -5477,6 +5493,41 @@
               </div>
               <div class="text-slate-300 text-xs whitespace-pre-line leading-relaxed max-h-32 sm:max-h-36 overflow-y-auto pr-1.5 scrollbar-thin select-text">${escapeHtml(d.summary)}</div>
             </div>
+
+            <!-- Marathon Expandable Lineup Section -->
+            ${isMarathon ? `
+            <div class="mt-2.5 flex flex-col gap-1.5">
+              <button type="button" onclick="toggleMarathonLineup('${marathonCardKey}')" id="btn-${marathonCardKey}" class="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-red-950/70 via-slate-900/90 to-red-950/70 hover:from-red-900/70 hover:to-red-900/70 text-rose-300 border border-red-800/60 text-xs font-bold transition flex items-center justify-between shadow-sm active:scale-98 cursor-pointer">
+                <span class="flex items-center gap-1.5">
+                  <span>🍿</span> <span>Marathon Lineup (${marathonInfo.count} Movies)</span>
+                </span>
+                <span id="arrow-${marathonCardKey}" class="text-xs transition-transform duration-200" style="${shouldAutoExpand ? 'transform: rotate(180deg);' : ''}">▾</span>
+              </button>
+
+              <div id="drawer-${marathonCardKey}" class="${shouldAutoExpand ? 'flex' : 'hidden'} flex-col gap-1.5 p-2.5 rounded-xl bg-slate-950 border border-red-900/50 text-xs max-h-56 overflow-y-auto custom-scrollbar">
+                <div class="text-[10px] uppercase font-bold tracking-wider text-rose-400/90 px-1 mb-0.5 flex items-center justify-between">
+                  <span>Films Screened in Marathon:</span>
+                  <span class="font-mono text-slate-400 text-[9px]">${marathonInfo.count} Titles</span>
+                </div>
+                ${marathonInfo.movies.map((film, fIdx) => {
+                  const fLow = film.toLowerCase();
+                  const normF = fLow.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+                  const isMatch = Boolean(q && (fLow.includes(q) || (Boolean(normQ) && normF.includes(normQ))));
+                  return `
+                <div class="flex items-center justify-between gap-2 p-1.5 rounded-lg ${isMatch ? 'bg-rose-950/50 border border-rose-600/70' : 'bg-slate-900/70 hover:bg-slate-900 border border-slate-800/60'} transition group/film">
+                  <div class="flex items-center gap-2 truncate">
+                    <span class="w-4 h-4 rounded-full ${isMatch ? 'bg-rose-600 text-white' : 'bg-red-950 text-red-400'} font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border border-red-800/50">${fIdx + 1}</span>
+                    <span class="film-title text-slate-200 font-medium truncate text-xs group-hover/film:text-amber-300 transition ${isMatch ? 'text-rose-200 font-bold' : ''}" title="${escapeHtml(film)}">${escapeHtml(film)}</span>
+                  </div>
+                  <button type="button" onclick="window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent('${escapeHtml(film)} trailer'), '_blank')" title="Watch Trailer on YouTube" class="shrink-0 text-[10px] px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1 active:scale-95 cursor-pointer">
+                    <span>▶</span> <span class="hidden sm:inline">Trailer</span>
+                  </button>
+                </div>
+                `;
+                }).join('')}
+              </div>
+            </div>
+            ` : ''}
 
             <!-- Dedicated Status Section: Exactly 1 Clean Status -->
             ${isScheduled ? `
@@ -5948,6 +5999,51 @@
       document.addEventListener('DOMContentLoaded', () => updateTheaterStats());
     } else {
       updateTheaterStats();
+    }
+
+    // Marathon Detection & Lineup Parser
+    function parseMarathonInfo(item) {
+      if (!item) return { isMarathon: false, count: 0, movies: [] };
+      const title = String(item.title || '').trim();
+      const isMarathonTitle = /\b(marathon|collection|fest|festival)\b/i.test(title);
+      const isExplicitMarathon = item.mediaType === 'marathon' || item.isMarathon;
+      
+      const summaryText = String(item.overview || item.summary || item.desc || '').trim();
+      const lines = summaryText.split('\n').map(l => l.trim()).filter(Boolean);
+      const movies = [];
+
+      lines.forEach(line => {
+        const match = line.match(/^([•\-*]|\d+[\.)])\s*(.+)$/);
+        if (match) {
+          const rawTitle = match[2].trim();
+          if (rawTitle.length > 2) {
+            movies.push(rawTitle);
+          }
+        }
+      });
+
+      const isMarathon = isMarathonTitle || isExplicitMarathon || movies.length >= 2;
+      return {
+        isMarathon: isMarathon && movies.length >= 2,
+        count: movies.length,
+        movies: movies
+      };
+    }
+
+    function toggleMarathonLineup(cardKey) {
+      const drawer = document.getElementById(`drawer-${cardKey}`);
+      const arrow = document.getElementById(`arrow-${cardKey}`);
+      if (!drawer) return;
+      const isOpening = drawer.classList.contains('hidden');
+      if (isOpening) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+      } else {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+      }
     }
 
     function toggleCardTrailer(id) {

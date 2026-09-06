@@ -1,9 +1,11 @@
 {
-  "version": "4.9.83",
+  "version": "4.9.84",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.83",
+  "title": "Brian's Theater v4.9.84",
   "notes": [
-    "Streamlined Movie Vault header stats with clean Movies label.",
-    "Optimized stats layout for compact spacing on mobile devices."
+    "Added interactive expandable marathon movie cards with multi-film lineups.",
+    "Introduced dedicated Marathon badge with total film count indicator.",
+    "One-click YouTube trailer search for individual marathon titles.",
+    "Smart search automatically finds and expands matching marathon films."
   ]
 }
