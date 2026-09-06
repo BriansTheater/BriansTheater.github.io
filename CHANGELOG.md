@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.67] - 2026-09-06
+
+### What's New
+- Added TMDB franchise collection detection to movie requests.
+- Introduced interactive bulk selection modal for movie sagas.
+- Enabled one-click requesting for all franchise installments.
+- Added select all and individual toggle controls for sagas.
+- Automated batch submission straight into Google Sheets queue.
+
 ## [4.9.66] - 2026-09-06
 
 ### What's New

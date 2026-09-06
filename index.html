@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.66 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.67 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1270,6 +1270,95 @@
     </div>
   </div>
 
+  <!-- FRANCHISE COLLECTION BULK REQUEST MODAL -->
+  <div id="franchiseSelectModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="handleFranchiseModalBackdrop(event)">
+    <div class="morphic-panel bg-slate-900/95 border border-amber-400/40 rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(251,191,36,0.25)] relative flex flex-col gap-4 text-slate-100 max-h-[90vh]">
+      
+      <!-- Top Glowing Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-sky-400 to-teal-400 rounded-t-3xl"></div>
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5 pt-1">
+        <div class="flex items-center gap-3 min-w-0">
+          <img id="franchiseModalPoster" src="" alt="Franchise" class="w-12 h-16 sm:w-14 sm:h-20 rounded-xl object-cover border border-amber-400/30 bg-slate-950 shrink-0 shadow-md">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 id="franchiseModalTitle" class="text-base sm:text-lg font-black text-amber-300 truncate">Franchise Collection</h3>
+              <span id="franchiseModalCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">Loading...</span>
+            </div>
+            <p id="franchiseModalOverview" class="text-xs text-slate-400 mt-1 line-clamp-2">Select all installments you wish to request in bulk.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeFranchiseModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Quick Action Controls & Select All -->
+      <div class="flex items-center justify-between gap-2 px-1 text-xs">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="toggleAllFranchiseMovies(true)" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-300 font-bold border border-teal-500/30 transition text-xs active:scale-95 cursor-pointer">
+            ✓ Select All
+          </button>
+          <button type="button" onclick="toggleAllFranchiseMovies(false)" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 font-semibold border border-white/5 transition text-xs active:scale-95 cursor-pointer">
+            Deselect All
+          </button>
+        </div>
+        <div id="franchiseSelectedCounter" class="text-xs font-mono font-bold text-amber-300">
+          0 / 0 Selected
+        </div>
+      </div>
+
+      <!-- Movie List Checklist (Scrollable) -->
+      <div id="franchiseMoviesList" class="flex-1 overflow-y-auto max-h-72 space-y-2 pr-1 custom-scrollbar">
+        <!-- Dynamically rendered checklist items -->
+      </div>
+
+      <!-- Requester & Platform Bar -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/10 text-xs">
+        <div class="flex flex-col gap-1">
+          <label for="franchiseRequesterName" class="font-bold text-slate-300">Your Name / Nickname <span class="text-amber-300">*</span></label>
+          <input type="text" id="franchiseRequesterName" placeholder="e.g. Brian, CinemaFan..." class="morphic-input px-3.5 py-2 rounded-xl text-slate-100 placeholder-slate-500 text-xs font-medium outline-none">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="franchisePlatformSelect" class="font-bold text-slate-300">Preferred Platform (Optional)</label>
+          <select id="franchisePlatformSelect" class="morphic-input px-3 py-2 rounded-xl text-slate-100 text-xs font-medium outline-none bg-slate-900">
+            <option value="">Streaming / Theaters</option>
+            <option value="HBO Max">HBO Max</option>
+            <option value="Disney+/ Hulu">Disney+/ Hulu</option>
+            <option value="Netflix">Netflix</option>
+            <option value="Tubi">Tubi</option>
+            <option value="Peacock">Peacock</option>
+            <option value="Parmount+">Paramount+</option>
+            <option value="Starz">Starz</option>
+            <option value="Theaters">Theaters</option>
+            <option value="Prime">Prime</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Progress / Status bar when submitting -->
+      <div id="franchiseSubmitProgress" class="hidden flex flex-col gap-1.5">
+        <div class="flex items-center justify-between text-xs text-amber-300 font-bold">
+          <span id="franchiseProgressText">Submitting Franchise Requests...</span>
+          <span id="franchiseProgressPercent">0%</span>
+        </div>
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+          <div id="franchiseProgressBar" class="h-full bg-gradient-to-r from-amber-400 to-teal-400 transition-all duration-200" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="flex items-center justify-end gap-2.5 pt-1">
+        <button type="button" onclick="closeFranchiseModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="btnSubmitFranchiseRequests" onclick="submitFranchiseBulkRequests()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-teal-400 hover:from-amber-300 hover:to-teal-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition active:scale-95 flex items-center gap-2 cursor-pointer">
+          <span>🚀</span> <span id="btnSubmitFranchiseLabel">Request Selected Movies</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- FRONT & CENTER VERSION UPDATE MODAL DIALOG (USER MUST SEE & CLICK TO ENTER) -->
   <div id="appUpdateToast" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300 pointer-events-none opacity-0" role="dialog" aria-modal="true" aria-labelledby="updateToastTitle">
     
@@ -1320,7 +1409,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.66";
+    const APP_VERSION = "4.9.67";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1695,6 +1784,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.67": [
+        "Added TMDB franchise collection detection to movie requests.",
+        "Introduced interactive bulk selection modal for movie sagas.",
+        "Enabled one-click requesting for all franchise installments.",
+        "Added select all and individual toggle controls for sagas.",
+        "Automated batch submission straight into Google Sheets queue."
+      ],
       "4.9.66": [
         "Reorganized Brian's Theater Google Sheets menus with clean hierarchy.",
         "Eliminated redundant duplicate actions across all submenus.",
@@ -5224,47 +5320,133 @@
 
       try {
         const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
-        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(query)}&include_adult=false`);
-        if (!res.ok) {
+
+        // Fetch movies and collections simultaneously
+        const [resMovie, resCol] = await Promise.all([
+          fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(query)}&include_adult=false`),
+          fetch(`https://api.themoviedb.org/3/search/collection?api_key=${_k}&query=${encodeURIComponent(query)}`)
+        ]);
+
+        let movieResults = [];
+        if (resMovie.ok) {
+          const data = await resMovie.json();
+          movieResults = (data.results || []).slice(0, 5);
+        }
+
+        let collections = [];
+        if (resCol.ok) {
+          const colData = await resCol.json();
+          const qLower = query.toLowerCase().trim();
+          collections = (colData.results || []).sort((a, b) => {
+            const aName = (a.name || '').toLowerCase();
+            const bName = (b.name || '').toLowerCase();
+            const aBad = aName.includes('making of') || aName.includes('behind the scenes') || aName.includes('sharks') ? 1 : 0;
+            const bBad = bName.includes('making of') || bName.includes('behind the scenes') || bName.includes('sharks') ? 1 : 0;
+            if (aBad !== bBad) return aBad - bBad;
+
+            const aExact = aName === qLower || aName === (qLower + ' collection') || aName === ('the ' + qLower + ' collection');
+            const bExact = bName === qLower || bName === (qLower + ' collection') || bName === ('the ' + qLower + ' collection');
+            if (aExact && !bExact) return -1;
+            if (!aExact && bExact) return 1;
+
+            const aHasPoster = a.poster_path ? 1 : 0;
+            const bHasPoster = b.poster_path ? 1 : 0;
+            if (aHasPoster !== bHasPoster) return bHasPoster - aHasPoster;
+            return 0;
+          }).slice(0, 2);
+        }
+
+        if (movieResults.length === 0 && collections.length === 0) {
           hideReqMovieSuggestions();
           return;
         }
-        const data = await res.json();
-        const results = (data.results || []).slice(0, 5);
 
-        if (results.length === 0) {
-          hideReqMovieSuggestions();
-          return;
-        }
+        let html = '';
 
-        container.innerHTML = results.map(m => {
-          const year = (m.release_date || '').split('-')[0] || 'N/A';
-          const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : '';
-          const safeTitle = escapeHtml(m.title || '');
-          const safeEncoded = encodeURIComponent(JSON.stringify({
-            title: m.title || '',
-            year: year,
-            posterUrl: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : ''
-          }));
-
-          return `
-            <div 
-              onclick="selectReqMovieSuggestion('${safeEncoded}')" 
-              class="p-3 hover:bg-slate-800/80 flex items-center gap-3 cursor-pointer transition select-none backdrop-blur-md">
-              ${poster ? `
-                <img src="${poster}" alt="${safeTitle}" class="w-8 h-12 object-cover rounded-lg bg-slate-900 border border-slate-700 shrink-0 shadow-sm">
-              ` : `
-                <div class="w-8 h-12 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm shrink-0">🎬</div>
-              `}
-              <div class="flex-1 min-w-0">
-                <div class="text-xs font-bold text-slate-100 truncate">${safeTitle}</div>
-                <div class="text-[11px] text-teal-300 font-medium mt-0.5">${year} • TMDb Verified</div>
-              </div>
-              <span class="text-xs text-teal-300 shrink-0 font-bold">Select ↗</span>
+        // Render Franchise / Collection Packs at the top
+        if (collections.length > 0) {
+          html += `
+            <div class="px-3 py-1.5 bg-slate-900/90 border-b border-amber-500/20 flex items-center justify-between text-[10px] font-extrabold uppercase tracking-wider text-amber-300 backdrop-blur-md">
+              <span class="flex items-center gap-1.5"><span>⚡</span> <span>Franchise Collection Packs</span></span>
+              <span class="text-teal-300 font-medium normal-case">1-click bulk sagas</span>
             </div>
           `;
-        }).join('');
 
+          html += collections.map(c => {
+            const poster = c.poster_path ? `https://image.tmdb.org/t/p/w92${c.poster_path}` : '';
+            const safeName = escapeHtml(c.name || 'Franchise Collection');
+            const safeEncoded = encodeURIComponent(JSON.stringify({
+              id: c.id,
+              name: c.name || '',
+              posterPath: c.poster_path || '',
+              overview: c.overview || ''
+            }));
+
+            return `
+              <div 
+                id="franchise-pack-${c.id}"
+                onclick="openFranchiseSelectModal('${safeEncoded}')" 
+                class="franchise-pack-suggestion p-3 hover:bg-slate-800/90 flex items-center gap-3 cursor-pointer transition select-none backdrop-blur-md bg-gradient-to-r from-amber-500/15 via-sky-500/10 to-transparent border-b border-white/5">
+                ${poster ? `
+                  <img src="${poster}" alt="${safeName}" class="w-9 h-13 object-cover rounded-lg bg-slate-900 border border-amber-400/40 shrink-0 shadow-md">
+                ` : `
+                  <div class="w-9 h-13 rounded-lg bg-slate-800 border border-amber-400/40 flex items-center justify-center text-sm shrink-0">🍿</div>
+                `}
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-black text-amber-300 truncate">${safeName}</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/40 shrink-0">Saga Pack</span>
+                  </div>
+                  <div class="text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-1">Click to view & bulk request full series 🎬</div>
+                </div>
+                <button type="button" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-300 text-slate-950 text-xs font-black shrink-0 hover:opacity-90 transition shadow-sm active:scale-95 cursor-pointer">
+                  Bulk Request ↗
+                </button>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Render Individual Movie Suggestions
+        if (movieResults.length > 0) {
+          if (collections.length > 0) {
+            html += `
+              <div class="px-3 py-1.5 bg-slate-900/60 border-b border-white/5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 backdrop-blur-md">
+                <span>🎬 Individual Titles</span>
+              </div>
+            `;
+          }
+
+          html += movieResults.map(m => {
+            const year = (m.release_date || '').split('-')[0] || 'N/A';
+            const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : '';
+            const safeTitle = escapeHtml(m.title || '');
+            const safeEncoded = encodeURIComponent(JSON.stringify({
+              title: m.title || '',
+              year: year,
+              posterUrl: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : ''
+            }));
+
+            return `
+              <div 
+                onclick="selectReqMovieSuggestion('${safeEncoded}')" 
+                class="p-3 hover:bg-slate-800/80 flex items-center gap-3 cursor-pointer transition select-none backdrop-blur-md">
+                ${poster ? `
+                  <img src="${poster}" alt="${safeTitle}" class="w-8 h-12 object-cover rounded-lg bg-slate-900 border border-slate-700 shrink-0 shadow-sm">
+                ` : `
+                  <div class="w-8 h-12 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm shrink-0">🎬</div>
+                `}
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-bold text-slate-100 truncate">${safeTitle}</div>
+                  <div class="text-[11px] text-teal-300 font-medium mt-0.5">${year} • TMDb Verified</div>
+                </div>
+                <span class="text-xs text-teal-300 shrink-0 font-bold">Select ↗</span>
+              </div>
+            `;
+          }).join('');
+        }
+
+        container.innerHTML = html;
         container.classList.remove('hidden');
       } catch (e) {
         hideReqMovieSuggestions();
@@ -5324,6 +5506,357 @@
         hideReqMovieSuggestions();
       }
     });
+
+    // =========================================================================
+    // 🎬 FRANCHISE COLLECTION SAGA BULK REQUEST ENGINE
+    // =========================================================================
+    let currentFranchiseData = null;
+    let currentFranchiseParts = [];
+
+    async function openFranchiseSelectModal(encodedColStr) {
+      hideReqMovieSuggestions();
+      let col = null;
+      try {
+        col = typeof encodedColStr === 'string' ? JSON.parse(decodeURIComponent(encodedColStr)) : encodedColStr;
+      } catch(e) {
+        return;
+      }
+
+      currentFranchiseData = col;
+      currentFranchiseParts = [];
+
+      const modal = document.getElementById('franchiseSelectModal');
+      const titleEl = document.getElementById('franchiseModalTitle');
+      const countBadge = document.getElementById('franchiseModalCountBadge');
+      const overviewEl = document.getElementById('franchiseModalOverview');
+      const posterEl = document.getElementById('franchiseModalPoster');
+      const listEl = document.getElementById('franchiseMoviesList');
+      const counterEl = document.getElementById('franchiseSelectedCounter');
+      const requesterInput = document.getElementById('franchiseRequesterName');
+      const platformSelect = document.getElementById('franchisePlatformSelect');
+      const progressEl = document.getElementById('franchiseSubmitProgress');
+      const submitBtn = document.getElementById('btnSubmitFranchiseRequests');
+
+      if (!modal) return;
+
+      // Reset states
+      if (progressEl) progressEl.classList.add('hidden');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+      }
+
+      // Pre-fill requester name & platform
+      const currentReqName = (document.getElementById('reqNameInput') ? document.getElementById('reqNameInput').value : '') || localStorage.getItem('bt_requester_name') || '';
+      if (requesterInput) requesterInput.value = currentReqName;
+
+      const currentPlatform = document.getElementById('reqPlatformInput') ? document.getElementById('reqPlatformInput').value : '';
+      if (platformSelect && currentPlatform) platformSelect.value = currentPlatform;
+
+      // Set initial header info
+      if (titleEl) titleEl.textContent = col.name;
+      if (countBadge) countBadge.textContent = "Loading...";
+      if (overviewEl) overviewEl.textContent = col.overview || "Loading complete franchise catalog from TMDb...";
+      if (posterEl) {
+        if (col.posterPath) {
+          posterEl.src = `https://image.tmdb.org/t/p/w185${col.posterPath}`;
+          posterEl.classList.remove('hidden');
+        } else {
+          posterEl.classList.add('hidden');
+        }
+      }
+
+      if (listEl) {
+        listEl.innerHTML = `
+          <div class="p-8 text-center text-slate-400 flex flex-col items-center gap-2">
+            <div class="animate-spin text-2xl">⏳</div>
+            <div class="text-xs">Fetching all franchise installments...</div>
+          </div>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+
+      // Fetch collection details
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const res = await fetch(`https://api.themoviedb.org/3/collection/${col.id}?api_key=${_k}`);
+        if (!res.ok) throw new Error('Failed to load collection');
+        const data = await res.json();
+
+        // Update poster / overview if available
+        if (data.overview && overviewEl) overviewEl.textContent = data.overview;
+        if (data.poster_path && posterEl) {
+          posterEl.src = `https://image.tmdb.org/t/p/w185${data.poster_path}`;
+          posterEl.classList.remove('hidden');
+          currentFranchiseData.posterPath = data.poster_path;
+        }
+
+        // Sort movies chronologically
+        const parts = (data.parts || []).slice().sort((a, b) => {
+          const dateA = a.release_date || '9999-99-99';
+          const dateB = b.release_date || '9999-99-99';
+          return dateA.localeCompare(dateB);
+        });
+
+        currentFranchiseParts = parts.map((p, idx) => ({
+          ...p,
+          selected: true
+        }));
+
+        if (countBadge) countBadge.textContent = `${currentFranchiseParts.length} Movies`;
+
+        renderFranchiseMoviesList();
+        updateFranchiseSelectionCount();
+      } catch (err) {
+        if (listEl) {
+          listEl.innerHTML = `
+            <div class="p-6 text-center text-rose-400 text-xs">
+              Unable to load franchise details from TMDb. Please try again.
+            </div>
+          `;
+        }
+      }
+    }
+
+    function renderFranchiseMoviesList() {
+      const listEl = document.getElementById('franchiseMoviesList');
+      if (!listEl) return;
+
+      if (currentFranchiseParts.length === 0) {
+        listEl.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No movies found in this franchise.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = currentFranchiseParts.map((p, idx) => {
+        const year = (p.release_date || '').split('-')[0] || 'N/A';
+        const poster = p.poster_path ? `https://image.tmdb.org/t/p/w92${p.poster_path}` : '';
+        const safeTitle = escapeHtml(p.title || 'Untitled');
+
+        return `
+          <div class="franchise-movie-row p-2.5 rounded-2xl bg-slate-950/60 border border-white/5 hover:border-amber-400/30 flex items-center gap-3 transition">
+            <input 
+              type="checkbox" 
+              id="franchiseCheckbox-${idx}" 
+              data-idx="${idx}"
+              ${p.selected ? 'checked' : ''} 
+              onchange="onFranchiseMovieCheckChange(${idx}, this.checked)"
+              class="w-4 h-4 rounded text-amber-400 focus:ring-amber-400 bg-slate-900 border-slate-700 cursor-pointer shrink-0">
+            ${poster ? `
+              <img src="${poster}" alt="${safeTitle}" class="w-9 h-13 object-cover rounded-lg bg-slate-900 border border-slate-800 shrink-0 shadow-sm">
+            ` : `
+              <div class="w-9 h-13 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-xs shrink-0">🎬</div>
+            `}
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-bold text-slate-100 truncate">${safeTitle}</div>
+              <div class="text-[11px] text-teal-300 font-medium mt-0.5">${year} • Part ${idx + 1}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function onFranchiseMovieCheckChange(idx, isChecked) {
+      if (currentFranchiseParts[idx]) {
+        currentFranchiseParts[idx].selected = !!isChecked;
+      }
+      updateFranchiseSelectionCount();
+    }
+
+    function toggleAllFranchiseMovies(select) {
+      currentFranchiseParts.forEach((p, idx) => {
+        p.selected = !!select;
+        const cb = document.getElementById(`franchiseCheckbox-${idx}`);
+        if (cb) cb.checked = !!select;
+      });
+      updateFranchiseSelectionCount();
+    }
+
+    function updateFranchiseSelectionCount() {
+      const selectedCount = currentFranchiseParts.filter(p => p.selected).length;
+      const totalCount = currentFranchiseParts.length;
+
+      const counterEl = document.getElementById('franchiseSelectedCounter');
+      if (counterEl) {
+        counterEl.textContent = `${selectedCount} / ${totalCount} Selected`;
+      }
+
+      const submitBtn = document.getElementById('btnSubmitFranchiseRequests');
+      const submitLabel = document.getElementById('btnSubmitFranchiseLabel');
+      if (submitBtn) {
+        if (selectedCount === 0) {
+          submitBtn.disabled = true;
+          submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+          if (submitLabel) submitLabel.textContent = "Select Movies to Request";
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+          if (submitLabel) submitLabel.textContent = `Request ${selectedCount} Selected Movie${selectedCount === 1 ? '' : 's'}`;
+        }
+      }
+    }
+
+    function closeFranchiseModal() {
+      const modal = document.getElementById('franchiseSelectModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleFranchiseModalBackdrop(e) {
+      if (e.target && e.target.id === 'franchiseSelectModal') {
+        closeFranchiseModal();
+      }
+    }
+
+    async function submitFranchiseBulkRequests() {
+      const requesterInput = document.getElementById('franchiseRequesterName');
+      const platformSelect = document.getElementById('franchisePlatformSelect');
+      const requesterName = (requesterInput ? requesterInput.value : '').trim();
+      const platform = platformSelect ? platformSelect.value : '';
+
+      if (!requesterName) {
+        showTheaterToast("⚠️ Please enter your name to request movies.");
+        if (requesterInput) requesterInput.focus();
+        return;
+      }
+
+      if (requesterName.length > 50) {
+        showTheaterToast("⚠️ Requester name cannot exceed 50 characters.");
+        return;
+      }
+
+      const selectedMovies = currentFranchiseParts.filter(p => p.selected);
+      if (selectedMovies.length === 0) {
+        showTheaterToast("⚠️ Please select at least one movie from the franchise.");
+        return;
+      }
+
+      const submitBtn = document.getElementById('btnSubmitFranchiseRequests');
+      const submitLabel = document.getElementById('btnSubmitFranchiseLabel');
+      const progressEl = document.getElementById('franchiseSubmitProgress');
+      const progressBar = document.getElementById('franchiseProgressBar');
+      const progressText = document.getElementById('franchiseProgressText');
+      const progressPercent = document.getElementById('franchiseProgressPercent');
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+      }
+      if (progressEl) progressEl.classList.remove('hidden');
+
+      // Save requester name in localStorage
+      localStorage.setItem('bt_requester_name', requesterName);
+      localStorage.setItem('bt_last_request_time', String(Date.now()));
+
+      // Synchronize in memory name input
+      const nameInput = document.getElementById('reqNameInput');
+      if (nameInput) nameInput.value = requesterName;
+
+      const colName = currentFranchiseData ? currentFranchiseData.name : 'Franchise';
+      let completed = 0;
+
+      for (let i = 0; i < selectedMovies.length; i++) {
+        const m = selectedMovies[i];
+        const reqId = `req_${Date.now()}_${i}`;
+        const year = (m.release_date || '').split('-')[0] || '2026';
+        const posterUrl = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
+        const pendingPayload = {
+          id: reqId,
+          title: m.title,
+          requester: requesterName,
+          genre: platform || 'Movie',
+          overview: `Franchise: ${colName}${platform ? ` • Platform: ${platform}` : ''}`,
+          date: new Date().toLocaleDateString('en-US'),
+          year: year,
+          posterUrl: posterUrl,
+          timestamp: Date.now() + i
+        };
+
+        // 1. Firebase pendingRequests (for Sheets ingestion)
+        try {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pendingRequests/${reqId}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pendingPayload)
+          });
+        } catch (e) {}
+
+        // 2. Firebase live requests list
+        try {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/requests/${reqId}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: m.title,
+              requester: requesterName,
+              genre: platform || 'Movie',
+              year: year,
+              posterUrl: posterUrl,
+              timestamp: Date.now() + i
+            })
+          });
+        } catch (e) {}
+
+        // 3. In-memory requests list
+        communityRequests.unshift({
+          title: m.title,
+          requester: requesterName,
+          genre: platform || 'Movie',
+          status: 'Under Review'
+        });
+
+        completed++;
+        const pct = Math.round((completed / selectedMovies.length) * 100);
+        if (progressBar) progressBar.style.width = `${pct}%`;
+        if (progressPercent) progressPercent.textContent = `${pct}%`;
+        if (progressText) progressText.textContent = `Queued "${escapeHtml(m.title)}" (${completed}/${selectedMovies.length})`;
+      }
+
+      // Sync to Vault and reload UI
+      syncRequestsToVault();
+      if (typeof loadRequests === 'function') {
+        loadRequests();
+      }
+
+      // Trigger Web App AutoSync
+      try {
+        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+      } catch (e) {}
+
+      // Close modal and show success card
+      setTimeout(() => {
+        closeFranchiseModal();
+
+        // Render success card on request tab
+        const formEl = document.getElementById('customMovieRequestForm');
+        const successCard = document.getElementById('customRequestSuccessCard');
+        const ticketTitle = document.getElementById('successTicketMovieTitle');
+        const ticketRequester = document.getElementById('successTicketRequesterName');
+        const ticketPlatform = document.getElementById('successTicketPlatformName');
+        const ticketPoster = document.getElementById('successTicketPosterImg');
+        const ticketDefaultIcon = document.getElementById('successTicketDefaultIcon');
+
+        if (ticketTitle) ticketTitle.textContent = `${colName} (${selectedMovies.length} Movies)`;
+        if (ticketRequester) ticketRequester.textContent = `Requested by ${requesterName}`;
+        if (ticketPlatform) ticketPlatform.textContent = platform ? `Available on ${platform}` : 'Franchise Saga Pack';
+
+        const colPoster = currentFranchiseData && currentFranchiseData.posterPath ? `https://image.tmdb.org/t/p/w500${currentFranchiseData.posterPath}` : '';
+        if (colPoster) {
+          if (ticketPoster) {
+            ticketPoster.src = colPoster;
+            ticketPoster.classList.remove('hidden');
+          }
+          if (ticketDefaultIcon) ticketDefaultIcon.classList.add('hidden');
+        }
+
+        if (formEl) formEl.classList.add('hidden');
+        if (successCard) {
+          successCard.classList.remove('hidden');
+          successCard.classList.add('flex');
+        }
+
+        showTheaterToast(`🎉 Requested ${selectedMovies.length} movies from ${colName}!`);
+      }, 500);
+    }
 
     async function handleCustomRequestSubmit(event) {
       if (event && event.preventDefault) event.preventDefault();

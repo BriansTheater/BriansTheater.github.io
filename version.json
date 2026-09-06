@@ -1,12 +1,12 @@
 {
-  "version": "4.9.66",
+  "version": "4.9.67",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.66",
+  "title": "Brian's Theater v4.9.67",
   "notes": [
-    "Reorganized Brian's Theater Google Sheets menus with clean hierarchy.",
-    "Eliminated redundant duplicate actions across all submenus.",
-    "Purged obsolete in-sheet search tab menu options.",
-    "Grouped tools into five focused and logical submenus.",
-    "Positioned Search & Edit Past Movies at top level."
+    "Added TMDB franchise collection detection to movie requests.",
+    "Introduced interactive bulk selection modal for movie sagas.",
+    "Enabled one-click requesting for all franchise installments.",
+    "Added select all and individual toggle controls for sagas.",
+    "Automated batch submission straight into Google Sheets queue."
   ]
 }
