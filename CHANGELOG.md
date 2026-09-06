@@ -1,4 +1,14 @@
 # Changelog
+ 
+## [4.9.92] - 2026-09-06
+
+### What's New
+- Frosted Aurora morphic cards for Christmas festival lineups.
+- Dual emerald and ruby ambient glow with frost backdrop.
+- Added sparkling snow crystal accents and festive badge pills.
+- Glossy emerald to ruby gradient festival action buttons.
+- Applied to both 2024 and 2025 Christmas events.
+- Full responsive and interactive vault filtering verified.
 
 ## [4.9.91] - 2026-09-06
 

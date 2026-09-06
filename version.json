@@ -1,12 +1,13 @@
 {
-  "version": "4.9.91",
+  "version": "4.9.92",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.91",
+  "title": "Brian's Theater v4.9.92",
   "notes": [
-    "Redesigned Movie Media Studio header with spacious two-tier layout.",
-    "Fixed button and input overlap in admin media header.",
-    "Expanded movie title editor into dedicated full-width input bar.",
-    "Added direct Google Sheets sync button beside movie selector.",
-    "Verified responsive layout across mobile, tablet, and desktop viewports."
+    "Frosted Aurora morphic cards for Christmas festival lineups.",
+    "Dual emerald and ruby ambient glow with frost backdrop.",
+    "Added sparkling snow crystal accents and festive badge pills.",
+    "Glossy emerald to ruby gradient festival action buttons.",
+    "Applied to both 2024 and 2025 Christmas events.",
+    "Full responsive and interactive vault filtering verified."
   ]
 }

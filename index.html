@@ -1639,25 +1639,45 @@
             </div>
 
             <!-- 2025 Christmas & Holiday Screening Festival -->
-            <div class="p-3.5 rounded-2xl bg-gradient-to-b from-emerald-950/40 to-slate-950 border border-emerald-800/60 hover:border-emerald-500 transition flex flex-col justify-between gap-3 shadow-md group">
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">🎄 CHRISTMAS FESTIVAL</span>
-                  <span class="text-[10px] font-mono text-slate-400">Dec 2025</span>
+            <div class="relative rounded-2xl overflow-hidden p-4 sm:p-5 flex flex-col justify-between gap-3.5 border border-emerald-500/40 hover:border-emerald-400 transition-all duration-300 shadow-xl group hover:shadow-2xl hover:shadow-emerald-950/50"
+                 style="background: linear-gradient(135deg, rgba(6, 78, 59, 0.48) 0%, rgba(15, 23, 42, 0.88) 45%, rgba(159, 18, 57, 0.42) 100%), rgba(2, 6, 23, 0.95);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        box-shadow: 0 12px 32px -8px rgba(0,0,0,0.8), inset 0 1px 1px 0 rgba(255,255,255,0.25), 0 0 20px -5px rgba(16, 185, 129, 0.3), 0 0 20px -5px rgba(244, 63, 94, 0.25);">
+              <!-- Ambient Glow Spheres -->
+              <div class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+              <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-rose-600/25 rounded-full blur-2xl pointer-events-none"></div>
+              <!-- Floating Sparkles -->
+              <span class="absolute top-3.5 right-24 text-[10px] text-white/60 pointer-events-none select-none">❄️</span>
+              <span class="absolute top-9 right-8 text-[8px] text-white/50 pointer-events-none select-none">✨</span>
+
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 backdrop-blur-md shadow-sm">
+                    <span>🎄</span> CHRISTMAS FESTIVAL
+                  </span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-950/60 text-rose-300 border border-rose-800/50 backdrop-blur-md">
+                    ❄️ Dec 2025
+                  </span>
                 </div>
-                <h4 class="text-sm sm:text-base font-black text-emerald-200 group-hover:text-amber-300 transition">2025 Christmas & Holiday Festival</h4>
-                <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                <h4 class="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-rose-100 to-amber-200 group-hover:from-emerald-100 group-hover:to-amber-100 transition tracking-wide">
+                  2025 Christmas & Holiday Festival
+                </h4>
+                <p class="text-xs text-slate-200/90 mt-1.5 leading-relaxed drop-shadow-sm font-normal">
                   22 holiday movies screened throughout December 2025 including Home Alone 2, The Grinch, The Nightmare Before Christmas, holiday comedies, and festive premieres.
                 </p>
-                <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px] font-semibold text-emerald-300/80">
-                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎁 22 Holiday Titles</span>
-                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎅 Family Classics</span>
-                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">❄️ Dec Screenings</span>
+                <div class="flex items-center gap-1.5 mt-3 flex-wrap text-[10px] font-semibold">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-rose-950/70 text-rose-200 border border-rose-800/60 shadow-sm backdrop-blur-sm">🎁 22 Holiday Titles</span>
+                  <span class="px-2.5 py-0.5 rounded-lg bg-emerald-950/70 text-emerald-200 border border-emerald-800/60 shadow-sm backdrop-blur-sm">🎅 Family Classics</span>
+                  <span class="px-2.5 py-0.5 rounded-lg bg-sky-950/60 text-sky-200 border border-sky-800/60 shadow-sm backdrop-blur-sm">❄️ Dec Screenings</span>
                 </div>
               </div>
-              <div class="flex items-center gap-2 pt-2 border-t border-emerald-900/40">
-                <button type="button" onclick="filterVaultToAnnualEvent('2025', 'christmas')" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                  <span>Explore 2025 Christmas Lineup (22 Films)</span> <span>→</span>
+
+              <div class="relative z-10 flex items-center gap-2 pt-3 border-t border-white/10">
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', 'christmas')" class="w-full py-2 px-3.5 rounded-xl text-white font-black text-xs transition-all duration-200 flex items-center justify-center gap-2 shadow-lg active:scale-95 cursor-pointer hover:brightness-110"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 42%, #e11d48 100%); box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.4), inset 0 1px 1px 0 rgba(255,255,255,0.4);">
+                  <span>Explore 2025 Christmas Lineup (22 Films)</span>
+                  <span>❄️</span>
                 </button>
               </div>
             </div>
@@ -1676,27 +1696,47 @@
             </button>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-gradient-to-b from-emerald-950/40 via-slate-950 to-slate-950 border border-emerald-800/60 hover:border-emerald-500 transition flex flex-col justify-between gap-3 shadow-md group">
-            <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">🎄 2024 CHRISTMAS FESTIVAL</span>
-                <span class="text-[10px] font-mono text-emerald-400">Dec 1 – Dec 25, 2024</span>
+          <div class="relative rounded-2xl overflow-hidden p-4 sm:p-5 flex flex-col justify-between gap-3.5 border border-emerald-500/40 hover:border-emerald-400 transition-all duration-300 shadow-xl group hover:shadow-2xl hover:shadow-emerald-950/50"
+               style="background: linear-gradient(135deg, rgba(6, 78, 59, 0.48) 0%, rgba(15, 23, 42, 0.88) 45%, rgba(159, 18, 57, 0.42) 100%), rgba(2, 6, 23, 0.95);
+                      backdrop-filter: blur(20px);
+                      -webkit-backdrop-filter: blur(20px);
+                      box-shadow: 0 12px 32px -8px rgba(0,0,0,0.8), inset 0 1px 1px 0 rgba(255,255,255,0.25), 0 0 20px -5px rgba(16, 185, 129, 0.3), 0 0 20px -5px rgba(244, 63, 94, 0.25);">
+            <!-- Ambient Glow Spheres -->
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-rose-600/25 rounded-full blur-2xl pointer-events-none"></div>
+            <!-- Floating Sparkles -->
+            <span class="absolute top-3.5 right-24 text-[10px] text-white/60 pointer-events-none select-none">❄️</span>
+            <span class="absolute top-9 right-8 text-[8px] text-white/50 pointer-events-none select-none">✨</span>
+
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-2">
+                <span class="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 backdrop-blur-md shadow-sm">
+                  <span>🎄</span> 2024 CHRISTMAS FESTIVAL
+                </span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-950/60 text-rose-300 border border-rose-800/50 backdrop-blur-md">
+                  ❄️ Dec 1 – Dec 25, 2024
+                </span>
               </div>
-              <h4 class="text-sm sm:text-base font-black text-emerald-200 group-hover:text-amber-300 transition">2024 Christmas & Holiday Festival</h4>
-              <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              <h4 class="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-rose-100 to-amber-200 group-hover:from-emerald-100 group-hover:to-amber-100 transition tracking-wide">
+                2024 Christmas & Holiday Festival
+              </h4>
+              <p class="text-xs text-slate-200/90 mt-1.5 leading-relaxed drop-shadow-sm font-normal">
                 The official 25-day December holiday festival lineup screened daily from Dec 1 to Dec 25, 2024. Features The Merry Gentlemen, Our Little Secret, Violent Night, Red One, The Grinch, and Exmas with trailers and full screening records.
               </p>
-              <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px] font-semibold text-emerald-300/80">
-                <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎁 25 Holiday Titles</span>
-                <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎅 Dec 1–25 Daily Screenings</span>
-                <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎬 Full Embedded Trailers</span>
+              <div class="flex items-center gap-1.5 mt-3 flex-wrap text-[10px] font-semibold">
+                <span class="px-2.5 py-0.5 rounded-lg bg-rose-950/70 text-rose-200 border border-rose-800/60 shadow-sm backdrop-blur-sm">🎁 25 Holiday Titles</span>
+                <span class="px-2.5 py-0.5 rounded-lg bg-emerald-950/70 text-emerald-200 border border-emerald-800/60 shadow-sm backdrop-blur-sm">🎅 Dec 1–25 Daily Screenings</span>
+                <span class="px-2.5 py-0.5 rounded-lg bg-amber-950/60 text-amber-200 border border-amber-800/60 shadow-sm backdrop-blur-sm">🎬 Full Embedded Trailers</span>
               </div>
             </div>
-            <div class="flex items-center gap-2 pt-2 border-t border-emerald-900/40">
-              <button type="button" onclick="filterVaultToAnnualEvent('2024', 'christmas', '2024 Christmas & Holiday Festival')" class="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                <span>Explore 2024 Christmas Lineup (25 Films)</span> <span>→</span>
+
+            <div class="relative z-10 flex items-center gap-2 pt-3 border-t border-white/10">
+              <button type="button" onclick="filterVaultToAnnualEvent('2024', 'christmas', '2024 Christmas & Holiday Festival')" class="flex-1 py-2 px-3.5 rounded-xl text-white font-black text-xs transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer hover:brightness-110"
+                      style="background: linear-gradient(135deg, #10b981 0%, #059669 42%, #e11d48 100%); box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.4), inset 0 1px 1px 0 rgba(255,255,255,0.4);">
+                <span>Explore 2024 Christmas Lineup (25 Films)</span>
+                <span>❄️</span>
               </button>
-              <button type="button" onclick="filterVaultToAnnualEvent('2024')" title="View all 29 screenings from 2024" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-800/60 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+              <button type="button" onclick="filterVaultToAnnualEvent('2024')" title="View all 29 screenings from 2024" class="py-2 px-3.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer backdrop-blur-md">
                 <span>All 2024 (29)</span>
               </button>
             </div>
@@ -1812,7 +1852,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.91";
+    const APP_VERSION = "4.9.92";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2189,6 +2229,14 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.92": [
+        "Frosted Aurora morphic cards for Christmas festival lineups.",
+        "Dual emerald and ruby ambient glow with frost backdrop.",
+        "Added sparkling snow crystal accents and festive badge pills.",
+        "Glossy emerald to ruby gradient festival action buttons.",
+        "Applied to both 2024 and 2025 Christmas events.",
+        "Full responsive and interactive vault filtering verified."
+      ],
       "4.9.91": [
         "Redesigned Movie Media Studio header with spacious two-tier layout.",
         "Fixed button and input overlap in admin media header.",
