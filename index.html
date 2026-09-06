@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.31 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.32 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -296,49 +296,19 @@
         </a>
       </div>
 
-      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-sky-500/40 p-6 sm:p-8 shadow-2xl neon-card flex flex-col items-center text-center gap-4">
-        <span class="text-xs font-bold uppercase tracking-widest text-sky-400">Next Scheduled Screening</span>
-        <h2 id="schedNextTitle" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
-          🎬 Neighbors 2
-        </h2>
-        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Sunday, Sept 6 • 7:00 PM PST</p>
-
-        <!-- Next Up Featured Movie Artwork Banner -->
-        <div id="schedNextPosterContainer" class="w-full max-w-lg aspect-[16/9] rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl relative my-1 group">
-          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/jzb9X0f2P1tH2e8964d4Lz14e0B.jpg" alt="Next Upcoming Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
-          <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
-            <span class="px-2.5 py-1 rounded-lg bg-amber-500/90 text-slate-950 font-bold uppercase tracking-wider text-[10px]">Next Premiere</span>
-            <span class="px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-sm text-slate-300 font-mono text-[11px] border border-slate-800">Sunday, Sept 6 • 7:00 PM PST</span>
-          </div>
+      <!-- Compatibility Hooks for Next Movie Metadata & Countdown (Hidden) -->
+      <div class="hidden" aria-hidden="true">
+        <span id="schedNextTitle">🎬 Neighbors 2</span>
+        <span id="schedNextDate">Sunday, Sept 6 • 7:00 PM PST</span>
+        <div id="schedNextPosterContainer">
+          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/jzb9X0f2P1tH2e8964d4Lz14e0B.jpg" alt="" />
         </div>
-
-        <!-- Precision Countdown -->
-        <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 w-full max-w-lg my-2">
-          <div id="countdownSubhead" class="text-[11px] text-center uppercase tracking-widest text-slate-400 mb-3 font-mono">Next Premiere Commences In</div>
-          <div id="schedCountdownGrid" class="grid grid-cols-4 gap-2 sm:gap-4 text-center font-mono">
-            <div id="schedColDays" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countDays" class="text-2xl sm:text-3xl font-black text-sky-400">00</div>
-              <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Days</div>
-            </div>
-            <div id="schedColHours" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countHours" class="text-2xl sm:text-3xl font-black text-sky-400">22</div>
-              <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Hours</div>
-            </div>
-            <div id="schedColMins" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countMins" class="text-2xl sm:text-3xl font-black text-sky-400">05</div>
-              <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Mins</div>
-            </div>
-            <div id="schedColSecs" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countSecs" class="text-2xl sm:text-3xl font-black text-amber-400">00</div>
-              <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Secs</div>
-            </div>
-          </div>
+        <div id="schedCountdownGrid">
+          <div id="schedColDays"><div id="countDays">00</div></div>
+          <div id="schedColHours"><div id="countHours">00</div></div>
+          <div id="schedColMins"><div id="countMins">00</div></div>
+          <div id="schedColSecs"><div id="countSecs">00</div></div>
         </div>
-
-        <button type="button" onclick="remindMeForNextMovie()" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2 shadow-md active:scale-95">
-          <span>🔔</span> Add to Calendar / Remind Me
-        </button>
       </div>
 
       <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
@@ -446,7 +416,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.31</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.32</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -646,7 +616,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.31</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.32</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -804,7 +774,7 @@
           <span>✨</span> <span>What's New</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.31</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.32</span>
     </div>
 
   </aside>
@@ -1015,7 +985,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h4 id="updateToastTitle" class="text-sm font-bold text-slate-100">Update Available</h4>
-            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.31</span>
+            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.32</span>
           </div>
           <p id="updateToastSubtitle" class="text-[11px] text-slate-400 mt-0.5">What's New in this release:</p>
         </div>
@@ -1046,7 +1016,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.31";
+    const APP_VERSION = "4.9.32";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1392,6 +1362,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.32": [
+        "Removed redundant featured screening card from schedule tab.",
+        "Focused schedule tab directly on upcoming movie lineup.",
+        "Streamlined layout for faster browsing of screening dates.",
+        "Maintained background sync for accurate countdowns."
+      ],
       "4.9.31": [
         "Popup toaster alerts for new app versions.",
         "One-click refresh button to instantly install updates.",
@@ -1423,7 +1399,7 @@
 
       const version = options.version || APP_VERSION;
       const isAvailable = options.isUpdateAvailable !== false;
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.31"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.32"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "New Version Available" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;

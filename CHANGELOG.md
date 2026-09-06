@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.32] - 2026-09-05
+
+### What's New
+- Removed redundant featured screening card from schedule tab.
+- Focused schedule tab directly on upcoming movie lineup.
+- Streamlined layout for faster browsing of screening dates.
+- Maintained background sync for accurate countdowns.
+- Updated Service Worker cache to version 4.9.32.
+
 ## [4.9.31] - 2026-09-05
 
 ### What's New
