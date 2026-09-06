@@ -19,7 +19,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7WJYrhDBQU4KDft1LUcEjqKVVxo.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7WJYrhDBQU4KDft1LUcEjqKVVxo.jpg",
     "releaseYear": "2012",
-    "trailerId": "ikz-zq1QqOE"
+    "trailerId": "ikz-zq1QqOE",
+    "screeningYear": 2018
   },
   {
     "title": "Fifty Shades Freed",
@@ -41,7 +42,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9ywA15OAiwjSTvg3cBs9B7kOCBF.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9ywA15OAiwjSTvg3cBs9B7kOCBF.jpg",
     "releaseYear": "2018",
-    "trailerId": "nJCc5HRPxYA"
+    "trailerId": "nJCc5HRPxYA",
+    "screeningYear": 2018
   },
   {
     "title": "Black Panther",
@@ -63,7 +65,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/b6ZJZHUdMEFECvGiDpJjlfUWela.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/b6ZJZHUdMEFECvGiDpJjlfUWela.jpg",
     "releaseYear": "2018",
-    "trailerId": "5lX-6qixxmY"
+    "trailerId": "5lX-6qixxmY",
+    "screeningYear": 2018
   },
   {
     "title": "Game Night",
@@ -85,7 +88,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aKPCZwkSZy2ASLo0QKeYmcoplfA.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aKPCZwkSZy2ASLo0QKeYmcoplfA.jpg",
     "releaseYear": "2018",
-    "trailerId": "AAb0W2z7eNA"
+    "trailerId": "AAb0W2z7eNA",
+    "screeningYear": 2018
   },
   {
     "title": "Pacific Rim: Uprising",
@@ -107,7 +111,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/oMaj75G2WFw66xI1TREg1hrToSg.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/oMaj75G2WFw66xI1TREg1hrToSg.jpg",
     "releaseYear": "2018",
-    "trailerId": "yR3tiOwq138"
+    "trailerId": "yR3tiOwq138",
+    "screeningYear": 2018
   },
   {
     "title": "Unsane",
@@ -129,7 +134,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5u0ImRdr8Z6uyDfmSWcThXEb8cl.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5u0ImRdr8Z6uyDfmSWcThXEb8cl.jpg",
     "releaseYear": "2018",
-    "trailerId": "ETRzz9ASpqg"
+    "trailerId": "ETRzz9ASpqg",
+    "screeningYear": 2018
   },
   {
     "title": "The Strangers: Prey at Night",
@@ -151,7 +157,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aUtLuEvTI1Z0vItORUYho4UiU6z.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aUtLuEvTI1Z0vItORUYho4UiU6z.jpg",
     "releaseYear": "2018",
-    "trailerId": "VuK1eSnCL8U"
+    "trailerId": "VuK1eSnCL8U",
+    "screeningYear": 2018
   },
   {
     "title": "Annihilation",
@@ -173,7 +180,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9trZvBr44UGedUOiGo3jgSUw13e.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9trZvBr44UGedUOiGo3jgSUw13e.jpg",
     "releaseYear": "2018",
-    "trailerId": "lHG6I6Ec4yA"
+    "trailerId": "lHG6I6Ec4yA",
+    "screeningYear": 2018
   },
   {
     "title": "Acrimony",
@@ -195,7 +203,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/h9USMzm43BZyUXc45OZAPlPBUjZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/h9USMzm43BZyUXc45OZAPlPBUjZ.jpg",
     "releaseYear": "2018",
-    "trailerId": "wlpunOUxYSo"
+    "trailerId": "wlpunOUxYSo",
+    "screeningYear": 2018
   },
   {
     "title": "Ready Player One",
@@ -217,7 +226,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5a7lMDn3nAj2ByO0X1fg6BhUphR.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5a7lMDn3nAj2ByO0X1fg6BhUphR.jpg",
     "releaseYear": "2018",
-    "trailerId": "1hrwbc5qCZ4"
+    "trailerId": "1hrwbc5qCZ4",
+    "screeningYear": 2018
   },
   {
     "title": "Tomb Raider",
@@ -239,7 +249,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ohijjhvNqAPKTURQr6VIF7xuAjY.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ohijjhvNqAPKTURQr6VIF7xuAjY.jpg",
     "releaseYear": "2018",
-    "trailerId": "3KkhD0MnaJU"
+    "trailerId": "3KkhD0MnaJU",
+    "screeningYear": 2018
   },
   {
     "title": "Blockers",
@@ -261,7 +272,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bStCGzVYFrKxtOyThKkqgI8gjgE.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/bStCGzVYFrKxtOyThKkqgI8gjgE.jpg",
     "releaseYear": "2018",
-    "trailerId": "RfFcaV5O7SU"
+    "trailerId": "RfFcaV5O7SU",
+    "screeningYear": 2018
   },
   {
     "title": "Truth or Dare",
@@ -283,7 +295,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/eQ5xu2pQ5Kergubto5PbbUzey28.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/eQ5xu2pQ5Kergubto5PbbUzey28.jpg",
     "releaseYear": "2018",
-    "trailerId": "BjRNY3u3bUw"
+    "trailerId": "BjRNY3u3bUw",
+    "screeningYear": 2018
   },
   {
     "title": "Traffik",
@@ -305,7 +318,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/wbk9VvJ8lkUF0ElpfRm3dFIzMJf.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wbk9VvJ8lkUF0ElpfRm3dFIzMJf.jpg",
     "releaseYear": "2018",
-    "trailerId": "Cq9Q4dRLGzA"
+    "trailerId": "Cq9Q4dRLGzA",
+    "screeningYear": 2018
   },
   {
     "title": "Super Troopers 2",
@@ -327,7 +341,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/sMJqDtLCdv9nlgU8BCj4VFfyzAv.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/sMJqDtLCdv9nlgU8BCj4VFfyzAv.jpg",
     "releaseYear": "2018",
-    "trailerId": "eEed-o8fVpM"
+    "trailerId": "eEed-o8fVpM",
+    "screeningYear": 2018
   },
   {
     "title": "Rampage",
@@ -349,7 +364,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vm8mhrjk5nQ562UQ0KbUzi0yOHr.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vm8mhrjk5nQ562UQ0KbUzi0yOHr.jpg",
     "releaseYear": "2018",
-    "trailerId": "-nEB0oCwgxI"
+    "trailerId": "-nEB0oCwgxI",
+    "screeningYear": 2018
   },
   {
     "title": "Overboard",
@@ -371,7 +387,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xiw4mTeahSbFMUgxapE9lfrBTUd.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xiw4mTeahSbFMUgxapE9lfrBTUd.jpg",
     "releaseYear": "2018",
-    "trailerId": "4TPJyx2Xljg"
+    "trailerId": "4TPJyx2Xljg",
+    "screeningYear": 2018
   },
   {
     "title": "Avengers: Infinity War",
@@ -393,7 +410,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg",
     "releaseYear": "2018",
-    "trailerId": "LXPaDL_oILs"
+    "trailerId": "LXPaDL_oILs",
+    "screeningYear": 2018
   },
   {
     "title": "Hereditary",
@@ -415,7 +433,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gJbTXKNTL6O7r7PzF6ZRkJGBlPp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gJbTXKNTL6O7r7PzF6ZRkJGBlPp.jpg",
     "releaseYear": "2018",
-    "trailerId": "LYhjNLMg8Ag"
+    "trailerId": "LYhjNLMg8Ag",
+    "screeningYear": 2018
   },
   {
     "title": "Incredibles 2",
@@ -437,7 +456,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mabuNsGJgRuCTuGqjFkWe1xdu19.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mabuNsGJgRuCTuGqjFkWe1xdu19.jpg",
     "releaseYear": "2018",
-    "trailerId": "i5qOzqD9Rms"
+    "trailerId": "i5qOzqD9Rms",
+    "screeningYear": 2018
   },
   {
     "title": "Tag",
@@ -459,7 +479,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/n8UzZ7gd3lmsBeYAH539pfnwGwu.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/n8UzZ7gd3lmsBeYAH539pfnwGwu.jpg",
     "releaseYear": "2018",
-    "trailerId": "kjC1zmZo30U"
+    "trailerId": "kjC1zmZo30U",
+    "screeningYear": 2018
   },
   {
     "title": "Jurassic World: Fallen Kingdom",
@@ -481,7 +502,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6WA9stUMbIkEPxn3D5SWlA8FIi7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6WA9stUMbIkEPxn3D5SWlA8FIi7.jpg",
     "releaseYear": "2018",
-    "trailerId": "1FJD7jZqZEk"
+    "trailerId": "1FJD7jZqZEk",
+    "screeningYear": 2018
   },
   {
     "title": "The First Purge",
@@ -503,11 +525,12 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/r4clWIxKeWoqrHspQP0XunuUmB7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/r4clWIxKeWoqrHspQP0XunuUmB7.jpg",
     "releaseYear": "2018",
-    "trailerId": "YIobxmhw3TU"
+    "trailerId": "YIobxmhw3TU",
+    "screeningYear": 2018
   },
   {
     "title": "The Interview",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2014",
     "date": "",
@@ -525,11 +548,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3YKGMZQ0pwQXSBSASeKlfPlkso7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3YKGMZQ0pwQXSBSASeKlfPlkso7.jpg",
     "releaseYear": "2014",
-    "trailerId": "zukaQeYdfT0"
+    "trailerId": "zukaQeYdfT0",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Pineapple Express",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2008",
     "date": "",
@@ -547,11 +572,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aO6Z7ErkEoahGFKYdEs4k4ilWFe.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aO6Z7ErkEoahGFKYdEs4k4ilWFe.jpg",
     "releaseYear": "2008",
-    "trailerId": "2T2o2WPNMXU"
+    "trailerId": "2T2o2WPNMXU",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Hokum",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -569,11 +596,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qY7zVZ7liULhfRoXg4c9Xl83LcR.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qY7zVZ7liULhfRoXg4c9Xl83LcR.jpg",
     "releaseYear": "2026",
-    "trailerId": "uiMPkzJ-iJU"
+    "trailerId": "uiMPkzJ-iJU",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "The 40 Year-Old Virgin",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2005",
     "date": "",
@@ -591,11 +620,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3Wej7JW8Ikrzbm6h0lmSdeOYMmu.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3Wej7JW8Ikrzbm6h0lmSdeOYMmu.jpg",
     "releaseYear": "2005",
-    "trailerId": "QVucTi58nA8"
+    "trailerId": "QVucTi58nA8",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Dracula",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2025",
     "date": "",
@@ -613,11 +644,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg",
     "releaseYear": "2025",
-    "trailerId": "hverb7siYJ8"
+    "trailerId": "hverb7siYJ8",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Deep Water 8/16",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -633,11 +666,13 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/szKv713FcUXx6hcfdY369vtkmzr.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/szKv713FcUXx6hcfdY369vtkmzr.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/szKv713FcUXx6hcfdY369vtkmzr.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/szKv713FcUXx6hcfdY369vtkmzr.jpg",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Normal",
-    "source": "past",
+    "source": "schedule",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -655,11 +690,14 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg",
     "releaseYear": "2026",
-    "trailerId": "7WsdqRuFCYc"
+    "trailerId": "7WsdqRuFCYc",
+    "screeningYear": 2026,
+    "scheduledDate": "Tuesday, Sept 15, 2026",
+    "status": "Scheduled"
   },
   {
     "title": "Mother Mary",
-    "source": "past",
+    "source": "schedule",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -677,11 +715,14 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9eynUDRhChIsgSYLK82aC4zIQ2M.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9eynUDRhChIsgSYLK82aC4zIQ2M.jpg",
     "releaseYear": "2026",
-    "trailerId": "aqYHOsuje1E"
+    "trailerId": "aqYHOsuje1E",
+    "screeningYear": 2026,
+    "scheduledDate": "Monday, Sept 14, 2026",
+    "status": "Scheduled"
   },
   {
     "title": "Borderlands",
-    "source": "past",
+    "source": "schedule",
     "mediaType": "movie",
     "year": "2024",
     "date": "",
@@ -699,11 +740,14 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg",
     "releaseYear": "2024",
-    "trailerId": "Icnysn53neU"
+    "trailerId": "Icnysn53neU",
+    "screeningYear": 2026,
+    "scheduledDate": "Saturday, Sept 19, 2026",
+    "status": "Scheduled"
   },
   {
     "title": "Dog Man",
-    "source": "past",
+    "source": "schedule",
     "mediaType": "movie",
     "year": "2025",
     "date": "",
@@ -721,11 +765,14 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/iXU87IdtNsYt7n6OigPJBDdbFf1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/iXU87IdtNsYt7n6OigPJBDdbFf1.jpg",
     "releaseYear": "2025",
-    "trailerId": "vvarnaXN7-s"
+    "trailerId": "vvarnaXN7-s",
+    "screeningYear": 2026,
+    "scheduledDate": "Friday, Sept 18, 2026",
+    "status": "Scheduled"
   },
   {
     "title": "Nosferatu",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2024",
     "date": "",
@@ -743,11 +790,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
     "releaseYear": "2024",
-    "trailerId": "X9hFwBygvlI"
+    "trailerId": "X9hFwBygvlI",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "The Mandalorian and Grogu",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -765,11 +814,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/wFKDH8nAz7l9iyVobjcNAPTrkNz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wFKDH8nAz7l9iyVobjcNAPTrkNz.jpg",
     "releaseYear": "2026",
-    "trailerId": "azv8TS-wUho"
+    "trailerId": "azv8TS-wUho",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "The President's Cake",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -787,11 +838,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vRdHKjKOpT1HoAp6JkfvdrnphH4.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vRdHKjKOpT1HoAp6JkfvdrnphH4.jpg",
     "releaseYear": "2026",
-    "trailerId": "4Ly1D0_Nj-U"
+    "trailerId": "4Ly1D0_Nj-U",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Scary Movie",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -809,11 +862,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
     "releaseYear": "2026",
-    "trailerId": "Cnz2kOZHZZo"
+    "trailerId": "Cnz2kOZHZZo",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Fuze",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -831,11 +886,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8wIaBCeGv3UhIn5CJOWQGHT1Cif.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8wIaBCeGv3UhIn5CJOWQGHT1Cif.jpg",
     "releaseYear": "2026",
-    "trailerId": "1aNywiElPSY"
+    "trailerId": "1aNywiElPSY",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Signal One",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -853,11 +910,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3gN540zmAiJW1v6mFoNiciamxc2.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3gN540zmAiJW1v6mFoNiciamxc2.jpg",
     "releaseYear": "2026",
-    "trailerId": "rJY9BC89igE"
+    "trailerId": "rJY9BC89igE",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Rich Flu",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2024",
     "date": "",
@@ -875,11 +934,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xFPtZRyFBU8oxeImTEh2rexzPXa.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xFPtZRyFBU8oxeImTEh2rexzPXa.jpg",
     "releaseYear": "2024",
-    "trailerId": "kJ_4XQiC4lg"
+    "trailerId": "kJ_4XQiC4lg",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "In the Grey",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -897,11 +958,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qcIKxhqGMIj8uujsSoSMZWr8QqU.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qcIKxhqGMIj8uujsSoSMZWr8QqU.jpg",
     "releaseYear": "2026",
-    "trailerId": "TEyz-nm8Wlk"
+    "trailerId": "TEyz-nm8Wlk",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Stop! That! Train!",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -919,11 +982,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/erNAhcSYrDMXQqAU1TVthYyFA71.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/erNAhcSYrDMXQqAU1TVthYyFA71.jpg",
     "releaseYear": "2026",
-    "trailerId": "554HOVMgbGw"
+    "trailerId": "554HOVMgbGw",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "LifeHack",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -941,11 +1006,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/k13za3wUhd8uejKJ2v9XQsRjxaw.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/k13za3wUhd8uejKJ2v9XQsRjxaw.jpg",
     "releaseYear": "2026",
-    "trailerId": "x6jEcgQ1cds"
+    "trailerId": "x6jEcgQ1cds",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Toy Story 5",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -963,11 +1030,13 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8sSKdEmlmqF4kJUd28SqthXC4yZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8sSKdEmlmqF4kJUd28SqthXC4yZ.jpg",
     "releaseYear": "2026",
-    "trailerId": "xo_Cwmdcu2Y"
+    "trailerId": "xo_Cwmdcu2Y",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Backrooms",
-    "source": "past",
+    "source": "request",
     "mediaType": "movie",
     "year": "2026",
     "date": "",
@@ -985,7 +1054,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/dqmMWNWfLnExDRpMtIMqI97GQFR.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/dqmMWNWfLnExDRpMtIMqI97GQFR.jpg",
     "releaseYear": "2026",
-    "trailerId": "5C-zBIuvGnU"
+    "trailerId": "5C-zBIuvGnU",
+    "screeningYear": null,
+    "status": "Not Scheduled"
   },
   {
     "title": "Haunted Mansion",
@@ -1007,7 +1078,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/Als2QyqbLgT5G3rwTGJta8QQfqP.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/Als2QyqbLgT5G3rwTGJta8QQfqP.jpg",
     "releaseYear": "2023",
-    "trailerId": "IOIKb3Qx93A"
+    "trailerId": "IOIKb3Qx93A",
+    "screeningYear": 2023
   },
   {
     "title": "TV: upload season 3",
@@ -1027,7 +1099,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/moH3PdysmUl8vrsYVM4l2ZZiRAd.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/moH3PdysmUl8vrsYVM4l2ZZiRAd.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/moH3PdysmUl8vrsYVM4l2ZZiRAd.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/moH3PdysmUl8vrsYVM4l2ZZiRAd.jpg",
+    "screeningYear": 2023
   },
   {
     "title": "Percy Jackson & the Olympians: The Lightning Thief",
@@ -1049,7 +1122,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ugiV9SpJburMOPeIyjBJyAnO1So.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ugiV9SpJburMOPeIyjBJyAnO1So.jpg",
     "releaseYear": "2010",
-    "trailerId": "R86InkfdboA"
+    "trailerId": "R86InkfdboA",
+    "screeningYear": 2023
   },
   {
     "title": "Inside Out 2",
@@ -1071,7 +1145,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/p5ozvmdgsmbWe0H8Xk7Rc8SCwAB.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/p5ozvmdgsmbWe0H8Xk7Rc8SCwAB.jpg",
     "releaseYear": "2024",
-    "trailerId": "QGFELnpig2M"
+    "trailerId": "QGFELnpig2M",
+    "screeningYear": 2024
   },
   {
     "title": "Despicable Me 4",
@@ -1093,7 +1168,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/twsxsfao6ZOVvT8LfudH603MMi6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/twsxsfao6ZOVvT8LfudH603MMi6.jpg",
     "releaseYear": "2024",
-    "trailerId": "rq68v4Q6aSo"
+    "trailerId": "rq68v4Q6aSo",
+    "screeningYear": 2024
   },
   {
     "title": "Deadpool & Wolverine",
@@ -1115,7 +1191,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/by8z9Fe8y7p4jo2YlW2SZDnptyT.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/by8z9Fe8y7p4jo2YlW2SZDnptyT.jpg",
     "releaseYear": "2024",
-    "trailerId": "dyq7hMlF9iY"
+    "trailerId": "dyq7hMlF9iY",
+    "screeningYear": 2024
   },
   {
     "title": "Face/Off",
@@ -1137,7 +1214,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tsSWHgaFlzzkp3o976juBZbmcs2.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tsSWHgaFlzzkp3o976juBZbmcs2.jpg",
     "releaseYear": "1997",
-    "trailerId": "3zebJ_NoduE"
+    "trailerId": "3zebJ_NoduE",
+    "screeningYear": 2024
   },
   {
     "title": "Sonic the Hedgehog 3",
@@ -1159,7 +1237,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zOpe0eHsq0A2NvNyBbtT6sj53qV.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zOpe0eHsq0A2NvNyBbtT6sj53qV.jpg",
     "releaseYear": "2024",
-    "trailerId": "7kz26vJu4Wk"
+    "trailerId": "7kz26vJu4Wk",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Philosopher's Stone",
@@ -1181,7 +1260,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1XAC6RPT01UX9EQGy2JVn5c8pgy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1XAC6RPT01UX9EQGy2JVn5c8pgy.jpg",
     "releaseYear": "2001",
-    "trailerId": "l91Km49W9qI"
+    "trailerId": "l91Km49W9qI",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Chamber of Secrets",
@@ -1203,7 +1283,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qSrq6ACzPDv4xerGJ78iS3N827K.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qSrq6ACzPDv4xerGJ78iS3N827K.jpg",
     "releaseYear": "2002",
-    "trailerId": "nE11U5iBnH0"
+    "trailerId": "nE11U5iBnH0",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Goblet of Fire",
@@ -1225,7 +1306,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cClWTo3ftVXvV1sF8vlLuWfnlph.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cClWTo3ftVXvV1sF8vlLuWfnlph.jpg",
     "releaseYear": "2005",
-    "trailerId": "4xkFJgcCQRE"
+    "trailerId": "4xkFJgcCQRE",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Prisoner of Azkaban",
@@ -1247,7 +1329,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/htmYEfH7TQgzsXHCnNXxmoYKQtL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/htmYEfH7TQgzsXHCnNXxmoYKQtL.jpg",
     "releaseYear": "2004",
-    "trailerId": "VwErvYgoH70"
+    "trailerId": "VwErvYgoH70",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Order of the Phoenix",
@@ -1269,7 +1352,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bsaA9qtIR6VTDQykXdBzJc8V5rS.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/bsaA9qtIR6VTDQykXdBzJc8V5rS.jpg",
     "releaseYear": "2007",
-    "trailerId": "47PHbQTmw5g"
+    "trailerId": "47PHbQTmw5g",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Half-Blood Prince",
@@ -1291,7 +1375,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mITJS77BV4TSqdFB5FPGBc7JKXj.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mITJS77BV4TSqdFB5FPGBc7JKXj.jpg",
     "releaseYear": "2009",
-    "trailerId": "DgeDDXcw--I"
+    "trailerId": "DgeDDXcw--I",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Deathly Hallows: Part 2",
@@ -1313,7 +1398,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/eKUk4oN4ucwnLJml7wRnjuB9AQH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/eKUk4oN4ucwnLJml7wRnjuB9AQH.jpg",
     "releaseYear": "2011",
-    "trailerId": "kwM3kN8PNOc"
+    "trailerId": "kwM3kN8PNOc",
+    "screeningYear": 2025
   },
   {
     "title": "Harry Potter and the Deathly Hallows: Part 2",
@@ -1335,7 +1421,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/eKUk4oN4ucwnLJml7wRnjuB9AQH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/eKUk4oN4ucwnLJml7wRnjuB9AQH.jpg",
     "releaseYear": "2011",
-    "trailerId": "kwM3kN8PNOc"
+    "trailerId": "kwM3kN8PNOc",
+    "screeningYear": 2025
   },
   {
     "title": "Paul",
@@ -1357,7 +1444,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kl3rMfydlxyLDsZidSUCEWm8K0M.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kl3rMfydlxyLDsZidSUCEWm8K0M.jpg",
     "releaseYear": "2011",
-    "trailerId": "S9jGTzQr7Nw"
+    "trailerId": "S9jGTzQr7Nw",
+    "screeningYear": 2025
   },
   {
     "title": "The Wild Robot",
@@ -1379,7 +1467,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1pmXyN3sKeYoUhu5VBZiDU4BX21.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1pmXyN3sKeYoUhu5VBZiDU4BX21.jpg",
     "releaseYear": "2024",
-    "trailerId": "oEC84M0GMdg"
+    "trailerId": "oEC84M0GMdg",
+    "screeningYear": 2025
   },
   {
     "title": "Moana 2",
@@ -1401,7 +1490,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vYqt6kb4lcF8wwqsMMaULkP9OEn.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vYqt6kb4lcF8wwqsMMaULkP9OEn.jpg",
     "releaseYear": "2024",
-    "trailerId": "kLbEvmOfh6U"
+    "trailerId": "kLbEvmOfh6U",
+    "screeningYear": 2025
   },
   {
     "title": "Heretic",
@@ -1423,7 +1513,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ag66gJCiZ06q1GSJuQlhGLi3Udx.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ag66gJCiZ06q1GSJuQlhGLi3Udx.jpg",
     "releaseYear": "2024",
-    "trailerId": "Swm7m1xGNwg"
+    "trailerId": "Swm7m1xGNwg",
+    "screeningYear": 2025
   },
   {
     "title": "Mike and Dave Need Wedding Dates",
@@ -1445,7 +1536,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4lfP1eVs5Q3Gk0K2kn1RvWs5alH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4lfP1eVs5Q3Gk0K2kn1RvWs5alH.jpg",
     "releaseYear": "2016",
-    "trailerId": "VpQNa2-5d2U"
+    "trailerId": "VpQNa2-5d2U",
+    "screeningYear": 2025
   },
   {
     "title": "Pirates of the Caribbean: The Curse of the Black Pearl",
@@ -1467,7 +1559,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uRNgkJSkNBFbbn9fPsEjDIy8Sh3.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uRNgkJSkNBFbbn9fPsEjDIy8Sh3.jpg",
     "releaseYear": "2003",
-    "trailerId": "-9HT0l9HV4c"
+    "trailerId": "-9HT0l9HV4c",
+    "screeningYear": 2025
   },
   {
     "title": "Pirates of the Caribbean: Dead Man's Chest",
@@ -1489,7 +1582,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vr6n6ZFUZvedvIlhfYcbCWcaKyW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vr6n6ZFUZvedvIlhfYcbCWcaKyW.jpg",
     "releaseYear": "2006",
-    "trailerId": "9SFWn9taQTw"
+    "trailerId": "9SFWn9taQTw",
+    "screeningYear": 2025
   },
   {
     "title": "The Strangers",
@@ -1511,7 +1605,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/y27M2hIwZRRvMAVEadFPP5hCPg1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/y27M2hIwZRRvMAVEadFPP5hCPg1.jpg",
     "releaseYear": "2008",
-    "trailerId": "jKGiF5m-FNY"
+    "trailerId": "jKGiF5m-FNY",
+    "screeningYear": 2025
   },
   {
     "title": "Pirates of the Caribbean: At World's End",
@@ -1533,7 +1628,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1jHxkVXMI5s3vRiyiZooUy1shB5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1jHxkVXMI5s3vRiyiZooUy1shB5.jpg",
     "releaseYear": "2007",
-    "trailerId": "HKSZtp_OGHY"
+    "trailerId": "HKSZtp_OGHY",
+    "screeningYear": 2025
   },
   {
     "title": "Pirates of the Caribbean: On Stranger Tides",
@@ -1555,7 +1651,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uzIGtyS6bbnJzGsPL93WCF1FWm8.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uzIGtyS6bbnJzGsPL93WCF1FWm8.jpg",
     "releaseYear": "2011",
-    "trailerId": "0BXCVe8Yww4"
+    "trailerId": "0BXCVe8Yww4",
+    "screeningYear": 2025
   },
   {
     "title": "The Strangers: Prey at Night",
@@ -1577,7 +1674,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aUtLuEvTI1Z0vItORUYho4UiU6z.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aUtLuEvTI1Z0vItORUYho4UiU6z.jpg",
     "releaseYear": "2018",
-    "trailerId": "VuK1eSnCL8U"
+    "trailerId": "VuK1eSnCL8U",
+    "screeningYear": 2025
   },
   {
     "title": "Pirates of the Caribbean: Dead Men Tell No Tales",
@@ -1599,7 +1697,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7C921eWK06n12c1miRXnYoEu5Yv.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7C921eWK06n12c1miRXnYoEu5Yv.jpg",
     "releaseYear": "2017",
-    "trailerId": "jnVk2C2YrSA"
+    "trailerId": "jnVk2C2YrSA",
+    "screeningYear": 2025
   },
   {
     "title": "Shrek",
@@ -1621,7 +1720,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/w0eKUOEog2ImtktCHAMUZws8qif.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/w0eKUOEog2ImtktCHAMUZws8qif.jpg",
     "releaseYear": "2001",
-    "trailerId": "ppDwfm6e498"
+    "trailerId": "ppDwfm6e498",
+    "screeningYear": 2025
   },
   {
     "title": "Shrek 2",
@@ -1643,7 +1743,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8ohobj5lAIbl5XWw11FywS3IRrS.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8ohobj5lAIbl5XWw11FywS3IRrS.jpg",
     "releaseYear": "2004",
-    "trailerId": "xBgSfhp5Fxo"
+    "trailerId": "xBgSfhp5Fxo",
+    "screeningYear": 2025
   },
   {
     "title": "Wicked",
@@ -1665,7 +1766,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fyZ6SDUS4o9jp2EHxfZa3qS9ean.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fyZ6SDUS4o9jp2EHxfZa3qS9ean.jpg",
     "releaseYear": "2024",
-    "trailerId": "kOnQ1sexTuc"
+    "trailerId": "kOnQ1sexTuc",
+    "screeningYear": 2025
   },
   {
     "title": "The Strangers: Chapter 1",
@@ -1687,7 +1789,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/59AJ2w9tKRSbBpnxKfB5UyIg6Jf.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/59AJ2w9tKRSbBpnxKfB5UyIg6Jf.jpg",
     "releaseYear": "2024",
-    "trailerId": "3pZUQmZdOi4"
+    "trailerId": "3pZUQmZdOi4",
+    "screeningYear": 2025
   },
   {
     "title": "Plane",
@@ -1709,7 +1812,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6JU2ysRVOHqav0Hs6BUv4mvvDxZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6JU2ysRVOHqav0Hs6BUv4mvvDxZ.jpg",
     "releaseYear": "2023",
-    "trailerId": "7-6_Ulo7mdk"
+    "trailerId": "7-6_Ulo7mdk",
+    "screeningYear": 2025
   },
   {
     "title": "Never Let Go",
@@ -1731,7 +1835,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fquVJ2v5NAW96sRfFAw4vXR5zla.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fquVJ2v5NAW96sRfFAw4vXR5zla.jpg",
     "releaseYear": "2024",
-    "trailerId": "-H3yhfkJBnQ"
+    "trailerId": "-H3yhfkJBnQ",
+    "screeningYear": 2025
   },
   {
     "title": "Coco",
@@ -1753,7 +1858,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/g7CHF8gTLGooTbP4GznIGwaqAGL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/g7CHF8gTLGooTbP4GznIGwaqAGL.jpg",
     "releaseYear": "2017",
-    "trailerId": "Rvr68u6k5sI"
+    "trailerId": "Rvr68u6k5sI",
+    "screeningYear": 2025
   },
   {
     "title": "Fifty Shades of Grey",
@@ -1775,7 +1881,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7IGKrY1f1KfwMipx9wZC4NRgIdF.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7IGKrY1f1KfwMipx9wZC4NRgIdF.jpg",
     "releaseYear": "2015",
-    "trailerId": "ey7joQ10fZk"
+    "trailerId": "ey7joQ10fZk",
+    "screeningYear": 2025
   },
   {
     "title": "Fifty Shades Darker",
@@ -1797,7 +1904,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/16aJtXO6lObbBUr11IvkjB1QD1f.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/16aJtXO6lObbBUr11IvkjB1QD1f.jpg",
     "releaseYear": "2017",
-    "trailerId": "HzIJJMj6Ar0"
+    "trailerId": "HzIJJMj6Ar0",
+    "screeningYear": 2025
   },
   {
     "title": "Fifty Shades Freed",
@@ -1819,7 +1927,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9ywA15OAiwjSTvg3cBs9B7kOCBF.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9ywA15OAiwjSTvg3cBs9B7kOCBF.jpg",
     "releaseYear": "2018",
-    "trailerId": "nJCc5HRPxYA"
+    "trailerId": "nJCc5HRPxYA",
+    "screeningYear": 2025
   },
   {
     "title": "Willy's Wonderland",
@@ -1841,7 +1950,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jFINtstDUh0vHOGImpMAmLrPcXy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jFINtstDUh0vHOGImpMAmLrPcXy.jpg",
     "releaseYear": "2021",
-    "trailerId": "0v27rfaoB2Y"
+    "trailerId": "0v27rfaoB2Y",
+    "screeningYear": 2025
   },
   {
     "title": "Night Swim",
@@ -1863,7 +1973,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aZ8dBIvpDFp9cp23MfBiY5mWfuy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aZ8dBIvpDFp9cp23MfBiY5mWfuy.jpg",
     "releaseYear": "2024",
-    "trailerId": "RlSQa56OjyI"
+    "trailerId": "RlSQa56OjyI",
+    "screeningYear": 2025
   },
   {
     "title": "Beetlejuice Beetlejuice",
@@ -1885,7 +1996,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kF8ljC7Y4p1UsmKBi2LxelZpqw.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kF8ljC7Y4p1UsmKBi2LxelZpqw.jpg",
     "releaseYear": "2024",
-    "trailerId": "EVm9EEpq4vU"
+    "trailerId": "EVm9EEpq4vU",
+    "screeningYear": 2025
   },
   {
     "title": "Y2K",
@@ -1907,7 +2019,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/47bsGWAEtJNWMcd3oNS7TELmi6v.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/47bsGWAEtJNWMcd3oNS7TELmi6v.jpg",
     "releaseYear": "2024",
-    "trailerId": "Oa823lY1sTs"
+    "trailerId": "Oa823lY1sTs",
+    "screeningYear": 2025
   },
   {
     "title": "Amityville: Where the Echo Lives",
@@ -1929,7 +2042,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5VYqB2T9L0WetvN9Bxk3Wg4vKoJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5VYqB2T9L0WetvN9Bxk3Wg4vKoJ.jpg",
     "releaseYear": "2024",
-    "trailerId": "0bJ_jJd39dU"
+    "trailerId": "0bJ_jJd39dU",
+    "screeningYear": 2025
   },
   {
     "title": "Beast",
@@ -1951,7 +2065,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
     "releaseYear": "2026",
-    "trailerId": "yJN2mJ4uOas"
+    "trailerId": "yJN2mJ4uOas",
+    "screeningYear": 2025
   },
   {
     "title": "Maxxine",
@@ -1971,7 +2086,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/viKEEaaCaZ0hZ2nGuvIEozlLooL.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/viKEEaaCaZ0hZ2nGuvIEozlLooL.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/viKEEaaCaZ0hZ2nGuvIEozlLooL.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/viKEEaaCaZ0hZ2nGuvIEozlLooL.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "The 15:17 to Paris",
@@ -1993,7 +2109,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gkkBhctHPGg8hrmtWbO3ySZoj4z.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gkkBhctHPGg8hrmtWbO3ySZoj4z.jpg",
     "releaseYear": "2018",
-    "trailerId": "PtngiTJZTos"
+    "trailerId": "PtngiTJZTos",
+    "screeningYear": 2025
   },
   {
     "title": "One of Them Days",
@@ -2015,7 +2132,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/t25z4ggC2Uvs3EhI66lxVO2jDp5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/t25z4ggC2Uvs3EhI66lxVO2jDp5.jpg",
     "releaseYear": "2025",
-    "trailerId": "W0ZFkibrq0U"
+    "trailerId": "W0ZFkibrq0U",
+    "screeningYear": 2025
   },
   {
     "title": "The Ritual",
@@ -2037,7 +2155,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/yPXGTceIv5ApZ5SziDM8xqXb9Ko.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/yPXGTceIv5ApZ5SziDM8xqXb9Ko.jpg",
     "releaseYear": "2025",
-    "trailerId": "GH5JslStSlA"
+    "trailerId": "GH5JslStSlA",
+    "screeningYear": 2025
   },
   {
     "title": "Thirteen Lives (reschedule)",
@@ -2057,7 +2176,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Bromates",
@@ -2079,7 +2199,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/umURGLeZ48xdf1jxzY9rnVa8fDx.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/umURGLeZ48xdf1jxzY9rnVa8fDx.jpg",
     "releaseYear": "2022",
-    "trailerId": "1mXnx_MKKGY"
+    "trailerId": "1mXnx_MKKGY",
+    "screeningYear": 2025
   },
   {
     "title": "Wolf Man",
@@ -2101,7 +2222,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/wwARk7hRIfHfh2n2ubN6N7lvTne.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wwARk7hRIfHfh2n2ubN6N7lvTne.jpg",
     "releaseYear": "2025",
-    "trailerId": "-tWdzz04C3Y"
+    "trailerId": "-tWdzz04C3Y",
+    "screeningYear": 2025
   },
   {
     "title": "Adrift",
@@ -2123,7 +2245,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/64jAqTJvrzEwncD3ARZdqYLcqbc.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/64jAqTJvrzEwncD3ARZdqYLcqbc.jpg",
     "releaseYear": "2018",
-    "trailerId": "HdMP4sWc71M"
+    "trailerId": "HdMP4sWc71M",
+    "screeningYear": 2025
   },
   {
     "title": "Paradise City",
@@ -2145,7 +2268,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tm1kAqfiElwOgXLI8goHBqhIWIM.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tm1kAqfiElwOgXLI8goHBqhIWIM.jpg",
     "releaseYear": "2022",
-    "trailerId": "YBBzvgBDgxE"
+    "trailerId": "YBBzvgBDgxE",
+    "screeningYear": 2025
   },
   {
     "title": "Battle: Los Angeles",
@@ -2167,7 +2291,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/buspsNeIGOAznaYQsnGDmQLZakW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/buspsNeIGOAznaYQsnGDmQLZakW.jpg",
     "releaseYear": "2011",
-    "trailerId": "eFDq1K4ZTls"
+    "trailerId": "eFDq1K4ZTls",
+    "screeningYear": 2025
   },
   {
     "title": "Plankton: The Movie",
@@ -2189,7 +2314,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lsgT602GYV8ts97sKH1gWFtQs1k.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/lsgT602GYV8ts97sKH1gWFtQs1k.jpg",
     "releaseYear": "2025",
-    "trailerId": "IHRScjhllsQ"
+    "trailerId": "IHRScjhllsQ",
+    "screeningYear": 2025
   },
   {
     "title": "The Retreat",
@@ -2210,7 +2336,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/eLScXIdMgm9VbJdx4X66VuYly7h.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/eLScXIdMgm9VbJdx4X66VuYly7h.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/eLScXIdMgm9VbJdx4X66VuYly7h.jpg",
-    "releaseYear": "2021"
+    "releaseYear": "2021",
+    "screeningYear": 2025
   },
   {
     "title": "Permission",
@@ -2232,7 +2359,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kqguapHFuUjKQ6Q7QQfTaJf4tfa.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kqguapHFuUjKQ6Q7QQfTaJf4tfa.jpg",
     "releaseYear": "2018",
-    "trailerId": "CTo5LREh21o"
+    "trailerId": "CTo5LREh21o",
+    "screeningYear": 2025
   },
   {
     "title": "Family Switch",
@@ -2254,7 +2382,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fc2pEZgr0ltmyzLl4cO9JInOg6l.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fc2pEZgr0ltmyzLl4cO9JInOg6l.jpg",
     "releaseYear": "2023",
-    "trailerId": "SWh4c9EVqGM"
+    "trailerId": "SWh4c9EVqGM",
+    "screeningYear": 2025
   },
   {
     "title": "The Relic",
@@ -2276,7 +2405,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/A21CdNF0nsnTPPreSkTsjmGmHQU.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/A21CdNF0nsnTPPreSkTsjmGmHQU.jpg",
     "releaseYear": "1997",
-    "trailerId": "bFbvUDpRBuo"
+    "trailerId": "bFbvUDpRBuo",
+    "screeningYear": 2025
   },
   {
     "title": "Both Eyes Open",
@@ -2298,7 +2428,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/yNWyPUPj7DA3U4Q0XkijY3eF1lg.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/yNWyPUPj7DA3U4Q0XkijY3eF1lg.jpg",
     "releaseYear": "2025",
-    "trailerId": "lFOk0SVhRM0"
+    "trailerId": "lFOk0SVhRM0",
+    "screeningYear": 2025
   },
   {
     "title": "thriteen lives and how it",
@@ -2318,7 +2449,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/tHR34A5n0my4maACNdLpWGd6QYq.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Cash Out",
@@ -2340,7 +2472,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6VoxDupaW2VXfLtJyeOoGCgXSjD.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6VoxDupaW2VXfLtJyeOoGCgXSjD.jpg",
     "releaseYear": "2024",
-    "trailerId": "Vt7rHUkoM08"
+    "trailerId": "Vt7rHUkoM08",
+    "screeningYear": 2025
   },
   {
     "title": "We Live in Time",
@@ -2362,7 +2495,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4t8IXJF4umwCfbdpeKLvlN3zkKp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4t8IXJF4umwCfbdpeKLvlN3zkKp.jpg",
     "releaseYear": "2024",
-    "trailerId": "gMorcJsN5wg"
+    "trailerId": "gMorcJsN5wg",
+    "screeningYear": 2025
   },
   {
     "title": "The Requin",
@@ -2384,7 +2518,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/eVSa4TpyXbOdk9fXSD6OcORJGtv.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/eVSa4TpyXbOdk9fXSD6OcORJGtv.jpg",
     "releaseYear": "2022",
-    "trailerId": "kWXK5fibfko"
+    "trailerId": "kWXK5fibfko",
+    "screeningYear": 2025
   },
   {
     "title": "Brothers Under Fire",
@@ -2406,7 +2541,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6D2NsU3FIQVthPgjT6RAsX58qZ6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6D2NsU3FIQVthPgjT6RAsX58qZ6.jpg",
     "releaseYear": "2026",
-    "trailerId": "4R6mxR53m10"
+    "trailerId": "4R6mxR53m10",
+    "screeningYear": 2025
   },
   {
     "title": "Back in Action",
@@ -2428,7 +2564,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mkxGpqh4yOYqtENv01IrDcesFRf.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mkxGpqh4yOYqtENv01IrDcesFRf.jpg",
     "releaseYear": "2025",
-    "trailerId": "MV2nYw6gL_w"
+    "trailerId": "MV2nYw6gL_w",
+    "screeningYear": 2025
   },
   {
     "title": "Honeymoon Crasher",
@@ -2449,7 +2586,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/pz0wQh69Fc88xJgEBGCnr8RHmQj.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/pz0wQh69Fc88xJgEBGCnr8RHmQj.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/pz0wQh69Fc88xJgEBGCnr8RHmQj.jpg",
-    "releaseYear": "2025"
+    "releaseYear": "2025",
+    "screeningYear": 2025
   },
   {
     "title": "Your Place or Mine",
@@ -2471,7 +2609,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1phS20ufmCOtT8kPBm3izGo6omk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1phS20ufmCOtT8kPBm3izGo6omk.jpg",
     "releaseYear": "2023",
-    "trailerId": "5JyfgkPMXk0"
+    "trailerId": "5JyfgkPMXk0",
+    "screeningYear": 2025
   },
   {
     "title": "iHostage",
@@ -2493,7 +2632,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4mM7m9L3XlPLq4vNNy3P8yDSXNM.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4mM7m9L3XlPLq4vNNy3P8yDSXNM.jpg",
     "releaseYear": "2025",
-    "trailerId": "Dhg-3ME2L6M"
+    "trailerId": "Dhg-3ME2L6M",
+    "screeningYear": 2025
   },
   {
     "title": "Trap",
@@ -2515,7 +2655,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/dCgrFY6uTqhEpyhe8MzP1oExyLt.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/dCgrFY6uTqhEpyhe8MzP1oExyLt.jpg",
     "releaseYear": "2024",
-    "trailerId": "aWvo3zcy2M0"
+    "trailerId": "aWvo3zcy2M0",
+    "screeningYear": 2025
   },
   {
     "title": "Geostorm",
@@ -2537,7 +2678,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vIEuJiIZN9EclAJDmD49F2zUzuX.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vIEuJiIZN9EclAJDmD49F2zUzuX.jpg",
     "releaseYear": "2017",
-    "trailerId": "HDASfaPuKV4"
+    "trailerId": "HDASfaPuKV4",
+    "screeningYear": 2025
   },
   {
     "title": "Companion",
@@ -2559,7 +2701,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cZnJ3ABPvsWGqwPcu06Eda493F9.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cZnJ3ABPvsWGqwPcu06Eda493F9.jpg",
     "releaseYear": "2025",
-    "trailerId": "KsovBd4l9-8"
+    "trailerId": "KsovBd4l9-8",
+    "screeningYear": 2025
   },
   {
     "title": "The Union",
@@ -2581,7 +2724,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4ft6TR9wA6bra0RLL6G7JFDQ5t1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4ft6TR9wA6bra0RLL6G7JFDQ5t1.jpg",
     "releaseYear": "2024",
-    "trailerId": "vea9SdnRMyg"
+    "trailerId": "vea9SdnRMyg",
+    "screeningYear": 2025
   },
   {
     "title": "Almost Afraid",
@@ -2603,7 +2747,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mISGABYdhj0Eouoxn0lmDvbHPQ5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mISGABYdhj0Eouoxn0lmDvbHPQ5.jpg",
     "releaseYear": "2026",
-    "trailerId": "Vl-zSD9KqaM"
+    "trailerId": "Vl-zSD9KqaM",
+    "screeningYear": 2025
   },
   {
     "title": "Missing",
@@ -2625,7 +2770,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tVH1qEFyKiCpP6kNDFyXKW2Tiif.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tVH1qEFyKiCpP6kNDFyXKW2Tiif.jpg",
     "releaseYear": "2023",
-    "trailerId": "seBixtcx19E"
+    "trailerId": "seBixtcx19E",
+    "screeningYear": 2025
   },
   {
     "title": "Fury",
@@ -2647,7 +2793,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/95ckrV6wQgbffurAVmETQ5YKASL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/95ckrV6wQgbffurAVmETQ5YKASL.jpg",
     "releaseYear": "2014",
-    "trailerId": "n-8YjrfLh6Y"
+    "trailerId": "n-8YjrfLh6Y",
+    "screeningYear": 2025
   },
   {
     "title": "Mom and Dad",
@@ -2669,7 +2816,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ozc8RAW9Bwt3T99iUjCrUvL7j1c.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ozc8RAW9Bwt3T99iUjCrUvL7j1c.jpg",
     "releaseYear": "2018",
-    "trailerId": "O4Kb40pnoOY"
+    "trailerId": "O4Kb40pnoOY",
+    "screeningYear": 2025
   },
   {
     "title": "Piece by Piece",
@@ -2691,7 +2839,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/oqWTbBixgF8XwqzGeFWMzkNwqAw.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/oqWTbBixgF8XwqzGeFWMzkNwqAw.jpg",
     "releaseYear": "2024",
-    "trailerId": "5lkZffop5kw"
+    "trailerId": "5lkZffop5kw",
+    "screeningYear": 2025
   },
   {
     "title": "Forever My Girl",
@@ -2713,7 +2862,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gEsBPNcGAuNBU5MGaOAlnm6uDe7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gEsBPNcGAuNBU5MGaOAlnm6uDe7.jpg",
     "releaseYear": "2018",
-    "trailerId": "5iEOQn8UUHI"
+    "trailerId": "5iEOQn8UUHI",
+    "screeningYear": 2025
   },
   {
     "title": "Monster Family",
@@ -2735,7 +2885,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jFSwrtsYJ0QesgPrvShQNOTn8aV.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jFSwrtsYJ0QesgPrvShQNOTn8aV.jpg",
     "releaseYear": "2017",
-    "trailerId": "UAeGpp5_lOI"
+    "trailerId": "UAeGpp5_lOI",
+    "screeningYear": 2025
   },
   {
     "title": "Monster Family 2",
@@ -2757,7 +2908,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8ISY1jghKbT9lbahxhxvHsX17ji.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8ISY1jghKbT9lbahxhxvHsX17ji.jpg",
     "releaseYear": "2021",
-    "trailerId": "46stXhjVF8Y"
+    "trailerId": "46stXhjVF8Y",
+    "screeningYear": 2025
   },
   {
     "title": "Novocaine",
@@ -2779,7 +2931,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lyBH2mFFU6qrHwD5QKotL2JnEb6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/lyBH2mFFU6qrHwD5QKotL2JnEb6.jpg",
     "releaseYear": "2025",
-    "trailerId": "umRCyzjQttA"
+    "trailerId": "umRCyzjQttA",
+    "screeningYear": 2025
   },
   {
     "title": "Holiday Ever After: A Disney World Wish Come True",
@@ -2801,7 +2954,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/z46rnl68nYfacEcaRxbPBR2yhgb.jpg",
     "backdropUrl": null,
     "releaseYear": "2026",
-    "trailerId": "atUrrfylupo"
+    "trailerId": "atUrrfylupo",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas"
   },
   {
     "title": "Horns",
@@ -2823,7 +2978,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mORSowyx92dlvx9zYOKXZx0NpAW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mORSowyx92dlvx9zYOKXZx0NpAW.jpg",
     "releaseYear": "2013",
-    "trailerId": "B3AZx-cNM78"
+    "trailerId": "B3AZx-cNM78",
+    "screeningYear": 2025
   },
   {
     "title": "Harold and the Purple Crayon",
@@ -2845,7 +3001,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/biMJPdS7bGW7HQTQrHvXxMqOqdC.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/biMJPdS7bGW7HQTQrHvXxMqOqdC.jpg",
     "releaseYear": "2024",
-    "trailerId": "_Onl0keRcnw"
+    "trailerId": "_Onl0keRcnw",
+    "screeningYear": 2025
   },
   {
     "title": "The color purple (2023)",
@@ -2865,7 +3022,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/rSle4ix2IZ6UMgCDY8L3ngdOmSZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/rSle4ix2IZ6UMgCDY8L3ngdOmSZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/rSle4ix2IZ6UMgCDY8L3ngdOmSZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/rSle4ix2IZ6UMgCDY8L3ngdOmSZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Carry On Jatta 4",
@@ -2887,7 +3045,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bKa9qAg71Kkjz0tOT1gxSAX9Nfv.jpg",
     "backdropUrl": null,
     "releaseYear": "2026",
-    "trailerId": "fsDBAr42UUg"
+    "trailerId": "fsDBAr42UUg",
+    "screeningYear": 2025
   },
   {
     "title": "Mother of the Bride",
@@ -2909,7 +3068,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/m0XCtFisSD0O6P55G1pUHdFccuL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/m0XCtFisSD0O6P55G1pUHdFccuL.jpg",
     "releaseYear": "2024",
-    "trailerId": "bUSoEQBHtSg"
+    "trailerId": "bUSoEQBHtSg",
+    "screeningYear": 2025
   },
   {
     "title": "The Sisters",
@@ -2931,7 +3091,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uG4BsZW7axw0qOf4Bj1dSYJ3X19.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uG4BsZW7axw0qOf4Bj1dSYJ3X19.jpg",
     "releaseYear": "2005",
-    "trailerId": "U-BbvE5iZR4"
+    "trailerId": "U-BbvE5iZR4",
+    "screeningYear": 2025
   },
   {
     "title": "Talk to Me",
@@ -2953,7 +3114,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/46Os8U0DEPmI0OnvKDxucl6SLVZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/46Os8U0DEPmI0OnvKDxucl6SLVZ.jpg",
     "releaseYear": "2023",
-    "trailerId": "mAbWxKLBkbY"
+    "trailerId": "mAbWxKLBkbY",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 1",
@@ -2973,7 +3135,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 3",
@@ -2993,7 +3156,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 4",
@@ -3013,7 +3177,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 5",
@@ -3033,7 +3198,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 6",
@@ -3053,7 +3219,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 7",
@@ -3073,7 +3240,8 @@
     "trailerUrl": "1.",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Big Mouth Season 8",
@@ -3093,7 +3261,8 @@
     "trailerUrl": "1.",
     "posterUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/uM6WJodeCyTp7h7NhE4rgd0RbRZ.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Captain America: Brave New World",
@@ -3115,7 +3284,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg",
     "releaseYear": "2025",
-    "trailerId": "SOwJjV6Y_l0"
+    "trailerId": "SOwJjV6Y_l0",
+    "screeningYear": 2025
   },
   {
     "title": "Mickey 17",
@@ -3137,7 +3307,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9PRKAdrDvAdCfg3EcApLTfzGsEt.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9PRKAdrDvAdCfg3EcApLTfzGsEt.jpg",
     "releaseYear": "2025",
-    "trailerId": "0cOrjAsV_-g"
+    "trailerId": "0cOrjAsV_-g",
+    "screeningYear": 2025
   },
   {
     "title": "Nonnas",
@@ -3159,7 +3330,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gfe8onl8FhaJg4C47Kecj7CdNvf.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gfe8onl8FhaJg4C47Kecj7CdNvf.jpg",
     "releaseYear": "2025",
-    "trailerId": "rDJxJd3FzDY"
+    "trailerId": "rDJxJd3FzDY",
+    "screeningYear": 2025
   },
   {
     "title": "Time Cut",
@@ -3181,7 +3353,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qYvOcinXcnebhmCxYeivurh91T1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qYvOcinXcnebhmCxYeivurh91T1.jpg",
     "releaseYear": "2024",
-    "trailerId": "a8F6yN56zB0"
+    "trailerId": "a8F6yN56zB0",
+    "screeningYear": 2025
   },
   {
     "title": "Exterritorial",
@@ -3203,7 +3376,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/14UFWFJsGeInCbhTiehRLTff4Yx.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/14UFWFJsGeInCbhTiehRLTff4Yx.jpg",
     "releaseYear": "2025",
-    "trailerId": "tlLsFEDHtWs"
+    "trailerId": "tlLsFEDHtWs",
+    "screeningYear": 2025
   },
   {
     "title": "The Life List",
@@ -3225,7 +3399,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/sulUXRukzh7WSK34y8mnaUcHo3y.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/sulUXRukzh7WSK34y8mnaUcHo3y.jpg",
     "releaseYear": "2025",
-    "trailerId": "nldAfgJrBr8"
+    "trailerId": "nldAfgJrBr8",
+    "screeningYear": 2025
   },
   {
     "title": "Aftermath",
@@ -3247,7 +3422,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aWILNXgq07riueQknYXMvum11jo.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aWILNXgq07riueQknYXMvum11jo.jpg",
     "releaseYear": "2024",
-    "trailerId": "PhuXe-bUgYs"
+    "trailerId": "PhuXe-bUgYs",
+    "screeningYear": 2025
   },
   {
     "title": "Don't Let Go",
@@ -3269,7 +3445,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2JMG17kxeq1w88oHUkesxpIHmTZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2JMG17kxeq1w88oHUkesxpIHmTZ.jpg",
     "releaseYear": "2019",
-    "trailerId": "wi3VH-zDFYM"
+    "trailerId": "wi3VH-zDFYM",
+    "screeningYear": 2025
   },
   {
     "title": "Heart Eyes",
@@ -3291,7 +3468,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vh5FIqfosYaLWxCmZfSPjgUWWfn.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vh5FIqfosYaLWxCmZfSPjgUWWfn.jpg",
     "releaseYear": "2025",
-    "trailerId": "Fr2nWWF2eN0"
+    "trailerId": "Fr2nWWF2eN0",
+    "screeningYear": 2025
   },
   {
     "title": "Golden Anniversary of Snow White and the Seven Dwarfs",
@@ -3312,7 +3490,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/lcYR7ylXpMxKZKqZI9Geq1xV4XA.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/lcYR7ylXpMxKZKqZI9Geq1xV4XA.jpg",
     "backdropUrl": null,
-    "releaseYear": "1987"
+    "releaseYear": "1987",
+    "screeningYear": 2025
   },
   {
     "title": "STRAW",
@@ -3334,7 +3513,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fnbWrDx8w8Reau4F1tFqoGuGmDZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fnbWrDx8w8Reau4F1tFqoGuGmDZ.jpg",
     "releaseYear": "2025",
-    "trailerId": "k1vWhii4tkE"
+    "trailerId": "k1vWhii4tkE",
+    "screeningYear": 2025
   },
   {
     "title": "Juror #2",
@@ -3356,7 +3536,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9Qq8InnodUYs8zdam8Zj967i6RO.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9Qq8InnodUYs8zdam8Zj967i6RO.jpg",
     "releaseYear": "2024",
-    "trailerId": "czYUXo0R0oA"
+    "trailerId": "czYUXo0R0oA",
+    "screeningYear": 2025
   },
   {
     "title": "Sextuplets",
@@ -3378,7 +3559,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/h9cKOZs5z0fVmM9cZ4RPBvcojK5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/h9cKOZs5z0fVmM9cZ4RPBvcojK5.jpg",
     "releaseYear": "2019",
-    "trailerId": "e0LJNn-GcnY"
+    "trailerId": "e0LJNn-GcnY",
+    "screeningYear": 2025
   },
   {
     "title": "Fountain of Youth",
@@ -3400,7 +3582,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/arGs8D4RfUfsk7vMiMjDi6Mtabv.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/arGs8D4RfUfsk7vMiMjDi6Mtabv.jpg",
     "releaseYear": "2025",
-    "trailerId": "-7S28bH8iDs"
+    "trailerId": "-7S28bH8iDs",
+    "screeningYear": 2025
   },
   {
     "title": "Incoming",
@@ -3422,7 +3605,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1XmbgjIpqpdnSBaEzN0YaaaZObd.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1XmbgjIpqpdnSBaEzN0YaaaZObd.jpg",
     "releaseYear": "2024",
-    "trailerId": "E_Vc11HVEYo"
+    "trailerId": "E_Vc11HVEYo",
+    "screeningYear": 2025
   },
   {
     "title": "Christmas Island",
@@ -3444,7 +3628,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/iFwxbJHxbp5uxXyeIV9MPoOLYlW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/iFwxbJHxbp5uxXyeIV9MPoOLYlW.jpg",
     "releaseYear": "2023",
-    "trailerId": "T3qpLfyRKqY"
+    "trailerId": "T3qpLfyRKqY",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas"
   },
   {
     "title": "Christmas on Candy Cane Lane",
@@ -3465,7 +3651,9 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/wHXdFpbcwQlfuhWREzDJpJflLTR.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/wHXdFpbcwQlfuhWREzDJpJflLTR.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wHXdFpbcwQlfuhWREzDJpJflLTR.jpg",
-    "releaseYear": "2022"
+    "releaseYear": "2022",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas"
   },
   {
     "title": "The Addams Family",
@@ -3487,7 +3675,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/grY5sfuT9YeXWlp4JYCmRZVqjk0.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/grY5sfuT9YeXWlp4JYCmRZVqjk0.jpg",
     "releaseYear": "2019",
-    "trailerId": "qSp0U0IB7yw"
+    "trailerId": "qSp0U0IB7yw",
+    "screeningYear": 2025
   },
   {
     "title": "The Addams Family 2",
@@ -3509,7 +3698,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/wfrfxivLOBtGMC98tIr2LSOeKSe.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wfrfxivLOBtGMC98tIr2LSOeKSe.jpg",
     "releaseYear": "2021",
-    "trailerId": "946LiJiMQrQ"
+    "trailerId": "946LiJiMQrQ",
+    "screeningYear": 2025
   },
   {
     "title": "We Have a Ghost",
@@ -3531,7 +3721,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/25xur6csh3XXtQcOq4zx3cyvbEN.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/25xur6csh3XXtQcOq4zx3cyvbEN.jpg",
     "releaseYear": "2023",
-    "trailerId": "82I1ErFD63U"
+    "trailerId": "82I1ErFD63U",
+    "screeningYear": 2025
   },
   {
     "title": "Girl Haunts Boy",
@@ -3553,7 +3744,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zOz4Dsg2JiplITr4SnPir0SyRIp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zOz4Dsg2JiplITr4SnPir0SyRIp.jpg",
     "releaseYear": "2024",
-    "trailerId": "QY0OcNIleNM"
+    "trailerId": "QY0OcNIleNM",
+    "screeningYear": 2025
   },
   {
     "title": "A Minecraft Movie",
@@ -3575,7 +3767,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg",
     "releaseYear": "2025",
-    "trailerId": "aSh_L6bvaCQ"
+    "trailerId": "aSh_L6bvaCQ",
+    "screeningYear": 2025
   },
   {
     "title": "The Woman in the Yard",
@@ -3597,7 +3790,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3lEV4CoKoeT2cZ4fbKEJugZcw6Z.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3lEV4CoKoeT2cZ4fbKEJugZcw6Z.jpg",
     "releaseYear": "2025",
-    "trailerId": "8jWsHU7Y6w4"
+    "trailerId": "8jWsHU7Y6w4",
+    "screeningYear": 2025
   },
   {
     "title": "Rebel Rudge",
@@ -3617,7 +3811,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/cyKH7pDFlxIXluqRyNoHHEpxSDX.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/cyKH7pDFlxIXluqRyNoHHEpxSDX.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/cyKH7pDFlxIXluqRyNoHHEpxSDX.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/cyKH7pDFlxIXluqRyNoHHEpxSDX.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "The Wrong Missy",
@@ -3639,7 +3834,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1xQtvgay8rDwSaZPwyhcecqV8UD.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1xQtvgay8rDwSaZPwyhcecqV8UD.jpg",
     "releaseYear": "2020",
-    "trailerId": "2Cwaneq2w-4"
+    "trailerId": "2Cwaneq2w-4",
+    "screeningYear": 2025
   },
   {
     "title": "Good on Paper",
@@ -3661,7 +3857,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/enlicWSFU0H2JNe3TgHNe4RIGWT.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/enlicWSFU0H2JNe3TgHNe4RIGWT.jpg",
     "releaseYear": "2021",
-    "trailerId": "z_-_hIuE1YA"
+    "trailerId": "z_-_hIuE1YA",
+    "screeningYear": 2025
   },
   {
     "title": "Trigger Warning",
@@ -3683,7 +3880,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cmgjr2saprHvYw6Ee7MUIqGVQHn.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cmgjr2saprHvYw6Ee7MUIqGVQHn.jpg",
     "releaseYear": "2024",
-    "trailerId": "MnHTLh6ruW0"
+    "trailerId": "MnHTLh6ruW0",
+    "screeningYear": 2025
   },
   {
     "title": "Cleaner",
@@ -3705,7 +3903,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gsQJOfeW45KLiQeEIsom94QPQwb.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gsQJOfeW45KLiQeEIsom94QPQwb.jpg",
     "releaseYear": "2025",
-    "trailerId": "c8sf0c-cjzQ"
+    "trailerId": "c8sf0c-cjzQ",
+    "screeningYear": 2025
   },
   {
     "title": "Extract",
@@ -3727,7 +3926,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vSUz6gjbK0x9LfaDxZcIKk84Dxs.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vSUz6gjbK0x9LfaDxZcIKk84Dxs.jpg",
     "releaseYear": "2009",
-    "trailerId": "mgIJjka3PK8"
+    "trailerId": "mgIJjka3PK8",
+    "screeningYear": 2025
   },
   {
     "title": "Murder Mystery 2",
@@ -3749,7 +3949,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/AwB7HGeDTrBGkP2WEnNwg8Wa0E4.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/AwB7HGeDTrBGkP2WEnNwg8Wa0E4.jpg",
     "releaseYear": "2023",
-    "trailerId": "EnfNOcmTSKA"
+    "trailerId": "EnfNOcmTSKA",
+    "screeningYear": 2025
   },
   {
     "title": "Murder Mystery",
@@ -3771,7 +3972,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/wL8KA3zIJQPbbU5hJlyIdmmLZit.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wL8KA3zIJQPbbU5hJlyIdmmLZit.jpg",
     "releaseYear": "2019",
-    "trailerId": "5YEVQDr2f3Q"
+    "trailerId": "5YEVQDr2f3Q",
+    "screeningYear": 2025
   },
   {
     "title": "Hitman",
@@ -3793,7 +3995,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9LMIoURuLvxEVKMib4DoVVcJJ5l.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9LMIoURuLvxEVKMib4DoVVcJJ5l.jpg",
     "releaseYear": "2007",
-    "trailerId": "7A0DuqGfXqw"
+    "trailerId": "7A0DuqGfXqw",
+    "screeningYear": 2025
   },
   {
     "title": "End of the Road",
@@ -3815,7 +4018,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5luJmy21N3bYCkjzRHsoZfvLtPP.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5luJmy21N3bYCkjzRHsoZfvLtPP.jpg",
     "releaseYear": "2022",
-    "trailerId": "202KkD12AuI"
+    "trailerId": "202KkD12AuI",
+    "screeningYear": 2025
   },
   {
     "title": "Woman of the Hour",
@@ -3837,7 +4041,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/n6KXCV9jqUDDL5HCIoKHQ8kD9Fq.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/n6KXCV9jqUDDL5HCIoKHQ8kD9Fq.jpg",
     "releaseYear": "2024",
-    "trailerId": "0c23FYqC1TM"
+    "trailerId": "0c23FYqC1TM",
+    "screeningYear": 2025
   },
   {
     "title": "Spider-Man: No Way Home",
@@ -3859,7 +4064,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uyrOU4BDm2kbVxFsMiDFIHDhc4d.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uyrOU4BDm2kbVxFsMiDFIHDhc4d.jpg",
     "releaseYear": "2021",
-    "trailerId": "FK1aFyCbbBM"
+    "trailerId": "FK1aFyCbbBM",
+    "screeningYear": 2025
   },
   {
     "title": "Madea's Destination Wedding",
@@ -3881,7 +4087,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rEX85lgoawCWv9l8bgEPRqWtdPp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rEX85lgoawCWv9l8bgEPRqWtdPp.jpg",
     "releaseYear": "2025",
-    "trailerId": "WdAYvmk4QjA"
+    "trailerId": "WdAYvmk4QjA",
+    "screeningYear": 2025
   },
   {
     "title": "Coffee & Kareem",
@@ -3903,7 +4110,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9nLiA8HCZCDKPLVYJKLLVJpbVGq.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9nLiA8HCZCDKPLVYJKLLVJpbVGq.jpg",
     "releaseYear": "2020",
-    "trailerId": "hY9h5o0G_OE"
+    "trailerId": "hY9h5o0G_OE",
+    "screeningYear": 2025
   },
   {
     "title": "Den of Thieves",
@@ -3925,7 +4133,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gQEfeFzEDhvz1YB3JXU2yUZspmH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gQEfeFzEDhvz1YB3JXU2yUZspmH.jpg",
     "releaseYear": "2018",
-    "trailerId": "DnCKpbUf1N8"
+    "trailerId": "DnCKpbUf1N8",
+    "screeningYear": 2025
   },
   {
     "title": "Den of Thieves 2: Pantera",
@@ -3947,7 +4156,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1mCEzHxDcJdkM3Ye7CTeZ04HVBB.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1mCEzHxDcJdkM3Ye7CTeZ04HVBB.jpg",
     "releaseYear": "2025",
-    "trailerId": "KG1tks1ICiA"
+    "trailerId": "KG1tks1ICiA",
+    "screeningYear": 2025
   },
   {
     "title": "Disney MUFASA The lion king",
@@ -3967,7 +4177,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/1w8kutrRucTd3wlYyu5QlUDMiG1.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/1w8kutrRucTd3wlYyu5QlUDMiG1.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/1w8kutrRucTd3wlYyu5QlUDMiG1.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/1w8kutrRucTd3wlYyu5QlUDMiG1.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Disney Mary Poppins Returns",
@@ -3987,7 +4198,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/oGzToOBTRdXVOrHj8r0VgK3d2sU.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/oGzToOBTRdXVOrHj8r0VgK3d2sU.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/oGzToOBTRdXVOrHj8r0VgK3d2sU.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/oGzToOBTRdXVOrHj8r0VgK3d2sU.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Sinners",
@@ -4009,7 +4221,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/nAxGnGHOsfzufThz20zgmRwKur3.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/nAxGnGHOsfzufThz20zgmRwKur3.jpg",
     "releaseYear": "2025",
-    "trailerId": "xSCeaV5RPVU"
+    "trailerId": "xSCeaV5RPVU",
+    "screeningYear": 2025
   },
   {
     "title": "Brick",
@@ -4031,7 +4244,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/apNfldKI3RiaukNwJzr8EjRG7Wc.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/apNfldKI3RiaukNwJzr8EjRG7Wc.jpg",
     "releaseYear": "2025",
-    "trailerId": "fmi4Qc-cvis"
+    "trailerId": "fmi4Qc-cvis",
+    "screeningYear": 2025
   },
   {
     "title": "Almost Cops",
@@ -4053,7 +4267,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qtSY2SAL5QApuCUD0sXqyzgHYnl.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qtSY2SAL5QApuCUD0sXqyzgHYnl.jpg",
     "releaseYear": "2025",
-    "trailerId": "QsMBhTskZC8"
+    "trailerId": "QsMBhTskZC8",
+    "screeningYear": 2025
   },
   {
     "title": "Scary Movie",
@@ -4075,7 +4290,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
     "releaseYear": "2026",
-    "trailerId": "Cnz2kOZHZZo"
+    "trailerId": "Cnz2kOZHZZo",
+    "screeningYear": 2025
   },
   {
     "title": "Until Dawn",
@@ -4097,7 +4313,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3xKJ0nyUTlySmMBCpOcsuSnFPI1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3xKJ0nyUTlySmMBCpOcsuSnFPI1.jpg",
     "releaseYear": "2025",
-    "trailerId": "OTRLxuakoLk"
+    "trailerId": "OTRLxuakoLk",
+    "screeningYear": 2025
   },
   {
     "title": "Happy Gilmore 1",
@@ -4117,7 +4334,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=y1emDAYCfVQ",
     "posterUrl": "https://image.tmdb.org/t/p/w780/As7NuiDRM4EO7LlJn2u8JWWsABp.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/As7NuiDRM4EO7LlJn2u8JWWsABp.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/As7NuiDRM4EO7LlJn2u8JWWsABp.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/As7NuiDRM4EO7LlJn2u8JWWsABp.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Happy Gilmore 2",
@@ -4139,7 +4357,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/dRgfr6i95s4qEZkdtWdJP495E75.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/dRgfr6i95s4qEZkdtWdJP495E75.jpg",
     "releaseYear": "2025",
-    "trailerId": "wUq6nRrz0OE"
+    "trailerId": "wUq6nRrz0OE",
+    "screeningYear": 2025
   },
   {
     "title": "Death of a Unicorn",
@@ -4161,7 +4380,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4rLaMBcCJ1pMq72vCulBMPsbAyh.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4rLaMBcCJ1pMq72vCulBMPsbAyh.jpg",
     "releaseYear": "2025",
-    "trailerId": "uG2gsnq7SJE"
+    "trailerId": "uG2gsnq7SJE",
+    "screeningYear": 2025
   },
   {
     "title": "Locked",
@@ -4183,7 +4403,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/r4X2xRrWleVgx0kahP27xRmm3ia.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/r4X2xRrWleVgx0kahP27xRmm3ia.jpg",
     "releaseYear": "2025",
-    "trailerId": "TuBP9dw-BCg"
+    "trailerId": "TuBP9dw-BCg",
+    "screeningYear": 2025
   },
   {
     "title": "Drop",
@@ -4205,7 +4426,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/akBGSguhkAj1TXOdZUcL11e1hpH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/akBGSguhkAj1TXOdZUcL11e1hpH.jpg",
     "releaseYear": "2025",
-    "trailerId": "1JY1WKFnA54"
+    "trailerId": "1JY1WKFnA54",
+    "screeningYear": 2025
   },
   {
     "title": "Wanted",
@@ -4227,7 +4449,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vjwuT8EzWY96W6nrJKZNI2WJU87.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vjwuT8EzWY96W6nrJKZNI2WJU87.jpg",
     "releaseYear": "2008",
-    "trailerId": "b9YEdjEKme0"
+    "trailerId": "b9YEdjEKme0",
+    "screeningYear": 2025
   },
   {
     "title": "Opus",
@@ -4249,7 +4472,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3kzw6Rw7TBujqtchJS2TSP3O2US.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3kzw6Rw7TBujqtchJS2TSP3O2US.jpg",
     "releaseYear": "2025",
-    "trailerId": "rifr_qti9vg"
+    "trailerId": "rifr_qti9vg",
+    "screeningYear": 2025
   },
   {
     "title": "Final Destination Bloodlines",
@@ -4271,7 +4495,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uIpJPDNFoeX0TVml9smPrs9KUVx.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uIpJPDNFoeX0TVml9smPrs9KUVx.jpg",
     "releaseYear": "2025",
-    "trailerId": "YBv7CPxD8fI"
+    "trailerId": "YBv7CPxD8fI",
+    "screeningYear": 2025
   },
   {
     "title": "Freelance",
@@ -4293,7 +4518,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zIYROrkHJPYB3VTiW1L9QVgaQO.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zIYROrkHJPYB3VTiW1L9QVgaQO.jpg",
     "releaseYear": "2023",
-    "trailerId": "W0k2XerT8Nw"
+    "trailerId": "W0k2XerT8Nw",
+    "screeningYear": 2025
   },
   {
     "title": "The Great Wall",
@@ -4315,7 +4541,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/th26RNksfM9nn7DPH06OqiV6BA2.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/th26RNksfM9nn7DPH06OqiV6BA2.jpg",
     "releaseYear": "2016",
-    "trailerId": "Bnsesxk5LF4"
+    "trailerId": "Bnsesxk5LF4",
+    "screeningYear": 2025
   },
   {
     "title": "War of the Worlds",
@@ -4337,7 +4564,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/iZLqwEwUViJdSkGVjePGhxYzbDb.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/iZLqwEwUViJdSkGVjePGhxYzbDb.jpg",
     "releaseYear": "2025",
-    "trailerId": "d9erkpdh5o0"
+    "trailerId": "d9erkpdh5o0",
+    "screeningYear": 2025
   },
   {
     "title": "twisted Metal Season 2 (ep1 - ep5)",
@@ -4357,7 +4585,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Kandahar",
@@ -4379,7 +4608,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/c6Splshb8lb2Q9OvUfhpqXl7uP0.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/c6Splshb8lb2Q9OvUfhpqXl7uP0.jpg",
     "releaseYear": "2023",
-    "trailerId": "WrAnd6AMfH0"
+    "trailerId": "WrAnd6AMfH0",
+    "screeningYear": 2025
   },
   {
     "title": "twisted Metal Season 2 Ep: 6",
@@ -4399,7 +4629,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "twisted Metal Season 2 Ep: 7",
@@ -4419,7 +4650,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Perfume Live at Tokyo Dome \"1 2 3 4 5 6 7 8 9 10 11\"",
@@ -4440,7 +4672,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/1HMAbPuvfu8RPFuinIybbADYvab.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/1HMAbPuvfu8RPFuinIybbADYvab.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1HMAbPuvfu8RPFuinIybbADYvab.jpg",
-    "releaseYear": "2010"
+    "releaseYear": "2010",
+    "screeningYear": 2025
   },
   {
     "title": "Perfume Live at Tokyo Dome \"1 2 3 4 5 6 7 8 9 10 11\"",
@@ -4461,7 +4694,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/1HMAbPuvfu8RPFuinIybbADYvab.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/1HMAbPuvfu8RPFuinIybbADYvab.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1HMAbPuvfu8RPFuinIybbADYvab.jpg",
-    "releaseYear": "2010"
+    "releaseYear": "2010",
+    "screeningYear": 2025
   },
   {
     "title": "lyle, lyle cocodile",
@@ -4481,7 +4715,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=s0W6O7mSlaU",
     "posterUrl": "https://image.tmdb.org/t/p/w780/zE97tcQOx7Ax6g1xKdKeCjTgpNl.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/zE97tcQOx7Ax6g1xKdKeCjTgpNl.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/zE97tcQOx7Ax6g1xKdKeCjTgpNl.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/zE97tcQOx7Ax6g1xKdKeCjTgpNl.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Oppenheimer",
@@ -4503,7 +4738,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg",
     "releaseYear": "2023",
-    "trailerId": "hlZO437mwXQ"
+    "trailerId": "hlZO437mwXQ",
+    "screeningYear": 2025
   },
   {
     "title": "twisted Metal s2 ep",
@@ -4523,7 +4759,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Night Always Comes",
@@ -4545,7 +4782,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cVqQdzqo0ymSFJqU87bIiHV8bA7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cVqQdzqo0ymSFJqU87bIiHV8bA7.jpg",
     "releaseYear": "2025",
-    "trailerId": "Gd44vTsTUhs"
+    "trailerId": "Gd44vTsTUhs",
+    "screeningYear": 2025
   },
   {
     "title": "State of Fear",
@@ -4566,7 +4804,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/1Xdsq7U7bvJJd2X7Jg4qNaKVkYO.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/1Xdsq7U7bvJJd2X7Jg4qNaKVkYO.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1Xdsq7U7bvJJd2X7Jg4qNaKVkYO.jpg",
-    "releaseYear": "2026"
+    "releaseYear": "2026",
+    "screeningYear": 2025
   },
   {
     "title": "Thunderbolts*",
@@ -4588,7 +4827,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rthMuZfFv4fqEU4JVbgSW9wQ8rs.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rthMuZfFv4fqEU4JVbgSW9wQ8rs.jpg",
     "releaseYear": "2025",
-    "trailerId": "tyMhqYy9F7g"
+    "trailerId": "tyMhqYy9F7g",
+    "screeningYear": 2025
   },
   {
     "title": "Twisted Metal s2 Finale",
@@ -4608,7 +4848,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/6wLJiFwmuZNvTiE9aqFqx4dDcWh.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Escape Room",
@@ -4630,7 +4871,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mWLljCmpqlcYQh7uh51BBMwCZwN.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mWLljCmpqlcYQh7uh51BBMwCZwN.jpg",
     "releaseYear": "2019",
-    "trailerId": "6dSKUoV0SNI"
+    "trailerId": "6dSKUoV0SNI",
+    "screeningYear": 2025
   },
   {
     "title": "Transformers: Rise of the Beasts",
@@ -4652,7 +4894,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2vFuG6bWGyQUzYS9d69E5l85nIz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2vFuG6bWGyQUzYS9d69E5l85nIz.jpg",
     "releaseYear": "2023",
-    "trailerId": "DMTufSkyx6E"
+    "trailerId": "DMTufSkyx6E",
+    "screeningYear": 2025
   },
   {
     "title": "Lilo & Stitch",
@@ -4674,7 +4917,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
     "releaseYear": "2025",
-    "trailerId": "zYqZ18i-ktE"
+    "trailerId": "zYqZ18i-ktE",
+    "screeningYear": 2025
   },
   {
     "title": "Fall for Me",
@@ -4696,7 +4940,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xd7YqovQSLBY7dbptsz2bPgL0ym.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xd7YqovQSLBY7dbptsz2bPgL0ym.jpg",
     "releaseYear": "2025",
-    "trailerId": "pgu-BsBV-2I"
+    "trailerId": "pgu-BsBV-2I",
+    "screeningYear": 2025
   },
   {
     "title": "The Last House",
@@ -4718,7 +4963,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1RhfevWmWCVHtEqxWBEjPOC5KG1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1RhfevWmWCVHtEqxWBEjPOC5KG1.jpg",
     "releaseYear": "2026",
-    "trailerId": "MLxgaz2Zp1k"
+    "trailerId": "MLxgaz2Zp1k",
+    "screeningYear": 2025
   },
   {
     "title": "The Legend of Ochi",
@@ -4740,7 +4986,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/yMatVGaUxw3Vi3Z0RsLetvcSYko.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/yMatVGaUxw3Vi3Z0RsLetvcSYko.jpg",
     "releaseYear": "2025",
-    "trailerId": "Kkyx4kBohQU"
+    "trailerId": "Kkyx4kBohQU",
+    "screeningYear": 2025
   },
   {
     "title": "The Last Letter",
@@ -4762,7 +5009,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/i7G9bqFClaKHK48cfD4b3cw3tKP.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/i7G9bqFClaKHK48cfD4b3cw3tKP.jpg",
     "releaseYear": "2013",
-    "trailerId": "a1H20fc4wDI"
+    "trailerId": "a1H20fc4wDI",
+    "screeningYear": 2025
   },
   {
     "title": "Monkey Man",
@@ -4784,7 +5032,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9NSXdVHeSfSHUv49OzLispFcpz1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9NSXdVHeSfSHUv49OzLispFcpz1.jpg",
     "releaseYear": "2024",
-    "trailerId": "6LboWl0yRGg"
+    "trailerId": "6LboWl0yRGg",
+    "screeningYear": 2025
   },
   {
     "title": "Friendship",
@@ -4806,7 +5055,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/g70uNy3hRqEcU0ilBTtcuBFlizx.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/g70uNy3hRqEcU0ilBTtcuBFlizx.jpg",
     "releaseYear": "2025",
-    "trailerId": "7FPRQgx3CpM"
+    "trailerId": "7FPRQgx3CpM",
+    "screeningYear": 2025
   },
   {
     "title": "The 33",
@@ -4828,7 +5078,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kyZUeUeDjOQO9t8KaPxHpWJCTsW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kyZUeUeDjOQO9t8KaPxHpWJCTsW.jpg",
     "releaseYear": "2015",
-    "trailerId": "hOoIBOYqHyw"
+    "trailerId": "hOoIBOYqHyw",
+    "screeningYear": 2025
   },
   {
     "title": "Elio",
@@ -4850,7 +5101,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ukPu5xYOBAnh5H46uK4aQOirW2b.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ukPu5xYOBAnh5H46uK4aQOirW2b.jpg",
     "releaseYear": "2025",
-    "trailerId": "ajeTX18-K0M"
+    "trailerId": "ajeTX18-K0M",
+    "screeningYear": 2025
   },
   {
     "title": "Screamboat",
@@ -4872,7 +5124,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/n6IPjfSwyKqLungH8EHX3ZldodS.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/n6IPjfSwyKqLungH8EHX3ZldodS.jpg",
     "releaseYear": "2025",
-    "trailerId": "ECfl5WXkbH8"
+    "trailerId": "ECfl5WXkbH8",
+    "screeningYear": 2025
   },
   {
     "title": "The Wrong Paris",
@@ -4894,7 +5147,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/i8QHgJKnsd8csNBo8fH9wYW2Y9E.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/i8QHgJKnsd8csNBo8fH9wYW2Y9E.jpg",
     "releaseYear": "2025",
-    "trailerId": "SgKpEeduwh0"
+    "trailerId": "SgKpEeduwh0",
+    "screeningYear": 2025
   },
   {
     "title": "Last Seen Alive",
@@ -4916,7 +5170,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/nAHysRXM17o6TurhobGtL1MCDDH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/nAHysRXM17o6TurhobGtL1MCDDH.jpg",
     "releaseYear": "2022",
-    "trailerId": "oczM-Nev_oY"
+    "trailerId": "oczM-Nev_oY",
+    "screeningYear": 2025
   },
   {
     "title": "M3GAN",
@@ -4938,7 +5193,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qd4EKTuudkws9lW76Dn9C0tnuVA.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qd4EKTuudkws9lW76Dn9C0tnuVA.jpg",
     "releaseYear": "2022",
-    "trailerId": "9zvgGSTZlOY"
+    "trailerId": "9zvgGSTZlOY",
+    "screeningYear": 2025
   },
   {
     "title": "M3GAN 2.0",
@@ -4960,7 +5216,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cT9ZfwoPDk8JbgkessmQgxAWiaM.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cT9ZfwoPDk8JbgkessmQgxAWiaM.jpg",
     "releaseYear": "2025",
-    "trailerId": "2LXgbz8lCWc"
+    "trailerId": "2LXgbz8lCWc",
+    "screeningYear": 2025
   },
   {
     "title": "Escape Room: Tournament of Champions",
@@ -4982,7 +5239,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qo9tN87uTsbXnaAob6aa7U33ayb.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qo9tN87uTsbXnaAob6aa7U33ayb.jpg",
     "releaseYear": "2021",
-    "trailerId": "G2bP-31wU_o"
+    "trailerId": "G2bP-31wU_o",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Superman (2025)",
@@ -5002,7 +5261,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
     "posterUrl": "https://image.tmdb.org/t/p/w780/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Karate Kid: Legends",
@@ -5024,7 +5284,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7Q2CmqIVJuDAESPPp76rWIiA0AD.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7Q2CmqIVJuDAESPPp76rWIiA0AD.jpg",
     "releaseYear": "2025",
-    "trailerId": "wjk89a-2bZI"
+    "trailerId": "wjk89a-2bZI",
+    "screeningYear": 2025
   },
   {
     "title": "Fractured",
@@ -5046,7 +5307,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6y4748yU4dnrI7jF2loGscmiVXQ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6y4748yU4dnrI7jF2loGscmiVXQ.jpg",
     "releaseYear": "2019",
-    "trailerId": "sCimThZW-Ew"
+    "trailerId": "sCimThZW-Ew",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Superman",
@@ -5068,7 +5331,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg",
     "releaseYear": "2025",
-    "trailerId": "MikgqM0LXr4"
+    "trailerId": "MikgqM0LXr4",
+    "screeningYear": 2025
   },
   {
     "title": "Smurfs",
@@ -5090,7 +5354,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9whEVuKte4Qi0LI4TzPf7glinJW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9whEVuKte4Qi0LI4TzPf7glinJW.jpg",
     "releaseYear": "2025",
-    "trailerId": "qVIP3q4Kw_A"
+    "trailerId": "qVIP3q4Kw_A",
+    "screeningYear": 2025
   },
   {
     "title": "28 Years Later",
@@ -5112,7 +5377,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6WqqEjiycNvDLjbEClM1zCwIbDD.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6WqqEjiycNvDLjbEClM1zCwIbDD.jpg",
     "releaseYear": "2025",
-    "trailerId": "S4ehyWPWrco"
+    "trailerId": "S4ehyWPWrco",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Hamilton",
@@ -5134,7 +5401,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uWVkEo9PWHu9algZsiLPi6sRU64.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uWVkEo9PWHu9algZsiLPi6sRU64.jpg",
     "releaseYear": "2025",
-    "trailerId": "J0yx43vha_w"
+    "trailerId": "J0yx43vha_w",
+    "screeningYear": 2025
   },
   {
     "title": "28 Days Later",
@@ -5156,7 +5424,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aJFwk1clMal1prxAvKAgHxKPAf.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aJFwk1clMal1prxAvKAgHxKPAf.jpg",
     "releaseYear": "2002",
-    "trailerId": "mWEhfF27O0c"
+    "trailerId": "mWEhfF27O0c",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Family Guy: Hulu Exclusive Halloween 2025: a little fright music",
@@ -5176,7 +5446,9 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Ballerina",
@@ -5198,7 +5470,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1yktYsxkmUtUFTUnCAUaqG6FEiz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1yktYsxkmUtUFTUnCAUaqG6FEiz.jpg",
     "releaseYear": "2025",
-    "trailerId": "Oqo_Vqt8vBE"
+    "trailerId": "Oqo_Vqt8vBE",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Ghostbusters (1984)",
@@ -5218,7 +5492,9 @@
     "trailerUrl": "https://www.youtube.com/watch?v=6hDkhw5Wkas",
     "posterUrl": "https://image.tmdb.org/t/p/w780/c6yfABGVKuB5cjoOwdX4AJMlzUz.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/c6yfABGVKuB5cjoOwdX4AJMlzUz.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/c6yfABGVKuB5cjoOwdX4AJMlzUz.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/c6yfABGVKuB5cjoOwdX4AJMlzUz.jpg",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "How to train your dragon \"live action\"",
@@ -5238,7 +5514,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=22w7z_lT6YM",
     "posterUrl": "https://image.tmdb.org/t/p/w780/8J6UlIFcU7eZfq9iCLbgc8Auklg.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/8J6UlIFcU7eZfq9iCLbgc8Auklg.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/8J6UlIFcU7eZfq9iCLbgc8Auklg.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/8J6UlIFcU7eZfq9iCLbgc8Auklg.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Ghostbusters II",
@@ -5260,7 +5537,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tgHO1DdnaS0xHcRxBHxE4kOQeIm.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tgHO1DdnaS0xHcRxBHxE4kOQeIm.jpg",
     "releaseYear": "1989",
-    "trailerId": "weIqC-oUGmA"
+    "trailerId": "weIqC-oUGmA",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Bring Her Back",
@@ -5282,7 +5561,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2IIKts2A9vnUdM9tTC76B8tDmuZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2IIKts2A9vnUdM9tTC76B8tDmuZ.jpg",
     "releaseYear": "2025",
-    "trailerId": "vBuYDMxD71c"
+    "trailerId": "vBuYDMxD71c",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Ghostbusters",
@@ -5304,7 +5585,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3KDHaahgXlUhmpXzoRZrLc7QSBM.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3KDHaahgXlUhmpXzoRZrLc7QSBM.jpg",
     "releaseYear": "2016",
-    "trailerId": "3_5F998AFug"
+    "trailerId": "3_5F998AFug",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Ghostbusters: Afterlife",
@@ -5326,7 +5609,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/EnDlndEvw6Ptpp8HIwmRcSSNKQ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/EnDlndEvw6Ptpp8HIwmRcSSNKQ.jpg",
     "releaseYear": "2021",
-    "trailerId": "udLFv9UgJdw"
+    "trailerId": "udLFv9UgJdw",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "The Naked Gun (2025)",
@@ -5346,7 +5631,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=uLguU7WLreA",
     "posterUrl": "https://image.tmdb.org/t/p/w780/1wi1hcbl6KYqARjdQ4qrBWZdiau.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/1wi1hcbl6KYqARjdQ4qrBWZdiau.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/1wi1hcbl6KYqARjdQ4qrBWZdiau.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/1wi1hcbl6KYqARjdQ4qrBWZdiau.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Ghostbusters: Frozen Empire",
@@ -5368,7 +5654,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5cCfqeUH2f5Gnu7Lh9xepY9TB6x.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5cCfqeUH2f5Gnu7Lh9xepY9TB6x.jpg",
     "releaseYear": "2024",
-    "trailerId": "ySbFr_3JRaM"
+    "trailerId": "ySbFr_3JRaM",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Slender Man",
@@ -5390,7 +5678,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tQPDwl1jNZi59KoFT2oxDDnlqhG.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tQPDwl1jNZi59KoFT2oxDDnlqhG.jpg",
     "releaseYear": "2018",
-    "trailerId": "3lShr_JspJc"
+    "trailerId": "3lShr_JspJc",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "I Know What You Did Last Summer 2025",
@@ -5410,7 +5700,9 @@
     "trailerUrl": "https://www.youtube.com/watch?v=9QABNfDhSxs",
     "posterUrl": "https://image.tmdb.org/t/p/w780/gVPjIcYo1gTaACF43OMsralrcUS.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/gVPjIcYo1gTaACF43OMsralrcUS.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/gVPjIcYo1gTaACF43OMsralrcUS.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/gVPjIcYo1gTaACF43OMsralrcUS.jpg",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Peter Pan's Neverland Nightmare",
@@ -5432,7 +5724,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/w3R8LTPU3ocl6oXuNkXmqw5bIFi.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/w3R8LTPU3ocl6oXuNkXmqw5bIFi.jpg",
     "releaseYear": "2025",
-    "trailerId": "FtsthiWpcAQ"
+    "trailerId": "FtsthiWpcAQ",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "The Substance",
@@ -5454,7 +5748,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bVSOgrxasVJF6V71T7v2KfBRSzu.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/bVSOgrxasVJF6V71T7v2KfBRSzu.jpg",
     "releaseYear": "2024",
-    "trailerId": "lR5nlovVgvQ"
+    "trailerId": "lR5nlovVgvQ",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Cirque du Freak: The Vampire's Assistant",
@@ -5476,7 +5772,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4cAc7XIe0CWgOZD1hF7z2OhfQ4P.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4cAc7XIe0CWgOZD1hF7z2OhfQ4P.jpg",
     "releaseYear": "2009",
-    "trailerId": "93FNs4lDgeI"
+    "trailerId": "93FNs4lDgeI",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Popeye the Slayer Man",
@@ -5498,7 +5796,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xkjWiRQtrenqGRWO2Enry2JIl4d.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xkjWiRQtrenqGRWO2Enry2JIl4d.jpg",
     "releaseYear": "2025",
-    "trailerId": "cGRfu8WD8RQ"
+    "trailerId": "cGRfu8WD8RQ",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Popeye's Revenge",
@@ -5520,7 +5820,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kSKC5GilSW3IXejH7Pp4sp2lzF1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kSKC5GilSW3IXejH7Pp4sp2lzF1.jpg",
     "releaseYear": "2025",
-    "trailerId": "kZR31mbwYP8"
+    "trailerId": "kZR31mbwYP8",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "IT: Welcome to Derry  Ep 1",
@@ -5540,7 +5842,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Weapons",
@@ -5562,7 +5865,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8VyTWJrNEyV2MTWvniDVp0MpOAe.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8VyTWJrNEyV2MTWvniDVp0MpOAe.jpg",
     "releaseYear": "2025",
-    "trailerId": "t41avNnPsaA"
+    "trailerId": "t41avNnPsaA",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "2025 Mystery Scary Movie Marathon",
@@ -5583,7 +5888,9 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "IT: Welcome to Derry  Ep 2",
@@ -5603,7 +5910,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "Mystery Horror Movie Marathon",
@@ -5623,7 +5931,9 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/a53EGF0NzHRGKuRItsrtXBM8FCD.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/a53EGF0NzHRGKuRItsrtXBM8FCD.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/a53EGF0NzHRGKuRItsrtXBM8FCD.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/a53EGF0NzHRGKuRItsrtXBM8FCD.jpg",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Jurassic World Rebirth",
@@ -5645,7 +5955,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zNriRTr0kWwyaXPzdg1EIxf0BWk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zNriRTr0kWwyaXPzdg1EIxf0BWk.jpg",
     "releaseYear": "2025",
-    "trailerId": "NJ0fzQzKOfg"
+    "trailerId": "NJ0fzQzKOfg",
+    "screeningYear": 2025
   },
   {
     "title": "A House of Dynamite",
@@ -5667,7 +5978,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5SVRVwBfHCIkffiq0MmbdvnHWSz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5SVRVwBfHCIkffiq0MmbdvnHWSz.jpg",
     "releaseYear": "2025",
-    "trailerId": "_wpw2QHJNco"
+    "trailerId": "_wpw2QHJNco",
+    "screeningYear": 2025
   },
   {
     "title": "Elvis",
@@ -5689,7 +6001,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rLo9T9jEg67UZPq3midjLnTUYYi.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rLo9T9jEg67UZPq3midjLnTUYYi.jpg",
     "releaseYear": "2022",
-    "trailerId": "ZbrmBotVIGw"
+    "trailerId": "ZbrmBotVIGw",
+    "screeningYear": 2025
   },
   {
     "title": "The Fantastic 4: First Steps",
@@ -5711,7 +6024,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/s94NjfKkcSczZ1FembwmQZwsuwY.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/s94NjfKkcSczZ1FembwmQZwsuwY.jpg",
     "releaseYear": "2025",
-    "trailerId": "cPRk4KyB2AI"
+    "trailerId": "cPRk4KyB2AI",
+    "screeningYear": 2025
   },
   {
     "title": "KPop Demon Hunters",
@@ -5733,7 +6047,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/w3Bi0wygeFQctn6AqFTwhGNXRwL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/w3Bi0wygeFQctn6AqFTwhGNXRwL.jpg",
     "releaseYear": "2025",
-    "trailerId": "AzCAwdp1uIQ"
+    "trailerId": "AzCAwdp1uIQ",
+    "screeningYear": 2025
   },
   {
     "title": "Frankenstein",
@@ -5755,7 +6070,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hpXBJxLD2SEf8l2CspmSeiHrBKX.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hpXBJxLD2SEf8l2CspmSeiHrBKX.jpg",
     "releaseYear": "2025",
-    "trailerId": "9WZllcEgWrM"
+    "trailerId": "9WZllcEgWrM",
+    "screeningYear": 2025
   },
   {
     "title": "IT: Welcome to Derry ep3",
@@ -5775,7 +6091,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "The Meg",
@@ -5797,7 +6114,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ibKeXahq4JD63z6uWQphqoJLvNw.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ibKeXahq4JD63z6uWQphqoJLvNw.jpg",
     "releaseYear": "2018",
-    "trailerId": "b_4uXy2Y1SQ"
+    "trailerId": "b_4uXy2Y1SQ",
+    "screeningYear": 2025
   },
   {
     "title": "Meg 2: The Trench",
@@ -5819,7 +6137,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5mzr6JZbrqnqD8rCEvPhuCE5Fw2.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5mzr6JZbrqnqD8rCEvPhuCE5Fw2.jpg",
     "releaseYear": "2023",
-    "trailerId": "Xh8lOrObhHs"
+    "trailerId": "Xh8lOrObhHs",
+    "screeningYear": 2025
   },
   {
     "title": "Freakier Friday",
@@ -5841,7 +6160,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/yQy9Y3p5INwkfTuHSnzYnz4MCV3.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/yQy9Y3p5INwkfTuHSnzYnz4MCV3.jpg",
     "releaseYear": "2025",
-    "trailerId": "3RwHv6kCWGY"
+    "trailerId": "3RwHv6kCWGY",
+    "screeningYear": 2025
   },
   {
     "title": "The Fast and the Furious",
@@ -5863,7 +6183,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jY9ef5nqY4xIIMu3yzW3qamUCoi.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jY9ef5nqY4xIIMu3yzW3qamUCoi.jpg",
     "releaseYear": "2001",
-    "trailerId": "iIU1xlDbbQk"
+    "trailerId": "iIU1xlDbbQk",
+    "screeningYear": 2025
   },
   {
     "title": "Nobody 2",
@@ -5885,7 +6206,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/82C04rTiXYZ7c8XZv91Nu53w82Y.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/82C04rTiXYZ7c8XZv91Nu53w82Y.jpg",
     "releaseYear": "2025",
-    "trailerId": "VXKHys7odj8"
+    "trailerId": "VXKHys7odj8",
+    "screeningYear": 2025
   },
   {
     "title": "2 Fast 2 Furious",
@@ -5907,7 +6229,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/90ooE5SbUEO0OVJHewNO7pgySb6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/90ooE5SbUEO0OVJHewNO7pgySb6.jpg",
     "releaseYear": "2003",
-    "trailerId": "fDooSsgINLQ"
+    "trailerId": "fDooSsgINLQ",
+    "screeningYear": 2025
   },
   {
     "title": "Playdate",
@@ -5929,7 +6252,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5lQ4euO30sDin5nCifvi0vURFNd.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5lQ4euO30sDin5nCifvi0vURFNd.jpg",
     "releaseYear": "2025",
-    "trailerId": "xGTq0blCPVQ"
+    "trailerId": "xGTq0blCPVQ",
+    "screeningYear": 2025
   },
   {
     "title": "IT: Welcome To Derry S1 E4",
@@ -5949,7 +6273,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=TVFip9YXefk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "The Fast and the Furious: Tokyo Drift",
@@ -5971,7 +6296,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/dMARcKLrv0T7kVJ4iQR3vqTTdtT.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/dMARcKLrv0T7kVJ4iQR3vqTTdtT.jpg",
     "releaseYear": "2006",
-    "trailerId": "K6RWbKMSDcg"
+    "trailerId": "K6RWbKMSDcg",
+    "screeningYear": 2025
   },
   {
     "title": "Materialists",
@@ -5993,7 +6319,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lqwwGkwJHtz9QgKtz4zeY19YgDg.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/lqwwGkwJHtz9QgKtz4zeY19YgDg.jpg",
     "releaseYear": "2025",
-    "trailerId": "qjYHRLuLr4Y"
+    "trailerId": "qjYHRLuLr4Y",
+    "screeningYear": 2025
   },
   {
     "title": "Fast & Furious Presents: Hobbs & Shaw",
@@ -6015,7 +6342,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hpgda6P9GutvdkDX5MUJ92QG9aj.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hpgda6P9GutvdkDX5MUJ92QG9aj.jpg",
     "releaseYear": "2019",
-    "trailerId": "b736ZM_KfEk"
+    "trailerId": "b736ZM_KfEk",
+    "screeningYear": 2025
   },
   {
     "title": "The Roses",
@@ -6037,7 +6365,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3CPQc1pgYu0iWr1UNk2nwy2ylDE.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3CPQc1pgYu0iWr1UNk2nwy2ylDE.jpg",
     "releaseYear": "2025",
-    "trailerId": "rb3x45F6mrQ"
+    "trailerId": "rb3x45F6mrQ",
+    "screeningYear": 2025
   },
   {
     "title": "The Bad Guys 2",
@@ -6059,7 +6388,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jvpkBenB6hv19WWYVlaiow8zklq.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jvpkBenB6hv19WWYVlaiow8zklq.jpg",
     "releaseYear": "2025",
-    "trailerId": "lYudCQHG0c8"
+    "trailerId": "lYudCQHG0c8",
+    "screeningYear": 2025
   },
   {
     "title": "Fast Five",
@@ -6081,7 +6411,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/c1Q8jLoaruQ9m5lCrVlXOaJJtu7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/c1Q8jLoaruQ9m5lCrVlXOaJJtu7.jpg",
     "releaseYear": "2011",
-    "trailerId": "P1UVXvKnCLM"
+    "trailerId": "P1UVXvKnCLM",
+    "screeningYear": 2025
   },
   {
     "title": "IT: Welcome To Derry S1 E5",
@@ -6101,7 +6432,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "The Conjuring: Last Rites",
@@ -6123,7 +6455,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/i8MupUe4xgmYXoRNAQMYvuoexSU.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/i8MupUe4xgmYXoRNAQMYvuoexSU.jpg",
     "releaseYear": "2025",
-    "trailerId": "3iBhELud1-I"
+    "trailerId": "3iBhELud1-I",
+    "screeningYear": 2025
   },
   {
     "title": "Fast & Furious 6",
@@ -6145,7 +6478,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xDp29MSWa7O3ROC13r6dPTFnREJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xDp29MSWa7O3ROC13r6dPTFnREJ.jpg",
     "releaseYear": "2013",
-    "trailerId": "-1ysq_lKovg"
+    "trailerId": "-1ysq_lKovg",
+    "screeningYear": 2025
   },
   {
     "title": "Bride Hard",
@@ -6167,7 +6501,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2DcD4Hh80SW7YVpwckkiEFRZX06.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2DcD4Hh80SW7YVpwckkiEFRZX06.jpg",
     "releaseYear": "2025",
-    "trailerId": "IeGMYCyfNkc"
+    "trailerId": "IeGMYCyfNkc",
+    "screeningYear": 2025
   },
   {
     "title": "Furious 7",
@@ -6189,7 +6524,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ehzI1mVcnHqB58NqPyQwpMqcVoz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ehzI1mVcnHqB58NqPyQwpMqcVoz.jpg",
     "releaseYear": "2015",
-    "trailerId": "B3Ms2yFvus0"
+    "trailerId": "B3Ms2yFvus0",
+    "screeningYear": 2025
   },
   {
     "title": "The Fate of the Furious",
@@ -6211,7 +6547,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/3IJ8kG8i84PncXkSovu0PaZQfjM.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/3IJ8kG8i84PncXkSovu0PaZQfjM.jpg",
     "releaseYear": "2017",
-    "trailerId": "iVdIiOKBPkg"
+    "trailerId": "iVdIiOKBPkg",
+    "screeningYear": 2025
   },
   {
     "title": "Fast & Furious Presents: Hobbs & Shaw",
@@ -6233,7 +6570,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hpgda6P9GutvdkDX5MUJ92QG9aj.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hpgda6P9GutvdkDX5MUJ92QG9aj.jpg",
     "releaseYear": "2019",
-    "trailerId": "b736ZM_KfEk"
+    "trailerId": "b736ZM_KfEk",
+    "screeningYear": 2025
   },
   {
     "title": "Disney’s Hulu’s Family Guy’s Hallmark Channel’s Lifetime’s Familiar Holiday Movie",
@@ -6253,7 +6591,10 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "F9",
@@ -6275,7 +6616,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xXHZeb1yhJvnSHPzZDqee0zfMb6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xXHZeb1yhJvnSHPzZDqee0zfMb6.jpg",
     "releaseYear": "2021",
-    "trailerId": "TfJkFsCn8Zw"
+    "trailerId": "TfJkFsCn8Zw",
+    "screeningYear": 2025
   },
   {
     "title": "Fast X",
@@ -6297,7 +6639,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4XM8DUTQb3lhLemJC51Jx4a2EuA.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4XM8DUTQb3lhLemJC51Jx4a2EuA.jpg",
     "releaseYear": "2023",
-    "trailerId": "_aMNKTiVbg4"
+    "trailerId": "_aMNKTiVbg4",
+    "screeningYear": 2025
   },
   {
     "title": "IT: Welcome To Derry S1 E6",
@@ -6317,7 +6660,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "A Merry Little Ex-Mas",
@@ -6339,7 +6683,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2GHJGnF2jgnzeqT3XTHjHXgk5Fx.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2GHJGnF2jgnzeqT3XTHjHXgk5Fx.jpg",
     "releaseYear": "2025",
-    "trailerId": "zLuOjCbDuwY"
+    "trailerId": "zLuOjCbDuwY",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "The Best Christmas Pageant Ever",
@@ -6361,7 +6708,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1AIwhOIMktmgesIqNcwUsQWYLl5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1AIwhOIMktmgesIqNcwUsQWYLl5.jpg",
     "releaseYear": "2024",
-    "trailerId": "SlB3K_PS7Hc"
+    "trailerId": "SlB3K_PS7Hc",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Champagne Problems",
@@ -6383,7 +6733,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/idRDmfGxrLD0SNBq5I2J6HC0dt5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/idRDmfGxrLD0SNBq5I2J6HC0dt5.jpg",
     "releaseYear": "2025",
-    "trailerId": "eba-EoMPBX8"
+    "trailerId": "eba-EoMPBX8",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "In Your Dreams",
@@ -6405,7 +6758,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cTuFz80FozP54Aob9TYl4mF1wKk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cTuFz80FozP54Aob9TYl4mF1wKk.jpg",
     "releaseYear": "2025",
-    "trailerId": "Jjjcn4acAC8"
+    "trailerId": "Jjjcn4acAC8",
+    "screeningYear": 2025
   },
   {
     "title": "Jingle Bell Heist",
@@ -6427,7 +6781,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/x8gV0MUZVWkikNZElaBk13vW5f4.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/x8gV0MUZVWkikNZElaBk13vW5f4.jpg",
     "releaseYear": "2025",
-    "trailerId": "AAEzB2LzFfM"
+    "trailerId": "AAEzB2LzFfM",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "It: Welcome to Derry s1 e7",
@@ -6447,7 +6804,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "My Secret Santa",
@@ -6469,7 +6827,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bXZcSDQoyXlzzUw9qxjZjiUSYov.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/bXZcSDQoyXlzzUw9qxjZjiUSYov.jpg",
     "releaseYear": "2025",
-    "trailerId": "I9Y5qYp8ro8"
+    "trailerId": "I9Y5qYp8ro8",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Christmas Under the Northern Lights",
@@ -6491,7 +6852,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/11CBYPBWNX4zvBPYlBP6VsSbDOj.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/11CBYPBWNX4zvBPYlBP6VsSbDOj.jpg",
     "releaseYear": "2024",
-    "trailerId": "-7CI9ENQU-g"
+    "trailerId": "-7CI9ENQU-g",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Home Sweet Home Alone",
@@ -6513,7 +6877,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/a8tH0jl37366bLVyPB08dncgqqd.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/a8tH0jl37366bLVyPB08dncgqqd.jpg",
     "releaseYear": "2021",
-    "trailerId": "FOXW8ur2jr4"
+    "trailerId": "FOXW8ur2jr4",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Home Alone 2: Lost in New York",
@@ -6535,7 +6902,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8fnYJPoXxwAN4valDLgz2whMGTH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8fnYJPoXxwAN4valDLgz2whMGTH.jpg",
     "releaseYear": "1992",
-    "trailerId": "k0kJieJ1k6k"
+    "trailerId": "k0kJieJ1k6k",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Joy to the World",
@@ -6556,7 +6926,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/nxMBwebmckF3O5lORdDq4cEaL6s.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/nxMBwebmckF3O5lORdDq4cEaL6s.jpg",
     "backdropUrl": null,
-    "releaseYear": "2003"
+    "releaseYear": "2003",
+    "screeningYear": 2025
   },
   {
     "title": "A Dickens of a Christmas",
@@ -6578,7 +6949,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2U1zdn2DGrMzKYRZg0OBjS0hpGW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2U1zdn2DGrMzKYRZg0OBjS0hpGW.jpg",
     "releaseYear": "2025",
-    "trailerId": "aX3of3WAJoQ"
+    "trailerId": "aX3of3WAJoQ",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "A Very Jonas Christmas Movie",
@@ -6600,7 +6974,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ajYw16ISz3qsdYTg4zy5rob1iAQ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ajYw16ISz3qsdYTg4zy5rob1iAQ.jpg",
     "releaseYear": "2025",
-    "trailerId": "oOOdswIJJYU"
+    "trailerId": "oOOdswIJJYU",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "My Christmas Hero",
@@ -6622,7 +6999,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zjQ9cgZTiDN5rxP0zd5Kc30nZxF.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zjQ9cgZTiDN5rxP0zd5Kc30nZxF.jpg",
     "releaseYear": "2023",
-    "trailerId": "2iCXEZm4CLs"
+    "trailerId": "2iCXEZm4CLs",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "The Night My Dad Saved Christmas 2",
@@ -6644,7 +7024,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/X5N8GliuEHrKBydQnKcztqT7AV.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/X5N8GliuEHrKBydQnKcztqT7AV.jpg",
     "releaseYear": "2025",
-    "trailerId": "7Zrtw25-iHM"
+    "trailerId": "7Zrtw25-iHM",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Enchanting Christmas",
@@ -6666,7 +7049,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/e9IupSFThpKfIh81YIYhPTD8mey.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/e9IupSFThpKfIh81YIYhPTD8mey.jpg",
     "releaseYear": "2024",
-    "trailerId": "T5TNvyRUTAw"
+    "trailerId": "T5TNvyRUTAw",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Tyler Perry's Finding Joy",
@@ -6688,7 +7074,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ss8aaeGyPRmOs9l9o9lL7FvcmbQ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ss8aaeGyPRmOs9l9o9lL7FvcmbQ.jpg",
     "releaseYear": "2025",
-    "trailerId": "60befdTWmG8"
+    "trailerId": "60befdTWmG8",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "IT: Welcome to Derry s1 e8",
@@ -6708,7 +7097,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg",
+    "screeningYear": 2025
   },
   {
     "title": "A Paw Patrol Christmas",
@@ -6730,7 +7120,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/32mjpsITLwEQcvqKuMBGyajN18h.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/32mjpsITLwEQcvqKuMBGyajN18h.jpg",
     "releaseYear": "2025",
-    "trailerId": "HYi1EDnpy9M"
+    "trailerId": "HYi1EDnpy9M",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Oh. What. Fun.",
@@ -6752,7 +7145,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/haAekI7zBtffqILr90DkviTe9fk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/haAekI7zBtffqILr90DkviTe9fk.jpg",
     "releaseYear": "2025",
-    "trailerId": "FRfj0OHlcvo"
+    "trailerId": "FRfj0OHlcvo",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Christmas in the Ballroom",
@@ -6774,7 +7170,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gJuks5iBlUJP16mOV9yozqcLc3m.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gJuks5iBlUJP16mOV9yozqcLc3m.jpg",
     "releaseYear": "2025",
-    "trailerId": "quINYRZftNo"
+    "trailerId": "quINYRZftNo",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "The Nightmare Before Christmas",
@@ -6796,7 +7195,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/dSfrsjhqC6lYe7LYDYnzWeXZmEl.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/dSfrsjhqC6lYe7LYDYnzWeXZmEl.jpg",
     "releaseYear": "1993",
-    "trailerId": "IoYahD_xNR0"
+    "trailerId": "IoYahD_xNR0",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "The Polar Express",
@@ -6818,7 +7220,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jtOvTVlkF8TlaOq94oNXRc9u2yp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jtOvTVlkF8TlaOq94oNXRc9u2yp.jpg",
     "releaseYear": "2004",
-    "trailerId": "f0oyHtZiJJs"
+    "trailerId": "f0oyHtZiJJs",
+    "screeningYear": 2025
   },
   {
     "title": "How the Grinch Stole Christmas! Special Edition",
@@ -6839,7 +7242,10 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/iAjy6LYFbzrhlBvjjrMZP7aJS7n.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/iAjy6LYFbzrhlBvjjrMZP7aJS7n.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/iAjy6LYFbzrhlBvjjrMZP7aJS7n.jpg",
-    "releaseYear": "1994"
+    "releaseYear": "1994",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "The Great Christmas Snow-In",
@@ -6861,7 +7267,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zkGLha4n4vQkA1KWQUS1fHKbJqs.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zkGLha4n4vQkA1KWQUS1fHKbJqs.jpg",
     "releaseYear": "2025",
-    "trailerId": "e04xQvRDrjk"
+    "trailerId": "e04xQvRDrjk",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Tinsel Town",
@@ -6883,7 +7292,10 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/psAGX272PFGdpKmSJI4x8sGPciZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/psAGX272PFGdpKmSJI4x8sGPciZ.jpg",
     "releaseYear": "2025",
-    "trailerId": "ObrcqCxZlPg"
+    "trailerId": "ObrcqCxZlPg",
+    "screeningYear": 2025,
+    "holidayCategory": "christmas",
+    "marathonCollection": "2025 Christmas & Holiday Festival"
   },
   {
     "title": "Dora and the Search for Sol Dorado",
@@ -6905,7 +7317,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9A0wQG38VdEu3DYh8HzXKXKhA6g.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9A0wQG38VdEu3DYh8HzXKXKhA6g.jpg",
     "releaseYear": "2025",
-    "trailerId": "92nh9E3B0do"
+    "trailerId": "92nh9E3B0do",
+    "screeningYear": 2025
   },
   {
     "title": "Mission: Impossible - The Final Reckoning",
@@ -6927,7 +7340,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/538U9snNc2fpnOmYXAPUh3zn31H.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/538U9snNc2fpnOmYXAPUh3zn31H.jpg",
     "releaseYear": "2025",
-    "trailerId": "Wd3fzHu1UlY"
+    "trailerId": "Wd3fzHu1UlY",
+    "screeningYear": 2025
   },
   {
     "title": "Kingdom of the Planet of the Apes",
@@ -6949,7 +7363,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fypydCipcWDKDTTCoPucBsdGYXW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fypydCipcWDKDTTCoPucBsdGYXW.jpg",
     "releaseYear": "2024",
-    "trailerId": "Q45wW7AmgC0"
+    "trailerId": "Q45wW7AmgC0",
+    "screeningYear": 2025
   },
   {
     "title": "Roofman",
@@ -6971,7 +7386,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/E7hhuSZ1U5xymN2Olg2EOr4N4P.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/E7hhuSZ1U5xymN2Olg2EOr4N4P.jpg",
     "releaseYear": "2025",
-    "trailerId": "r5lhsdfeSqY"
+    "trailerId": "r5lhsdfeSqY",
+    "screeningYear": 2026
   },
   {
     "title": "Wrath of Man",
@@ -6993,7 +7409,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/70AV2Xx5FQYj20labp0EGdbjI6E.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/70AV2Xx5FQYj20labp0EGdbjI6E.jpg",
     "releaseYear": "2021",
-    "trailerId": "wo1kO8m2Nik"
+    "trailerId": "wo1kO8m2Nik",
+    "screeningYear": 2026
   },
   {
     "title": "HIM",
@@ -7015,7 +7432,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jzzpCJWkVZZwAxzzLmtYN0MBWFd.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jzzpCJWkVZZwAxzzLmtYN0MBWFd.jpg",
     "releaseYear": "2025",
-    "trailerId": "Z2sbVl0N-us"
+    "trailerId": "Z2sbVl0N-us",
+    "screeningYear": 2026
   },
   {
     "title": "Shadow Force",
@@ -7037,7 +7455,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lBsbWXGn9maPKGhN3fozTU3BH0r.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/lBsbWXGn9maPKGhN3fozTU3BH0r.jpg",
     "releaseYear": "2025",
-    "trailerId": "M7LhGytiHFM"
+    "trailerId": "M7LhGytiHFM",
+    "screeningYear": 2026
   },
   {
     "title": "Safe",
@@ -7059,7 +7478,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/gc150q5RMjq5vXJddBk90dXFvlr.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/gc150q5RMjq5vXJddBk90dXFvlr.jpg",
     "releaseYear": "2012",
-    "trailerId": "s3kTkk4k_5Q"
+    "trailerId": "s3kTkk4k_5Q",
+    "screeningYear": 2026
   },
   {
     "title": "TRON: Ares",
@@ -7081,7 +7501,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/pUNfHmVqfwRdILhCkU8TdysVOXo.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/pUNfHmVqfwRdILhCkU8TdysVOXo.jpg",
     "releaseYear": "2025",
-    "trailerId": "1AEPAyQ9Tz0"
+    "trailerId": "1AEPAyQ9Tz0",
+    "screeningYear": 2026
   },
   {
     "title": "The Long Walk",
@@ -7103,7 +7524,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2dlt9I2ga6hweywz9zsFUz1PVii.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2dlt9I2ga6hweywz9zsFUz1PVii.jpg",
     "releaseYear": "2025",
-    "trailerId": "kytJK_v7_zc"
+    "trailerId": "kytJK_v7_zc",
+    "screeningYear": 2026
   },
   {
     "title": "Home on the Range",
@@ -7125,7 +7547,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/Jghbo8U2XkmGjCfKD9NiMM70ha.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/Jghbo8U2XkmGjCfKD9NiMM70ha.jpg",
     "releaseYear": "2004",
-    "trailerId": "bnBCdajH_HU"
+    "trailerId": "bnBCdajH_HU",
+    "screeningYear": 2026
   },
   {
     "title": "Americana",
@@ -7147,7 +7570,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ice3dNrgJZmyFXs4InhjAJMIGMS.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ice3dNrgJZmyFXs4InhjAJMIGMS.jpg",
     "releaseYear": "2025",
-    "trailerId": "ulZoLec80fs"
+    "trailerId": "ulZoLec80fs",
+    "screeningYear": 2026
   },
   {
     "title": "TRON: Legacy",
@@ -7169,7 +7593,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uUa6jgSr5BQpcBhhaz1PV1JhSa4.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uUa6jgSr5BQpcBhhaz1PV1JhSa4.jpg",
     "releaseYear": "2010",
-    "trailerId": "BMXCAs7rzUU"
+    "trailerId": "BMXCAs7rzUU",
+    "screeningYear": 2026
   },
   {
     "title": "The Aristocats",
@@ -7191,7 +7616,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rnMwOM8gMqo6Gf6XXMpaJEayUwk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rnMwOM8gMqo6Gf6XXMpaJEayUwk.jpg",
     "releaseYear": "1970",
-    "trailerId": "h6M_OJ41NfA"
+    "trailerId": "h6M_OJ41NfA",
+    "screeningYear": 2026
   },
   {
     "title": "Black Phone 2",
@@ -7213,7 +7639,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6zKjoOOb3OZnZuiHtQZn4Kd69Gq.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6zKjoOOb3OZnZuiHtQZn4Kd69Gq.jpg",
     "releaseYear": "2025",
-    "trailerId": "Lz5mf-kKPRc"
+    "trailerId": "Lz5mf-kKPRc",
+    "screeningYear": 2026
   },
   {
     "title": "The Running Man",
@@ -7235,7 +7662,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/aHj7d7wSLqrg5cjAcgHhiGr97Ih.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/aHj7d7wSLqrg5cjAcgHhiGr97Ih.jpg",
     "releaseYear": "2025",
-    "trailerId": "LdDjHCZnFMA"
+    "trailerId": "LdDjHCZnFMA",
+    "screeningYear": 2026
   },
   {
     "title": "The Strangers: Chapter 2",
@@ -7257,7 +7685,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/AkzGC9vQbKMHGebetpjBF4bU4VS.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/AkzGC9vQbKMHGebetpjBF4bU4VS.jpg",
     "releaseYear": "2025",
-    "trailerId": "2YQ7VuOfzxo"
+    "trailerId": "2YQ7VuOfzxo",
+    "screeningYear": 2026
   },
   {
     "title": "The Strangers Chapter 2 ( 2nd showing)",
@@ -7277,7 +7706,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/AkzGC9vQbKMHGebetpjBF4bU4VS.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/AkzGC9vQbKMHGebetpjBF4bU4VS.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/AkzGC9vQbKMHGebetpjBF4bU4VS.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/AkzGC9vQbKMHGebetpjBF4bU4VS.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "People We Meet on Vacation",
@@ -7299,7 +7729,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qa3oDSDZSJKSdIdBgQgEAxO0N88.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qa3oDSDZSJKSdIdBgQgEAxO0N88.jpg",
     "releaseYear": "2026",
-    "trailerId": "m1C9DTOUH5s"
+    "trailerId": "m1C9DTOUH5s",
+    "screeningYear": 2026
   },
   {
     "title": "The Rip",
@@ -7321,7 +7752,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kwNIQW7egAmI66sb0zIugMbpCfU.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kwNIQW7egAmI66sb0zIugMbpCfU.jpg",
     "releaseYear": "2026",
-    "trailerId": "yeR5bcbRPak"
+    "trailerId": "yeR5bcbRPak",
+    "screeningYear": 2026
   },
   {
     "title": "An Unexpected Valentine",
@@ -7343,7 +7775,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kFKhSRHAQPWjqrflnSj4CMFOpEp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kFKhSRHAQPWjqrflnSj4CMFOpEp.jpg",
     "releaseYear": "2025",
-    "trailerId": "V_kIAFoXoHI"
+    "trailerId": "V_kIAFoXoHI",
+    "screeningYear": 2026
   },
   {
     "title": "Zack and Miri Make a Porno",
@@ -7365,7 +7798,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5kPMUjtfDemu8MvKoa37cYoo5iJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5kPMUjtfDemu8MvKoa37cYoo5iJ.jpg",
     "releaseYear": "2008",
-    "trailerId": "u2Y3cCOkz8o"
+    "trailerId": "u2Y3cCOkz8o",
+    "screeningYear": 2026
   },
   {
     "title": "The Smashing Machine",
@@ -7387,7 +7821,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hTCr9dDf0EcBGZSUaY0YCeBjBr5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hTCr9dDf0EcBGZSUaY0YCeBjBr5.jpg",
     "releaseYear": "2025",
-    "trailerId": "fGUJmnt2FbE"
+    "trailerId": "fGUJmnt2FbE",
+    "screeningYear": 2026
   },
   {
     "title": "The Big Knife",
@@ -7409,7 +7844,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qDZrpmU8ow8Q8LEBFYvACxsLYgp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qDZrpmU8ow8Q8LEBFYvACxsLYgp.jpg",
     "releaseYear": "1955",
-    "trailerId": "pXFx-MMwIvs"
+    "trailerId": "pXFx-MMwIvs",
+    "screeningYear": 2026
   },
   {
     "title": "Hurry Up Tomorrow",
@@ -7431,7 +7867,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/iqQSRP52a8q7CNViVyXz6nC5CJP.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/iqQSRP52a8q7CNViVyXz6nC5CJP.jpg",
     "releaseYear": "2025",
-    "trailerId": "dCt-w6CoqCQ"
+    "trailerId": "dCt-w6CoqCQ",
+    "screeningYear": 2026
   },
   {
     "title": "Homefront",
@@ -7453,7 +7890,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kT8orKwz2bmRdHBLnG44yucYtFy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kT8orKwz2bmRdHBLnG44yucYtFy.jpg",
     "releaseYear": "2013",
-    "trailerId": "BjFTuZH7E2c"
+    "trailerId": "BjFTuZH7E2c",
+    "screeningYear": 2026
   },
   {
     "title": "Joe's College Road Trip",
@@ -7475,7 +7913,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/dbr3eceKuGnKc9v5GaVTVtegZNK.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/dbr3eceKuGnKc9v5GaVTVtegZNK.jpg",
     "releaseYear": "2026",
-    "trailerId": "yuBO0wfQKR0"
+    "trailerId": "yuBO0wfQKR0",
+    "screeningYear": 2026
   },
   {
     "title": "Predator: Badlands",
@@ -7497,7 +7936,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/82lM4GJ9uuNvNDOEpxFy77uv4Ak.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/82lM4GJ9uuNvNDOEpxFy77uv4Ak.jpg",
     "releaseYear": "2025",
-    "trailerId": "LkBqjfg8TGM"
+    "trailerId": "LkBqjfg8TGM",
+    "screeningYear": 2026
   },
   {
     "title": "Song Sung Blue",
@@ -7519,7 +7959,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8dlna8rRcf5gDCRzEsjtHizpj1X.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8dlna8rRcf5gDCRzEsjtHizpj1X.jpg",
     "releaseYear": "2025",
-    "trailerId": "Hm12K_cuLWA"
+    "trailerId": "Hm12K_cuLWA",
+    "screeningYear": 2026
   },
   {
     "title": "This Is the End",
@@ -7541,7 +7982,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/sXfN4ir91SfTeoWidIukQWane43.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/sXfN4ir91SfTeoWidIukQWane43.jpg",
     "releaseYear": "2013",
-    "trailerId": "kliQSsD_npo"
+    "trailerId": "kliQSsD_npo",
+    "screeningYear": 2026
   },
   {
     "title": "The SpongeBob Movie: Search for SquarePants",
@@ -7563,7 +8005,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/pMxO1beNNFYMDM7RcDyKW5Wheuz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/pMxO1beNNFYMDM7RcDyKW5Wheuz.jpg",
     "releaseYear": "2025",
-    "trailerId": "UazW5vuAsF0"
+    "trailerId": "UazW5vuAsF0",
+    "screeningYear": 2026
   },
   {
     "title": "Copshop",
@@ -7585,7 +8028,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/jIkH6cy0Haa1cyitn6gtKmE3lxu.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/jIkH6cy0Haa1cyitn6gtKmE3lxu.jpg",
     "releaseYear": "2021",
-    "trailerId": "-gi0QMzjcrM"
+    "trailerId": "-gi0QMzjcrM",
+    "screeningYear": 2026
   },
   {
     "title": "Beyoncé: X10 - The Mrs. Carter Show World Tour",
@@ -7606,7 +8050,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/5wcffCBdYV9ylVxRSe8LBUM22qY.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/5wcffCBdYV9ylVxRSe8LBUM22qY.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5wcffCBdYV9ylVxRSe8LBUM22qY.jpg",
-    "releaseYear": "2014"
+    "releaseYear": "2014",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep1",
@@ -7626,7 +8071,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Fall",
@@ -7648,7 +8094,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hT3OqvzMqCQuJsUjZnQwA5NuxgK.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hT3OqvzMqCQuJsUjZnQwA5NuxgK.jpg",
     "releaseYear": "2022",
-    "trailerId": "c-LeWeashLw"
+    "trailerId": "c-LeWeashLw",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep2",
@@ -7668,7 +8115,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "The Orphans",
@@ -7690,7 +8138,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/z4hZZQ1GRuNGdeeWfKZIt8PXrmX.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/z4hZZQ1GRuNGdeeWfKZIt8PXrmX.jpg",
     "releaseYear": "2025",
-    "trailerId": "_5qojZYwxpk"
+    "trailerId": "_5qojZYwxpk",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep3",
@@ -7710,7 +8159,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Stephen",
@@ -7731,7 +8181,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/7cQjb8cRbRjF5tM5gOCnqsvC0iT.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/7cQjb8cRbRjF5tM5gOCnqsvC0iT.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7cQjb8cRbRjF5tM5gOCnqsvC0iT.jpg",
-    "releaseYear": "2025"
+    "releaseYear": "2025",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep4",
@@ -7751,7 +8202,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Rescued by Ruby",
@@ -7773,7 +8225,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zQG1FYDqoWo2hYhE5GVZ1yrWSfh.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zQG1FYDqoWo2hYhE5GVZ1yrWSfh.jpg",
     "releaseYear": "2022",
-    "trailerId": "-Pwxr307O4w"
+    "trailerId": "-Pwxr307O4w",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep5",
@@ -7793,7 +8246,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "The SpongeBob Movie: Search for SquarePants",
@@ -7815,7 +8269,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/pMxO1beNNFYMDM7RcDyKW5Wheuz.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/pMxO1beNNFYMDM7RcDyKW5Wheuz.jpg",
     "releaseYear": "2025",
-    "trailerId": "UazW5vuAsF0"
+    "trailerId": "UazW5vuAsF0",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep6",
@@ -7835,7 +8290,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Good Fortune",
@@ -7857,7 +8313,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/nkxtuK4alXlGC87FRNDfAZJIFiB.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/nkxtuK4alXlGC87FRNDfAZJIFiB.jpg",
     "releaseYear": "2025",
-    "trailerId": "pIdSWv94K9E"
+    "trailerId": "pIdSWv94K9E",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep7",
@@ -7877,7 +8334,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Yk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Now You See Me: Now You Don't",
@@ -7899,7 +8357,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ufqytAlziHq5pljKByGJ8IKhtEZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ufqytAlziHq5pljKByGJ8IKhtEZ.jpg",
     "releaseYear": "2025",
-    "trailerId": "KEnmKJK386c"
+    "trailerId": "KEnmKJK386c",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: the last airbender ep8",
@@ -7919,7 +8378,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=ByAn8DF8Ykk",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Zootopia",
@@ -7941,7 +8401,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9tOkjBEiiGcaClgJFtwocStZvIT.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9tOkjBEiiGcaClgJFtwocStZvIT.jpg",
     "releaseYear": "2016",
-    "trailerId": "jWM0ct-OLsM"
+    "trailerId": "jWM0ct-OLsM",
+    "screeningYear": 2026
   },
   {
     "title": "Wicked: For Good",
@@ -7963,7 +8424,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cGbPBHKSFO7hSIjxkb3KOaGdOep.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cGbPBHKSFO7hSIjxkb3KOaGdOep.jpg",
     "releaseYear": "2025",
-    "trailerId": "PglGqa64324"
+    "trailerId": "PglGqa64324",
+    "screeningYear": 2026
   },
   {
     "title": "Zootopia 2",
@@ -7985,7 +8447,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lgotja3xMoJZbynwHfcQcJAEMWH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/lgotja3xMoJZbynwHfcQcJAEMWH.jpg",
     "releaseYear": "2025",
-    "trailerId": "gvfijvp_QZU"
+    "trailerId": "gvfijvp_QZU",
+    "screeningYear": 2026
   },
   {
     "title": "War Machine",
@@ -8007,7 +8470,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
     "releaseYear": "2026",
-    "trailerId": "AFuE1LRxm80"
+    "trailerId": "AFuE1LRxm80",
+    "screeningYear": 2026
   },
   {
     "title": "Trap House",
@@ -8029,7 +8493,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/oIJjO1CvEdTMFNkWfHaV0RB584G.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/oIJjO1CvEdTMFNkWfHaV0RB584G.jpg",
     "releaseYear": "2025",
-    "trailerId": "z5mCWsv0Z7U"
+    "trailerId": "z5mCWsv0Z7U",
+    "screeningYear": 2026
   },
   {
     "title": "Dune",
@@ -8051,7 +8516,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zRKQW58MBEY078AxkHxEJzUskCl.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zRKQW58MBEY078AxkHxEJzUskCl.jpg",
     "releaseYear": "2021",
-    "trailerId": "FabyRquCEtY"
+    "trailerId": "FabyRquCEtY",
+    "screeningYear": 2026
   },
   {
     "title": "Dune: Part Two",
@@ -8073,7 +8539,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/eZ239CUp1d6OryZEBPnO2n87gMG.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/eZ239CUp1d6OryZEBPnO2n87gMG.jpg",
     "releaseYear": "2024",
-    "trailerId": "p-4Xgcuwb00"
+    "trailerId": "p-4Xgcuwb00",
+    "screeningYear": 2026
   },
   {
     "title": "The Package",
@@ -8095,7 +8562,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5P3EeDAzFPScaDx0IAJbPJJxWOW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5P3EeDAzFPScaDx0IAJbPJJxWOW.jpg",
     "releaseYear": "1989",
-    "trailerId": "fuxCToaPa7Y"
+    "trailerId": "fuxCToaPa7Y",
+    "screeningYear": 2026
   },
   {
     "title": "28 Weeks Later",
@@ -8117,7 +8585,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/83ownpZPvBHJD5UVNShzQfa3LaW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/83ownpZPvBHJD5UVNShzQfa3LaW.jpg",
     "releaseYear": "2007",
-    "trailerId": "gPOt4mAEfBE"
+    "trailerId": "gPOt4mAEfBE",
+    "screeningYear": 2026
   },
   {
     "title": "28 Years Later: The Bone Temple",
@@ -8139,7 +8608,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hHDNOlATHhre4eZ7aYz5cdyJLik.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hHDNOlATHhre4eZ7aYz5cdyJLik.jpg",
     "releaseYear": "2026",
-    "trailerId": "Nh96MdgQ69U"
+    "trailerId": "Nh96MdgQ69U",
+    "screeningYear": 2026
   },
   {
     "title": "The Housemaid",
@@ -8161,7 +8631,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zTnAnYIn0Iv3cn0ZHlzLhou3ybm.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zTnAnYIn0Iv3cn0ZHlzLhou3ybm.jpg",
     "releaseYear": "2025",
-    "trailerId": "M_HwDp-zKBI"
+    "trailerId": "M_HwDp-zKBI",
+    "screeningYear": 2026
   },
   {
     "title": "Primate",
@@ -8183,7 +8654,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/d5C5Wsx4fnMRA0tj9BK1kTPcgQe.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/d5C5Wsx4fnMRA0tj9BK1kTPcgQe.jpg",
     "releaseYear": "2026",
-    "trailerId": "xKGw0q_6aGw"
+    "trailerId": "xKGw0q_6aGw",
+    "screeningYear": 2026
   },
   {
     "title": "Anaconda",
@@ -8205,7 +8677,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/swxhEJsAWms6X1fDZ4HdbvYBSf9.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/swxhEJsAWms6X1fDZ4HdbvYBSf9.jpg",
     "releaseYear": "2025",
-    "trailerId": "jMbBuQAYOeM"
+    "trailerId": "jMbBuQAYOeM",
+    "screeningYear": 2026
   },
   {
     "title": "The Man in the White Van",
@@ -8227,7 +8700,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cFFY6G19LeotX0SuUhvzja3CQZk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cFFY6G19LeotX0SuUhvzja3CQZk.jpg",
     "releaseYear": "2024",
-    "trailerId": "ztQZYF0E0AY"
+    "trailerId": "ztQZYF0E0AY",
+    "screeningYear": 2026
   },
   {
     "title": "Five Nights at Freddy's",
@@ -8249,7 +8723,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7NRGAtu8E4343NSKwhkgmVRDINw.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7NRGAtu8E4343NSKwhkgmVRDINw.jpg",
     "releaseYear": "2023",
-    "trailerId": "GfYnJ2-E7Is"
+    "trailerId": "GfYnJ2-E7Is",
+    "screeningYear": 2026,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Pizza Movie",
@@ -8271,7 +8747,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/75UkXLlLedidOGo0VogF0A0NPfC.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/75UkXLlLedidOGo0VogF0A0NPfC.jpg",
     "releaseYear": "2026",
-    "trailerId": "fOzF87PFGnw"
+    "trailerId": "fOzF87PFGnw",
+    "screeningYear": 2026
   },
   {
     "title": "I Feel Pretty",
@@ -8293,7 +8770,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7XM7kxa3U2g8TO3OGSiETCroNRD.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7XM7kxa3U2g8TO3OGSiETCroNRD.jpg",
     "releaseYear": "2018",
-    "trailerId": "cVx9EFK3DWE"
+    "trailerId": "cVx9EFK3DWE",
+    "screeningYear": 2026
   },
   {
     "title": "ROOMATES",
@@ -8315,7 +8793,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ehPqQzHL6gGT7mT21TjU7oMLzVO.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ehPqQzHL6gGT7mT21TjU7oMLzVO.jpg",
     "releaseYear": "2026",
-    "trailerId": "_00e9SR4zQU"
+    "trailerId": "_00e9SR4zQU",
+    "screeningYear": 2026
   },
   {
     "title": "Thrash",
@@ -8337,7 +8816,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hniERZojXCEc7Fp3yljZUigOAhm.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hniERZojXCEc7Fp3yljZUigOAhm.jpg",
     "releaseYear": "2026",
-    "trailerId": "hzyOsNyDkbM"
+    "trailerId": "hzyOsNyDkbM",
+    "screeningYear": 2026
   },
   {
     "title": "Dust Bunny",
@@ -8359,7 +8839,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/AecGG1XVCmkk7fT10ko3FC0dLIP.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/AecGG1XVCmkk7fT10ko3FC0dLIP.jpg",
     "releaseYear": "2025",
-    "trailerId": "lQqmOjPDlWg"
+    "trailerId": "lQqmOjPDlWg",
+    "screeningYear": 2026
   },
   {
     "title": "Turbulence",
@@ -8381,7 +8862,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vOV4Qy3g791OTzEndiSGoJwuI2M.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vOV4Qy3g791OTzEndiSGoJwuI2M.jpg",
     "releaseYear": "2025",
-    "trailerId": "qbJt-u9L7cA"
+    "trailerId": "qbJt-u9L7cA",
+    "screeningYear": 2026
   },
   {
     "title": "Night Hunter",
@@ -8403,7 +8885,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6rJAeP8xlq0bHUdCNg5epBvrFVa.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6rJAeP8xlq0bHUdCNg5epBvrFVa.jpg",
     "releaseYear": "2019",
-    "trailerId": "aDD9jy4xACQ"
+    "trailerId": "aDD9jy4xACQ",
+    "screeningYear": 2026
   },
   {
     "title": "Apex",
@@ -8425,7 +8908,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/9nzfyiYbmTUXWC4B2kwjl4NAlqO.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/9nzfyiYbmTUXWC4B2kwjl4NAlqO.jpg",
     "releaseYear": "2026",
-    "trailerId": "kgv8jf_8dm0"
+    "trailerId": "kgv8jf_8dm0",
+    "screeningYear": 2026
   },
   {
     "title": "Marty Supreme",
@@ -8447,7 +8931,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6h7w8R4BA7vubEmEEW5vYEjuoz6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6h7w8R4BA7vubEmEEW5vYEjuoz6.jpg",
     "releaseYear": "2025",
-    "trailerId": "pwE3ZG1kIqw"
+    "trailerId": "pwE3ZG1kIqw",
+    "screeningYear": 2026
   },
   {
     "title": "Greenland",
@@ -8469,7 +8954,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2Fk3AB8E9dYIBc2ywJkxk8BTyhc.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2Fk3AB8E9dYIBc2ywJkxk8BTyhc.jpg",
     "releaseYear": "2020",
-    "trailerId": "d4s9XNChIRk"
+    "trailerId": "d4s9XNChIRk",
+    "screeningYear": 2026
   },
   {
     "title": "Greenland 2: Migration",
@@ -8491,7 +8977,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cLFbDVfhllIMybpo2fkGNzehiQG.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cLFbDVfhllIMybpo2fkGNzehiQG.jpg",
     "releaseYear": "2026",
-    "trailerId": "S2iTwzUiBM0"
+    "trailerId": "S2iTwzUiBM0",
+    "screeningYear": 2026
   },
   {
     "title": "211",
@@ -8513,7 +9000,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/7eTWQb475pM9H3NEOiUzGYASEx0.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/7eTWQb475pM9H3NEOiUzGYASEx0.jpg",
     "releaseYear": "2018",
-    "trailerId": "SCLjS-owEig"
+    "trailerId": "SCLjS-owEig",
+    "screeningYear": 2026
   },
   {
     "title": "Send Help",
@@ -8535,7 +9023,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hO2jx1H3XafR7Y8QbFgVH1sHTY9.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hO2jx1H3XafR7Y8QbFgVH1sHTY9.jpg",
     "releaseYear": "2026",
-    "trailerId": "VXWye0z9mfU"
+    "trailerId": "VXWye0z9mfU",
+    "screeningYear": 2026
   },
   {
     "title": "Swapped",
@@ -8557,7 +9046,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zMwhWailP1WY7sb6AoE6b8ugoy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zMwhWailP1WY7sb6AoE6b8ugoy.jpg",
     "releaseYear": "2026",
-    "trailerId": "glgmAwRDP8s"
+    "trailerId": "glgmAwRDP8s",
+    "screeningYear": 2026
   },
   {
     "title": "GOAT",
@@ -8579,7 +9069,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tq3h43fZy0H80vzf47MAY7R9Mxo.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tq3h43fZy0H80vzf47MAY7R9Mxo.jpg",
     "releaseYear": "2026",
-    "trailerId": "24uQEGjqETE"
+    "trailerId": "24uQEGjqETE",
+    "screeningYear": 2026
   },
   {
     "title": "We Bury the Dead",
@@ -8601,7 +9092,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vbkW4KerpshPZnP84w9qwSfYrhu.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vbkW4KerpshPZnP84w9qwSfYrhu.jpg",
     "releaseYear": "2026",
-    "trailerId": "YmPyNvrzF0A"
+    "trailerId": "YmPyNvrzF0A",
+    "screeningYear": 2026
   },
   {
     "title": "The Punisher: One Last Kill",
@@ -8623,7 +9115,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qO55CD8tgVL1T4WKn6zYFFiD6lL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qO55CD8tgVL1T4WKn6zYFFiD6lL.jpg",
     "releaseYear": "2026",
-    "trailerId": "3YbEW12GpAs"
+    "trailerId": "3YbEW12GpAs",
+    "screeningYear": 2026
   },
   {
     "title": "Another Man's Wife (2026)",
@@ -8643,7 +9136,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "posterUrl": "https://image.tmdb.org/t/p/w780/3dv8P4NTHkXpVWKkykeIUwO3VE2.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/3dv8P4NTHkXpVWKkykeIUwO3VE2.jpg",
-    "backdropUrl": null
+    "backdropUrl": null,
+    "screeningYear": 2026
   },
   {
     "title": "Remarkably Bright Creatures",
@@ -8665,7 +9159,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bVGHSe47W6oCQL1Q88pvRAet51A.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/bVGHSe47W6oCQL1Q88pvRAet51A.jpg",
     "releaseYear": "2026",
-    "trailerId": "b14IFe4an5k"
+    "trailerId": "b14IFe4an5k",
+    "screeningYear": 2026
   },
   {
     "title": "Step Bros",
@@ -8685,7 +9180,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=cKPNums7NUo",
     "posterUrl": "https://image.tmdb.org/t/p/w780/247H2jS9Te9TTmKDcAMg3LN5gmI.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/247H2jS9Te9TTmKDcAMg3LN5gmI.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/247H2jS9Te9TTmKDcAMg3LN5gmI.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/247H2jS9Te9TTmKDcAMg3LN5gmI.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Lurker",
@@ -8707,7 +9203,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/u4JsyMpp6mtAYbg0t3GIaCgPrRy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/u4JsyMpp6mtAYbg0t3GIaCgPrRy.jpg",
     "releaseYear": "2025",
-    "trailerId": "TohwFNb7AHI"
+    "trailerId": "TohwFNb7AHI",
+    "screeningYear": 2026
   },
   {
     "title": "Eden",
@@ -8729,7 +9226,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rz8NcfTRczvn94vpnmMx42zt6EC.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rz8NcfTRczvn94vpnmMx42zt6EC.jpg",
     "releaseYear": "2025",
-    "trailerId": "2HRB36E5N6g"
+    "trailerId": "2HRB36E5N6g",
+    "screeningYear": 2026
   },
   {
     "title": "Shelter",
@@ -8751,7 +9249,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/nHxWyy18SvAZ8jJeemtS8k1UNjM.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/nHxWyy18SvAZ8jJeemtS8k1UNjM.jpg",
     "releaseYear": "2026",
-    "trailerId": "kdcxogb4leQ"
+    "trailerId": "kdcxogb4leQ",
+    "screeningYear": 2026
   },
   {
     "title": "The Bride!",
@@ -8773,7 +9272,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/l8rKKMU2M9dDULO9CEtDNdWAEUJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/l8rKKMU2M9dDULO9CEtDNdWAEUJ.jpg",
     "releaseYear": "2026",
-    "trailerId": "-oLJmEFK14k"
+    "trailerId": "-oLJmEFK14k",
+    "screeningYear": 2026
   },
   {
     "title": "Ladies First",
@@ -8795,7 +9295,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/z1hekwU7a7FUP6XvqDwJjxAbrXJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/z1hekwU7a7FUP6XvqDwJjxAbrXJ.jpg",
     "releaseYear": "2026",
-    "trailerId": "yeetI2DfbaE"
+    "trailerId": "yeetI2DfbaE",
+    "screeningYear": 2026
   },
   {
     "title": "Hoppers",
@@ -8817,7 +9318,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/u53UYu5XG2hNgWGvs3xGhAVzypl.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/u53UYu5XG2hNgWGvs3xGhAVzypl.jpg",
     "releaseYear": "2026",
-    "trailerId": "rmsh6S_lCSo"
+    "trailerId": "rmsh6S_lCSo",
+    "screeningYear": 2026
   },
   {
     "title": "Welcome Home Roscoe Jenkins",
@@ -8839,7 +9341,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/wJANuGGBJC5GXJXY93cZXAPD3nk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/wJANuGGBJC5GXJXY93cZXAPD3nk.jpg",
     "releaseYear": "2008",
-    "trailerId": "pI09LqSkNbw"
+    "trailerId": "pI09LqSkNbw",
+    "screeningYear": 2026
   },
   {
     "title": "Miss You, Love You",
@@ -8861,7 +9364,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fH4pbzTCP1EWbZ1BoCtx7lgRb1F.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fH4pbzTCP1EWbZ1BoCtx7lgRb1F.jpg",
     "releaseYear": "2026",
-    "trailerId": "qriWSK376U0"
+    "trailerId": "qriWSK376U0",
+    "screeningYear": 2026
   },
   {
     "title": "Fast Charlie",
@@ -8883,7 +9387,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zX0q1hPRon0SAIcRmTum06Khjll.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zX0q1hPRon0SAIcRmTum06Khjll.jpg",
     "releaseYear": "2023",
-    "trailerId": "geZ-0zEHx60"
+    "trailerId": "geZ-0zEHx60",
+    "screeningYear": 2026
   },
   {
     "title": "Office Romance",
@@ -8905,7 +9410,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1N5yz1IDw6Ci8le1YgeM6xtBijA.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1N5yz1IDw6Ci8le1YgeM6xtBijA.jpg",
     "releaseYear": "2026",
-    "trailerId": "11gcNa-TBRA"
+    "trailerId": "11gcNa-TBRA",
+    "screeningYear": 2026
   },
   {
     "title": "Colors of Evil: Black",
@@ -8926,7 +9432,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/2D3W3Jp0VYsLhXTEfnvhbMvQEzk.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2D3W3Jp0VYsLhXTEfnvhbMvQEzk.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2D3W3Jp0VYsLhXTEfnvhbMvQEzk.jpg",
-    "releaseYear": "2026"
+    "releaseYear": "2026",
+    "screeningYear": 2026
   },
   {
     "title": "Colors of Evil: Red",
@@ -8947,7 +9454,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/cLXvsCO4KfWSLaXPnJF9GL0NKeg.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/cLXvsCO4KfWSLaXPnJF9GL0NKeg.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cLXvsCO4KfWSLaXPnJF9GL0NKeg.jpg",
-    "releaseYear": "2024"
+    "releaseYear": "2024",
+    "screeningYear": 2026
   },
   {
     "title": "After Everything",
@@ -8969,7 +9477,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fH7kYS9qEOkhFQZc0Dcoa9MFjje.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fH7kYS9qEOkhFQZc0Dcoa9MFjje.jpg",
     "releaseYear": "2023",
-    "trailerId": "XLkX_WQqmwU"
+    "trailerId": "XLkX_WQqmwU",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Season 2 E1",
@@ -8989,7 +9498,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Season 2 E2",
@@ -9009,7 +9519,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Season 2 E3",
@@ -9029,7 +9540,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Season 2 E4",
@@ -9049,7 +9561,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Ticket to Paradise",
@@ -9071,7 +9584,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/n4elrbXCYyhBGHuw3YrUHbwmQBo.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/n4elrbXCYyhBGHuw3YrUHbwmQBo.jpg",
     "releaseYear": "2022",
-    "trailerId": "S1Hl8HnxnAM"
+    "trailerId": "S1Hl8HnxnAM",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Season 2 ep 5",
@@ -9091,7 +9605,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Season 2 ep 6",
@@ -9111,7 +9626,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: season 2 ep 7",
@@ -9131,7 +9647,8 @@
     "trailerUrl": "",
     "posterUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/aVvRQJ2Ckhlym4uh0YGc166CUoP.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "David",
@@ -9153,7 +9670,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/mZ6J2g6HCV2gj3iuCdSxcyBXq9c.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/mZ6J2g6HCV2gj3iuCdSxcyBXq9c.jpg",
     "releaseYear": "2025",
-    "trailerId": "2ocVv1m5NVU"
+    "trailerId": "2ocVv1m5NVU",
+    "screeningYear": 2026
   },
   {
     "title": "Little Brother",
@@ -9175,7 +9693,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/bdwv8Hsu4Bnz8aRbH5MQ9clQ0DG.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/bdwv8Hsu4Bnz8aRbH5MQ9clQ0DG.jpg",
     "releaseYear": "2026",
-    "trailerId": "bWtrFcerKE0"
+    "trailerId": "bWtrFcerKE0",
+    "screeningYear": 2026
   },
   {
     "title": "Balls Up",
@@ -9197,7 +9716,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/qE0FswzjACs2kvAycYVS2zcmgec.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/qE0FswzjACs2kvAycYVS2zcmgec.jpg",
     "releaseYear": "2026",
-    "trailerId": "zgzxY4RtxBg"
+    "trailerId": "zgzxY4RtxBg",
+    "screeningYear": 2026
   },
   {
     "title": "You're Cordially Invited",
@@ -9219,7 +9739,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lsOdEAkwQ0TcP71HocJi8WUftmp.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/lsOdEAkwQ0TcP71HocJi8WUftmp.jpg",
     "releaseYear": "2025",
-    "trailerId": "FTEqcrgsmzg"
+    "trailerId": "FTEqcrgsmzg",
+    "screeningYear": 2026
   },
   {
     "title": "Tom Clancy's Jack Ryan ghostwar",
@@ -9239,7 +9760,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=dnVvVBNwqbo",
     "posterUrl": "https://image.tmdb.org/t/p/w780/2y2TbzeKZHYqTN5gb4nBv9dKk1f.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/2y2TbzeKZHYqTN5gb4nBv9dKk1f.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/2y2TbzeKZHYqTN5gb4nBv9dKk1f.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/2y2TbzeKZHYqTN5gb4nBv9dKk1f.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar",
@@ -9261,7 +9783,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/vL5LR6WdxWPjLPFRLe133jXWsh5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/vL5LR6WdxWPjLPFRLe133jXWsh5.jpg",
     "releaseYear": "2009",
-    "trailerId": "LgZ2MDuJvhc"
+    "trailerId": "LgZ2MDuJvhc",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: The Way of Water",
@@ -9283,7 +9806,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kJsPVzdyBrYHLomuNv5SJDXUQ2f.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kJsPVzdyBrYHLomuNv5SJDXUQ2f.jpg",
     "releaseYear": "2022",
-    "trailerId": "VflTF8XFNgA"
+    "trailerId": "VflTF8XFNgA",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar: Fire and Ash",
@@ -9305,7 +9829,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/sdZSjtGUTSN8B3al5o0f2WoQfQQ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/sdZSjtGUTSN8B3al5o0f2WoQfQQ.jpg",
     "releaseYear": "2025",
-    "trailerId": "3ThgcAj0UyE"
+    "trailerId": "3ThgcAj0UyE",
+    "screeningYear": 2026
   },
   {
     "title": "I.S.S.",
@@ -9327,7 +9852,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/uNVm7P02IDiYsi9lul0aJ0lROBL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/uNVm7P02IDiYsi9lul0aJ0lROBL.jpg",
     "releaseYear": "2024",
-    "trailerId": "KpRc0fZhhWU"
+    "trailerId": "KpRc0fZhhWU",
+    "screeningYear": 2026
   },
   {
     "title": "The Black Demon",
@@ -9349,7 +9875,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/cvpgZt6bxHLWUqdQTAxn0ZJri8o.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/cvpgZt6bxHLWUqdQTAxn0ZJri8o.jpg",
     "releaseYear": "2023",
-    "trailerId": "1FRtbDz6U1Y"
+    "trailerId": "1FRtbDz6U1Y",
+    "screeningYear": 2026
   },
   {
     "title": "The Sheep Detectives",
@@ -9371,7 +9898,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/a8uQvrplTkhGJQog6GZ6CqF8An6.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/a8uQvrplTkhGJQog6GZ6CqF8An6.jpg",
     "releaseYear": "2026",
-    "trailerId": "kIGsC3Vk-ZA"
+    "trailerId": "kIGsC3Vk-ZA",
+    "screeningYear": 2026
   },
   {
     "title": "Project Hail Mary",
@@ -9393,7 +9921,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8Tfys3mDZVp4tNoH2ktm06a0Tau.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8Tfys3mDZVp4tNoH2ktm06a0Tau.jpg",
     "releaseYear": "2026",
-    "trailerId": "eSGTui-T-4Q"
+    "trailerId": "eSGTui-T-4Q",
+    "screeningYear": 2026
   },
   {
     "title": "Lee Cronin's The Mummy",
@@ -9415,7 +9944,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xugEpZk9YQ0DIz1aFvH5HGkqpZK.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xugEpZk9YQ0DIz1aFvH5HGkqpZK.jpg",
     "releaseYear": "2026",
-    "trailerId": "x-W69KDGDRE"
+    "trailerId": "x-W69KDGDRE",
+    "screeningYear": 2026
   },
   {
     "title": "Wardriver",
@@ -9437,7 +9967,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/fcNno43tiFnaycu1mO9TqfbPL45.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/fcNno43tiFnaycu1mO9TqfbPL45.jpg",
     "releaseYear": "2026",
-    "trailerId": "pynXm5tVGho"
+    "trailerId": "pynXm5tVGho",
+    "screeningYear": 2026
   },
   {
     "title": "Reminders of Him",
@@ -9459,7 +9990,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/5rxEnsgriw8z065q51lrvPKYmCL.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/5rxEnsgriw8z065q51lrvPKYmCL.jpg",
     "releaseYear": "2026",
-    "trailerId": "L6oy0ugJzSE"
+    "trailerId": "L6oy0ugJzSE",
+    "screeningYear": 2026
   },
   {
     "title": "The Paradise Murders",
@@ -9480,7 +10012,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/oInrSmnwx1PrpGqdJF34FTuUlRy.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/oInrSmnwx1PrpGqdJF34FTuUlRy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/oInrSmnwx1PrpGqdJF34FTuUlRy.jpg",
-    "releaseYear": "2025"
+    "releaseYear": "2025",
+    "screeningYear": 2026
   },
   {
     "title": "Nothing to Lose",
@@ -9502,7 +10035,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/lYQmXiKEooImScqysi2HbjjRrgC.jpg",
     "backdropUrl": null,
     "releaseYear": "2026",
-    "trailerId": "rIZhRF35nVc"
+    "trailerId": "rIZhRF35nVc",
+    "screeningYear": 2026
   },
   {
     "title": "Mortal Kombat II",
@@ -9524,7 +10058,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/4EAAwpylq313qrDqpCxulUrXBNF.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/4EAAwpylq313qrDqpCxulUrXBNF.jpg",
     "releaseYear": "2026",
-    "trailerId": "qGyIEis2T2o"
+    "trailerId": "qGyIEis2T2o",
+    "screeningYear": 2026
   },
   {
     "title": "72 HOURS",
@@ -9546,7 +10081,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/hL5EIk48251OXlbIbRJq3yaBHk8.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/hL5EIk48251OXlbIbRJq3yaBHk8.jpg",
     "releaseYear": "2026",
-    "trailerId": "N-J-HR3quc4"
+    "trailerId": "N-J-HR3quc4",
+    "screeningYear": 2026
   },
   {
     "title": "The Drama",
@@ -9568,7 +10104,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1oKLEA9JOhvaBwLpqjROisvWMy7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1oKLEA9JOhvaBwLpqjROisvWMy7.jpg",
     "releaseYear": "2026",
-    "trailerId": "-ppw3BbSelI"
+    "trailerId": "-ppw3BbSelI",
+    "screeningYear": 2026
   },
   {
     "title": "Obsession",
@@ -9590,7 +10127,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rZfmzpixLKLR3Hg2u0WgC7XLFl8.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rZfmzpixLKLR3Hg2u0WgC7XLFl8.jpg",
     "releaseYear": "2026",
-    "trailerId": "AvLWFCXbVqU"
+    "trailerId": "AvLWFCXbVqU",
+    "screeningYear": 2026
   },
   {
     "title": "The Super Mario Galaxy Movie",
@@ -9612,7 +10150,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kxQiIJ4gVcD3K6o14MJ72p5yRcE.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kxQiIJ4gVcD3K6o14MJ72p5yRcE.jpg",
     "releaseYear": "2026",
-    "trailerId": "-LLhj6QYQi8"
+    "trailerId": "-LLhj6QYQi8",
+    "screeningYear": 2026
   },
   {
     "title": "Masters of the Universe",
@@ -9634,7 +10173,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/yQIdU11DYQQp0neGtGtGxbGfRer.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/yQIdU11DYQQp0neGtGtGxbGfRer.jpg",
     "releaseYear": "2026",
-    "trailerId": "lBnfz93v27Q"
+    "trailerId": "lBnfz93v27Q",
+    "screeningYear": 2026
   },
   {
     "title": "Michael",
@@ -9656,7 +10196,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ufSwlnECLoUbBjPrFqEQcWBzHwc.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ufSwlnECLoUbBjPrFqEQcWBzHwc.jpg",
     "releaseYear": "2026",
-    "trailerId": "9h7-znnwxeA"
+    "trailerId": "9h7-znnwxeA",
+    "screeningYear": 2026
   },
   {
     "title": "You, Me & Tuscany",
@@ -9678,7 +10219,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/2TWIlmhE06ghspeQLEX1VmnEBiE.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/2TWIlmhE06ghspeQLEX1VmnEBiE.jpg",
     "releaseYear": "2026",
-    "trailerId": "fU_wIyrAEWI"
+    "trailerId": "fU_wIyrAEWI",
+    "screeningYear": 2026
   },
   {
     "title": "The Devil Wears Prada 2 Red Carpet World Premiere",
@@ -9699,7 +10241,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/Af907x5h9W1wVis8XrSd7ynTWuy.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/Af907x5h9W1wVis8XrSd7ynTWuy.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/Af907x5h9W1wVis8XrSd7ynTWuy.jpg",
-    "releaseYear": "2026"
+    "releaseYear": "2026",
+    "screeningYear": 2026
   },
   {
     "title": "The Devil's Mouth",
@@ -9721,7 +10264,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/pLyaH6k69OJHnONSmN3R7Peh6HE.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/pLyaH6k69OJHnONSmN3R7Peh6HE.jpg",
     "releaseYear": "2026",
-    "trailerId": "2bp4Viru6Xc"
+    "trailerId": "2bp4Viru6Xc",
+    "screeningYear": 2026
   },
   {
     "title": "Avatar Aang: The Last Airbender",
@@ -9743,7 +10287,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/ezbrL1dMymKQZw7mDEWa2ZTzN7d.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/ezbrL1dMymKQZw7mDEWa2ZTzN7d.jpg",
     "releaseYear": "2026",
-    "trailerId": "7b20GRFZBFE"
+    "trailerId": "7b20GRFZBFE",
+    "screeningYear": 2026
   },
   {
     "title": "The Last House",
@@ -9765,7 +10310,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/1RhfevWmWCVHtEqxWBEjPOC5KG1.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1RhfevWmWCVHtEqxWBEjPOC5KG1.jpg",
     "releaseYear": "2026",
-    "trailerId": "MLxgaz2Zp1k"
+    "trailerId": "MLxgaz2Zp1k",
+    "screeningYear": 2026
   },
   {
     "title": "Grand Theft Auto VI: An Extended Look",
@@ -9787,7 +10333,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/po0uFYwWNByHQzHLCVJ6FetkN4M.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/po0uFYwWNByHQzHLCVJ6FetkN4M.jpg",
     "releaseYear": "2026",
-    "trailerId": "uphThaa97ig"
+    "trailerId": "uphThaa97ig",
+    "screeningYear": 2026
   },
   {
     "title": "Facing El Chapo",
@@ -9809,7 +10356,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/c4U96GrPRfnNrS01mBtqnocvlLJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/c4U96GrPRfnNrS01mBtqnocvlLJ.jpg",
     "releaseYear": "2026",
-    "trailerId": "Rk0efhpa-5Y"
+    "trailerId": "Rk0efhpa-5Y",
+    "screeningYear": 2026
   },
   {
     "title": "To Catch a Cheater",
@@ -9830,7 +10378,8 @@
     "posterUrl": "https://image.tmdb.org/t/p/w780/1k90jWj7L1DV28U7pTRKTgfpAUY.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/1k90jWj7L1DV28U7pTRKTgfpAUY.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/1k90jWj7L1DV28U7pTRKTgfpAUY.jpg",
-    "releaseYear": "2026"
+    "releaseYear": "2026",
+    "screeningYear": 2026
   },
   {
     "title": "The Whisper Man",
@@ -9852,7 +10401,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/xSJJQeAp9GBFmiKusysTRG6jQjt.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/xSJJQeAp9GBFmiKusysTRG6jQjt.jpg",
     "releaseYear": "2026",
-    "trailerId": "ZHRR-1CKYIQ"
+    "trailerId": "ZHRR-1CKYIQ",
+    "screeningYear": 2026
   },
   {
     "title": "Yellow Mirror",
@@ -9874,7 +10424,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/rFjlsx5IygrHmBqr0KsVolAHhy7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/rFjlsx5IygrHmBqr0KsVolAHhy7.jpg",
     "releaseYear": "2026",
-    "trailerId": "zNyZ6OlMbh0"
+    "trailerId": "zNyZ6OlMbh0",
+    "screeningYear": 2026
   },
   {
     "title": "Return to Silent Hill",
@@ -9896,7 +10447,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/v0NEB75SZjxY8GS3ho8WeEvjIT3.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/v0NEB75SZjxY8GS3ho8WeEvjIT3.jpg",
     "releaseYear": "2026",
-    "trailerId": "cbFSZ_8r58Y"
+    "trailerId": "cbFSZ_8r58Y",
+    "screeningYear": 2026
   },
   {
     "title": "Neighbors",
@@ -9918,7 +10470,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg",
     "releaseYear": "2014",
-    "trailerId": "pW2U1-2x7f0"
+    "trailerId": "pW2U1-2x7f0",
+    "screeningYear": 2026
   },
   {
     "title": "Neighbors 2: Sorority Rising",
@@ -9940,7 +10493,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg",
     "releaseYear": "2016",
-    "trailerId": "R5WLJiT4oSs"
+    "trailerId": "R5WLJiT4oSs",
+    "screeningYear": 2026
   },
   {
     "title": "manchine gun pearcher",
@@ -9960,7 +10514,8 @@
     "trailerUrl": "https://www.youtube.com/watch?v=eddnloOFjwY",
     "posterUrl": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg",
     "imageUrl": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg"
+    "backdropUrl": "https://image.tmdb.org/t/p/w780/tyO7uhV4803mnSwSAhjKhKV1bMN.jpg",
+    "screeningYear": 2026
   },
   {
     "title": "A Nightmare on Elm Street",
@@ -9985,7 +10540,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/nzSjTiecdosBfwMGAdpt9CxltCI.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/nzSjTiecdosBfwMGAdpt9CxltCI.jpg",
     "trailerId": "dCVh4lBfW-c",
-    "trailerUrl": "https://www.youtube.com/watch?v=dCVh4lBfW-c"
+    "trailerUrl": "https://www.youtube.com/watch?v=dCVh4lBfW-c",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "A Nightmare on Elm Street 2: Freddy's Revenge",
@@ -10010,7 +10567,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/8cxB1CiiODiWFayDPxLsAeviZvc.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/8cxB1CiiODiWFayDPxLsAeviZvc.jpg",
     "trailerId": "b-dZa6xt6hQ",
-    "trailerUrl": "https://www.youtube.com/watch?v=b-dZa6xt6hQ"
+    "trailerUrl": "https://www.youtube.com/watch?v=b-dZa6xt6hQ",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "A Nightmare on Elm Street 3: Dream Warriors",
@@ -10035,7 +10594,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/euXJlfeYSyrdkOoFQ9gtUG8OOhH.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/euXJlfeYSyrdkOoFQ9gtUG8OOhH.jpg",
     "trailerId": "oy-hgBu1h0w",
-    "trailerUrl": "https://www.youtube.com/watch?v=oy-hgBu1h0w"
+    "trailerUrl": "https://www.youtube.com/watch?v=oy-hgBu1h0w",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "A Nightmare on Elm Street 4: The Dream Master",
@@ -10060,7 +10621,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/boStYG7jKdoIZTduiOOsUVknD13.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/boStYG7jKdoIZTduiOOsUVknD13.jpg",
     "trailerId": "2m1a2Pt8Vjw",
-    "trailerUrl": "https://www.youtube.com/watch?v=2m1a2Pt8Vjw"
+    "trailerUrl": "https://www.youtube.com/watch?v=2m1a2Pt8Vjw",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "A Nightmare on Elm Street 5: The Dream Child",
@@ -10085,7 +10648,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/kizvpgXQfrAgN8FhOd87LbKk6kO.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/kizvpgXQfrAgN8FhOd87LbKk6kO.jpg",
     "trailerId": "qa4lBfEWBBs",
-    "trailerUrl": "https://www.youtube.com/watch?v=qa4lBfEWBBs"
+    "trailerUrl": "https://www.youtube.com/watch?v=qa4lBfEWBBs",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Freddy's Dead: The Final Nightmare",
@@ -10110,7 +10675,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/e4qh58n2WaG4Gyh9VhjOUeN9Mhv.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/e4qh58n2WaG4Gyh9VhjOUeN9Mhv.jpg",
     "trailerId": "PhcKV5e4RoU",
-    "trailerUrl": "https://www.youtube.com/watch?v=PhcKV5e4RoU"
+    "trailerUrl": "https://www.youtube.com/watch?v=PhcKV5e4RoU",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Wes Craven's New Nightmare",
@@ -10135,7 +10702,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/q5BWxfL1x34nyYSvA3Qo5odleGW.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/q5BWxfL1x34nyYSvA3Qo5odleGW.jpg",
     "trailerId": "9dLQYxBYGTQ",
-    "trailerUrl": "https://www.youtube.com/watch?v=9dLQYxBYGTQ"
+    "trailerUrl": "https://www.youtube.com/watch?v=9dLQYxBYGTQ",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Freddy vs. Jason",
@@ -10160,7 +10729,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/f9ZASRUfl8Jlco7rgRx3ujPR0P7.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/f9ZASRUfl8Jlco7rgRx3ujPR0P7.jpg",
     "trailerId": "ipbCUW3umJU",
-    "trailerUrl": "https://www.youtube.com/watch?v=ipbCUW3umJU"
+    "trailerUrl": "https://www.youtube.com/watch?v=ipbCUW3umJU",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "A Nightmare on Elm Street (2010)",
@@ -10185,7 +10756,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/Aur8dDhjDDJBuSDa9Y9GNrvlPI5.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/Aur8dDhjDDJBuSDa9Y9GNrvlPI5.jpg",
     "trailerId": "ZuYoEtEI_go",
-    "trailerUrl": "https://www.youtube.com/watch?v=ZuYoEtEI_go"
+    "trailerUrl": "https://www.youtube.com/watch?v=ZuYoEtEI_go",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "Clown in a Cornfield",
@@ -10210,7 +10783,9 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6ep6gw90TJ8bYvJC6hEDo8SxjoJ.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6ep6gw90TJ8bYvJC6hEDo8SxjoJ.jpg",
     "trailerId": "lWUKnQVCAhk",
-    "trailerUrl": "https://www.youtube.com/watch?v=lWUKnQVCAhk"
+    "trailerUrl": "https://www.youtube.com/watch?v=lWUKnQVCAhk",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   },
   {
     "title": "IT Chapter Two",
@@ -10235,6 +10810,8 @@
     "imageUrl": "https://image.tmdb.org/t/p/w780/6LVSrgm83UYWlrLTCVGmWhFKYO0.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w780/6LVSrgm83UYWlrLTCVGmWhFKYO0.jpg",
     "trailerId": "Pr85vto4dbo",
-    "trailerUrl": "https://www.youtube.com/watch?v=Pr85vto4dbo"
+    "trailerUrl": "https://www.youtube.com/watch?v=Pr85vto4dbo",
+    "screeningYear": 2025,
+    "holidayCategory": "halloween"
   }
 ]

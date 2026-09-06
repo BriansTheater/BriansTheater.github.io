@@ -411,6 +411,32 @@
           </div>
         </div>
 
+        <!-- Annual & Holiday Collections Control Hub -->
+        <div id="annualHolidayControls" class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-2xl bg-slate-950/80 border border-slate-800 shadow-inner">
+          <!-- Left: Year Pills (All, 2026, 2025, 2024, Older) -->
+          <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">📅 Year:</span>
+            <button type="button" onclick="setVaultYearFilter('all')" id="vYear-all" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm shrink-0 active:scale-95 cursor-pointer">All Years</button>
+            <button type="button" onclick="setVaultYearFilter('2026')" id="vYear-2026" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition shrink-0 active:scale-95 cursor-pointer">2026</button>
+            <button type="button" onclick="setVaultYearFilter('2025')" id="vYear-2025" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition shrink-0 active:scale-95 cursor-pointer">2025</button>
+            <button type="button" onclick="setVaultYearFilter('2024')" id="vYear-2024" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition shrink-0 active:scale-95 cursor-pointer">2024</button>
+            <button type="button" onclick="setVaultYearFilter('older')" id="vYear-older" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition shrink-0 active:scale-95 cursor-pointer">Vintage</button>
+          </div>
+
+          <!-- Right: Holiday Shortcuts & Showcase Hub Modal Button -->
+          <div class="flex items-center gap-2 shrink-0 overflow-x-auto custom-scrollbar">
+            <button type="button" onclick="toggleVaultHolidayFilter('halloween')" id="vHol-halloween" title="Filter to Halloween & Horror Marathons" class="px-2.5 py-1.5 rounded-xl text-xs font-bold text-orange-400 hover:text-orange-300 bg-orange-950/40 hover:bg-orange-950/70 border border-orange-800/60 hover:border-orange-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
+              <span>🎃</span> <span>Halloween</span>
+            </button>
+            <button type="button" onclick="toggleVaultHolidayFilter('christmas')" id="vHol-christmas" title="Filter to Christmas & Holiday Screening Festival" class="px-2.5 py-1.5 rounded-xl text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-800/60 hover:border-emerald-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
+              <span>🎄</span> <span>Christmas</span>
+            </button>
+            <button type="button" onclick="openAnnualCollectionsModal()" id="btnOpenAnnualHub" title="View All Annual Marathons & Holiday Lineups" class="px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-gradient-to-r from-amber-950/70 via-slate-900 to-amber-950/70 hover:from-amber-900/80 hover:to-amber-900/80 border border-amber-700/60 hover:border-amber-400 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer shadow-sm">
+              <span>🏛️</span> <span>Annual Hub ↗</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Search Input & Info Bar (Zero-Collision Responsive Layout) -->
         <div class="flex flex-col gap-2">
           <div class="relative flex items-center">
@@ -1519,6 +1545,157 @@
     </div>
   </div>
 
+  <!-- ANNUAL SCREENING ARCHIVES & HOLIDAY MARATHONS SHOWCASE MODAL -->
+  <div id="annualCollectionsModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeAnnualCollectionsModal()">
+    <div class="morphic-panel bg-slate-900/95 border border-amber-400/40 rounded-3xl max-w-3xl w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(251,191,36,0.25)] relative flex flex-col gap-4 text-slate-100 max-h-[90vh] overflow-hidden">
+      
+      <!-- Top Glowing Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-400 rounded-t-3xl"></div>
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5 pt-1">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-400 to-emerald-400 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-xl shrink-0">
+            🏛️
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-amber-300 flex items-center gap-2">
+              <span>Annual Collections & Holiday Hub</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Explore yearly screening archives, Halloween marathons, and Christmas festivals</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAnnualCollectionsModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition cursor-pointer" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Modal Scrollable Content: Yearly Showcase Sections -->
+      <div class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-1 py-1">
+        
+        <!-- SECTION: 2025 ANNUAL MARATHONS & HOLIDAY FESTIVALS -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-extrabold text-sky-400 font-mono">📅 2025 Screening Season</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">281 Titles</span>
+            </div>
+            <button type="button" onclick="filterVaultToAnnualEvent('2025')" class="text-xs text-sky-400 hover:text-sky-300 font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>View All 2025</span> <span>→</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- 2025 Halloween Mystery Scary Movie Marathon -->
+            <div class="p-3.5 rounded-2xl bg-gradient-to-b from-orange-950/40 to-slate-950 border border-orange-800/60 hover:border-orange-500 transition flex flex-col justify-between gap-3 shadow-md group">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30 font-mono">🎃 HALLOWEEN MARATHON</span>
+                  <span class="text-[10px] font-mono text-slate-400">Oct 31, 2025</span>
+                </div>
+                <h4 class="text-sm sm:text-base font-black text-orange-200 group-hover:text-amber-300 transition">2025 Mystery Scary Movie Marathon</h4>
+                <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                  11 iconic horror films screened in back-to-back sequence featuring the complete Freddy Krueger saga, Clown in a Cornfield, and IT Chapter Two with official in-app trailers.
+                </p>
+                <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px] font-semibold text-orange-300/80">
+                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎟️ 11 Sub-Cards</span>
+                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎬 Embedded Trailers</span>
+                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🕒 21h Total Run</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 pt-2 border-t border-orange-900/40">
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', null, '2025 Mystery Scary Movie Marathon')" class="flex-1 py-2 px-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                  <span>Explore 11 Films</span> <span>→</span>
+                </button>
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', 'halloween')" title="View all 33 Halloween screenings from 2025" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 border border-orange-800/60 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                  <span>All Spooky (33)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2025 Christmas & Holiday Screening Festival -->
+            <div class="p-3.5 rounded-2xl bg-gradient-to-b from-emerald-950/40 to-slate-950 border border-emerald-800/60 hover:border-emerald-500 transition flex flex-col justify-between gap-3 shadow-md group">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">🎄 CHRISTMAS FESTIVAL</span>
+                  <span class="text-[10px] font-mono text-slate-400">Dec 2025</span>
+                </div>
+                <h4 class="text-sm sm:text-base font-black text-emerald-200 group-hover:text-amber-300 transition">2025 Christmas & Holiday Festival</h4>
+                <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                  25 holiday movies screened throughout December including Home Alone 2, The Grinch, The Nightmare Before Christmas, holiday comedies, and festive premieres.
+                </p>
+                <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px] font-semibold text-emerald-300/80">
+                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎁 25 Holiday Titles</span>
+                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎅 Family Classics</span>
+                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">❄️ Dec Screenings</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 pt-2 border-t border-emerald-900/40">
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', 'christmas')" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                  <span>Explore Christmas Lineup (25 Films)</span> <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: 2026 ANNUAL SCREENINGS & PREMIERES -->
+        <div class="flex flex-col gap-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-extrabold text-teal-400 font-mono">📅 2026 Screening Season</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">153 Titles</span>
+            </div>
+            <button type="button" onclick="filterVaultToAnnualEvent('2026')" class="text-xs text-teal-400 hover:text-teal-300 font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>View All 2026</span> <span>→</span>
+            </button>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-teal-700/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-200">2026 Feature Screenings & Upcoming Premieres</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Explore all 153 titles screened and scheduled for 2026 at Brian's Theater.</p>
+            </div>
+            <button type="button" onclick="filterVaultToAnnualEvent('2026')" class="shrink-0 py-2 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>Explore 2026 Archive</span> <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION: VINTAGE SCREENINGS (2018 - 2024) -->
+        <div class="flex flex-col gap-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-extrabold text-purple-400 font-mono">📜 Vintage Archives (2018 - 2024)</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">33 Titles</span>
+            </div>
+            <button type="button" onclick="filterVaultToAnnualEvent('older')" class="text-xs text-purple-400 hover:text-purple-300 font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>View Vintage</span> <span>→</span>
+            </button>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-purple-700/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-200">Classic Screenings & Vintage Heritage</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Browse past theater screening records dating back to 2018.</p>
+            </div>
+            <button type="button" onclick="filterVaultToAnnualEvent('older')" class="shrink-0 py-2 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-purple-300 hover:text-white border border-purple-800/60 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>Explore Vintage Archive</span> <span>→</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        <span class="flex items-center gap-1.5 font-mono text-[11px]">
+          <span>🍿</span> <span>Brian's Theater Annual Screening Heritage</span>
+        </span>
+        <button type="button" onclick="closeAnnualCollectionsModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition active:scale-95 cursor-pointer">
+          Close Hub
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- FRONT & CENTER VERSION UPDATE MODAL DIALOG (USER MUST SEE & CLICK TO ENTER) -->
   <div id="appUpdateToast" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300 pointer-events-none opacity-0" role="dialog" aria-modal="true" aria-labelledby="updateToastTitle">
     
@@ -1569,7 +1746,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.85";
+    const APP_VERSION = "4.9.86";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -1946,6 +2123,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.86": [
+        "Added annual screening archive browser with quick year selector pills.",
+        "Added dedicated Halloween and Christmas annual holiday collection filters.",
+        "Added interactive Annual Collections and Holiday Hub showcase modal.",
+        "Themed collection banners highlight yearly archives and holiday festivals.",
+        "One-click reset returns to full vault movie archive effortlessly."
+      ],
       "4.9.85": [
         "Added individual movie sub-cards for full marathon film collection.",
         "Each marathon movie features verified artwork and embedded trailers.",
@@ -5149,9 +5333,143 @@
     let vaultPageSize = 24;
     let vaultSearchTimer = null;
     let activeVaultCollectionFilter = null;
+    let activeVaultYearFilter = 'all'; // 'all' | '2026' | '2025' | '2024' | 'older'
+    let activeVaultHolidayFilter = null; // null | 'halloween' | 'christmas'
+
+    function getMovieScreeningYear(m) {
+      if (!m) return '';
+      if (m.screeningYear) return String(m.screeningYear);
+      const d = m.watchDate || m.date || m.scheduledDate || '';
+      const match = d.match(/\/(\d{4})$/) || d.match(/^(\d{4})/);
+      if (match) return match[1];
+      if (m.year && /^(19|20)\d{2}$/.test(String(m.year).trim())) return String(m.year).trim();
+      return '';
+    }
+
+    function getMovieHolidayCategory(m) {
+      if (!m) return '';
+      if (m.holidayCategory) return m.holidayCategory;
+      if (m.marathonCollection && /scary|halloween/i.test(m.marathonCollection)) return 'halloween';
+      if (m.marathonCollection && /christmas|holiday/i.test(m.marathonCollection)) return 'christmas';
+
+      const title = String(m.title || '').toLowerCase();
+      const summary = String(m.summary || m.overview || '').toLowerCase();
+      const genre = String(m.genre || m.genres || '').toLowerCase();
+      const d = m.watchDate || m.date || '';
+
+      const isXmasScreening = /11\/\d{2}\/\d{4}/.test(d) || /12\/\d{2}\/\d{4}/.test(d);
+      if (/christmas|xmas|holiday|santa|grinch|claus|tinsel|jingle|ex-mas/i.test(title) ||
+          (isXmasScreening && /christmas|holiday|santa|grinch/i.test(genre + ' ' + summary))) {
+        return 'christmas';
+      }
+
+      const isOctScreening = /10\/\d{2}\/\d{4}/.test(d);
+      if (/halloween|scary movie marathon|slayer|vampire|ghostbusters|freddy|nightmare on elm/i.test(title) ||
+          (isOctScreening && /horror|halloween|scary|thriller/i.test(genre + ' ' + title))) {
+        return 'halloween';
+      }
+
+      return '';
+    }
+
+    function setVaultYearFilter(year) {
+      activeVaultYearFilter = year;
+      const yearOptions = ['all', '2026', '2025', '2024', 'older'];
+      yearOptions.forEach(y => {
+        const btn = document.getElementById(`vYear-${y}`);
+        if (!btn) return;
+        if (y === year) {
+          btn.className = "px-2.5 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm shrink-0 active:scale-95 cursor-pointer";
+        } else {
+          btn.className = "px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition shrink-0 active:scale-95 cursor-pointer";
+        }
+      });
+      activeVaultCollectionFilter = null;
+      vaultPageSize = 36;
+      renderVault();
+    }
+
+    function toggleVaultHolidayFilter(holiday) {
+      if (activeVaultHolidayFilter === holiday) {
+        activeVaultHolidayFilter = null;
+      } else {
+        activeVaultHolidayFilter = holiday;
+      }
+      updateHolidayButtonsState();
+      activeVaultCollectionFilter = null;
+      vaultPageSize = 50;
+      renderVault();
+    }
+
+    function updateHolidayButtonsState() {
+      const hBtn = document.getElementById('vHol-halloween');
+      if (hBtn) {
+        if (activeVaultHolidayFilter === 'halloween') {
+          hBtn.className = "px-2.5 py-1.5 rounded-xl text-xs font-extrabold text-slate-950 bg-orange-400 border border-orange-300 shadow-md transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer";
+        } else {
+          hBtn.className = "px-2.5 py-1.5 rounded-xl text-xs font-bold text-orange-400 hover:text-orange-300 bg-orange-950/40 hover:bg-orange-950/70 border border-orange-800/60 hover:border-orange-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer";
+        }
+      }
+      const cBtn = document.getElementById('vHol-christmas');
+      if (cBtn) {
+        if (activeVaultHolidayFilter === 'christmas') {
+          cBtn.className = "px-2.5 py-1.5 rounded-xl text-xs font-extrabold text-slate-950 bg-emerald-400 border border-emerald-300 shadow-md transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer";
+        } else {
+          cBtn.className = "px-2.5 py-1.5 rounded-xl text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-800/60 hover:border-emerald-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer";
+        }
+      }
+    }
+
+    function openAnnualCollectionsModal() {
+      const modal = document.getElementById('annualCollectionsModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeAnnualCollectionsModal() {
+      const modal = document.getElementById('annualCollectionsModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function filterVaultToAnnualEvent(year, holiday, collectionName) {
+      closeAnnualCollectionsModal();
+      activeVaultYearFilter = year || 'all';
+      activeVaultHolidayFilter = holiday || null;
+      activeVaultCollectionFilter = collectionName || null;
+
+      const yearOptions = ['all', '2026', '2025', '2024', 'older'];
+      yearOptions.forEach(y => {
+        const btn = document.getElementById(`vYear-${y}`);
+        if (!btn) return;
+        if (y === (year || 'all')) {
+          btn.className = "px-2.5 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-slate-950 transition shadow-sm shrink-0 active:scale-95 cursor-pointer";
+        } else {
+          btn.className = "px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition shrink-0 active:scale-95 cursor-pointer";
+        }
+      });
+      updateHolidayButtonsState();
+
+      vaultPageSize = 50;
+      const searchInput = document.getElementById('vaultSearch');
+      if (searchInput) {
+        searchInput.value = '';
+        const clearBtn = document.getElementById('vaultSearchClearBtn');
+        if (clearBtn) clearBtn.classList.add('hidden');
+      }
+      renderVault();
+      const grid = document.getElementById('vaultGrid');
+      if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     function filterVaultToCollection(collectionName) {
       activeVaultCollectionFilter = collectionName;
+      activeVaultHolidayFilter = null;
+      updateHolidayButtonsState();
       vaultPageSize = 50;
       const searchInput = document.getElementById('vaultSearch');
       if (searchInput) {
@@ -5166,6 +5484,10 @@
 
     function clearCollectionFilter() {
       activeVaultCollectionFilter = null;
+      activeVaultHolidayFilter = null;
+      activeVaultYearFilter = 'all';
+      setVaultYearFilter('all');
+      updateHolidayButtonsState();
       vaultPageSize = 24;
       renderVault();
     }
@@ -5176,6 +5498,10 @@
       const clearBtn = document.getElementById('vaultSearchClearBtn');
       if (clearBtn) clearBtn.classList.add('hidden');
       activeVaultCollectionFilter = null;
+      activeVaultHolidayFilter = null;
+      activeVaultYearFilter = 'all';
+      setVaultYearFilter('all');
+      updateHolidayButtonsState();
       vaultPageSize = 24;
       renderVault();
     }
@@ -5412,8 +5738,30 @@
           const cName = activeVaultCollectionFilter.toLowerCase();
           return Boolean(m.marathonCollection && m.marathonCollection.toLowerCase() === cName);
         }
-        if (vFilter === 'past' && !(m.source === 'past' || m.isConcluded)) return false;
-        if (vFilter === 'request' && (m.source !== 'request' || m.isConcluded)) return false;
+
+        // Year filter check
+        if (activeVaultYearFilter && activeVaultYearFilter !== 'all') {
+          const mYr = getMovieScreeningYear(m);
+          if (activeVaultYearFilter === 'older') {
+            const numYr = parseInt(mYr, 10);
+            if (!numYr || numYr >= 2024) return false;
+          } else {
+            if (mYr !== activeVaultYearFilter) return false;
+          }
+        }
+
+        // Holiday filter check
+        if (activeVaultHolidayFilter) {
+          const mHol = getMovieHolidayCategory(m);
+          if (mHol !== activeVaultHolidayFilter) return false;
+        }
+
+        const d = parseVaultMovieCardData(m);
+        const isScheduled = d.isScheduled;
+        const isActuallyPast = Boolean(d.watchDate || d.isConcluded);
+
+        if (vFilter === 'past' && !isActuallyPast) return false;
+        if (vFilter === 'request' && (isActuallyPast || isScheduled)) return false;
         if (vFilter !== 'all' && vFilter !== 'past' && vFilter !== 'request' && m.source !== vFilter) return false;
 
         const isTv = isTvShowItem(m);
@@ -5449,6 +5797,13 @@
       if (countEl) {
         if (activeVaultCollectionFilter) {
           countEl.textContent = `Showing all ${currentFilteredVault.length} films in ${activeVaultCollectionFilter}`;
+        } else if (activeVaultHolidayFilter) {
+          const holName = activeVaultHolidayFilter === 'halloween' ? 'Halloween' : 'Christmas';
+          const yrText = activeVaultYearFilter !== 'all' ? ` (${activeVaultYearFilter})` : '';
+          countEl.textContent = `Showing all ${currentFilteredVault.length} ${holName}${yrText} titles`;
+        } else if (activeVaultYearFilter !== 'all') {
+          const yrText = activeVaultYearFilter === 'older' ? 'Vintage' : activeVaultYearFilter;
+          countEl.textContent = `Showing all ${currentFilteredVault.length} titles from ${yrText}`;
         } else {
           countEl.textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} ${typeLabel}`;
         }
@@ -5457,6 +5812,13 @@
       if (statusEl) {
         if (activeVaultCollectionFilter) {
           statusEl.textContent = `Marathon Collection • ${currentFilteredVault.length} Films`;
+        } else if (activeVaultHolidayFilter) {
+          const holName = activeVaultHolidayFilter === 'halloween' ? '🎃 Halloween Season' : '🎄 Christmas Festival';
+          const yrText = activeVaultYearFilter !== 'all' ? ` • ${activeVaultYearFilter}` : '';
+          statusEl.textContent = `${holName}${yrText}`;
+        } else if (activeVaultYearFilter !== 'all') {
+          const yrText = activeVaultYearFilter === 'older' ? 'Vintage' : activeVaultYearFilter;
+          statusEl.textContent = `Year: ${yrText} • ${currentFilteredVault.length} Titles`;
         } else {
           const typeStr = vMediaType === 'movie' ? 'Movies' : (vMediaType === 'tv' ? 'TV' : 'All Types');
           const srcStr = vFilter === 'past' ? 'Past Screenings' : (vFilter === 'request' ? 'Requests' : 'All Sources');
@@ -5588,19 +5950,19 @@
               </div>
               <span class="font-mono font-bold text-amber-300 text-[11px] truncate max-w-[200px]" title="${escapeHtml(d.scheduledDate || 'Upcoming Screening')}">${escapeHtml(d.scheduledDate || 'Upcoming Screening')}</span>
             </div>
-            ` : ((isRequest && !d.isConcluded && !d.watchDate) ? `
-            <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
-              <div class="font-semibold text-sky-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
-                <span>⏳</span> REQUEST
-              </div>
-              <span class="font-mono font-bold text-sky-300 text-[11px]">${escapeHtml(m.status || 'Under Review')}</span>
-            </div>
-            ` : `
+            ` : (d.watchDate ? `
             <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
               <div class="font-semibold text-sky-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
                 <span>🗓️</span> WATCHED
               </div>
-              <span class="font-mono font-bold text-sky-300 text-[11px] truncate max-w-[200px]" title="${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}">${escapeHtml(d.watchDateFormatted || d.watchDate || 'Past Screening')}</span>
+              <span class="font-mono font-bold text-sky-300 text-[11px] truncate max-w-[200px]" title="${escapeHtml(d.watchDateFormatted || d.watchDate)}">${escapeHtml(d.watchDateFormatted || d.watchDate)}</span>
+            </div>
+            ` : `
+            <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
+              <div class="font-semibold text-slate-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                <span>${(m.status && /unavailable/i.test(m.status)) ? '🚫' : (isRequest ? '⏳' : '📋')}</span> ${(m.status && /unavailable/i.test(m.status)) ? 'UNAVAILABLE' : (isRequest ? 'REQUEST' : 'NOT SCHEDULED')}
+              </div>
+              <span class="font-mono font-bold text-slate-300 text-[11px]">${escapeHtml(m.status || (isRequest ? 'Under Review' : 'Not Scheduled'))}</span>
             </div>
             `)}
           </div>
@@ -5659,7 +6021,9 @@
         `;
       }
 
-      const collectionBannerHtml = activeVaultCollectionFilter ? `
+      let collectionBannerHtml = '';
+      if (activeVaultCollectionFilter) {
+        collectionBannerHtml = `
         <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-red-950/80 via-slate-950 to-red-950/80 border border-red-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-red-900/50 border border-red-700/60 flex items-center justify-center text-xl shrink-0 shadow-md">
@@ -5677,8 +6041,71 @@
           <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-300 hover:text-white border border-red-800/60 hover:border-red-600 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
             <span>✕</span> <span>Show All Vault Titles</span>
           </button>
-        </div>
-      ` : '';
+        </div>`;
+      } else if (activeVaultHolidayFilter === 'halloween') {
+        const yrLabel = activeVaultYearFilter !== 'all' ? (activeVaultYearFilter === 'older' ? 'Vintage ' : activeVaultYearFilter + ' ') : '';
+        collectionBannerHtml = `
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-orange-950/90 via-slate-950 to-red-950/90 border border-orange-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-900/50 border border-orange-600/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+              🎃
+            </div>
+            <div>
+              <div class="text-orange-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                <span>${yrLabel}Halloween & Horror Screening Season</span>
+              </div>
+              <div class="text-slate-400 text-xs mt-0.5">
+                Showing all ${currentFilteredVault.length} spooky screenings, horror marathons, and Freddy Krueger classics
+              </div>
+            </div>
+          </div>
+          <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 hover:text-white border border-orange-800/60 hover:border-orange-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+            <span>✕</span> <span>Show All Vault Titles</span>
+          </button>
+        </div>`;
+      } else if (activeVaultHolidayFilter === 'christmas') {
+        const yrLabel = activeVaultYearFilter !== 'all' ? (activeVaultYearFilter === 'older' ? 'Vintage ' : activeVaultYearFilter + ' ') : '';
+        collectionBannerHtml = `
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-950 to-red-950/90 border border-emerald-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-900/50 border border-emerald-600/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+              🎄
+            </div>
+            <div>
+              <div class="text-emerald-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                <span>${yrLabel}Christmas & Holiday Screening Festival</span>
+              </div>
+              <div class="text-slate-400 text-xs mt-0.5">
+                Showing all ${currentFilteredVault.length} holiday classics, Christmas comedies, and seasonal favorites
+              </div>
+            </div>
+          </div>
+          <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 hover:text-white border border-emerald-800/60 hover:border-emerald-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+            <span>✕</span> <span>Show All Vault Titles</span>
+          </button>
+        </div>`;
+      } else if (activeVaultYearFilter !== 'all') {
+        const yrLabel = activeVaultYearFilter === 'older' ? 'Vintage Screenings (2018 - 2024)' : `${activeVaultYearFilter} Screening Season`;
+        collectionBannerHtml = `
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-sky-800/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-950/70 border border-sky-700/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+              📅
+            </div>
+            <div>
+              <div class="text-sky-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                <span>${yrLabel}</span>
+              </div>
+              <div class="text-slate-400 text-xs mt-0.5">
+                Showing all ${currentFilteredVault.length} titles screened in this era
+              </div>
+            </div>
+          </div>
+          <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-300 hover:text-white border border-sky-800/60 hover:border-sky-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+            <span>✕</span> <span>Show All Vault Titles</span>
+          </button>
+        </div>`;
+      }
 
       grid.innerHTML = collectionBannerHtml + cardsHtml;
     }
@@ -6004,8 +6431,14 @@
         if (!m || !m.title) return;
         const cleanTitle = m.title.replace(/^🎬\s*/, '').replace(/^Movie:\s*/i, '').replace(/\s+at\s+.*$/i, '').trim();
         const existing = vaultMovies.find(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
-        const watchDate = m.watchDate || m.date || m.dateText || "";
+        const rawWatchDate = m.watchDate || m.date || m.dateText || "";
+        const isValidWatchDate = Boolean(rawWatchDate && !rawWatchDate.includes('@') && !/under review|not scheduled|pending|unavailable/i.test(rawWatchDate) && /\d/.test(rawWatchDate));
+        const watchDate = isValidWatchDate ? rawWatchDate : "";
         const artworkUrl = m.posterUrl || m.imageUrl || m.backdropUrl || "";
+        const isActuallyPast = isValidWatchDate;
+        const itemSource = isActuallyPast ? (m.source || "past") : (m.source === "past" ? "request" : (m.source || "request"));
+        const defaultStatus = m.status || (isActuallyPast ? "Watched" : "Not Scheduled");
+
         if (!existing) {
           vaultMovies.push({
             title: cleanTitle,
@@ -6017,9 +6450,10 @@
             watchDate: watchDate,
             startTime: m.startTime || m.time || "7:00 PM",
             endTime: m.endTime || "8:45 PM",
-            source: m.source || "past",
-            genre: m.genres || m.genre || "Past Screening",
-            genres: m.genres || m.genre || "Past Screening",
+            source: itemSource,
+            status: defaultStatus,
+            genre: m.genres || m.genre || (isActuallyPast ? "Past Screening" : "Movie Request"),
+            genres: m.genres || m.genre || (isActuallyPast ? "Past Screening" : "Movie Request"),
             runtime: m.runtime || "Full Feature",
             posterUrl: artworkUrl,
             imageUrl: artworkUrl,
@@ -6030,7 +6464,9 @@
             overview: m.overview || m.summary || "",
             marathonCollection: m.marathonCollection || "",
             marathonOrder: m.marathonOrder || null,
-            marathonTotal: m.marathonTotal || null
+            marathonTotal: m.marathonTotal || null,
+            screeningYear: m.screeningYear || null,
+            holidayCategory: m.holidayCategory || ""
           });
           added++;
         } else {
@@ -6038,6 +6474,13 @@
           if (m.marathonCollection) existing.marathonCollection = m.marathonCollection;
           if (m.marathonOrder) existing.marathonOrder = m.marathonOrder;
           if (m.marathonTotal) existing.marathonTotal = m.marathonTotal;
+          if (m.screeningYear) existing.screeningYear = m.screeningYear;
+          if (m.holidayCategory) existing.holidayCategory = m.holidayCategory;
+          if (m.status) existing.status = m.status;
+          if (!watchDate && (!existing.watchDate || existing.watchDate.includes('@')) && (!existing.date || existing.date.includes('@'))) {
+            existing.source = "request";
+            if (!existing.status) existing.status = m.status || "Not Scheduled";
+          }
           if (artworkUrl && (!existing.posterUrl || !existing.imageUrl || existing.posterUrl.includes('data:image') || existing.posterUrl.includes('svg'))) {
             existing.posterUrl = artworkUrl;
             existing.imageUrl = artworkUrl;
@@ -6045,13 +6488,19 @@
           }
           if (!existing.overview && m.overview) existing.overview = m.overview;
           if (!existing.summary && m.summary) existing.summary = m.summary;
-          if (watchDate) {
+          if (isValidWatchDate) {
             existing.date = watchDate;
             existing.watchDate = watchDate;
             existing.dateText = watchDate;
             existing.source = "past";
             existing.isConcluded = true;
             existing.isScheduled = false;
+          } else if (!existing.watchDate || existing.watchDate.includes('@')) {
+            existing.source = "request";
+            existing.date = "";
+            existing.watchDate = "";
+            existing.dateText = "";
+            existing.isConcluded = false;
           }
           if ((!existing.startTime || existing.startTime === "7:00 PM") && m.startTime) existing.startTime = m.startTime;
           if ((!existing.endTime || existing.endTime === "8:45 PM") && m.endTime) existing.endTime = m.endTime;
@@ -6069,8 +6518,9 @@
     }
 
     // Ingest pre-cached past movies catalog on load and sync theater stats
-    if (typeof window !== 'undefined' && window.INITIAL_PAST_MOVIES && Array.isArray(window.INITIAL_PAST_MOVIES)) {
-      mergePastMoviesIntoVault(window.INITIAL_PAST_MOVIES);
+    const localPastList = (typeof window !== 'undefined') ? (window.INITIAL_PAST_MOVIES || window.PAST_MOVIES_DATA) : null;
+    if (Array.isArray(localPastList)) {
+      mergePastMoviesIntoVault(localPastList);
       updateTheaterStats();
     }
     if (document.readyState === 'loading') {
@@ -6504,6 +6954,10 @@
 
         if (existing) {
           if (r.requester && !existing.requester) existing.requester = r.requester;
+          if (r.status) existing.status = r.status;
+          if (!existing.watchDate && !existing.date) {
+            existing.source = 'request';
+          }
           return;
         }
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.86] - 2026-09-06
+
+### What's New
+- Added annual screening archive browser with quick year selector pills.
+- Added dedicated Halloween and Christmas annual holiday collection filters.
+- Added interactive Annual Collections and Holiday Hub showcase modal.
+- Synchronized live status labels directly from Google Sheet requests.
+- Prevented unscheduled and unavailable titles from displaying as watched.
+
 ## [4.9.85] - 2026-09-06
 
 ### What's New
