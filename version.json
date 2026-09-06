@@ -1,13 +1,13 @@
 {
-  "version": "4.9.92",
+  "version": "4.9.93",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.92",
+  "title": "Brian's Theater v4.9.93",
   "notes": [
-    "Frosted Aurora morphic cards for Christmas festival lineups.",
-    "Dual emerald and ruby ambient glow with frost backdrop.",
-    "Added sparkling snow crystal accents and festive badge pills.",
-    "Glossy emerald to ruby gradient festival action buttons.",
-    "Applied to both 2024 and 2025 Christmas events.",
-    "Full responsive and interactive vault filtering verified."
+    "Pumpkin Ember morphic card for 2025 Halloween Marathon.",
+    "Added animated fluttering bat and floating spectral ghost wisp.",
+    "Pulsing candlelight ambient glow with purple graveyard fog backdrop.",
+    "Glossy molten amber-orange gradient action button with active styling.",
+    "Added companion swaying snow and twinkling stars to Christmas.",
+    "Full interactive vault filtering and responsive layout verified."
   ]
 }

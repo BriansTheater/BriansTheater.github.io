@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.93] - 2026-09-06
+
+### What's New
+- Pumpkin Ember morphic card for 2025 Halloween Marathon.
+- Added animated fluttering bat and floating spectral ghost wisp.
+- Pulsing candlelight ambient glow with purple graveyard fog backdrop.
+- Glossy molten amber-orange gradient action button with active styling.
+- Added companion swaying snow and twinkling stars to Christmas.
+- Full interactive vault filtering and responsive layout verified.
+
 ## [4.9.92] - 2026-09-06
 
 ### What's New

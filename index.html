@@ -41,6 +41,34 @@
     .theater-btn {
       animation: glowPulse 2.2s infinite ease-in-out;
     }
+    /* Seasonal Living Motion Animations */
+    @keyframes flutterBat {
+      0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+      25% { transform: translateY(-4px) translateX(-3px) rotate(-8deg) scale(1.05); }
+      50% { transform: translateY(-2px) translateX(2px) rotate(4deg) scale(0.98); }
+      75% { transform: translateY(-6px) translateX(-1px) rotate(-4deg) scale(1.03); }
+    }
+    @keyframes spectralFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+      50% { transform: translateY(-7px) rotate(5deg); opacity: 0.95; filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6)); }
+    }
+    @keyframes candlePulse {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(1.12); }
+    }
+    @keyframes snowSway {
+      0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+      50% { transform: translateY(4px) translateX(3px) rotate(15deg); }
+    }
+    @keyframes sparkleTwinkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.25); filter: drop-shadow(0 0 4px rgba(255,255,255,0.8)); }
+    }
+    .anim-bat { animation: flutterBat 3.5s ease-in-out infinite; }
+    .anim-ghost { animation: spectralFloat 4s ease-in-out infinite; }
+    .anim-pulse { animation: candlePulse 3.8s ease-in-out infinite; }
+    .anim-snow { animation: snowSway 3.2s ease-in-out infinite; }
+    .anim-sparkle { animation: sparkleTwinkle 2.5s ease-in-out infinite; }
     .tab-view {
       transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
@@ -1612,27 +1640,48 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <!-- 2025 Halloween Mystery Scary Movie Marathon -->
-            <div class="p-3.5 rounded-2xl bg-gradient-to-b from-orange-950/40 to-slate-950 border border-orange-800/60 hover:border-orange-500 transition flex flex-col justify-between gap-3 shadow-md group">
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30 font-mono">🎃 HALLOWEEN MARATHON</span>
-                  <span class="text-[10px] font-mono text-slate-400">Oct 31, 2025</span>
+            <div class="relative rounded-2xl overflow-hidden p-4 sm:p-5 flex flex-col justify-between gap-3.5 border border-orange-500/50 hover:border-orange-400 transition-all duration-300 shadow-xl group hover:shadow-2xl hover:shadow-orange-950/50"
+                 style="background: linear-gradient(135deg, rgba(124, 45, 18, 0.52) 0%, rgba(15, 23, 42, 0.90) 45%, rgba(88, 28, 135, 0.42) 100%), rgba(3, 7, 18, 0.95);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        box-shadow: 0 12px 32px -8px rgba(0,0,0,0.85), inset 0 1px 1px 0 rgba(255,255,255,0.25), 0 0 22px -4px rgba(249, 115, 22, 0.35), 0 0 20px -4px rgba(147, 51, 234, 0.28);">
+              <!-- Pulsing Candlelight Ambient Glow -->
+              <div class="absolute -top-12 -left-12 w-32 h-32 bg-orange-500/25 rounded-full blur-2xl pointer-events-none anim-pulse"></div>
+              <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-600/25 rounded-full blur-2xl pointer-events-none"></div>
+
+              <!-- Animated Living Motion: Fluttering Bat & Drifting Ghost -->
+              <span class="absolute top-3.5 right-28 text-base text-white/90 pointer-events-none select-none anim-bat inline-block drop-shadow-md" title="Fluttering Bat">🦇</span>
+              <span class="absolute top-10 right-8 text-base text-purple-200/90 pointer-events-none select-none anim-ghost inline-block drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]" title="Floating Ghost">👻</span>
+              <span class="absolute top-3 right-12 text-xs text-white/40 pointer-events-none select-none">🕸️</span>
+
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="inline-flex items-center gap-1.5 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-orange-500/20 text-orange-300 border border-orange-400/40 backdrop-blur-md shadow-sm">
+                    <span>🎃</span> HALLOWEEN MARATHON
+                  </span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-950/70 text-purple-300 border border-purple-800/50 backdrop-blur-md">
+                    🕷️ Oct 31, 2025
+                  </span>
                 </div>
-                <h4 class="text-sm sm:text-base font-black text-orange-200 group-hover:text-amber-300 transition">2025 Mystery Scary Movie Marathon</h4>
-                <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                <h4 class="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-200 via-amber-100 to-purple-200 group-hover:from-orange-100 group-hover:to-amber-100 transition tracking-wide">
+                  2025 Mystery Scary Movie Marathon
+                </h4>
+                <p class="text-xs text-slate-200/90 mt-1.5 leading-relaxed drop-shadow-sm font-normal">
                   11 iconic horror films screened in back-to-back sequence featuring the complete Freddy Krueger saga, Clown in a Cornfield, and IT Chapter Two with official in-app trailers.
                 </p>
-                <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px] font-semibold text-orange-300/80">
-                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎟️ 11 Sub-Cards</span>
-                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🎬 Embedded Trailers</span>
-                  <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">🕒 21h Total Run</span>
+                <div class="flex items-center gap-1.5 mt-3 flex-wrap text-[10px] font-semibold">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-orange-950/75 text-orange-200 border border-orange-800/70 shadow-sm backdrop-blur-sm">🎟️ 11 Sub-Cards</span>
+                  <span class="px-2.5 py-0.5 rounded-lg bg-purple-950/75 text-purple-200 border border-purple-800/70 shadow-sm backdrop-blur-sm">🎬 Embedded Trailers</span>
+                  <span class="px-2.5 py-0.5 rounded-lg bg-amber-950/75 text-amber-200 border border-amber-800/70 shadow-sm backdrop-blur-sm">🕒 21h Total Run</span>
                 </div>
               </div>
-              <div class="flex items-center gap-2 pt-2 border-t border-orange-900/40">
-                <button type="button" onclick="filterVaultToAnnualEvent('2025', null, '2025 Mystery Scary Movie Marathon')" class="flex-1 py-2 px-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                  <span>Explore 11 Films</span> <span>→</span>
+
+              <div class="relative z-10 flex items-center gap-2 pt-3 border-t border-white/10">
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', null, '2025 Mystery Scary Movie Marathon')" class="flex-1 py-2 px-3 rounded-xl text-slate-950 font-black text-xs transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer hover:brightness-110"
+                        style="background: linear-gradient(135deg, #fb923c 0%, #f97316 45%, #ea580c 100%); box-shadow: 0 4px 14px 0 rgba(249, 115, 22, 0.45), inset 0 1px 1px 0 rgba(255,255,255,0.4);">
+                  <span>Explore 11 Films</span> <span>🔥</span>
                 </button>
-                <button type="button" onclick="filterVaultToAnnualEvent('2025', 'halloween')" title="View all 33 Halloween screenings from 2025" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 border border-orange-800/60 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', 'halloween')" title="View all 33 Halloween screenings from 2025" class="py-2 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-orange-300 border border-orange-500/40 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer backdrop-blur-md">
                   <span>All Spooky (33)</span>
                 </button>
               </div>
@@ -1647,9 +1696,9 @@
               <!-- Ambient Glow Spheres -->
               <div class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
               <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-rose-600/25 rounded-full blur-2xl pointer-events-none"></div>
-              <!-- Floating Sparkles -->
-              <span class="absolute top-3.5 right-24 text-[10px] text-white/60 pointer-events-none select-none">❄️</span>
-              <span class="absolute top-9 right-8 text-[8px] text-white/50 pointer-events-none select-none">✨</span>
+              <!-- Floating Sparkles & Animated Snow -->
+              <span class="absolute top-3.5 right-24 text-sm text-white/90 pointer-events-none select-none anim-snow inline-block drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]">❄️</span>
+              <span class="absolute top-9 right-8 text-xs text-amber-200 pointer-events-none select-none anim-sparkle inline-block drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]">✨</span>
 
               <div class="relative z-10">
                 <div class="flex items-center justify-between mb-2">
@@ -1704,9 +1753,9 @@
             <!-- Ambient Glow Spheres -->
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
             <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-rose-600/25 rounded-full blur-2xl pointer-events-none"></div>
-            <!-- Floating Sparkles -->
-            <span class="absolute top-3.5 right-24 text-[10px] text-white/60 pointer-events-none select-none">❄️</span>
-            <span class="absolute top-9 right-8 text-[8px] text-white/50 pointer-events-none select-none">✨</span>
+            <!-- Floating Sparkles & Animated Snow -->
+            <span class="absolute top-3.5 right-24 text-sm text-white/90 pointer-events-none select-none anim-snow inline-block drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]">❄️</span>
+            <span class="absolute top-9 right-8 text-xs text-amber-200 pointer-events-none select-none anim-sparkle inline-block drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]">✨</span>
 
             <div class="relative z-10">
               <div class="flex items-center justify-between mb-2">
@@ -1852,7 +1901,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.92";
+    const APP_VERSION = "4.9.93";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2229,6 +2278,14 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.93": [
+        "Pumpkin Ember morphic card for 2025 Halloween Marathon.",
+        "Added animated fluttering bat and floating spectral ghost wisp.",
+        "Pulsing candlelight ambient glow with purple graveyard fog backdrop.",
+        "Glossy molten amber-orange gradient action button with active styling.",
+        "Added companion swaying snow and twinkling stars to Christmas.",
+        "Full interactive vault filtering and responsive layout verified."
+      ],
       "4.9.92": [
         "Frosted Aurora morphic cards for Christmas festival lineups.",
         "Dual emerald and ruby ambient glow with frost backdrop.",
