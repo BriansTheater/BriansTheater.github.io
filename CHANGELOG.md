@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.61] - 2026-09-06
+
+### What's New
+- Instant one-click past movies correction using verified library.
+- Automatically fixes title typos and removes calendar artifacts.
+- Populates rich plot summaries, runtimes, and YouTube trailer links.
+- Executes single batch write in two seconds without timeouts.
+- Synchronizes pristine movie catalog to Firebase realtime database.
+
 ## [4.9.60] - 2026-09-06
 
 ### What's New
