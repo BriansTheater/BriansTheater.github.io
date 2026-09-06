@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.58] - 2026-09-06
+
+### What's New
+- Added one-click Past Movies auto-fill to Google Sheets.
+- Automatically populates missing movie runtimes and plot summaries.
+- Gemini AI fallback enriches titles missing from TMDB.
+- Writes detailed overviews and official YouTube trailer links.
+- Removed redundant Community Requests section from mobile phones.
+
 ## [4.9.57] - 2026-09-06
 
 ### What's New
