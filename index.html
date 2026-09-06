@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.54 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.55 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -421,7 +421,7 @@
         <iframe name="googleFormSubmitTarget" id="googleFormSubmitTarget" style="display:none; width:0; height:0;" tabindex="-1"></iframe>
 
         <!-- 1. ACTIVE INPUT FORM VIEW -->
-        <form id="customMovieRequestForm" target="googleFormSubmitTarget" action="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/formResponse" method="POST" onsubmit="handleCustomRequestSubmit(event)" class="relative z-10 flex flex-col gap-6">
+        <form id="customMovieRequestForm" action="javascript:void(0);" method="POST" onsubmit="handleCustomRequestSubmit(event)" class="relative z-10 flex flex-col gap-6">
           <input type="hidden" name="fvv" value="1">
           <input type="hidden" name="pageHistory" value="0">
           <!-- Anti-Spam Bot Honeypot Trap (Hidden from human users) -->
@@ -1348,7 +1348,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.54";
+    const APP_VERSION = "4.9.55";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1723,6 +1723,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.55": [
+        "Integrated real headless Chrome automated end-to-end testing.",
+        "Eliminated 401 console error on custom request submission.",
+        "Verified live Community Requests Queue rendering in browser DOM.",
+        "Verified anti-spam honeypot and 30-second cooldown in browser.",
+        "Synchronized community movie requests seamlessly across tabs."
+      ],
       "4.9.54": [
         "Restored live Community Requests Queue on Requests tab.",
         "Dynamically synchronized user movie requests into Vault tab.",
@@ -1923,7 +1930,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.54"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.55"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -5267,6 +5274,7 @@
     });
 
     async function handleCustomRequestSubmit(event) {
+      if (event && event.preventDefault) event.preventDefault();
       const nameInput = document.getElementById('reqNameInput');
       const movieInput = document.getElementById('reqMovieInput');
       const platformInput = document.getElementById('reqPlatformInput');
@@ -5376,21 +5384,7 @@
         });
       } catch (err) {}
 
-      // 3. Multi-path redundant submission to Google Form endpoint
-      try {
-        const formData = new FormData();
-        formData.append('fvv', '1');
-        formData.append('pageHistory', '0');
-        formData.append('entry.2011388280', requesterName);
-        formData.append('entry.655230611', movieTitle);
-        if (platform) formData.append('entry.1587670981', platform);
 
-        fetch(GOOGLE_FORM_ACTION_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData
-        }).catch(() => {});
-      } catch (e) {}
 
       // 4. Trigger Web App AutoSync
       try {

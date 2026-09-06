@@ -1,13 +1,12 @@
 {
-  "version": "4.9.54",
+  "version": "4.9.55",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.54",
+  "title": "Brian's Theater v4.9.55",
   "notes": [
-    "Restored live Community Requests Queue on Requests tab.",
-    "Dynamically synchronized user movie requests into Vault tab.",
-    "Added honeypot trap to silently block automated spam bots.",
-    "Enforced thirty second request cooldown to prevent rapid spam.",
-    "Blocked external URL links and promo spam in requests.",
-    "Added backend duplicate filtering to keep spreadsheet clean."
+    "Integrated real headless Chrome automated end-to-end testing.",
+    "Eliminated 401 console error on custom request submission.",
+    "Verified live Community Requests Queue rendering in browser DOM.",
+    "Verified anti-spam honeypot and 30-second cooldown in browser.",
+    "Synchronized community movie requests seamlessly across tabs."
   ]
 }

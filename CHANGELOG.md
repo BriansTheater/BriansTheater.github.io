@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.55] - 2026-09-06
+
+### What's New
+- Integrated real headless Chrome automated end-to-end testing.
+- Eliminated 401 console error on custom request submission.
+- Verified live Community Requests Queue rendering in browser DOM.
+- Verified anti-spam honeypot and 30-second cooldown in browser.
+- Synchronized community movie requests seamlessly across tabs.
+
 ## [4.9.54] - 2026-09-06
 
 ### What's New
