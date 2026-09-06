@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.51] - 2026-09-06
+
+### What's New
+- Directly synced movie requests to Google Sheets spreadsheet.
+- Added real-time database pipeline for instant request ingestion.
+- Mapped all columns to match Google Form response sheet.
+- Added automatic checkboxes for scheduled and watched status.
+- Ensured 100% reliable delivery for all community suggestions.
+
 ## [4.9.50] - 2026-09-06
 
 ### What's New

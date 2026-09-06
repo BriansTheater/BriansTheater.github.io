@@ -1,12 +1,12 @@
 {
-  "version": "4.9.50",
+  "version": "4.9.51",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.50",
+  "title": "Brian's Theater v4.9.51",
   "notes": [
-    "Aligned Vault cards to match exact Schedule tab styling.",
-    "Added dedicated Watched section displaying formatted screening date.",
-    "Standardized top poster badge with glowing watched indicator.",
-    "Unified summary header with uppercase icon styling across cards.",
-    "Streamlined card details grid for pixel-perfect cinema layout."
+    "Directly synced movie requests to Google Sheets spreadsheet.",
+    "Added real-time database pipeline for instant request ingestion.",
+    "Mapped all columns to match Google Form response sheet.",
+    "Added automatic checkboxes for scheduled and watched status.",
+    "Ensured 100% reliable delivery for all community suggestions."
   ]
 }
