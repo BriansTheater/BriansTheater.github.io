@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.55 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.56 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1348,7 +1348,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.55";
+    const APP_VERSION = "4.9.56";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1723,6 +1723,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.56": [
+        "Enriched all 459 past Vault movies with official TMDB posters.",
+        "Added verified widescreen cinema backdrops across the entire catalog.",
+        "Synchronized official movie runtimes, release years, and plot summaries.",
+        "Linked high-definition official YouTube trailers across confirmed screenings.",
+        "Preserved watched dates and screening times for every title."
+      ],
       "4.9.55": [
         "Integrated real headless Chrome automated end-to-end testing.",
         "Eliminated 401 console error on custom request submission.",
@@ -1930,7 +1937,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.55"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.56"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -2467,8 +2474,8 @@
       if (!title) return getCinemaPlaceholder("Brian's Theater");
 
       if (customMovieImages[title]) return customMovieImages[title];
-      if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl)) {
-        const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl;
+      if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
+        const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl;
         if (url && typeof url === 'string' && url.startsWith('http')) return url;
       }
       if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
@@ -4190,6 +4197,7 @@
         const exists = vaultMovies.some(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
         if (!exists) {
           const details = parseMovieScheduleDetails(s);
+          const artworkUrl = s.posterUrl || s.imageUrl || s.backdropUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(s) : "");
           vaultMovies.push({
             title: cleanTitle,
             year: details.year || "2026",
@@ -4202,6 +4210,9 @@
             genre: s.genre || "Featured Film",
             genres: s.genre || "Featured Film",
             runtime: details.runtime || "Standard",
+            posterUrl: artworkUrl,
+            imageUrl: artworkUrl,
+            backdropUrl: s.backdropUrl || artworkUrl,
             trailerUrl: s.trailerUrl || "",
             trailerId: s.trailerId || "",
             summary: details.summary || "",
@@ -4440,20 +4451,25 @@
 
       // 1. Theatrical Release Year (never mixed with watch date!)
       let releaseYear = null;
-      const yExplicit = ov.match(/Year:\s*(\d{4})/i);
-      if (yExplicit) {
-        releaseYear = yExplicit[1];
-      } else {
-        const yList = ov.match(/<li>\s*(\d{4})\s*<\/li>/i);
-        const yTitle = (m.title || '').match(/\((\d{4})\)/);
-        const yDot = ov.match(/\b(19\d\d|20\d\d)\s*[‧·•]/);
-        const yRating = ov.match(/(?:PG-13|PG|R|TV-MA|TV-14|TV-Y7|TV-G|TV-PG|NC-17|G)\s*[-‧·•]?\s*(19\d\d|20\d\d)/i);
-        if (yList) releaseYear = yList[1];
-        else if (yTitle) releaseYear = yTitle[1];
-        else if (yDot) releaseYear = yDot[1];
-        else if (yRating) releaseYear = yRating[1];
-        else if (m.year && m.year !== 'Past' && m.year !== '2025' && m.year !== '2026') {
-          releaseYear = m.year;
+      if (m.releaseYear && /^\d{4}$/.test(String(m.releaseYear))) {
+        releaseYear = String(m.releaseYear);
+      }
+      if (!releaseYear) {
+        const yExplicit = ov.match(/Year:\s*(\d{4})/i);
+        if (yExplicit) {
+          releaseYear = yExplicit[1];
+        } else {
+          const yList = ov.match(/<li>\s*(\d{4})\s*<\/li>/i);
+          const yTitle = (m.title || '').match(/\((\d{4})\)/);
+          const yDot = ov.match(/\b(19\d\d|20\d\d)\s*[‧·•]/);
+          const yRating = ov.match(/(?:PG-13|PG|R|TV-MA|TV-14|TV-Y7|TV-G|TV-PG|NC-17|G)\s*[-‧·•]?\s*(19\d\d|20\d\d)/i);
+          if (yList) releaseYear = yList[1];
+          else if (yTitle) releaseYear = yTitle[1];
+          else if (yDot) releaseYear = yDot[1];
+          else if (yRating) releaseYear = yRating[1];
+          else if (m.year && m.year !== 'Past') {
+            releaseYear = m.year;
+          }
         }
       }
 
@@ -4595,11 +4611,13 @@
         const cleanTitle = m.title.replace(/^🎬\s*/, '').replace(/^Movie:\s*/i, '').replace(/\s+at\s+.*$/i, '').trim();
         const existing = vaultMovies.find(v => v.title.toLowerCase().trim() === cleanTitle.toLowerCase().trim());
         const watchDate = m.watchDate || m.date || m.dateText || "";
+        const artworkUrl = m.posterUrl || m.imageUrl || m.backdropUrl || "";
         if (!existing) {
           vaultMovies.push({
             title: cleanTitle,
             mediaType: m.mediaType || ((cleanTitle.toLowerCase().includes("season") || cleanTitle.toLowerCase().includes("episode") || (m.genre && m.genre.includes("TV"))) ? "tv" : "movie"),
-            year: m.year || "Past",
+            year: m.releaseYear || m.year || "Past",
+            releaseYear: m.releaseYear || m.year || "",
             date: watchDate,
             dateText: watchDate,
             watchDate: watchDate,
@@ -4609,6 +4627,9 @@
             genre: m.genres || m.genre || "Past Screening",
             genres: m.genres || m.genre || "Past Screening",
             runtime: m.runtime || "Full Feature",
+            posterUrl: artworkUrl,
+            imageUrl: artworkUrl,
+            backdropUrl: m.backdropUrl || artworkUrl,
             trailerUrl: m.trailerUrl || "",
             trailerId: m.trailerId || "",
             summary: m.summary || m.overview || "",
@@ -4616,7 +4637,12 @@
           });
           added++;
         } else {
-          // 100% preservation of Column N data, watch date, times, and trailer
+          // 100% preservation of Column N data, watch date, times, trailer, and artwork
+          if (artworkUrl && (!existing.posterUrl || !existing.imageUrl || existing.posterUrl.includes('data:image') || existing.posterUrl.includes('svg'))) {
+            existing.posterUrl = artworkUrl;
+            existing.imageUrl = artworkUrl;
+            existing.backdropUrl = m.backdropUrl || artworkUrl;
+          }
           if (!existing.overview && m.overview) existing.overview = m.overview;
           if (!existing.summary && m.summary) existing.summary = m.summary;
           if (!existing.date && watchDate) {
@@ -4627,7 +4653,8 @@
           if ((!existing.startTime || existing.startTime === "7:00 PM") && m.startTime) existing.startTime = m.startTime;
           if ((!existing.endTime || existing.endTime === "8:45 PM") && m.endTime) existing.endTime = m.endTime;
           if ((!existing.runtime || existing.runtime === "Full Feature") && m.runtime) existing.runtime = m.runtime;
-          if ((!existing.year || existing.year === "Past") && m.year) existing.year = m.year;
+          if ((!existing.year || existing.year === "Past") && (m.releaseYear || m.year)) existing.year = m.releaseYear || m.year;
+          if (!existing.releaseYear && (m.releaseYear || m.year)) existing.releaseYear = m.releaseYear || m.year;
           if (!existing.trailerUrl && m.trailerUrl) existing.trailerUrl = m.trailerUrl;
         }
       });

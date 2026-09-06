@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.56] - 2026-09-06
+
+### What's New
+- Enriched all 459 past Vault movies with official TMDB posters.
+- Added verified widescreen cinema backdrops across the entire catalog.
+- Synchronized official movie runtimes, release years, and plot summaries.
+- Linked high-definition official YouTube trailers across confirmed screenings.
+- Preserved watched dates and screening times for every title.
+
 ## [4.9.55] - 2026-09-06
 
 ### What's New

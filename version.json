@@ -1,12 +1,12 @@
 {
-  "version": "4.9.55",
+  "version": "4.9.56",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.55",
+  "title": "Brian's Theater v4.9.56",
   "notes": [
-    "Integrated real headless Chrome automated end-to-end testing.",
-    "Eliminated 401 console error on custom request submission.",
-    "Verified live Community Requests Queue rendering in browser DOM.",
-    "Verified anti-spam honeypot and 30-second cooldown in browser.",
-    "Synchronized community movie requests seamlessly across tabs."
+    "Enriched all 459 past Vault movies with official TMDB posters.",
+    "Added verified widescreen cinema backdrops across the entire catalog.",
+    "Synchronized official movie runtimes, release years, and plot summaries.",
+    "Linked high-definition official YouTube trailers across confirmed screenings.",
+    "Preserved watched dates and screening times for every title."
   ]
 }
