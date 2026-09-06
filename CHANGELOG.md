@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.77] - 2026-09-06
+
+### What's New
+- Added title correction input to Movie Posters Artwork Manager.
+- Introduced interactive visual TMDB candidate gallery for custom artwork.
+- Added quick navigation section switcher to Admin Control Studio.
+- Populated movie selector with all scheduled and vault titles.
+- Replaced blocking browser alerts with sleek inline status toasts.
+
 ## [4.9.76] - 2026-09-06
 
 ### What's New

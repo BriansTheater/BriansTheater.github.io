@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.76 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.77 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -74,9 +74,13 @@
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
   </style>
 </head>
-<body class="bg-[#0b1120] text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-500 selection:text-white">
+<body class="bg-[#0b1120] text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-500 selection:text-white overflow-x-hidden">
 
   <!-- TOP HEADER & AMBIENT BANNER -->
   <header class="border-b border-slate-800/80 bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-40">
@@ -610,21 +614,40 @@
     </div>
 
     <!-- TAB 6: 👑 ADMIN PORTAL -->
-    <div id="view-admin" class="tab-view hidden flex flex-col gap-6">
+    <div id="view-admin" class="tab-view hidden flex flex-col gap-6 max-w-full overflow-hidden">
       
-      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/40 p-6 shadow-2xl relative">
+      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/40 p-4 sm:p-6 shadow-2xl relative max-w-full overflow-hidden">
         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
           <div class="flex items-center gap-2">
             <span class="text-xl text-amber-400">👑</span>
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.76</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.77</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Admin Section Quick-Nav Switcher -->
+        <div class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-2 mb-6 scrollbar-none border-b border-slate-800">
+          <button type="button" onclick="setAdminSectionFilter('all')" id="adminSecBtn-all" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shadow transition shrink-0 flex items-center gap-1.5">
+            <span>👁️</span> All Controls
+          </button>
+          <button type="button" onclick="setAdminSectionFilter('stage')" id="adminSecBtn-stage" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
+            <span>🎛️</span> Stage & Doors
+          </button>
+          <button type="button" onclick="setAdminSectionFilter('artwork')" id="adminSecBtn-artwork" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
+            <span>🖼️</span> Posters & Artwork
+          </button>
+          <button type="button" onclick="setAdminSectionFilter('trailers')" id="adminSecBtn-trailers" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
+            <span>🎬</span> Trailers & Previews
+          </button>
+          <button type="button" onclick="setAdminSectionFilter('requests')" id="adminSecBtn-requests" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
+            <span>📥</span> Review Queue
+          </button>
+        </div>
+
+        <div id="adminSection-stage" class="grid grid-cols-1 md:grid-cols-2 gap-6 admin-section">
           <!-- 1. Now Playing Controller -->
           <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-4">
             <h3 class="text-sm font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
@@ -705,16 +728,16 @@
         </div>
 
         <!-- 3. Movie Posters & Artwork Manager -->
-        <div class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-amber-500/50 flex flex-col gap-5 shadow-2xl">
+        <div id="adminSection-artwork" class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-amber-500/50 flex flex-col gap-5 shadow-2xl admin-section">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <div>
               <h3 class="text-sm sm:text-base font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
                 <span>🖼️</span> Movie Posters & Artwork Manager
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Set high-definition posters for each movie in your lineup and display them when next up in the Theater.</p>
+              <p class="text-xs text-slate-400 mt-0.5">Correct movie titles, auto-search high-definition 16:9 backdrops or posters via TMDB, and set custom stage artwork.</p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-xs px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 font-mono" id="adminArtworkMovieCount">10 Movies</span>
+              <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono" id="adminArtworkMovieCount">Loading Titles...</span>
             </div>
           </div>
 
@@ -726,38 +749,72 @@
                   <span>🎬</span> Select Movie to Configure
                 </label>
                 <select id="adminArtworkMovieSelect" onchange="onAdminSelectArtworkMovie()" class="w-full mt-1.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-semibold focus:border-amber-400">
-                  <!-- Populated dynamically with all scheduled movies -->
+                  <!-- Populated dynamically with all schedule + vault movies -->
                 </select>
+              </div>
+
+              <!-- Editable Search Title / Query (Allows Correcting Titles) -->
+              <div>
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                    <span>✏️</span> Search Title / Query (Editable)
+                  </label>
+                  <span class="text-[10px] text-slate-400 font-mono">Correct typos, add year, or search any title</span>
+                </div>
+                <div class="flex gap-2 mt-1.5">
+                  <input type="text" id="adminArtworkSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbArtworkForSelectedMovie();}" placeholder="e.g. Neighbors, Neighbors 2, The Batman (2022)..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                  <button type="button" onclick="fetchTmdbArtworkForSelectedMovie()" id="btnFetchTmdbArtwork" class="py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
+                    <span>🔍</span> Search TMDB
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interactive Visual TMDB Candidate Results Gallery Container -->
+              <div id="adminArtworkCandidateContainer" class="hidden flex-col gap-2.5 p-3.5 rounded-xl bg-slate-900/95 border border-amber-500/40 shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                      <span>✨</span> TMDB Matches Found (Click to Preview & Apply)
+                    </span>
+                    <span id="adminArtworkCandidateCount" class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">0</span>
+                  </div>
+                  <button type="button" onclick="closeAdminArtworkCandidates()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1 transition px-1.5 py-0.5 rounded hover:bg-slate-800">
+                    <span>✕</span> Close
+                  </button>
+                </div>
+                <div id="adminArtworkCandidateGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                  <!-- Injected dynamically -->
+                </div>
               </div>
 
               <div>
                 <label class="text-xs font-semibold text-slate-300">Custom Image URL</label>
                 <div class="flex gap-2 mt-1">
-                  <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, Discord, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400">
-                  <button onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0">
+                  <input type="text" id="adminArtworkUrlInput" placeholder="Paste image URL (TMDB, Linktree, Discord, etc.)..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+                  <button type="button" onclick="previewCustomArtworkUrl()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg shrink-0 transition active:scale-95">
                     Preview
                   </button>
                 </div>
               </div>
 
-              <!-- Quick Action Buttons -->
+              <!-- Action Buttons -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <label class="cursor-pointer py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-2 transition active:scale-95 text-center">
                   <span>📁</span> Browse Local File
                   <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
                 </label>
 
-                <button onclick="fetchTmdbArtworkForSelectedMovie()" id="btnFetchTmdbArtwork" class="py-2.5 px-3 bg-gradient-to-r from-sky-600 to-cyan-500 hover:from-sky-500 hover:to-cyan-400 text-slate-950 font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95">
-                  <span>🔍</span> TMDB 1-Click Auto-Fetch
+                <button type="button" onclick="resetSelectedMovieArtworkToDefault()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <span>🔄</span> Reset to Default
                 </button>
               </div>
 
               <!-- Save & Stage Buttons -->
               <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-slate-850">
-                <button onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
+                <button type="button" onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="flex-1 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 active:scale-95">
                   <span>💾</span> Save Movie Image
                 </button>
-                <button onclick="applySelectedArtworkToStageNow()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 active:scale-95 shrink-0">
+                <button type="button" onclick="applySelectedArtworkToStageNow()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 active:scale-95 shrink-0">
                   <span>⭐</span> Set on Stage Now
                 </button>
               </div>
@@ -792,7 +849,7 @@
         </div>
 
         <!-- 4. Movie Trailers & Preview Manager -->
-        <div class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-red-500/50 flex flex-col gap-5 shadow-2xl">
+        <div id="adminSection-trailers" class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-red-500/50 flex flex-col gap-5 shadow-2xl admin-section">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <div>
               <h3 class="text-sm sm:text-base font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
@@ -817,6 +874,22 @@
                 </select>
               </div>
 
+              <!-- Editable Search Title / Query for Trailers -->
+              <div>
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+                    <span>✏️</span> Search Title / Query (Editable)
+                  </label>
+                  <span class="text-[10px] text-slate-400 font-mono">Correct title to auto-find trailer</span>
+                </div>
+                <div class="flex gap-2 mt-1.5">
+                  <input type="text" id="adminTrailerSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbTrailerForSelectedMovie();}" placeholder="e.g. Neighbors 2, The Batman (2022)..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-900 border border-rose-500/40 text-slate-100 font-medium focus:border-red-400 focus:ring-1 focus:ring-red-400">
+                  <button type="button" onclick="fetchTmdbTrailerForSelectedMovie()" id="btnFetchTmdbTrailer" class="py-2.5 px-4 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 hover:opacity-90 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
+                    <span>🔍</span> TMDB Auto-Find
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label class="text-xs font-semibold text-slate-300">YouTube Trailer URL or ID</label>
                 <div class="flex gap-2 mt-1">
@@ -829,21 +902,18 @@
 
               <!-- Action Buttons -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <button type="button" onclick="fetchTmdbTrailerForSelectedMovie()" id="btnFetchTmdbTrailer" class="py-2.5 px-3 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 hover:opacity-90 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95">
-                  <span>🔍</span> TMDB 1-Click Auto-Find
-                </button>
-
                 <button type="button" onclick="testSelectedMovieTrailerInTheater()" class="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
                   <span>⚡</span> Test in Screening Room
+                </button>
+
+                <button type="button" onclick="clearSelectedMovieTrailer()" class="py-2.5 px-3 bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-700/50 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <span>🗑️</span> Clear Saved Trailer
                 </button>
               </div>
 
               <div class="flex items-center gap-2 pt-2 border-t border-slate-850">
                 <button type="button" onclick="saveSelectedMovieTrailer()" id="btnSaveTrailer" class="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
                   <span>💾</span> Save Trailer
-                </button>
-                <button type="button" onclick="clearSelectedMovieTrailer()" class="py-3 px-4 rounded-xl bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-700/50 text-xs font-semibold transition active:scale-95">
-                  Clear
                 </button>
               </div>
 
@@ -875,7 +945,7 @@
         </div>
 
         <!-- 5. Review Queue -->
-        <div class="mt-6 p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-3">
+        <div id="adminSection-requests" class="mt-6 p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-3 admin-section">
           <div class="flex items-center justify-between">
             <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
               <span>📥</span> Community Request Review Queue
@@ -902,7 +972,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.73</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.77</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1067,7 +1137,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.73</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.77</span>
     </div>
 
   </aside>
@@ -1406,7 +1476,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.76";
+    const APP_VERSION = "4.9.77";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1781,6 +1851,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.77": [
+        "Added title correction input to Movie Posters Artwork Manager.",
+        "Introduced interactive visual TMDB candidate gallery for custom artwork.",
+        "Added quick navigation section switcher to Admin Control Studio.",
+        "Populated movie selector with all scheduled and vault titles.",
+        "Replaced blocking browser alerts with sleek inline status toasts."
+      ],
       "4.9.76": [
         "Completely removed PIN and passkey inputs from admin authentication.",
         "Restored pure one-click Google Sign-In for administrator portal.",
@@ -2149,7 +2226,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.73"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.77"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -3468,7 +3545,7 @@
 
       // Send to backend API
       fetch(`${API_BASE_URL}?action=admin_update_now_playing&title=${encodeURIComponent(title)}&timeLeft=${encodeURIComponent(timeLeft)}&posterUrl=${encodeURIComponent(posterUrl)}`, { mode: 'no-cors' });
-      alert(`Admin Update: Now Playing updated to "${title}"!`);
+      showTheaterToast(`🎉 Now Playing updated to "${title}"!`);
       switchTab('screening');
     }
 
@@ -3479,11 +3556,14 @@
         return;
       }
       const url = document.getElementById('adminTrailerUrl').value.trim();
-      if (!url) return alert('Please enter a YouTube video URL');
+      if (!url) {
+        showTheaterToast("⚠️ Please enter a YouTube video URL.");
+        return;
+      }
       setTrailer(url);
 
       fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
-      alert(`Trailer broadcasted live!`);
+      showTheaterToast(`🎬 Trailer broadcasted live to stage!`);
       switchTab('screening');
     }
 
@@ -3498,7 +3578,7 @@
       fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' });
       setTimeout(() => {
         btn.textContent = "⚡ Force Sync";
-        alert("Firebase Realtime Database successfully updated!");
+        showTheaterToast("⚡ Firebase Realtime Database synced successfully!");
       }, 800);
     }
 
@@ -3530,6 +3610,38 @@
       }
     });
 
+    // 🎛️ Admin Section Navigation Filter
+    function setAdminSectionFilter(section) {
+      const valid = ['all', 'stage', 'artwork', 'trailers', 'requests'];
+      const current = valid.includes(section) ? section : 'all';
+
+      valid.forEach(s => {
+        const btn = document.getElementById(`adminSecBtn-${s}`);
+        if (!btn) return;
+        if (s === current) {
+          btn.className = "admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shadow transition shrink-0 flex items-center gap-1.5";
+        } else {
+          btn.className = "admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5";
+        }
+      });
+
+      const sections = {
+        stage: document.getElementById('adminSection-stage'),
+        artwork: document.getElementById('adminSection-artwork'),
+        trailers: document.getElementById('adminSection-trailers'),
+        requests: document.getElementById('adminSection-requests')
+      };
+
+      Object.entries(sections).forEach(([key, el]) => {
+        if (!el) return;
+        if (current === 'all' || current === key) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+    }
+
     // 🎬 Movie Posters & Artwork Manager Engine
     function populateAdminArtworkSelector() {
       const select = document.getElementById('adminArtworkMovieSelect');
@@ -3537,13 +3649,30 @@
       const countBadge = document.getElementById('adminArtworkMovieCount');
       if (!select) return;
 
-      const moviesList = sampleSchedule.map(s => s.title);
-      select.innerHTML = moviesList.map(title => `<option value="${escapeHtml(title)}">${escapeHtml(title)}</option>`).join('');
+      const titleSet = new Set();
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
 
-      if (countBadge) countBadge.textContent = `${moviesList.length} Movies in Lineup`;
+      schedSource.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
+      if (Array.isArray(vaultMovies)) {
+        vaultMovies.forEach(v => { if (v && v.title) titleSet.add(v.title.replace(/^🎬\s*/, '').trim()); });
+      }
+      if (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests)) {
+        communityRequests.forEach(r => { if (r && r.title) titleSet.add(r.title.replace(/^🎬\s*/, '').trim()); });
+      }
+
+      const allTitles = Array.from(titleSet).filter(Boolean).sort((a, b) => a.localeCompare(b));
+      
+      const currentVal = select.value;
+      let html = '<option value="">-- Choose Movie or Type Custom Below --</option>';
+      html += allTitles.map(title => `<option value="${escapeHtml(title)}"${title === currentVal ? ' selected' : ''}>${escapeHtml(title)}</option>`).join('');
+      select.innerHTML = html;
+
+      if (countBadge) countBadge.textContent = `${allTitles.length} Titles`;
 
       if (gallery) {
-        gallery.innerHTML = sampleSchedule.map(s => {
+        gallery.innerHTML = schedSource.slice(0, 15).map(s => {
           const artUrl = getMovieArtworkUrl(s.title);
           return `
             <div onclick="selectMovieFromGallery('${escapeHtml(s.title)}')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/60 transition flex flex-col gap-1.5 shadow-md">
@@ -3555,6 +3684,10 @@
             </div>
           `;
         }).join('');
+      }
+
+      if (!select.value && allTitles.length > 0) {
+        select.value = allTitles[0];
       }
 
       onAdminSelectArtworkMovie();
@@ -3571,19 +3704,33 @@
 
     function onAdminSelectArtworkMovie() {
       const select = document.getElementById('adminArtworkMovieSelect');
+      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
       const urlInput = document.getElementById('adminArtworkUrlInput');
       const previewImg = document.getElementById('adminArtworkPreviewImg');
       const caption = document.getElementById('adminArtworkPreviewCaption');
       const urlText = document.getElementById('adminArtworkPreviewUrl');
       if (!select) return;
 
-      const title = select.value;
-      const currentUrl = getMovieArtworkUrl(title);
+      const title = select.value.trim();
+      const currentUrl = title ? getMovieArtworkUrl(title) : getCinemaPlaceholder("Brian's Theater");
 
+      if (searchInput && title) searchInput.value = title;
       if (urlInput) urlInput.value = currentUrl;
       if (previewImg) previewImg.src = currentUrl;
-      if (caption) caption.textContent = `${title}`;
+      if (caption) caption.textContent = title || "Cinema Stage";
       if (urlText) urlText.textContent = currentUrl;
+
+      closeAdminArtworkCandidates();
+    }
+
+    function closeAdminArtworkCandidates() {
+      const container = document.getElementById('adminArtworkCandidateContainer');
+      const grid = document.getElementById('adminArtworkCandidateGrid');
+      if (container) {
+        container.classList.add('hidden');
+        container.classList.remove('flex');
+      }
+      if (grid) grid.innerHTML = '';
     }
 
     function previewCustomArtworkUrl() {
@@ -3596,50 +3743,175 @@
       }
     }
 
+    function applyAdminCandidateArtwork(url, title, type, showToast = true) {
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const caption = document.getElementById('adminArtworkPreviewCaption');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+
+      if (urlInput) urlInput.value = url;
+      if (previewImg) previewImg.src = url;
+      if (caption) caption.textContent = `${title} (${type})`;
+      if (urlText) urlText.textContent = url;
+
+      if (showToast) {
+        showTheaterToast(`✨ Selected ${type} for "${title}". Click 'Save Movie Image' to save!`);
+      }
+    }
+
+    function resetSelectedMovieArtworkToDefault() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        return;
+      }
+      const select = document.getElementById('adminArtworkMovieSelect');
+      if (!select) return;
+      const title = select.value.trim();
+      if (!title) return;
+
+      delete customMovieImages[title];
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+      } catch(e) {}
+
+      onAdminSelectArtworkMovie();
+      renderSchedule();
+      showTheaterToast(`🔄 Reset artwork for "${title}" to default.`);
+    }
+
     async function fetchTmdbArtworkForSelectedMovie() {
       if (!isAdmin) {
         openAdminAuthModal();
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
+      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
       const select = document.getElementById('adminArtworkMovieSelect');
       const btn = document.getElementById('btnFetchTmdbArtwork');
-      if (!select) return;
+      const container = document.getElementById('adminArtworkCandidateContainer');
+      const grid = document.getElementById('adminArtworkCandidateGrid');
+      const countBadge = document.getElementById('adminArtworkCandidateCount');
 
-      const title = select.value.replace(/^🎬\s*/, '').trim();
-      if (btn) btn.textContent = "Fetching TMDB...";
+      const rawQuery = (searchInput ? searchInput.value.trim() : '') || (select ? select.value.trim() : '');
+      const query = rawQuery.replace(/^🎬\s*/, '').trim();
+
+      if (!query) {
+        showTheaterToast("⚠️ Please enter or select a movie title to search.");
+        return;
+      }
+
+      if (btn) btn.innerHTML = '<span>⏳</span> Searching...';
 
       try {
         const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
-        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(title)}`);
+
+        let searchTitle = query;
+        let searchYear = null;
+        const yearMatch = query.match(/\b(19\d\d|20\d\d)\b/);
+        if (yearMatch) {
+          searchYear = yearMatch[1];
+          searchTitle = query.replace(/\b(19\d\d|20\d\d)\b/, '').replace(/[()]/g, '').trim();
+        }
+
+        let movieSearchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`;
+        if (searchYear) {
+          movieSearchUrl += `&primary_release_year=${searchYear}`;
+        }
+        let res = await fetch(movieSearchUrl);
+        let results = [];
         if (res.ok) {
           const data = await res.json();
-          if (data.results && data.results.length > 0) {
-            const top = data.results[0];
-            const backdrop = top.backdrop_path ? `https://image.tmdb.org/t/p/w780${top.backdrop_path}` : null;
-            const poster = top.poster_path ? `https://image.tmdb.org/t/p/w500${top.poster_path}` : null;
-            const chosen = backdrop || poster;
-            if (chosen) {
-              const urlInput = document.getElementById('adminArtworkUrlInput');
-              const previewImg = document.getElementById('adminArtworkPreviewImg');
-              const urlText = document.getElementById('adminArtworkPreviewUrl');
-              if (urlInput) urlInput.value = chosen;
-              if (previewImg) previewImg.src = chosen;
-              if (urlText) urlText.textContent = chosen;
-              alert(`🎬 Found TMDB Artwork for "${top.title}" (${top.release_date ? top.release_date.split('-')[0] : 'N/A'})!\n\nClick 'Save Movie Image' to apply it.`);
-            } else {
-              alert(`No poster images found on TMDB for "${title}".`);
-            }
-          } else {
-            alert(`No TMDB results found for "${title}".`);
-          }
-        } else {
-          alert("TMDB search request failed. Please paste an image URL directly.");
+          results = data.results || [];
         }
+
+        if (results.length === 0 && searchYear) {
+          res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`);
+          if (res.ok) {
+            const data = await res.json();
+            results = data.results || [];
+          }
+        }
+
+        if (results.length === 0 || /\b(tv|season|series|show)\b/i.test(query)) {
+          const tvRes = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`);
+          if (tvRes.ok) {
+            const tvData = await tvRes.json();
+            if (tvData.results && tvData.results.length > 0) {
+              results = [...results, ...tvData.results.map(t => ({ ...t, title: t.name, release_date: t.first_air_date, isTv: true }))];
+            }
+          }
+        }
+
+        const candidates = results.filter(r => r.backdrop_path || r.poster_path).slice(0, 6);
+
+        if (candidates.length === 0) {
+          showTheaterToast(`❌ No TMDB images found for "${query}". Try adjusting keywords.`);
+          closeAdminArtworkCandidates();
+          return;
+        }
+
+        if (countBadge) countBadge.textContent = `${candidates.length} Match${candidates.length > 1 ? 'es' : ''}`;
+
+        if (grid) {
+          grid.innerHTML = candidates.map(c => {
+            const cTitle = c.title || c.name || "Movie";
+            const cYear = (c.release_date || c.first_air_date || '').split('-')[0] || 'N/A';
+            const backdropUrl = c.backdrop_path ? `https://image.tmdb.org/t/p/w780${c.backdrop_path}` : null;
+            const posterUrl = c.poster_path ? `https://image.tmdb.org/t/p/w500${c.poster_path}` : null;
+            const mediaBadge = c.isTv ? '<span class="text-[9px] px-1 rounded bg-purple-950 text-purple-300 border border-purple-800">TV</span>' : '<span class="text-[9px] px-1 rounded bg-sky-950 text-sky-300 border border-sky-800">Movie</span>';
+
+            const safeTitle = escapeHtml(cTitle);
+            const jsTitle = cTitle.replace(/'/g, "\\'");
+
+            return `
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 transition flex flex-col gap-2 shadow">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-100 truncate max-w-[170px]" title="${safeTitle}">${safeTitle}</span>
+                  <div class="flex items-center gap-1">
+                    ${mediaBadge}
+                    <span class="text-[10px] text-amber-400 font-mono">${escapeHtml(cYear)}</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  ${backdropUrl ? `
+                    <button type="button" onclick="applyAdminCandidateArtwork('${backdropUrl}', '${jsTitle}', '16:9 Backdrop')" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-amber-400 transition flex flex-col items-center justify-end p-1 text-left bg-black shadow-inner">
+                      <img src="${backdropUrl}" alt="${safeTitle}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition" loading="lazy">
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent pointer-events-none"></div>
+                      <span class="relative z-10 text-[9px] font-bold text-amber-300 font-mono truncate w-full text-center">🖼️ 16:9 Backdrop</span>
+                    </button>
+                  ` : `<div class="aspect-video rounded-lg border border-slate-800 flex items-center justify-center text-[10px] text-slate-600">No Backdrop</div>`}
+
+                  ${posterUrl ? `
+                    <button type="button" onclick="applyAdminCandidateArtwork('${posterUrl}', '${jsTitle}', 'Poster')" class="group relative aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-sky-400 transition flex flex-col items-center justify-end p-1 text-left bg-black shadow-inner">
+                      <img src="${posterUrl}" alt="${safeTitle}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition" loading="lazy">
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent pointer-events-none"></div>
+                      <span class="relative z-10 text-[9px] font-bold text-sky-300 font-mono truncate w-full text-center">📜 Poster</span>
+                    </button>
+                  ` : `<div class="aspect-video rounded-lg border border-slate-800 flex items-center justify-center text-[10px] text-slate-600">No Poster</div>`}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        if (container) {
+          container.classList.remove('hidden');
+          container.classList.add('flex');
+        }
+
+        const top = candidates[0];
+        const topImg = top.backdrop_path ? `https://image.tmdb.org/t/p/w780${top.backdrop_path}` : `https://image.tmdb.org/t/p/w500${top.poster_path}`;
+        if (topImg) {
+          applyAdminCandidateArtwork(topImg, top.title || top.name || query, top.backdrop_path ? '16:9 Backdrop' : 'Poster', false);
+        }
+
+        showTheaterToast(`✨ Found ${candidates.length} TMDB match${candidates.length > 1 ? 'es' : ''} for "${query}"!`);
+
       } catch(e) {
-        alert("Could not reach TMDB: " + e.message);
+        showTheaterToast("❌ TMDB search failed: " + e.message);
       } finally {
-        if (btn) btn.innerHTML = '<span>🔍</span> TMDB 1-Click Auto-Fetch';
+        if (btn) btn.innerHTML = '<span>🔍</span> Search TMDB';
       }
     }
 
@@ -3650,29 +3922,30 @@
         return;
       }
       const select = document.getElementById('adminArtworkMovieSelect');
+      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
       const urlInput = document.getElementById('adminArtworkUrlInput');
-      if (!select || !urlInput) return;
+      if (!urlInput) return;
 
-      const title = select.value.trim();
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
       const url = urlInput.value.trim();
-      if (!title || !url) return alert("Please select a movie and provide an image URL.");
+      if (!title || !url) {
+        showTheaterToast("⚠️ Please select a movie and provide an image URL.");
+        return;
+      }
 
       customMovieImages[title] = url;
       try {
         localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
       } catch(e) {}
 
-      // Sync to backend Google Apps Script and Firebase
       fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
 
-      // Refresh schedule cards and admin gallery
       renderSchedule();
       populateAdminArtworkSelector();
 
-      // If this movie is currently on stage (live or next up), update stage image immediately
       updateStageArtwork(false, document.getElementById('nowPlayingHeading')?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
 
-      alert(`🎉 Success! Saved custom image for "${title}".`);
+      showTheaterToast(`🎉 Success! Saved custom image for "${title}".`);
     }
 
     function applySelectedArtworkToStageNow() {
@@ -3683,16 +3956,20 @@
       }
       const urlInput = document.getElementById('adminArtworkUrlInput');
       const select = document.getElementById('adminArtworkMovieSelect');
+      const searchInput = document.getElementById('adminArtworkSearchTitleInput');
       const url = urlInput?.value.trim();
-      const title = select?.value.trim() || "Featured Movie";
-      if (!url) return alert("Please specify an image URL first.");
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "Featured Movie";
+      if (!url) {
+        showTheaterToast("⚠️ Please specify an image URL first.");
+        return;
+      }
 
       const stagePoster = document.getElementById('stagePoster');
       const stagePosterBadgeTitle = document.getElementById('stagePosterBadgeTitle');
       if (stagePoster) stagePoster.src = url;
       if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `FEATURED: ${title}`;
 
-      alert(`⭐ Updated Theater stage poster with "${title}" image!`);
+      showTheaterToast(`⭐ Updated Theater stage poster with "${title}" image!`);
       switchTab('screening');
     }
 
@@ -3720,6 +3997,7 @@
 
     function onAdminSelectTrailerMovie() {
       const select = document.getElementById('adminTrailerMovieSelect');
+      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
       const input = document.getElementById('adminTrailerCustomUrlInput');
       const previewIframe = document.getElementById('adminTrailerPreviewIframe');
       const placeholder = document.getElementById('adminTrailerPreviewPlaceholder');
@@ -3729,6 +4007,8 @@
 
       const title = select.value.trim();
       const currentTrailerId = getTrailerIdForMovie({ title: title });
+
+      if (searchInput && title) searchInput.value = title;
 
       if (input) {
         input.value = currentTrailerId ? `https://www.youtube.com/watch?v=${currentTrailerId}` : '';
@@ -3765,7 +4045,7 @@
       const ytid = extractYouTubeId(raw) || (/^[\w-]{11}$/.test(raw) ? raw : null);
 
       if (!ytid) {
-        alert("Please enter a valid YouTube video URL or 11-character video ID.");
+        showTheaterToast("⚠️ Please enter a valid YouTube video URL or 11-character video ID.");
         return;
       }
 
@@ -3824,12 +4104,19 @@
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
+      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
       const select = document.getElementById('adminTrailerMovieSelect');
       const btn = document.getElementById('btnFetchTmdbTrailer');
       const input = document.getElementById('adminTrailerCustomUrlInput');
-      if (!select) return;
 
-      const title = select.value.replace(/^🎬\s*/, '').trim();
+      const rawTitle = (searchInput ? searchInput.value.trim() : '') || (select ? select.value.trim() : '');
+      const title = rawTitle.replace(/^🎬\s*/, '').trim();
+
+      if (!title) {
+        showTheaterToast("⚠️ Please enter or select a title to search.");
+        return;
+      }
+
       if (btn) btn.innerHTML = '<span>⏳</span> Searching TMDB...';
 
       try {
@@ -3837,14 +4124,14 @@
         if (result && result.videoKey) {
           if (input) input.value = result.url;
           previewCustomTrailerInput();
-          alert(`🎬 Found Official TMDB Trailer for "${result.title}"!\n\nVideo: ${result.videoName}\n\nClick 'Save Trailer' to apply it.`);
+          showTheaterToast(`🎬 Found Trailer: "${result.title}"! Click 'Save Trailer' to apply.`);
         } else {
-          alert(`No official YouTube trailer found on TMDB for "${title}". You can paste any YouTube link manually.`);
+          showTheaterToast(`⚠️ No official trailer found on TMDB for "${title}". You can paste any link manually.`);
         }
       } catch(e) {
-        alert("Could not reach TMDB: " + e.message);
+        showTheaterToast("❌ TMDB trailer search failed: " + e.message);
       } finally {
-        if (btn) btn.innerHTML = '<span>🔍</span> TMDB 1-Click Auto-Find';
+        if (btn) btn.innerHTML = '<span>🔍</span> TMDB Auto-Find';
       }
     }
 
@@ -3855,15 +4142,16 @@
         return;
       }
       const select = document.getElementById('adminTrailerMovieSelect');
+      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
       const input = document.getElementById('adminTrailerCustomUrlInput');
-      if (!select || !input) return;
+      if (!input) return;
 
-      const title = select.value.trim();
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
       const rawUrl = input.value.trim();
       const ytid = extractYouTubeId(rawUrl) || (/^[\w-]{11}$/.test(rawUrl) ? rawUrl : null);
 
       if (!ytid) {
-        alert("Please enter or auto-find a valid YouTube URL or video ID before saving.");
+        showTheaterToast("⚠️ Please enter or auto-find a valid YouTube URL or video ID before saving.");
         return;
       }
 
@@ -3881,7 +4169,7 @@
       renderVault();
       onAdminSelectTrailerMovie();
 
-      alert(`🎉 Success! Saved official trailer for "${title}".`);
+      showTheaterToast(`🎉 Success! Saved official trailer for "${title}".`);
     }
 
     function clearSelectedMovieTrailer() {
@@ -3891,22 +4179,21 @@
         return;
       }
       const select = document.getElementById('adminTrailerMovieSelect');
-      if (!select) return;
+      const searchInput = document.getElementById('adminTrailerSearchTitleInput');
+      const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
+      if (!title) return;
 
-      const title = select.value.trim();
-      if (confirm(`Remove custom trailer for "${title}"?`)) {
-        delete customMovieTrailers[title];
-        try {
-          localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
-        } catch(e) {}
+      delete customMovieTrailers[title];
+      try {
+        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+      } catch(e) {}
 
-        fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
 
-        renderSchedule();
-        renderVault();
-        onAdminSelectTrailerMovie();
-        alert(`Cleared trailer for "${title}".`);
-      }
+      renderSchedule();
+      renderVault();
+      onAdminSelectTrailerMovie();
+      showTheaterToast(`🗑️ Cleared custom trailer for "${title}".`);
     }
 
     function testSelectedMovieTrailerInTheater() {
@@ -3917,7 +4204,7 @@
       const ytid = extractYouTubeId(raw) || (/^[\w-]{11}$/.test(raw) ? raw : null);
 
       if (!ytid) {
-        alert("Please specify a trailer first.");
+        showTheaterToast("⚠️ Please specify a valid trailer first.");
         return;
       }
 

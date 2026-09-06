@@ -1,12 +1,12 @@
 {
-  "version": "4.9.76",
+  "version": "4.9.77",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.76",
+  "title": "Brian's Theater v4.9.77",
   "notes": [
-    "Completely removed PIN and passkey inputs from admin authentication.",
-    "Restored pure one-click Google Sign-In for administrator portal.",
-    "Cleaned up admin modal to eliminate unwanted passkey forms.",
-    "Retained streamlined top navigation bar with public cinema tabs.",
-    "Ensured authorized Google accounts remain exclusive admin access method."
+    "Added title correction input to Movie Posters Artwork Manager.",
+    "Introduced interactive visual TMDB candidate gallery for custom artwork.",
+    "Added quick navigation section switcher to Admin Control Studio.",
+    "Populated movie selector with all scheduled and vault titles.",
+    "Replaced blocking browser alerts with sleek inline status toasts."
   ]
 }
