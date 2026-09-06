@@ -1,12 +1,12 @@
 {
-  "version": "4.9.39",
+  "version": "4.9.40",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.39",
+  "title": "Brian's Theater v4.9.40",
   "notes": [
-    "Renamed Screening Room tab to Theater across entire app.",
-    "Updated main menu navigation bar with Theater label.",
-    "Updated mobile sidebar drawer link to Theater.",
-    "Updated home screen PWA shortcut title to Theater.",
-    "Streamlined navigation naming for cleaner browsing experience."
+    "Renamed Movie Vault tab to Vault across entire app.",
+    "Updated main menu navigation bar with Vault label.",
+    "Updated mobile sidebar drawer link to Vault.",
+    "Updated home screen PWA shortcut title to Vault.",
+    "Cleaned navigation bar layout for streamlined theater browsing."
   ]
 }

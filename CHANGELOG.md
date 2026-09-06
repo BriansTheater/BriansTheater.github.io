@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.40] - 2026-09-05
+
+### What's New
+- Renamed Movie Vault tab to Vault across entire app.
+- Updated main menu navigation bar with Vault label.
+- Updated mobile sidebar drawer link to Vault.
+- Updated home screen PWA shortcut title to Vault.
+- Cleaned navigation bar layout for streamlined theater browsing.
+
 ## [4.9.39] - 2026-09-05
 
 ### What's New
