@@ -1,12 +1,12 @@
 {
-  "version": "4.9.51",
+  "version": "4.9.52",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.51",
+  "title": "Brian's Theater v4.9.52",
   "notes": [
-    "Directly synced movie requests to Google Sheets spreadsheet.",
-    "Added real-time database pipeline for instant request ingestion.",
-    "Mapped all columns to match Google Form response sheet.",
-    "Added automatic checkboxes for scheduled and watched status.",
-    "Ensured 100% reliable delivery for all community suggestions."
+    "Dynamically synchronized footer version badge with active app version.",
+    "Unified version badges across footer, sidebar, and admin studio.",
+    "Added automatic version badge synchronizer on page startup.",
+    "Guaranteed footer version number updates instantly on new releases.",
+    "Eliminated stale hardcoded version tags throughout entire layout."
   ]
 }

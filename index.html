@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.51 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.52 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -611,7 +611,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.48</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.52</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -894,7 +894,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.48</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.52</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1059,7 +1059,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.48</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.52</span>
     </div>
 
   </aside>
@@ -1273,7 +1273,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.48</span>
+              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.52</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1308,8 +1308,28 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.51";
+    const APP_VERSION = "4.9.52";
     window.APP_VERSION = APP_VERSION;
+
+    function syncAppVersionBadges() {
+      try {
+        const badges = document.querySelectorAll('.app-version-badge');
+        badges.forEach(b => {
+          b.textContent = `v${APP_VERSION}`;
+        });
+        const footerBadge = document.getElementById('footerAppVersionBadge');
+        if (footerBadge) footerBadge.textContent = `v${APP_VERSION}`;
+        const sidebarBadge = document.getElementById('sidebarAppVersionBadge');
+        if (sidebarBadge) sidebarBadge.textContent = `v${APP_VERSION}`;
+        const adminBadge = document.getElementById('adminAppVersionBadge');
+        if (adminBadge) adminBadge.textContent = `v${APP_VERSION}`;
+      } catch(e) {}
+    }
+    syncAppVersionBadges();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncAppVersionBadges);
+    }
+
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
 
@@ -1663,6 +1683,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.52": [
+        "Dynamically synchronized footer version badge with active app version.",
+        "Unified version badges across footer, sidebar, and admin studio.",
+        "Added automatic version badge synchronizer on page startup.",
+        "Guaranteed footer version number updates instantly on new releases.",
+        "Eliminated stale hardcoded version tags throughout entire layout."
+      ],
       "4.9.51": [
         "Directly synced movie requests to Google Sheets spreadsheet.",
         "Added real-time database pipeline for instant request ingestion.",
@@ -1841,7 +1868,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.51"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.52"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;

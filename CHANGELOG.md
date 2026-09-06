@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.52] - 2026-09-06
+
+### What's New
+- Dynamically synchronized footer version badge with active app version.
+- Unified version badges across footer, sidebar, and admin studio.
+- Added automatic version badge synchronizer on page startup.
+- Guaranteed footer version number updates instantly on new releases.
+- Eliminated stale hardcoded version tags throughout entire layout.
+
 ## [4.9.51] - 2026-09-06
 
 ### What's New
