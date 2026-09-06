@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.30] - 2026-09-05
+
+### What's New
+- Next movie automatically rolls over when screening concludes.
+- Stage now features next premiere artwork and date display.
+- Added working trailer player and YouTube button on stage.
+- Added Add to Calendar reminder button on main stage.
+- Synchronized live changes in real time via Firebase stream.
+- Renamed Schedule and Next Up menu tab to Schedule.
+- Removed stale fallbacks to Return To Silent Hill.
+- Updated Service Worker cache to version 4.9.30.
+
 ## [4.9.29] - 2026-09-05
 
 ### What's New

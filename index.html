@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.29 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.30 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -123,7 +123,7 @@
 
         <button onclick="switchTab('schedule')" id="nav-schedule" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
           <span>📅</span>
-          <span>Schedule & Next Up</span>
+          <span>Schedule</span>
         </button>
 
         <button onclick="switchTab('vault')" id="nav-vault" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
@@ -157,7 +157,7 @@
         <div class="flex items-center gap-2 truncate" id="bannerLiveIndicator">
           <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span>
           <span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span>
-          <span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: Neighbors • Sat, Sept 5 • 7:00 PM PST</span>
+          <span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: Neighbors 2 • Sun, Sept 6 • 7:00 PM PST</span>
         </div>
         <div class="flex items-center gap-2 font-mono shrink-0">
           <span class="text-slate-400" id="screenTimeLabel">Starts In:</span>
@@ -176,27 +176,27 @@
 
           <!-- 2. TITLE -->
           <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
-            🎬 Neighbors
+            🎬 Neighbors 2
           </h2>
 
-          <!-- 3. DATE AND TIME (Hidden to keep stage header clean) -->
-          <p id="nowPlayingDate" class="hidden text-xs sm:text-sm text-slate-400"></p>
+          <!-- 3. DATE AND TIME (Matches Schedule Date Display) -->
+          <p id="nowPlayingDate" class="text-xs sm:text-sm text-slate-400 font-mono">Sunday, Sept 6 • 7:00 PM PST</p>
         </div>
 
-        <!-- 4. PIC (The Stage Poster) -->
-        <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl w-full max-w-md aspect-[16/10] flex items-center justify-center group my-1">
-          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover transition duration-300">
+        <!-- 4. PIC (The Stage Poster - Widescreen 16:9 Banner) -->
+        <div class="relative z-10 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl w-full max-w-lg aspect-[16/9] flex items-center justify-center group my-1">
+          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none"></div>
           <div id="stagePosterBadge" class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-700/80 flex items-center justify-between text-xs font-mono shadow-lg">
             <span id="stagePosterBadgeLabel" class="font-bold text-amber-300 flex items-center gap-1.5 truncate">
-              <span>⭐</span> <span id="stagePosterBadgeTitle">NEXT PREMIERE: Neighbors</span>
+              <span>⭐</span> <span id="stagePosterBadgeTitle">NEXT PREMIERE: Neighbors 2</span>
             </span>
-            <span id="stagePosterBadgeDate" class="text-sky-300 text-[11px] font-semibold shrink-0">Saturday, Sept 5 • 7:00 PM PST</span>
+            <span id="stagePosterBadgeDate" class="text-sky-300 text-[11px] font-semibold shrink-0">Sunday, Sept 6 • 7:00 PM PST</span>
           </div>
         </div>
 
         <!-- 5. PRIMARY STAGE ENTRANCE SLOT (COUNTDOWN WHEN CLOSED -> REPLACED BY ENTER BUTTON WHEN OPEN) -->
-        <div id="stageEntranceSlot" class="relative z-10 w-full max-w-md my-1">
+        <div id="stageEntranceSlot" class="relative z-10 w-full max-w-lg my-1">
           
           <!-- STATE A: COUNTDOWN BOX (Visible when theater is closed) -->
           <div id="stageCountdownBox" class="bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full shadow-xl">
@@ -209,11 +209,11 @@
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Days</div>
               </div>
               <div id="stageColHours" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-                <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">19</div>
+                <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">22</div>
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Hours</div>
               </div>
               <div id="stageColMins" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-                <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">02</div>
+                <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">05</div>
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Mins</div>
               </div>
               <div id="stageColSecs" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
@@ -237,27 +237,35 @@
 
         </div>
 
-        <!-- AUXILIARY ACTION CONTROLS & TRAILER -->
-        <div id="stageActionControls" class="relative z-10 w-full max-w-md flex flex-col gap-2.5">
+        <!-- 6. REMINDER BUTTON (Matches Schedule Tab Add to Calendar / Remind Me) -->
+        <button type="button" onclick="remindMeForNextMovie()" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center justify-center gap-2 w-full max-w-lg shadow-md active:scale-95 relative z-10">
+          <span>🔔</span> <span id="stageRemindBtnText">Add to Calendar / Remind Me</span>
+        </button>
+
+        <!-- 7. AUXILIARY ACTION CONTROLS & TRAILER (Pulled from Upcoming Lineup) -->
+        <div id="stageActionControls" class="relative z-10 w-full max-w-lg flex flex-col gap-2.5">
           
-          <div id="theaterDoorsLockedCard" class="p-3 rounded-2xl bg-slate-950/90 border border-slate-800 shadow-xl flex flex-col items-center gap-2">
+          <div id="theaterDoorsLockedCard" class="p-3 rounded-2xl bg-slate-950/90 border border-slate-800 shadow-xl flex flex-col items-center gap-2 w-full">
             <!-- Hidden state hooks for script compatibility -->
             <span id="doorsLockIcon" class="hidden"></span>
             <span id="doorsLockedStatusTitle" class="hidden"></span>
             <p id="doorsLockedSubtext" class="hidden"><span id="doorsOpenAtTime"></span></p>
             
-            <!-- Interactive Teaser Actions -->
-            <div class="grid grid-cols-2 gap-2 w-full">
-              <button type="button" id="stageTrailerToggleBtn" onclick="toggleStageTrailer()" class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 hover:border-amber-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
-                <span>▶</span> <span id="stageTrailerBtnLabel">Watch Trailer</span>
+            <!-- Interactive Teaser Actions: Watch Trailer, Direct YouTube, and Request Movie -->
+            <div class="grid grid-cols-3 gap-2 w-full">
+              <button type="button" id="stageTrailerToggleBtn" onclick="toggleStageTrailer()" class="py-2.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 hover:border-amber-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                <span>🎬</span> <span id="stageTrailerBtnLabel">Trailer ▾</span>
               </button>
-              <button type="button" onclick="switchTab('requests')" class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 hover:border-sky-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
-                <span>🍿</span> <span>Request Movie</span>
+              <button type="button" id="stageTrailerYouTubeBtn" onclick="openStageTrailerYouTube()" title="Watch on YouTube" class="py-2.5 px-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                <span>▶</span> <span>YouTube ↗</span>
+              </button>
+              <button type="button" onclick="switchTab('requests')" class="py-2.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 hover:border-sky-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                <span>🍿</span> <span>Request</span>
               </button>
             </div>
           </div>
 
-          <!-- INLINE STAGE TRAILER PLAYER (Collapsible) -->
+          <!-- INLINE STAGE TRAILER PLAYER (Collapsible with No-Cookie YouTube Embed) -->
           <div id="stageTrailerPlayerContainer" class="hidden w-full aspect-video rounded-xl overflow-hidden border border-amber-500/40 bg-black shadow-2xl mt-1">
             <iframe id="stageTrailerFrame" src="" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
@@ -267,7 +275,7 @@
 
     </div>
 
-    <!-- TAB 2: 📅 SCHEDULE & NEXT UP -->
+    <!-- TAB 2: 📅 SCHEDULE -->
     <div id="view-schedule" class="tab-view hidden flex flex-col gap-6">
 
       <!-- Active Screening In-Progress Alert Banner -->
@@ -291,17 +299,17 @@
       <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-sky-500/40 p-6 sm:p-8 shadow-2xl neon-card flex flex-col items-center text-center gap-4">
         <span class="text-xs font-bold uppercase tracking-widest text-sky-400">Next Scheduled Screening</span>
         <h2 id="schedNextTitle" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
-          🎬 Neighbors
+          🎬 Neighbors 2
         </h2>
-        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Saturday, Sept 5 • 7:00 PM PST</p>
+        <p id="schedNextDate" class="text-xs sm:text-sm text-slate-400">Sunday, Sept 6 • 7:00 PM PST</p>
 
         <!-- Next Up Featured Movie Artwork Banner -->
         <div id="schedNextPosterContainer" class="w-full max-w-lg aspect-[16/9] rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl relative my-1 group">
-          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Next Upcoming Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/jzb9X0f2P1tH2e8964d4Lz14e0B.jpg" alt="Next Upcoming Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
           <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
             <span class="px-2.5 py-1 rounded-lg bg-amber-500/90 text-slate-950 font-bold uppercase tracking-wider text-[10px]">Next Premiere</span>
-            <span class="px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-sm text-slate-300 font-mono text-[11px] border border-slate-800">Saturday, Sept 5 • 7:00 PM PST</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-sm text-slate-300 font-mono text-[11px] border border-slate-800">Sunday, Sept 6 • 7:00 PM PST</span>
           </div>
         </div>
 
@@ -314,11 +322,11 @@
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Days</div>
             </div>
             <div id="schedColHours" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countHours" class="text-2xl sm:text-3xl font-black text-sky-400">26</div>
+              <div id="countHours" class="text-2xl sm:text-3xl font-black text-sky-400">22</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Hours</div>
             </div>
             <div id="schedColMins" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
-              <div id="countMins" class="text-2xl sm:text-3xl font-black text-sky-400">10</div>
+              <div id="countMins" class="text-2xl sm:text-3xl font-black text-sky-400">05</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Mins</div>
             </div>
             <div id="schedColSecs" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
@@ -328,7 +336,7 @@
           </div>
         </div>
 
-        <button onclick="alert('Notification enabled! You will be alerted before ' + document.getElementById('schedNextTitle').textContent.replace('🎬 ', '') + ' begins.')" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+        <button type="button" onclick="remindMeForNextMovie()" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2 shadow-md active:scale-95">
           <span>🔔</span> Add to Calendar / Remind Me
         </button>
       </div>
@@ -438,7 +446,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.29</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.30</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -452,7 +460,7 @@
 
             <div>
               <label class="text-xs font-semibold text-slate-300">Active Movie Title</label>
-              <input type="text" id="adminTitle" value="Return To Silent Hill" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400">
+              <input type="text" id="adminTitle" value="Neighbors 2" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400">
             </div>
 
             <div>
@@ -638,7 +646,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.29</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.30</span>
         </div>
       </div>
 
@@ -726,7 +734,7 @@
           </button>
           <button onclick="switchTab('schedule'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
             <span class="text-sm group-hover:scale-110 transition-transform">📅</span>
-            <span class="flex-1">Schedule & Next Up</span>
+            <span class="flex-1">Schedule</span>
             <span class="text-[10px] text-slate-500 font-mono">Lineup</span>
           </button>
           <button onclick="switchTab('vault'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
@@ -787,7 +795,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.29</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.30</span>
     </div>
 
   </aside>
@@ -990,7 +998,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.29";
+    const APP_VERSION = "4.9.30";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1061,10 +1069,10 @@
       console.warn("Firebase Auth initialization:", err);
     }
     
-    // Target next upcoming premiere (Neighbors, Saturday Sept 5 at 7:00 PM PST)
-    let targetNextMs = 1788660000000;
-    let targetMovieRuntimeMs = 105 * 60 * 1000; // 105 mins default screening runtime
-    let activeLiveMovieTitle = "Neighbors";
+    // Target next upcoming premiere (Neighbors 2, Sunday Sept 6 at 7:00 PM PST)
+    let targetNextMs = 1788746400000;
+    let targetMovieRuntimeMs = 92 * 60 * 1000; // 92 mins default screening runtime
+    let activeLiveMovieTitle = "Neighbors 2";
     let liveScreeningEndMs = 0;
     // Schedule Cards - Structured directly from Google Sheets Quick Schedule (Only Upcoming Movies)
     const sampleSchedule = [
@@ -1196,6 +1204,71 @@
       }
     ];
     window.theaterScheduleCache = sampleSchedule;
+
+    // Dynamic Active or Next Movie Resolver
+    function getActiveOrNextMovie(now = Date.now()) {
+      const scheduleSource = (window.theaterScheduleCache && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      // 1. Check if a movie is actively screening right now
+      const liveItem = scheduleSource.find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+      if (liveItem) {
+        return {
+          movie: liveItem,
+          isLive: true,
+          targetMs: liveItem.endMs,
+          title: liveItem.title,
+          date: liveItem.date,
+          startTime: liveItem.startTime,
+          runtime: liveItem.runtime,
+          trailerId: liveItem.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(liveItem) : "X2i9Zz_AqTg"),
+          posterUrl: liveItem.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(liveItem.title) : "")
+        };
+      }
+
+      // 2. Find upcoming movies with future endMs or future startMs
+      const upcomingList = scheduleSource
+        .filter(s => (s.endMs ? s.endMs > now : (s.startMs ? s.startMs > now : false)))
+        .sort((a, b) => (a.startMs || 0) - (b.startMs || 0));
+
+      if (upcomingList.length > 0) {
+        const nextItem = upcomingList[0];
+        return {
+          movie: nextItem,
+          isLive: false,
+          targetMs: nextItem.startMs,
+          title: nextItem.title,
+          date: nextItem.date,
+          startTime: nextItem.startTime,
+          runtime: nextItem.runtime,
+          trailerId: nextItem.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextItem) : "X2i9Zz_AqTg"),
+          posterUrl: nextItem.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(nextItem.title) : "")
+        };
+      }
+
+      // 3. Fallback to Neighbors 2 if schedule list is exhausted
+      return {
+        movie: {
+          title: "Neighbors 2",
+          date: "Sunday, Sept 6, 2026",
+          startTime: "7:00 PM",
+          startMs: 1788746400000,
+          endMs: 1788751920000,
+          runtime: "1h 32m",
+          trailerId: "X2i9Zz_AqTg"
+        },
+        isLive: false,
+        targetMs: 1788746400000,
+        title: "Neighbors 2",
+        date: "Sunday, Sept 6, 2026",
+        startTime: "7:00 PM",
+        runtime: "1h 32m",
+        trailerId: "X2i9Zz_AqTg",
+        posterUrl: typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl("Neighbors 2") : "https://image.tmdb.org/t/p/w780/jzb9X0f2P1tH2e8964d4Lz14e0B.jpg"
+      };
+    }
+
     let isAdmin = false;
 
     // ========================================================
@@ -1589,25 +1662,26 @@
       const stagePosterBadgeDate = document.getElementById('stagePosterBadgeDate');
       const schedNextPoster = document.getElementById('schedNextPoster');
 
-      const activeMovie = (nowPlayingTitle && nowPlayingTitle !== "No Movie Playing") ? nowPlayingTitle : "Return To Silent Hill";
-      const nextMovie = (nextUpTitle && nextUpTitle !== "None") ? nextUpTitle.replace(/^🎬\s*/, '') : "Neighbors";
+      const nextInfo = getActiveOrNextMovie(Date.now());
+      const activeMovie = (nowPlayingTitle && nowPlayingTitle !== "No Movie Playing") ? nowPlayingTitle : nextInfo.title;
+      const nextMovie = (nextUpTitle && nextUpTitle !== "None") ? nextUpTitle.replace(/^🎬\s*/, '') : nextInfo.title;
 
       if (isLive) {
-        const activeImg = (data && data.nowPlayingPoster) || getMovieArtworkUrl(activeMovie);
+        const activeImg = (data && data.nowPlayingPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(activeMovie);
         if (stagePoster && stagePoster.src !== activeImg) stagePoster.src = activeImg;
         if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `LIVE ON STAGE: ${activeMovie}`;
         if (stagePosterBadgeDate) stagePosterBadgeDate.textContent = `Doors Open Now`;
       } else {
         // Auditorium closed between screenings: Dynamically display the NEXT UP movie's artwork!
-        const nextImg = (data && data.nextPoster) || getMovieArtworkUrl(nextMovie);
+        const nextImg = (data && data.nextPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(nextMovie);
         if (stagePoster && stagePoster.src !== nextImg) stagePoster.src = nextImg;
         if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `NEXT UP: ${nextMovie}`;
-        const nextDateStr = document.getElementById('schedNextDate')?.textContent || "Saturday, Sept 5 • 7:00 PM PST";
+        const nextDateStr = document.getElementById('schedNextDate')?.textContent || (nextInfo.movie ? `${nextInfo.movie.date} • ${nextInfo.movie.startTime} PST` : "Sunday, Sept 6 • 7:00 PM PST");
         if (stagePosterBadgeDate) stagePosterBadgeDate.textContent = nextDateStr;
       }
 
       if (schedNextPoster) {
-        const nextImg = (data && data.nextPoster) || getMovieArtworkUrl(nextMovie);
+        const nextImg = (data && data.nextPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(nextMovie);
         if (schedNextPoster.src !== nextImg) schedNextPoster.src = nextImg;
       }
     }
@@ -1751,18 +1825,32 @@
       if (isStageTrailerOpen) {
         frame.src = "";
         container.classList.add('hidden');
-        if (label) label.textContent = "Watch Trailer";
-        if (btn) btn.className = "py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 hover:border-amber-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95";
+        if (label) label.textContent = "Trailer ▾";
+        if (btn) btn.className = "py-2.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 hover:border-amber-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95";
         isStageTrailerOpen = false;
       } else {
-        const nextMovie = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
-        const trailerId = getTrailerIdForMovie({ title: nextMovie });
-        frame.src = `https://www.youtube.com/embed/${trailerId}?autoplay=1`;
+        const nextObj = getActiveOrNextMovie(Date.now());
+        const trailerId = nextObj.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextObj.movie) : null) || "X2i9Zz_AqTg";
+        frame.src = `https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&rel=0`;
         container.classList.remove('hidden');
-        if (label) label.textContent = "Close Trailer ✕";
-        if (btn) btn.className = "py-2.5 px-3 rounded-xl bg-amber-500 text-slate-950 border border-amber-400 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95";
+        if (label) label.textContent = "Close ✕";
+        if (btn) btn.className = "py-2.5 px-2.5 rounded-xl bg-amber-500 text-slate-950 border border-amber-400 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95";
         isStageTrailerOpen = true;
       }
+    }
+
+    function openStageTrailerYouTube() {
+      const nextObj = getActiveOrNextMovie(Date.now());
+      const trailerId = nextObj.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextObj.movie) : null) || "X2i9Zz_AqTg";
+      window.open(`https://www.youtube.com/watch?v=${trailerId}`, '_blank');
+    }
+
+    function remindMeForNextMovie() {
+      const nextObj = getActiveOrNextMovie(Date.now());
+      const currentTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Neighbors 2").replace(/^🎬\s*/, '').trim();
+      const currentDate = (nextObj.movie && nextObj.movie.date) ? `${nextObj.movie.date} at ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Sunday, Sept 6 at 7:00 PM PST");
+      showTheaterToast(`🔔 Reminder set for "${currentTitle}"! We will alert you before showtime.`);
+      alert(`🔔 Notification Enabled!\n\nYou will be alerted before "${currentTitle}" begins on ${currentDate}.`);
     }
 
     // Helper to format text countdown without zero leading components
@@ -1826,46 +1914,41 @@
     function updateCountdown() {
       const now = Date.now();
 
-      // Resolve dynamic active screening window and upcoming movie
-      const scheduleSource = (window.theaterScheduleCache && window.theaterScheduleCache.length > 0)
-        ? window.theaterScheduleCache
-        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+      // Dynamically resolve active screening or next premiere
+      const nextObj = getActiveOrNextMovie(now);
+      const isLiveBySchedule = nextObj.isLive;
+      const movieItem = nextObj.movie;
 
-      let activeStart = targetNextMs;
-      let activeEnd = activeStart + targetMovieRuntimeMs;
-      let liveMovieTitle = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
-
-      // Check if any schedule movie is currently live
-      const activeSchedItem = scheduleSource.find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
-      if (activeSchedItem) {
-        activeStart = activeSchedItem.startMs;
-        activeEnd = activeSchedItem.endMs;
-        if (activeSchedItem.title) liveMovieTitle = activeSchedItem.title.replace(/^🎬\s*/, '').trim();
-      } else if (liveScreeningEndMs && liveScreeningEndMs > now) {
-        activeEnd = liveScreeningEndMs;
+      let activeStart = nextObj.targetMs;
+      let activeEnd = isLiveBySchedule ? nextObj.targetMs : (nextObj.targetMs + ((movieItem?.endMs && movieItem.endMs > movieItem.startMs) ? (movieItem.endMs - movieItem.startMs) : targetMovieRuntimeMs));
+      if (!isLiveBySchedule) {
+        targetNextMs = nextObj.targetMs;
+      }
+      if (movieItem && movieItem.endMs && movieItem.startMs) {
+        targetMovieRuntimeMs = movieItem.endMs - movieItem.startMs;
       }
 
-      // Check if past current movie runtime end: advance to next upcoming movie if available
-      if (now >= activeEnd && scheduleSource.length > 0) {
-        const nextItem = scheduleSource.find(s => s.startMs && s.startMs > now);
-        if (nextItem) {
-          targetNextMs = nextItem.startMs;
-          targetMovieRuntimeMs = (nextItem.endMs && nextItem.endMs > nextItem.startMs) ? (nextItem.endMs - nextItem.startMs) : (105 * 60 * 1000);
-          const sTitle = document.getElementById('schedNextTitle');
-          const sDate = document.getElementById('schedNextDate');
-          const sPoster = document.getElementById('schedNextPoster');
-          if (sTitle && nextItem.title) sTitle.textContent = nextItem.title.startsWith('🎬') ? nextItem.title : `🎬 ${nextItem.title}`;
-          if (sDate && nextItem.date && nextItem.startTime) sDate.textContent = `${nextItem.date} • ${nextItem.startTime} PST`;
-          if (sPoster && nextItem.posterUrl) sPoster.src = nextItem.posterUrl;
-          activeStart = targetNextMs;
-          activeEnd = activeStart + targetMovieRuntimeMs;
-          liveMovieTitle = (nextItem.title || "Neighbors").replace(/^🎬\s*/, '').trim();
+      // Automatically keep Schedule tab and Stage elements in sync
+      const sTitle = document.getElementById('schedNextTitle');
+      const sDate = document.getElementById('schedNextDate');
+      const sPoster = document.getElementById('schedNextPoster');
+      if (movieItem && !isLiveBySchedule) {
+        if (sTitle && movieItem.title) {
+          const formatted = movieItem.title.startsWith('🎬') ? movieItem.title : `🎬 ${movieItem.title}`;
+          if (sTitle.textContent !== formatted) sTitle.textContent = formatted;
+        }
+        if (sDate && movieItem.date && movieItem.startTime) {
+          const dateTxt = `${movieItem.date} • ${movieItem.startTime} PST`;
+          if (sDate.textContent !== dateTxt) sDate.textContent = dateTxt;
+        }
+        if (sPoster && movieItem.posterUrl && sPoster.src !== movieItem.posterUrl) {
+          sPoster.src = movieItem.posterUrl;
         }
       }
 
       const headingEl = document.getElementById('nowPlayingHeading');
       const isExplicitLive = headingEl && headingEl.getAttribute('data-live') === 'true';
-      const isLiveScreening = (now >= activeStart && now < activeEnd) || isExplicitLive;
+      const isLiveScreening = isLiveBySchedule || (now >= activeStart && now < activeEnd) || isExplicitLive;
 
       // 10-Minute Pre-Show Seating Window (600,000 ms before start)
       const diffToStart = Math.max(0, targetNextMs - now);
@@ -1890,8 +1973,6 @@
       }
 
       // Schedule Tab Countdown Calculations
-      // If live screening: count down remaining screening runtime
-      // If not live: count down to showtime (targetNextMs)
       const countdownTargetMs = isLiveScreening ? activeEnd : targetNextMs;
       const diffSched = Math.max(0, countdownTargetMs - now);
       const dSched = Math.floor(diffSched / (1000 * 60 * 60 * 24));
@@ -1939,7 +2020,6 @@
 
       // Clean non-zero formatted strings for headers/pills
       const countdownClockStr = formatNonZeroCountdown(dSched, hSched, mSched, sSched, false);
-      const countdownPillStr = formatNonZeroCountdown(dSched, hSched, mSched, sSched, true);
 
       // Update stage artwork and posters
       updateStageArtwork(stateMode === 3, headingEl?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
@@ -1959,8 +2039,8 @@
       const btnEnterSubtext = document.getElementById('btnEnterAuditoriumSubtext');
       const doorsOpenAtTime = document.getElementById('doorsOpenAtTime');
 
-      const nextMovieTitle = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
-      const nextDateStr = document.getElementById('schedNextDate')?.textContent || "Saturday, Sept 5 • 7:00 PM PST";
+      const currentMovieTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Neighbors 2").replace(/^🎬\s*/, '').trim();
+      const currentDateStr = (nextObj.movie?.date && nextObj.movie?.startTime) ? `${nextObj.movie.date} • ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Sunday, Sept 6 • 7:00 PM PST");
 
       // Display the exact time when doors open (10 mins before start)
       if (doorsOpenAtTime && targetNextMs) {
@@ -1981,7 +2061,7 @@
           stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live Screening In Progress';
         }
         if (headingEl) {
-          headingEl.textContent = `🎬 ${nextMovieTitle}`;
+          headingEl.textContent = `🎬 ${currentMovieTitle}`;
           headingEl.className = "text-2xl sm:text-3xl font-black text-red-400";
         }
         if (nowPlayingDate) nowPlayingDate.textContent = `Screening Live On Stage • Runtime Left: ${formattedTime}`;
@@ -1994,7 +2074,7 @@
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
 
         if (schedActiveMovieTitle) {
-          schedActiveMovieTitle.textContent = `"${nextMovieTitle}" is screening live!`;
+          schedActiveMovieTitle.textContent = `"${currentMovieTitle}" is screening live!`;
         }
         if (countdownSubhead) {
           countdownSubhead.textContent = "Live Screening Runtime Remaining";
@@ -2005,7 +2085,7 @@
           alertBox.classList.add('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"${escapeHtml(nextMovieTitle)}" is Screening Live!</span>`;
+          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"${escapeHtml(currentMovieTitle)}" is Screening Live!</span>`;
         }
 
         // Enter button remains permanently active and visible during live screening!
@@ -2023,11 +2103,11 @@
           stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Auditorium Doors Open • Seating Now';
         }
         if (headingEl) {
-          headingEl.textContent = `🎬 ${nextMovieTitle}`;
+          headingEl.textContent = `🎬 ${currentMovieTitle}`;
           headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
         }
         if (nowPlayingDate) {
-          nowPlayingDate.textContent = isForced ? `Doors Open For Seating • Premiere: ${nextDateStr}` : nextDateStr;
+          nowPlayingDate.textContent = isForced ? `Doors Open For Seating • Premiere: ${currentDateStr}` : currentDateStr;
         }
 
         if (screenTimeLabel) screenTimeLabel.textContent = isForced ? "Doors Status:" : "Starts In:";
@@ -2047,8 +2127,8 @@
         }
         if (bannerLive) {
           bannerLive.innerHTML = isForced
-            ? `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Forced Open Now • Enter Auditorium for ${escapeHtml(nextMovieTitle)}</span>`
-            : `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Open Now for ${escapeHtml(nextMovieTitle)}</span>`;
+            ? `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Forced Open Now • Enter Auditorium for ${escapeHtml(currentMovieTitle)}</span>`
+            : `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Open Now for ${escapeHtml(currentMovieTitle)}</span>`;
         }
 
         setEntranceState(true);
@@ -2069,10 +2149,10 @@
           stageCategoryLabel.textContent = "Next Scheduled Screening";
         }
         if (headingEl) {
-          headingEl.textContent = `🎬 ${nextMovieTitle}`;
+          headingEl.textContent = `🎬 ${currentMovieTitle}`;
           headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
         }
-        if (nowPlayingDate) nowPlayingDate.textContent = nextDateStr;
+        if (nowPlayingDate) nowPlayingDate.textContent = currentDateStr;
 
         if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
         if (screenTimeEl) {
@@ -2090,7 +2170,7 @@
           alertBox.classList.remove('flex');
         }
         if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span><span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: ${escapeHtml(nextMovieTitle)}</span>`;
+          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span><span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: ${escapeHtml(currentMovieTitle)}</span>`;
         }
       }
     }
@@ -2652,149 +2732,167 @@
       renderCommunityRequests(filtered);
     }
 
-    // Live Firebase Listener
+    // Live Firebase Realtime Handler
+    function applyFirebaseData(data) {
+      if (!data) return;
+      const now = Date.now();
+
+      // Cache schedule list in global memory
+      if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
+        window.theaterScheduleCache = data.schedule;
+      }
+
+      // Check live status dynamically
+      const nextObj = getActiveOrNextMovie(now);
+      const isLive = nextObj.isLive || (data.nowPlaying && data.nowPlaying !== "No Movie Playing");
+
+      if (data.nowPlaying && data.nowPlaying !== "No Movie Playing") {
+        const headingEl = document.getElementById('nowPlayingHeading');
+        if (headingEl) headingEl.textContent = data.nowPlaying.startsWith('🎬') ? data.nowPlaying : `🎬 ${data.nowPlaying}`;
+      }
+
+      if (isLive && data.timeLeft && data.timeLeft !== "--") {
+        const screenTimeEl = document.getElementById('screenTimeLeft');
+        if (screenTimeEl) screenTimeEl.textContent = data.timeLeft;
+      }
+
+      // If Firebase provides a valid future next premiere, sync targetNextMs
+      if (data.nextStartMs && data.nextStartMs > now) {
+        targetNextMs = data.nextStartMs;
+        if (data.nextTitle) {
+          const sTitle = document.getElementById('schedNextTitle');
+          if (sTitle) sTitle.textContent = data.nextTitle.startsWith('🎬') ? data.nextTitle : `🎬 ${data.nextTitle}`;
+        }
+        if (data.nextTime) {
+          const sDate = document.getElementById('schedNextDate');
+          if (sDate) sDate.textContent = data.nextTime;
+        }
+      }
+
+      if (data.moviesCount) {
+        const el1 = document.getElementById('statMoviesNum');
+        const el2 = document.getElementById('statMoviesNumBanner');
+        const el3 = document.getElementById('sidebarStatMovies');
+        if (el1) el1.textContent = data.moviesCount;
+        if (el2) el2.textContent = data.moviesCount;
+        if (el3) el3.textContent = data.moviesCount;
+      }
+      if (data.tvCount) {
+        const el1 = document.getElementById('statTvNum');
+        const el2 = document.getElementById('statTvNumBanner');
+        const el3 = document.getElementById('sidebarStatTv');
+        if (el1) el1.textContent = data.tvCount;
+        if (el2) el2.textContent = data.tvCount;
+        if (el3) el3.textContent = data.tvCount;
+      }
+      if (data.daysOpen) {
+        const el1 = document.getElementById('statDaysNum');
+        const el2 = document.getElementById('statDaysNumBanner');
+        const el3 = document.getElementById('sidebarStatDays');
+        if (el1) el1.textContent = data.daysOpen;
+        if (el2) el2.textContent = data.daysOpen;
+        if (el3) el3.textContent = data.daysOpen;
+      }
+
+      if (data.moviePosters && typeof data.moviePosters === 'object') {
+        Object.assign(customMovieImages, data.moviePosters);
+      }
+
+      // Sync global door mode from Firebase in real time
+      if (data.doorMode && data.doorMode !== doorOverrideMode) {
+        doorOverrideMode = data.doorMode;
+        try { localStorage.setItem('brian_theater_door_mode', doorOverrideMode); } catch(e) {}
+        updateDoorAdminButtons();
+      }
+
+      updateStageArtwork(isLive, data.nowPlaying, data.nextTitle, data);
+      updateCountdown();
+
+      // Render schedule directly from Firebase (0 Google Sheets calls!)
+      if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
+        renderSchedule(data.schedule);
+        mergeScheduleIntoVault(data.schedule);
+      }
+
+      // Sync full 398+ past movies catalog from Firebase
+      fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
+        .then(r => r.json())
+        .then(pastData => {
+          if (Array.isArray(pastData) && pastData.length > 0) {
+            mergePastMoviesIntoVault(pastData);
+          }
+        })
+        .catch(() => {});
+
+      // Sync live movie requests from Firebase
+      if (data.requests && Array.isArray(data.requests) && data.requests.length > 0) {
+        communityRequests = data.requests;
+        loadRequests();
+      } else {
+        fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/requests.json')
+          .then(r => r.json())
+          .then(reqData => {
+            if (reqData) {
+              const reqList = Array.isArray(reqData) ? reqData : Object.values(reqData);
+              if (reqList.length > 0) {
+                communityRequests = reqList;
+                loadRequests();
+              }
+            }
+          })
+          .catch(() => {});
+      }
+    }
+
+    // Live Firebase Realtime EventSource Listener (Real-Time SSE Sync)
+    let firebaseEventSource = null;
+    function initFirebaseRealtimeListener() {
+      try {
+        if (typeof EventSource !== 'undefined') {
+          if (firebaseEventSource) {
+            firebaseEventSource.close();
+          }
+          firebaseEventSource = new EventSource('https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json');
+          firebaseEventSource.addEventListener('put', (event) => {
+            try {
+              const payload = JSON.parse(event.data);
+              if (payload && payload.path === '/' && payload.data) {
+                applyFirebaseData(payload.data);
+              } else if (payload && payload.path) {
+                syncFromFirebase();
+              }
+            } catch(err) {}
+          });
+          firebaseEventSource.addEventListener('patch', (event) => {
+            try {
+              const payload = JSON.parse(event.data);
+              if (payload && payload.data) {
+                applyFirebaseData(payload.data);
+              } else {
+                syncFromFirebase();
+              }
+            } catch(err) {}
+          });
+        }
+      } catch(err) {
+        console.warn("Firebase SSE initialization error:", err);
+      }
+    }
+
+    // Fallback Polling
     async function syncFromFirebase() {
       try {
         const res = await fetch(FIREBASE_URL);
         if (res.ok) {
           const data = await res.json();
           if (data) {
-            const now = Date.now();
-
-            // Cache schedule list in global memory
-            if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
-              window.theaterScheduleCache = data.schedule;
-            }
-
-            // Detect if a movie is actively screening
-            const schedList = window.theaterScheduleCache || [];
-            let activeItem = schedList.find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
-            const liveMovie = activeItem ? activeItem.title : (data.nowPlaying && data.nowPlaying !== "No Movie Playing" ? data.nowPlaying : null);
-            const activeStart = activeItem ? activeItem.startMs : targetNextMs;
-            const activeEnd = activeItem ? activeItem.endMs : (data.endMs && data.endMs > now ? data.endMs : (activeStart + targetMovieRuntimeMs));
-            liveScreeningEndMs = activeEnd;
-
-            const isLive = Boolean(liveMovie) || (now >= activeStart && now < activeEnd);
-
-            if (data.nowPlaying && data.nowPlaying !== "No Movie Playing") {
-              document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
-            } else if (isLive && activeItem) {
-              document.getElementById('nowPlayingHeading').textContent = activeItem.title;
-            } else if (isLive) {
-              document.getElementById('nowPlayingHeading').textContent = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
-            } else {
-              document.getElementById('nowPlayingHeading').textContent = "No Movie Playing";
-            }
-
-            if (isLive && data.timeLeft && data.timeLeft !== "--") {
-              document.getElementById('screenTimeLeft').textContent = data.timeLeft;
-            } else if (!isLive) {
-              document.getElementById('screenTimeLeft').textContent = "--";
-            }
-
-            if (data.nextTitle) {
-              const formattedTitle = data.nextTitle.startsWith('🎬') ? data.nextTitle : `🎬 ${data.nextTitle}`;
-              document.getElementById('schedNextTitle').textContent = formattedTitle;
-            }
-            if (data.nextTime) {
-              if (data.nextTime.includes('T') && (data.nextTime.includes('Z') || data.nextTime.includes('+'))) {
-                try {
-                  const d = new Date(data.nextTime);
-                  if (!isNaN(d.getTime())) {
-                    const fDate = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' });
-                    const fTime = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' });
-                    document.getElementById('schedNextDate').textContent = `${fDate} • ${fTime} PST`;
-                  } else {
-                    document.getElementById('schedNextDate').textContent = data.nextTime;
-                  }
-                } catch(e) {
-                  document.getElementById('schedNextDate').textContent = data.nextTime;
-                }
-              } else {
-                document.getElementById('schedNextDate').textContent = data.nextTime;
-              }
-            }
-            if (data.nextStartMs && data.nextStartMs > Date.now()) {
-              targetNextMs = data.nextStartMs;
-            }
-            if (data.moviesCount) {
-              const el1 = document.getElementById('statMoviesNum');
-              const el2 = document.getElementById('statMoviesNumBanner');
-              const el3 = document.getElementById('sidebarStatMovies');
-              if (el1) el1.textContent = data.moviesCount;
-              if (el2) el2.textContent = data.moviesCount;
-              if (el3) el3.textContent = data.moviesCount;
-            }
-            if (data.tvCount) {
-              const el1 = document.getElementById('statTvNum');
-              const el2 = document.getElementById('statTvNumBanner');
-              const el3 = document.getElementById('sidebarStatTv');
-              if (el1) el1.textContent = data.tvCount;
-              if (el2) el2.textContent = data.tvCount;
-              if (el3) el3.textContent = data.tvCount;
-            }
-            if (data.daysOpen) {
-              const el1 = document.getElementById('statDaysNum');
-              const el2 = document.getElementById('statDaysNumBanner');
-              const el3 = document.getElementById('sidebarStatDays');
-              if (el1) el1.textContent = data.daysOpen;
-              if (el2) el2.textContent = data.daysOpen;
-              if (el3) el3.textContent = data.daysOpen;
-            }
-
-            if (data.moviePosters && typeof data.moviePosters === 'object') {
-              Object.assign(customMovieImages, data.moviePosters);
-            }
-
-            // Sync global door mode from Firebase in real time
-            if (data.doorMode && data.doorMode !== doorOverrideMode) {
-              doorOverrideMode = data.doorMode;
-              try { localStorage.setItem('brian_theater_door_mode', doorOverrideMode); } catch(e) {}
-              updateDoorAdminButtons();
-              updateCountdown();
-            }
-
-            updateStageArtwork(isLive, data.nowPlaying, data.nextTitle, data);
-
-            // Render schedule directly from Firebase (0 Google Sheets calls!)
-            if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
-              renderSchedule(data.schedule);
-              mergeScheduleIntoVault(data.schedule);
-            }
-
-            // Sync full 398+ past movies catalog from Firebase
-            fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
-              .then(r => r.json())
-              .then(pastData => {
-                if (Array.isArray(pastData) && pastData.length > 0) {
-                  mergePastMoviesIntoVault(pastData);
-                }
-              })
-              .catch(() => {});
-
-            // Sync live movie requests from Firebase (direct from Google Sheets)
-            if (data.requests && Array.isArray(data.requests) && data.requests.length > 0) {
-              communityRequests = data.requests;
-              loadRequests();
-            } else {
-              fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/requests.json')
-                .then(r => r.json())
-                .then(reqData => {
-                  if (reqData) {
-                    const reqList = Array.isArray(reqData) ? reqData : Object.values(reqData);
-                    if (reqList.length > 0) {
-                      communityRequests = reqList;
-                      loadRequests();
-                    }
-                  }
-                })
-                .catch(() => {});
-            }
+            applyFirebaseData(data);
           }
         }
       } catch(e) {}
     }
     syncFromFirebase();
+    initFirebaseRealtimeListener();
     setInterval(syncFromFirebase, 15000);
 
     // Initial Vault Library & Community Requests
