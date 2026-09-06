@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.9.83] - 2026-09-06
+
+### What's New
+- Streamlined Movie Vault header stats with clean Movies label.
+- Synchronized verified catalog count to official 404 movies.
+- Removed redundant total archive pill for cleaner mobile layout.
+
 ## [4.9.82] - 2026-09-06
 
 ### What's New

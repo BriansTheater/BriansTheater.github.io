@@ -395,19 +395,15 @@
           </div>
         </div>
 
-        <!-- Restored Theater Stats Overview Bar -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 shadow-inner">
+        <!-- Restored Theater Stats Overview Bar (Streamlined 3-Column: Movies, TV Shows, Days Serving) -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-4 p-2.5 sm:p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 shadow-inner">
           <div class="flex flex-col items-center sm:items-start px-2 py-1">
-            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🍿 Screened Movies</span>
-            <span id="vaultStatMovies" class="text-sm sm:text-base font-black text-emerald-400 font-mono">420 Movies</span>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🍿 Movies</span>
+            <span id="vaultStatMovies" class="text-sm sm:text-base font-black text-emerald-400 font-mono">404 Movies</span>
           </div>
           <div class="flex flex-col items-center sm:items-start px-2 py-1">
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">📺 TV Shows</span>
             <span id="vaultStatTv" class="text-sm sm:text-base font-black text-amber-400 font-mono">37 TV Shows</span>
-          </div>
-          <div class="flex flex-col items-center sm:items-start px-2 py-1">
-            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🏛️ Vault Archive</span>
-            <span id="vaultStatTotal" class="text-sm sm:text-base font-black text-sky-400 font-mono">457+ Archived</span>
           </div>
           <div class="flex flex-col items-center sm:items-start px-2 py-1">
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🗓️ Days Serving</span>
@@ -1133,7 +1129,7 @@
         <div class="grid grid-cols-2 gap-2.5">
           <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col gap-1 shadow-sm">
             <span class="text-xs">🍿 Movies</span>
-            <span id="sidebarStatMovies" class="text-lg font-black text-emerald-400 font-mono">420</span>
+            <span id="sidebarStatMovies" class="text-lg font-black text-emerald-400 font-mono">404</span>
             <span class="text-[10px] text-slate-400">Screened in vault</span>
           </div>
           <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col gap-1 shadow-sm">
@@ -1573,7 +1569,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.82";
+    const APP_VERSION = "4.9.83";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4989,8 +4985,13 @@
           }
         }
 
-        if (movieCount === 0) movieCount = 420;
-        if (tvCount === 0) tvCount = 37;
+        // Align with official theater records (404 movies, 37 TV shows)
+        if (movieCount === 0 || !overrideStats || !overrideStats.moviesCount || String(overrideStats.moviesCount).includes('#REF')) {
+          movieCount = 404;
+        }
+        if (tvCount === 0 || !overrideStats || !overrideStats.tvCount || String(overrideStats.tvCount).includes('#REF')) {
+          tvCount = 37;
+        }
         if (totalCount === 0) totalCount = movieCount + tvCount;
 
         let daysOpenStr = "";
@@ -5011,15 +5012,13 @@
         if (elSideDays) elSideDays.textContent = daysOpenStr;
         if (elSideVaultBadge) elSideVaultBadge.textContent = `${totalCount}+`;
 
-        // 2. Movie Vault Restored Theater Stats Bar
+        // 2. Movie Vault Restored Theater Stats Bar (Streamlined: Movies, TV Shows, Days Serving)
         const elVaultMovies = document.getElementById('vaultStatMovies');
         const elVaultTv = document.getElementById('vaultStatTv');
-        const elVaultTotal = document.getElementById('vaultStatTotal');
         const elVaultDays = document.getElementById('vaultStatDays');
 
         if (elVaultMovies) elVaultMovies.textContent = `${movieCount} Movies`;
         if (elVaultTv) elVaultTv.textContent = `${tvCount} TV Shows`;
-        if (elVaultTotal) elVaultTotal.textContent = `${totalCount}+ Archived`;
         if (elVaultDays) elVaultDays.textContent = daysOpenStr;
       } catch(e) {
         console.warn("Theater stats update error:", e);
