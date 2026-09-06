@@ -1,12 +1,12 @@
 {
-  "version": "4.9.41",
+  "version": "4.9.42",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.41",
+  "title": "Brian's Theater v4.9.42",
   "notes": [
-    "Consolidated update alert into single popup with summary.",
-    "Eliminated duplicate post-reload popup so page loads cleanly.",
-    "Renamed Vault archive title to Movie Vault & Archive.",
-    "Simplified update alerts modal title and update summary.",
-    "Enhanced theater loading speed and smooth navigation flow."
+    "Upgraded poster status badges to high-contrast dark pills.",
+    "Guaranteed 100% legibility on bright white poster backgrounds.",
+    "Added top cinema vignette shadow to schedule cards.",
+    "Brightened Tomorrow status badge with glowing neon indicator.",
+    "Enhanced visual contrast across all screening artwork banners."
   ]
 }

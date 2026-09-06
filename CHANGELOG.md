@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.42] - 2026-09-05
+
+### What's New
+- Upgraded poster status badges to high-contrast dark pills.
+- Guaranteed 100% legibility on bright white poster backgrounds.
+- Added top cinema vignette shadow to schedule cards.
+- Brightened Tomorrow status badge with glowing neon indicator.
+- Enhanced visual contrast across all screening artwork banners.
+
 ## [4.9.41] - 2026-09-05
 
 ### What's New

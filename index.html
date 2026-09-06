@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.41 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.42 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -414,7 +414,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.41</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.42</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -614,7 +614,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.41</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.42</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -779,7 +779,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.41</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.42</span>
     </div>
 
   </aside>
@@ -993,7 +993,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.41</span>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.42</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1028,7 +1028,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.41";
+    const APP_VERSION = "4.9.42";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1117,7 +1117,7 @@
         year: "2014", 
         summary: "A young couple with a newborn baby face off in an escalating war with an unruly fraternity next door.", 
         status: "NEXT UP", 
-        tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40", 
+        tagColor: "bg-slate-950/95 text-amber-300 border border-amber-500/70 shadow-xl", 
         trailerId: "kL5c2Szf3E4" 
       },
       { 
@@ -1131,7 +1131,7 @@
         year: "2016", 
         summary: "Mac and Kelly team up with their former enemy to take on an even wilder sorority.", 
         status: "SUNDAY", 
-        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
+        tagColor: "bg-slate-950/95 text-sky-300 border border-sky-400/70 shadow-xl", 
         trailerId: "X2i9Zz_AqTg" 
       },
       { 
@@ -1229,7 +1229,7 @@
         year: "2026", 
         summary: "The franchise returns for a hilarious new send-up of modern horror cinema.", 
         status: "SUNDAY", 
-        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
+        tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl", 
         trailerId: "gCcx85zbxz4" 
       }
     ];
@@ -1383,6 +1383,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.42": [
+        "Upgraded poster status badges to high-contrast dark pills.",
+        "Guaranteed 100% legibility on bright white poster backgrounds.",
+        "Added top cinema vignette shadow to schedule cards.",
+        "Brightened Tomorrow status badge with glowing neon indicator.",
+        "Enhanced visual contrast across all screening artwork banners."
+      ],
       "4.9.41": [
         "Consolidated update alert into single popup with summary.",
         "Eliminated duplicate post-reload popup so page loads cleanly.",
@@ -1490,7 +1497,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.41"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.42"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -3726,6 +3733,39 @@
       };
     }
 
+    function renderScheduleTagBadge(status, tagColor, isConcluded) {
+      if (isConcluded) {
+        return `<span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-slate-400 border border-slate-700/80 font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+          <span>CONCLUDED</span>
+        </span>`;
+      }
+      const st = String(status || 'SCHEDULED').trim().toUpperCase();
+      if (st.includes('LIVE') || st.includes('NOW')) {
+        return `<span class="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-2xl border border-rose-400/60 flex items-center gap-1.5 animate-pulse">
+          <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+          <span>🔴 LIVE NOW</span>
+        </span>`;
+      }
+      if (st === 'NEXT UP') {
+        return `<span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-amber-300 border border-amber-500/70 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b] animate-pulse"></span>
+          <span>⚡ NEXT UP</span>
+        </span>`;
+      }
+      if (st === 'TOMORROW') {
+        return `<span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-sky-300 border border-sky-400/80 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
+          <span>TOMORROW</span>
+        </span>`;
+      }
+      // Any other day of week or scheduled tag
+      return `<span class="px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-md text-purple-300 border border-purple-500/70 font-black text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xl flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc]"></span>
+        <span>${escapeHtml(st)}</span>
+      </span>`;
+    }
+
     function renderScheduleCardHtml(s, idx, isConcluded) {
       const trailerId = getTrailerIdForMovie(s);
       const d = parseMovieScheduleDetails(s);
@@ -3737,9 +3777,9 @@
           <!-- Movie Poster / Artwork Thumbnail Banner -->
           <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
             <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
             <div class="absolute top-2.5 left-2.5">
-              <span class="px-2.5 py-0.5 rounded ${s.tagColor || (isConcluded ? 'bg-slate-800/80 text-slate-400 border border-slate-700/60 font-semibold' : 'bg-slate-800 text-slate-300')} font-bold text-[11px] shadow-md">${isConcluded ? 'CONCLUDED' : (s.status || 'SCHEDULED')}</span>
+              ${renderScheduleTagBadge(s.status, s.tagColor, isConcluded)}
             </div>
             <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
               <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
