@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.43] - 2026-09-05
+
+### What's New
+- Removed unverified trailers from all community request cards.
+- Fixed incorrect Dune 2 fallback trailer on requests.
+- Request cards now cleanly display Awaiting Schedule badge.
+- Trailers only unlock once a movie is scheduled.
+- Verified trailer playback across confirmed past screenings.
+
 ## [4.9.42] - 2026-09-05
 
 ### What's New

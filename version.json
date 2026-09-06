@@ -1,12 +1,12 @@
 {
-  "version": "4.9.42",
+  "version": "4.9.43",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.42",
+  "title": "Brian's Theater v4.9.43",
   "notes": [
-    "Upgraded poster status badges to high-contrast dark pills.",
-    "Guaranteed 100% legibility on bright white poster backgrounds.",
-    "Added top cinema vignette shadow to schedule cards.",
-    "Brightened Tomorrow status badge with glowing neon indicator.",
-    "Enhanced visual contrast across all screening artwork banners."
+    "Removed unverified trailers from all community request cards.",
+    "Fixed incorrect Dune 2 fallback trailer on requests.",
+    "Request cards now cleanly display Awaiting Schedule badge.",
+    "Trailers only unlock once a movie is scheduled.",
+    "Verified trailer playback across confirmed past screenings."
   ]
 }

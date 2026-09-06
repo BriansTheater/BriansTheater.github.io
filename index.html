@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.42 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.43 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -414,7 +414,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.42</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.43</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -614,7 +614,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.42</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.43</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -779,7 +779,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.42</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.43</span>
     </div>
 
   </aside>
@@ -993,7 +993,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.42</span>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.43</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -1028,7 +1028,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.42";
+    const APP_VERSION = "4.9.43";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1383,6 +1383,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.43": [
+        "Removed unverified trailers from all community request cards.",
+        "Fixed incorrect Dune 2 fallback trailer on requests.",
+        "Request cards now cleanly display Awaiting Schedule badge.",
+        "Trailers only unlock once a movie is scheduled.",
+        "Verified trailer playback across confirmed past screenings."
+      ],
       "4.9.42": [
         "Upgraded poster status badges to high-contrast dark pills.",
         "Guaranteed 100% legibility on bright white poster backgrounds.",
@@ -1497,7 +1504,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.42"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.43"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -3304,7 +3311,6 @@
 
     // Comprehensive Trailers Mapping for Schedule & Vault Movies
     const SCHEDULE_TRAILERS = {
-      "Return To Silent Hill": "Way9Dexny3w",
       "Neighbors": "kL5c2Szf3E4",
       "Neighbors 2": "X2i9Zz_AqTg",
       "Machine Gun Preacher": "q5D4v8a7o4M",
@@ -3328,7 +3334,9 @@
     };
 
     function getTrailerIdForMovie(movie) {
-      if (!movie) return "Way9Dexny3w";
+      if (!movie) return "";
+      // Unscheduled community requests do not show unverified trailers
+      if (movie.source === 'request') return "";
       if (movie.trailerId) return movie.trailerId;
       if (movie.trailerUrl) {
         const extracted = extractYouTubeId(movie.trailerUrl);
@@ -3345,7 +3353,7 @@
       for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
         if (k.toLowerCase() === lower) return v;
       }
-      return "Way9Dexny3w";
+      return "";
     }
 
     let vaultPageSize = 24;
@@ -3408,7 +3416,8 @@
       }
 
       if (isOpening) {
-        const trailerId = container.dataset.trailerId || "Way9Dexny3w";
+        const trailerId = container.dataset.trailerId || "";
+        if (!trailerId) return;
         const movieTitle = container.dataset.movieTitle || "Movie";
         container.innerHTML = `<iframe id="vaultTrailerFrame-${idx}" class="w-full h-full" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailerId)}?autoplay=1&rel=0" title="Trailer: ${escapeHtml(movieTitle)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         viewer.classList.remove('hidden');
@@ -3504,7 +3513,9 @@
       const visibleMovies = currentFilteredVault.slice(0, vaultPageSize);
 
       let cardsHtml = visibleMovies.map((m, idx) => {
-        const trailerId = getTrailerIdForMovie(m);
+        const isRequest = m.source === 'request';
+        const trailerId = isRequest ? "" : getTrailerIdForMovie(m);
+        const hasTrailer = Boolean(trailerId && trailerId.trim() !== "");
         const isTv = isTvShowItem(m);
         const runtimeText = m.runtime || m.dateText || 'Standard';
         return `
@@ -3526,6 +3537,7 @@
           <div class="flex flex-col gap-2 mt-3 pt-2.5 border-t border-slate-900">
             <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2">
               <span class="font-mono text-slate-500 shrink-0 text-[10px]">⏱️ ${escapeHtml(runtimeText)}</span>
+              ${hasTrailer ? `
               <div class="flex items-center gap-1.5 shrink-0">
                 <button onclick="toggleVaultTrailer(${idx})" id="vaultTrailerBtn-${idx}" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1 shadow-sm active:scale-95">
                   <span>🎬</span> <span id="vaultTrailerBtnText-${idx}">Watch Trailer ▾</span>
@@ -3534,8 +3546,16 @@
                   <span>▶</span>
                 </button>
               </div>
+              ` : (isRequest ? `
+              <span class="text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2 py-0.5 rounded font-mono flex items-center gap-1 font-semibold shrink-0" title="Trailer verified once scheduled">
+                <span>⏳</span> Awaiting Schedule
+              </span>
+              ` : `
+              <span class="text-[10px] text-slate-500 font-mono shrink-0">No Trailer</span>
+              `)}
             </div>
 
+            ${hasTrailer ? `
             <!-- Vault Dropdown Video Viewer Drawer -->
             <div id="vaultTrailerViewer-${idx}" class="hidden flex-col gap-2 mt-2 pt-2.5 border-t border-slate-800/80">
               <div id="vaultTrailerContainer-${idx}" data-trailer-id="${escapeHtml(trailerId)}" data-movie-title="${escapeHtml(m.title || '')}" class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
@@ -3548,6 +3568,7 @@
                 </button>
               </div>
             </div>
+            ` : ''}
 
           </div>
         </div>
@@ -3635,7 +3656,8 @@
       }
 
       if (isOpening) {
-        const trailerId = frame.dataset.trailerId || "Way9Dexny3w";
+        const trailerId = frame.dataset.trailerId || "";
+        if (!trailerId) return;
         frame.src = `https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&rel=0`;
         viewer.classList.remove('hidden');
         if (btnText) btnText.textContent = "Hide Trailer ▴";
