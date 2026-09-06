@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.60] - 2026-09-06
+
+### What's New
+- Upgraded Past Movies auto-fill with 4-minute batch execution.
+- Added automatic background continuation triggers every 30 seconds.
+- Permanently eliminated in-cell pause limit text messages.
+- Automatically processes remaining movies until entire catalog completes.
+- Cleaned movie cells to keep spreadsheet descriptions pristine.
+
 ## [4.9.59] - 2026-09-06
 
 ### What's New

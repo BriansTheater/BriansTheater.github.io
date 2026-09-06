@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.59 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.60 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1320,7 +1320,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.59";
+    const APP_VERSION = "4.9.60";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1695,6 +1695,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.60": [
+        "Upgraded Past Movies auto-fill with 4-minute batch execution.",
+        "Added automatic background continuation triggers every 30 seconds.",
+        "Permanently eliminated in-cell pause limit text messages.",
+        "Automatically processes remaining movies until entire catalog completes.",
+        "Cleaned movie cells to keep spreadsheet descriptions pristine."
+      ],
       "4.9.59": [
         "Redesigned Vault search and counter with zero mobile text collision.",
         "Optimized movie filter tabs for one-tap mobile phone tapping.",
@@ -1929,7 +1936,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.59"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.60"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;

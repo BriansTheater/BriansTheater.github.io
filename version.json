@@ -1,12 +1,12 @@
 {
-  "version": "4.9.59",
+  "version": "4.9.60",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.59",
+  "title": "Brian's Theater v4.9.60",
   "notes": [
-    "Redesigned Vault search and counter with zero mobile text collision.",
-    "Optimized movie filter tabs for one-tap mobile phone tapping.",
-    "Polished mobile card layout and eliminated duplicate date overlays.",
-    "Expanded trailer buttons to full width for responsive mobile viewing.",
-    "Removed inner scroll trap for smooth natural page scrolling."
+    "Upgraded Past Movies auto-fill with 4-minute batch execution.",
+    "Added automatic background continuation triggers every 30 seconds.",
+    "Permanently eliminated in-cell pause limit text messages.",
+    "Automatically processes remaining movies until entire catalog completes.",
+    "Cleaned movie cells to keep spreadsheet descriptions pristine."
   ]
 }
