@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.72 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.73 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -623,7 +623,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.72</span>
+            <span id="adminAppVersionBadge" class="app-version-badge text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.73</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -906,7 +906,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.72</span>
+          <span id="footerAppVersionBadge" class="app-version-badge font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.73</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false, isUserInitiated: true })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -1071,7 +1071,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.72</span>
+      <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.73</span>
     </div>
 
   </aside>
@@ -1409,7 +1409,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.72";
+    const APP_VERSION = "4.9.73";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1784,6 +1784,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.73": [
+        "Concluded screenings now accurately display as Watched in Vault.",
+        "Past screening dates properly format under clean Watched status.",
+        "Active and upcoming screenings retain their Scheduled status banner.",
+        "Enhanced Vault filtering across past movies and active requests.",
+        "Synchronized live schedule status checks with current date thresholds."
+      ],
       "4.9.72": [
         "Added verified runtimes for scheduled and requested cinema titles.",
         "Vault cards now highlight Scheduled status with screening dates.",
@@ -2124,7 +2131,7 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.72"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.73"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -4381,6 +4388,43 @@
       renderVault();
     }
 
+    function isScreeningConcluded(item, sched) {
+      if (!item && !sched) return false;
+      const now = Date.now();
+      if (sched) {
+        if (sched.status === 'CONCLUDED') return true;
+        if (sched.endMs && sched.endMs < now) return true;
+      }
+      if (item) {
+        if (item.status === 'CONCLUDED') return true;
+        if (item.endMs && item.endMs < now) return true;
+      }
+      const rawDate = (sched && sched.date) || (item && (item.watchDate || item.date || item.dateText)) || '';
+      if (rawDate && !rawDate.includes('@')) {
+        try {
+          const parts = String(rawDate).split('/');
+          let screeningEndMs = null;
+          if (parts.length === 3) {
+            const d = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]), 23, 59, 59, 999);
+            if (!isNaN(d.getTime())) screeningEndMs = d.getTime();
+          } else {
+            const d = new Date(rawDate);
+            if (!isNaN(d.getTime())) {
+              d.setHours(23, 59, 59, 999);
+              screeningEndMs = d.getTime();
+            }
+          }
+          if (screeningEndMs) {
+            if (sched && sched.endMs) {
+              return sched.endMs < now;
+            }
+            return screeningEndMs < now;
+          }
+        } catch(e) {}
+      }
+      return false;
+    }
+
     function mergeScheduleIntoVault(scheduleItems) {
       if (!Array.isArray(scheduleItems)) return;
       scheduleItems.forEach(s => {
@@ -4406,10 +4450,15 @@
         const schedStartTime = details.startTime || s.startTime || s.time || "7:00 PM";
         const schedEndTime = details.endTime || s.endTime || "8:45 PM";
         const schedDate = s.date || "";
+        const isConcluded = s.status === 'CONCLUDED' || (s.endMs && s.endMs < Date.now()) || isScreeningConcluded(s, s);
 
         if (existingIdx >= 0) {
           const existing = vaultMovies[existingIdx];
-          existing.isScheduled = true;
+          existing.isScheduled = !isConcluded;
+          existing.isConcluded = isConcluded;
+          if (isConcluded) {
+            existing.source = "past";
+          }
           existing.scheduledDate = schedDate || existing.scheduledDate || "";
           if (schedRuntime && schedRuntime !== 'Pending' && schedRuntime !== 'Standard') {
             existing.runtime = schedRuntime;
@@ -4441,10 +4490,11 @@
             watchDate: schedDate,
             dateText: schedDate,
             scheduledDate: schedDate,
-            isScheduled: true,
+            isScheduled: !isConcluded,
+            isConcluded: isConcluded,
             startTime: schedStartTime,
             endTime: schedEndTime,
-            source: "past",
+            source: isConcluded ? "past" : "schedule",
             genre: s.genre || details.genre || "Featured Film",
             genres: s.genre || details.genre || "Featured Film",
             runtime: schedRuntime || "Standard",
@@ -4473,7 +4523,9 @@
 
       currentFilteredVault = vaultMovies.filter(m => {
         if (!m) return false;
-        if (vFilter !== 'all' && m.source !== vFilter) return false;
+        if (vFilter === 'past' && !(m.source === 'past' || m.isConcluded)) return false;
+        if (vFilter === 'request' && (m.source !== 'request' || m.isConcluded)) return false;
+        if (vFilter !== 'all' && vFilter !== 'past' && vFilter !== 'request' && m.source !== vFilter) return false;
 
         const isTv = isTvShowItem(m);
         if (vMediaType === 'movie' && isTv) return false;
@@ -4592,7 +4644,7 @@
               </div>
               <span class="font-mono font-bold text-amber-300 text-[11px] truncate max-w-[200px]" title="${escapeHtml(d.scheduledDate || 'Upcoming Screening')}">${escapeHtml(d.scheduledDate || 'Upcoming Screening')}</span>
             </div>
-            ` : (isRequest ? `
+            ` : ((isRequest && !d.isConcluded && !d.watchDate) ? `
             <div class="mt-2.5 text-xs bg-slate-900/50 border border-slate-850 p-2.5 rounded-xl flex items-center justify-between">
               <div class="font-semibold text-sky-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
                 <span>⏳</span> REQUEST
@@ -4623,7 +4675,7 @@
               <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Scheduled screening">
                 <span>🗓️</span> Scheduled Screening
               </span>
-              ` : (isRequest ? `
+              ` : ((isRequest && !d.isConcluded && !d.watchDate) ? `
               <span class="flex-1 text-[10px] text-amber-400/90 bg-amber-950/40 border border-amber-800/50 px-2.5 py-2 rounded-lg font-mono flex items-center justify-center gap-1 font-semibold" title="Trailer verified once scheduled">
                 <span>⏳</span> Awaiting Schedule
               </span>
@@ -4756,10 +4808,11 @@
       const ov = String(m.overview || m.summary || m.desc || '');
       const cleanT = String(m.title || '').replace(/^🎬\s*/, '').toLowerCase().trim();
 
-      // Check live schedule linkage
+      // Check live schedule linkage and past/future status
       const sched = findScheduleItemForMovie(m);
-      const isScheduled = Boolean(m.isScheduled || (sched && sched.status !== 'CONCLUDED') || (sched && sched.date));
-      const scheduledDate = (sched && sched.date) || m.scheduledDate || (m.isScheduled ? (m.date || m.watchDate) : '');
+      const isConcluded = isScreeningConcluded(m, sched);
+      const isScheduled = !isConcluded && Boolean(m.isScheduled || (sched && sched.status !== 'CONCLUDED' && (!sched.endMs || sched.endMs >= Date.now())));
+      const scheduledDate = (sched && sched.date) || m.scheduledDate || (isScheduled ? (m.date || m.watchDate) : '');
 
       // 1. Theatrical Release Year (never mixed with watch date!)
       let releaseYear = null;
@@ -4910,6 +4963,7 @@
         watchDate,
         watchDateFormatted: watchDateFormatted || watchDate,
         isScheduled,
+        isConcluded,
         scheduledDate: scheduledDate || watchDateFormatted || watchDate,
         location: m.location || '',
         runtime,
@@ -4980,10 +5034,13 @@
           }
           if (!existing.overview && m.overview) existing.overview = m.overview;
           if (!existing.summary && m.summary) existing.summary = m.summary;
-          if (!existing.date && watchDate) {
+          if (watchDate) {
             existing.date = watchDate;
             existing.watchDate = watchDate;
             existing.dateText = watchDate;
+            existing.source = "past";
+            existing.isConcluded = true;
+            existing.isScheduled = false;
           }
           if ((!existing.startTime || existing.startTime === "7:00 PM") && m.startTime) existing.startTime = m.startTime;
           if ((!existing.endTime || existing.endTime === "8:45 PM") && m.endTime) existing.endTime = m.endTime;

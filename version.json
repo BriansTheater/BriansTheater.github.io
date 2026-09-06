@@ -1,12 +1,12 @@
 {
-  "version": "4.9.72",
+  "version": "4.9.73",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.72",
+  "title": "Brian's Theater v4.9.73",
   "notes": [
-    "Added verified runtimes for scheduled and requested cinema titles.",
-    "Vault cards now highlight Scheduled status with screening dates.",
-    "Eliminated duplicate status tags to preserve clean card layout.",
-    "Merged live theater schedule details directly into catalog movies.",
-    "Streamlined card UI to a single unified status section."
+    "Concluded screenings now accurately display as Watched in Vault.",
+    "Past screening dates properly format under clean Watched status.",
+    "Active and upcoming screenings retain their Scheduled status banner.",
+    "Enhanced Vault filtering across past movies and active requests.",
+    "Synchronized live schedule status checks with current date thresholds."
   ]
 }

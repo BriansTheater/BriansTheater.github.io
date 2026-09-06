@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.73] - 2026-09-06
+
+### What's New
+- Concluded screenings now accurately display as Watched in Vault.
+- Past screening dates properly format under clean Watched status.
+- Active and upcoming screenings retain their Scheduled status banner.
+- Enhanced Vault filtering across past movies and active requests.
+- Synchronized live schedule status checks with current date thresholds.
+
 ## [4.9.72] - 2026-09-06
 
 ### What's New
