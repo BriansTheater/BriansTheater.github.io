@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.29] - 2026-09-05
+
+### What's New
+- Kept Enter Theater button active during live movie screenings.
+- Enter button no longer disappears when countdown reaches zero.
+- Dynamically hides zero countdown columns for clean compact view.
+- Omitted zero days and hours from precision countdown clocks.
+- Formatted text timers to display only active non-zero units.
+- Updated Service Worker cache to version 4.9.29.
+
 ## [4.9.28] - 2026-09-05
 
 ### What's New

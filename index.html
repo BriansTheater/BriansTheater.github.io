@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.28 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.29 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -203,20 +203,20 @@
             <div id="stageCountdownLabel" class="text-[11px] text-center uppercase tracking-widest text-sky-400 mb-2.5 font-mono font-bold flex items-center justify-center gap-1.5">
               <span>⏱️</span> <span id="stageCountdownLabelText">Theater Opens In</span>
             </div>
-            <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center font-mono">
-              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+            <div id="stageCountdownGrid" class="grid grid-cols-4 gap-2 sm:gap-3 text-center font-mono">
+              <div id="stageColDays" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
                 <div id="stageCountDays" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Days</div>
               </div>
-              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageColHours" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
                 <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">19</div>
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Hours</div>
               </div>
-              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageColMins" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
                 <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">02</div>
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Mins</div>
               </div>
-              <div class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
+              <div id="stageColSecs" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
                 <div id="stageCountSecs" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
                 <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Secs</div>
               </div>
@@ -308,20 +308,20 @@
         <!-- Precision Countdown -->
         <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 w-full max-w-lg my-2">
           <div id="countdownSubhead" class="text-[11px] text-center uppercase tracking-widest text-slate-400 mb-3 font-mono">Next Premiere Commences In</div>
-          <div class="grid grid-cols-4 gap-2 sm:gap-4 text-center font-mono">
-            <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
+          <div id="schedCountdownGrid" class="grid grid-cols-4 gap-2 sm:gap-4 text-center font-mono">
+            <div id="schedColDays" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
               <div id="countDays" class="text-2xl sm:text-3xl font-black text-sky-400">00</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Days</div>
             </div>
-            <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
+            <div id="schedColHours" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
               <div id="countHours" class="text-2xl sm:text-3xl font-black text-sky-400">26</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Hours</div>
             </div>
-            <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
+            <div id="schedColMins" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
               <div id="countMins" class="text-2xl sm:text-3xl font-black text-sky-400">10</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Mins</div>
             </div>
-            <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
+            <div id="schedColSecs" class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
               <div id="countSecs" class="text-2xl sm:text-3xl font-black text-amber-400">00</div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Secs</div>
             </div>
@@ -438,7 +438,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.28</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.29</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -638,7 +638,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.28</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.29</span>
         </div>
       </div>
 
@@ -787,7 +787,7 @@
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
       <span>Brian's Theater</span>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.28</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.29</span>
     </div>
 
   </aside>
@@ -990,7 +990,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.28";
+    const APP_VERSION = "4.9.29";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1063,6 +1063,139 @@
     
     // Target next upcoming premiere (Neighbors, Saturday Sept 5 at 7:00 PM PST)
     let targetNextMs = 1788660000000;
+    let targetMovieRuntimeMs = 105 * 60 * 1000; // 105 mins default screening runtime
+    let activeLiveMovieTitle = "Neighbors";
+    let liveScreeningEndMs = 0;
+    // Schedule Cards - Structured directly from Google Sheets Quick Schedule (Only Upcoming Movies)
+    const sampleSchedule = [
+      { 
+        title: "Neighbors", 
+        date: "Saturday, Sept 5, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:37 PM", 
+        startMs: 1788660000000,
+        endMs: 1788665820000,
+        runtime: "1h 37m", 
+        year: "2014", 
+        summary: "A young couple with a newborn baby face off in an escalating war with an unruly fraternity next door.", 
+        status: "NEXT UP", 
+        tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40", 
+        trailerId: "kL5c2Szf3E4" 
+      },
+      { 
+        title: "Neighbors 2", 
+        date: "Sunday, Sept 6, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:32 PM", 
+        startMs: 1788746400000,
+        endMs: 1788751920000,
+        runtime: "1h 32m", 
+        year: "2016", 
+        summary: "Mac and Kelly team up with their former enemy to take on an even wilder sorority.", 
+        status: "SUNDAY", 
+        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
+        trailerId: "X2i9Zz_AqTg" 
+      },
+      { 
+        title: "Machine Gun Preacher", 
+        date: "Wednesday, Sept 9, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "9:09 PM", 
+        startMs: 1789005600000,
+        endMs: 1789013340000,
+        runtime: "2h 09m", 
+        year: "2011", 
+        summary: "The true story of Sam Childers, a former drug dealer who dedicates his life to saving Sudanese child soldiers.", 
+        status: "WEDNESDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "q5D4v8a7o4M" 
+      },
+      { 
+        title: "beast", 
+        date: "Thursday, Sept 10, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:55 PM", 
+        startMs: 1789092000000,
+        endMs: 1789098900000,
+        runtime: "1h 55m", 
+        year: "2022", 
+        summary: "A father and his two teenage daughters find themselves hunted by a rogue lion in South Africa.", 
+        status: "THURSDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "oQMc7Sq366I" 
+      },
+      { 
+        title: "mother mary", 
+        date: "Monday, Sept 14, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:52 PM", 
+        startMs: 1789437600000,
+        endMs: 1789444320000,
+        runtime: "1h 52m", 
+        year: "2026", 
+        summary: "An epic pop melodrama chronicling the relationship between a musician and an iconic fashion designer.", 
+        status: "MONDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "3VbW9A6gGgQ" 
+      },
+      { 
+        title: "Normal", 
+        date: "Tuesday, Sept 15, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:31 PM", 
+        startMs: 1789524000000,
+        endMs: 1789529460000,
+        runtime: "1h 31m", 
+        year: "2025", 
+        summary: "A temporary sheriff in the quiet town of Normal uncovers a sinister criminal conspiracy.", 
+        status: "TUESDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "dQw4w9WgXcQ" 
+      },
+      { 
+        title: "Dog Man", 
+        date: "Friday, Sept 18, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:29 PM", 
+        startMs: 1789783200000,
+        endMs: 1789788540000,
+        runtime: "1h 29m", 
+        year: "2025", 
+        summary: "Part dog, part policeman, all hero—Dog Man fights crime while trying to impress his Chief.", 
+        status: "FRIDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "Wa0B2s7E2b8" 
+      },
+      { 
+        title: "Borderlands", 
+        date: "Saturday, Sept 19, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:41 PM", 
+        startMs: 1789869600000,
+        endMs: 1789875660000,
+        runtime: "1h 41m", 
+        year: "2024", 
+        summary: "An infamous outlaw returns to her home planet to find the missing daughter of the universe's most powerful man.", 
+        status: "SATURDAY", 
+        tagColor: "bg-slate-800 text-slate-300", 
+        trailerId: "l3XzepN03KQ" 
+      },
+      { 
+        title: "Scary Movie 2026", 
+        date: "Sunday, Sept 20, 2026", 
+        startTime: "7:00 PM", 
+        endTime: "8:36 PM", 
+        startMs: 1789956000000,
+        endMs: 1789961760000,
+        runtime: "1h 36m", 
+        year: "2026", 
+        summary: "The franchise returns for a hilarious new send-up of modern horror cinema.", 
+        status: "SUNDAY", 
+        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
+        trailerId: "gCcx85zbxz4" 
+      }
+    ];
+    window.theaterScheduleCache = sampleSchedule;
     let isAdmin = false;
 
     // ========================================================
@@ -1632,60 +1765,115 @@
       }
     }
 
-    function updateCountdown() {
-      const now = Date.now();
-      const diff = Math.max(0, targetNextMs - now);
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-
-      const dStr = String(d).padStart(2, '0');
+    // Helper to format text countdown without zero leading components
+    function formatNonZeroCountdown(d, h, m, s, uppercase = false) {
+      const dUnit = uppercase ? 'D' : 'd';
+      const hUnit = uppercase ? 'H' : 'h';
+      const mUnit = uppercase ? 'M' : 'm';
+      const sUnit = uppercase ? 'S' : 's';
       const hStr = String(h).padStart(2, '0');
       const mStr = String(m).padStart(2, '0');
       const sStr = String(s).padStart(2, '0');
 
-      // Schedule tab precision countdown counters
-      const countDaysEl = document.getElementById('countDays');
-      const countHoursEl = document.getElementById('countHours');
-      const countMinsEl = document.getElementById('countMins');
-      const countSecsEl = document.getElementById('countSecs');
-      if (countDaysEl) countDaysEl.textContent = dStr;
-      if (countHoursEl) countHoursEl.textContent = hStr;
-      if (countMinsEl) countMinsEl.textContent = mStr;
-      if (countSecsEl) countSecsEl.textContent = sStr;
+      if (d > 0) {
+        return `${d}${dUnit} ${hStr}${hUnit} ${mStr}${mUnit} ${sStr}${sUnit}`;
+      } else if (h > 0) {
+        return `${hStr}${hUnit} ${mStr}${mUnit} ${sStr}${sUnit}`;
+      } else if (m > 0) {
+        return `${mStr}${mUnit} ${sStr}${sUnit}`;
+      } else {
+        return `${sStr}${sUnit}`;
+      }
+    }
 
-      // Screening room stage precision countdown counters (under PIC): Counts down to DOORS OPENING
-      const doorsOpenMs = targetNextMs - 600000;
-      const diffDoors = Math.max(0, doorsOpenMs - now);
-      const dDoors = Math.floor(diffDoors / (1000 * 60 * 60 * 24));
-      const hDoors = Math.floor((diffDoors / (1000 * 60 * 60)) % 24);
-      const mDoors = Math.floor((diffDoors / (1000 * 60)) % 60);
-      const sDoors = Math.floor((diffDoors / 1000) % 60);
+    // Helper to dynamically adjust grid columns and hide zero units
+    function updateCountdownGridColumns(gridEl, colDaysEl, colHoursEl, colMinsEl, colSecsEl, d, h, m, s, isStage = false) {
+      if (!gridEl) return;
+      const gapClass = isStage ? 'gap-2 sm:gap-3' : 'gap-2 sm:gap-4';
 
-      const stageDaysEl = document.getElementById('stageCountDays');
-      const stageHoursEl = document.getElementById('stageCountHours');
-      const stageMinsEl = document.getElementById('stageCountMins');
-      const stageSecsEl = document.getElementById('stageCountSecs');
-      if (stageDaysEl) stageDaysEl.textContent = String(dDoors).padStart(2, '0');
-      if (stageHoursEl) stageHoursEl.textContent = String(hDoors).padStart(2, '0');
-      if (stageMinsEl) stageMinsEl.textContent = String(mDoors).padStart(2, '0');
-      if (stageSecsEl) stageSecsEl.textContent = String(sDoors).padStart(2, '0');
+      if (d > 0) {
+        // Show 4 columns: Days, Hours, Mins, Secs
+        if (colDaysEl) colDaysEl.classList.remove('hidden');
+        if (colHoursEl) colHoursEl.classList.remove('hidden');
+        if (colMinsEl) colMinsEl.classList.remove('hidden');
+        if (colSecsEl) colSecsEl.classList.remove('hidden');
+        gridEl.className = `grid grid-cols-4 ${gapClass} text-center font-mono`;
+      } else if (h > 0) {
+        // Show 3 columns: Hours, Mins, Secs (Omit 0 Days)
+        if (colDaysEl) colDaysEl.classList.add('hidden');
+        if (colHoursEl) colHoursEl.classList.remove('hidden');
+        if (colMinsEl) colMinsEl.classList.remove('hidden');
+        if (colSecsEl) colSecsEl.classList.remove('hidden');
+        const maxW = isStage ? 'max-w-sm' : 'max-w-md';
+        gridEl.className = `grid grid-cols-3 ${maxW} mx-auto ${gapClass} text-center font-mono`;
+      } else if (m > 0) {
+        // Show 2 columns: Mins, Secs (Omit 0 Days and 0 Hours)
+        if (colDaysEl) colDaysEl.classList.add('hidden');
+        if (colHoursEl) colHoursEl.classList.add('hidden');
+        if (colMinsEl) colMinsEl.classList.remove('hidden');
+        if (colSecsEl) colSecsEl.classList.remove('hidden');
+        gridEl.className = `grid grid-cols-2 max-w-xs mx-auto ${gapClass} text-center font-mono`;
+      } else {
+        // Show 1 column: Secs (Omit 0 Days, 0 Hours, 0 Mins)
+        if (colDaysEl) colDaysEl.classList.add('hidden');
+        if (colHoursEl) colHoursEl.classList.add('hidden');
+        if (colMinsEl) colMinsEl.classList.add('hidden');
+        if (colSecsEl) colSecsEl.classList.remove('hidden');
+        gridEl.className = `grid grid-cols-1 max-w-[140px] mx-auto ${gapClass} text-center font-mono`;
+      }
+    }
 
-      const countdownClockStr = d > 0 ? `${d}d ${hStr}h ${mStr}m ${sStr}s` : `${hStr}h ${mStr}m ${sStr}s`;
-      const countdownPillStr = d > 0 ? `${d}D ${hStr}H ${mStr}M ${sStr}S` : `${hStr}H ${mStr}M ${sStr}S`;
+    function updateCountdown() {
+      const now = Date.now();
 
-      // Active screening check
-      const activeStart = 1788573600000; // 7:00 PM PST
-      const activeEnd = activeStart + (105 * 60 * 1000); // 8:45 PM PST
+      // Resolve dynamic active screening window and upcoming movie
+      const scheduleSource = (window.theaterScheduleCache && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      let activeStart = targetNextMs;
+      let activeEnd = activeStart + targetMovieRuntimeMs;
+      let liveMovieTitle = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
+
+      // Check if any schedule movie is currently live
+      const activeSchedItem = scheduleSource.find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+      if (activeSchedItem) {
+        activeStart = activeSchedItem.startMs;
+        activeEnd = activeSchedItem.endMs;
+        if (activeSchedItem.title) liveMovieTitle = activeSchedItem.title.replace(/^🎬\s*/, '').trim();
+      } else if (liveScreeningEndMs && liveScreeningEndMs > now) {
+        activeEnd = liveScreeningEndMs;
+      }
+
+      // Check if past current movie runtime end: advance to next upcoming movie if available
+      if (now >= activeEnd && scheduleSource.length > 0) {
+        const nextItem = scheduleSource.find(s => s.startMs && s.startMs > now);
+        if (nextItem) {
+          targetNextMs = nextItem.startMs;
+          targetMovieRuntimeMs = (nextItem.endMs && nextItem.endMs > nextItem.startMs) ? (nextItem.endMs - nextItem.startMs) : (105 * 60 * 1000);
+          const sTitle = document.getElementById('schedNextTitle');
+          const sDate = document.getElementById('schedNextDate');
+          const sPoster = document.getElementById('schedNextPoster');
+          if (sTitle && nextItem.title) sTitle.textContent = nextItem.title.startsWith('🎬') ? nextItem.title : `🎬 ${nextItem.title}`;
+          if (sDate && nextItem.date && nextItem.startTime) sDate.textContent = `${nextItem.date} • ${nextItem.startTime} PST`;
+          if (sPoster && nextItem.posterUrl) sPoster.src = nextItem.posterUrl;
+          activeStart = targetNextMs;
+          activeEnd = activeStart + targetMovieRuntimeMs;
+          liveMovieTitle = (nextItem.title || "Neighbors").replace(/^🎬\s*/, '').trim();
+        }
+      }
+
       const headingEl = document.getElementById('nowPlayingHeading');
       const isExplicitLive = headingEl && headingEl.getAttribute('data-live') === 'true';
       const isLiveScreening = (now >= activeStart && now < activeEnd) || isExplicitLive;
 
-      // 10-Minute Door Access Window (600,000 ms)
-      const isWithin10Mins = (diffDoors <= 0 && diff > 0);
+      // 10-Minute Pre-Show Seating Window (600,000 ms before start)
+      const diffToStart = Math.max(0, targetNextMs - now);
+      const doorsOpenMs = targetNextMs - 600000;
+      const diffDoors = Math.max(0, doorsOpenMs - now);
+      const isWithin10Mins = (diffDoors <= 0 && diffToStart > 0);
 
-      // Determine State: 1 = Doors Closed (>10m), 2 = Doors Open (10m-0m), 3 = Live Screening
+      // Determine State Mode: 1 = Doors Closed (>10m), 2 = Doors Open (10m-0m), 3 = Live Screening (0m through runtime)
       let stateMode = 1;
       if (doorOverrideMode === 'force_open') {
         stateMode = isLiveScreening ? 3 : 2;
@@ -1701,6 +1889,58 @@
         }
       }
 
+      // Schedule Tab Countdown Calculations
+      // If live screening: count down remaining screening runtime
+      // If not live: count down to showtime (targetNextMs)
+      const countdownTargetMs = isLiveScreening ? activeEnd : targetNextMs;
+      const diffSched = Math.max(0, countdownTargetMs - now);
+      const dSched = Math.floor(diffSched / (1000 * 60 * 60 * 24));
+      const hSched = Math.floor((diffSched / (1000 * 60 * 60)) % 24);
+      const mSched = Math.floor((diffSched / (1000 * 60)) % 60);
+      const sSched = Math.floor((diffSched / 1000) % 60);
+
+      const countDaysEl = document.getElementById('countDays');
+      const countHoursEl = document.getElementById('countHours');
+      const countMinsEl = document.getElementById('countMins');
+      const countSecsEl = document.getElementById('countSecs');
+      if (countDaysEl) countDaysEl.textContent = String(dSched).padStart(2, '0');
+      if (countHoursEl) countHoursEl.textContent = String(hSched).padStart(2, '0');
+      if (countMinsEl) countMinsEl.textContent = String(mSched).padStart(2, '0');
+      if (countSecsEl) countSecsEl.textContent = String(sSched).padStart(2, '0');
+
+      const schedGrid = document.getElementById('schedCountdownGrid');
+      const schedColDays = document.getElementById('schedColDays');
+      const schedColHours = document.getElementById('schedColHours');
+      const schedColMins = document.getElementById('schedColMins');
+      const schedColSecs = document.getElementById('schedColSecs');
+      updateCountdownGridColumns(schedGrid, schedColDays, schedColHours, schedColMins, schedColSecs, dSched, hSched, mSched, sSched, false);
+
+      // Stage Countdown Calculations (under poster): Counts down to Doors Opening
+      const dDoors = Math.floor(diffDoors / (1000 * 60 * 60 * 24));
+      const hDoors = Math.floor((diffDoors / (1000 * 60 * 60)) % 24);
+      const mDoors = Math.floor((diffDoors / (1000 * 60)) % 60);
+      const sDoors = Math.floor((diffDoors / 1000) % 60);
+
+      const stageDaysEl = document.getElementById('stageCountDays');
+      const stageHoursEl = document.getElementById('stageCountHours');
+      const stageMinsEl = document.getElementById('stageCountMins');
+      const stageSecsEl = document.getElementById('stageCountSecs');
+      if (stageDaysEl) stageDaysEl.textContent = String(dDoors).padStart(2, '0');
+      if (stageHoursEl) stageHoursEl.textContent = String(hDoors).padStart(2, '0');
+      if (stageMinsEl) stageMinsEl.textContent = String(mDoors).padStart(2, '0');
+      if (stageSecsEl) stageSecsEl.textContent = String(sDoors).padStart(2, '0');
+
+      const stageGrid = document.getElementById('stageCountdownGrid');
+      const stageColDays = document.getElementById('stageColDays');
+      const stageColHours = document.getElementById('stageColHours');
+      const stageColMins = document.getElementById('stageColMins');
+      const stageColSecs = document.getElementById('stageColSecs');
+      updateCountdownGridColumns(stageGrid, stageColDays, stageColHours, stageColMins, stageColSecs, dDoors, hDoors, mDoors, sDoors, true);
+
+      // Clean non-zero formatted strings for headers/pills
+      const countdownClockStr = formatNonZeroCountdown(dSched, hSched, mSched, sSched, false);
+      const countdownPillStr = formatNonZeroCountdown(dSched, hSched, mSched, sSched, true);
+
       // Update stage artwork and posters
       updateStageArtwork(stateMode === 3, headingEl?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
 
@@ -1709,6 +1949,8 @@
       const screenTimeLabel = document.getElementById('screenTimeLabel');
       const schedTimeEl = document.getElementById('schedActiveTimeLeft');
       const alertBox = document.getElementById('schedActiveAlertBox');
+      const schedActiveMovieTitle = document.getElementById('schedActiveMovieTitle');
+      const countdownSubhead = document.getElementById('countdownSubhead');
       const bannerLive = document.getElementById('bannerLiveIndicator');
       const stageCategoryLabel = document.getElementById('stageCategoryLabel');
       const nowPlayingDate = document.getElementById('nowPlayingDate');
@@ -1730,10 +1972,10 @@
       }
 
       if (stateMode === 3) {
-        // STATE 3: LIVE SCREENING IN PROGRESS
+        // STATE 3: LIVE SCREENING IN PROGRESS (Counter reached 0 & Movie is playing)
         const minsLeft = Math.max(1, Math.ceil((activeEnd - now) / 60000));
         const formattedTime = minsLeft >= 60 ? `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m` : `${minsLeft}m`;
-        
+
         if (stageCategoryLabel) {
           stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-red-400 flex items-center gap-1.5";
           stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live Screening In Progress';
@@ -1750,7 +1992,14 @@
           screenTimeEl.className = "text-red-400 font-bold font-mono";
         }
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
-        
+
+        if (schedActiveMovieTitle) {
+          schedActiveMovieTitle.textContent = `"${nextMovieTitle}" is screening live!`;
+        }
+        if (countdownSubhead) {
+          countdownSubhead.textContent = "Live Screening Runtime Remaining";
+        }
+
         if (alertBox) {
           alertBox.classList.remove('hidden');
           alertBox.classList.add('flex');
@@ -1759,15 +2008,16 @@
           bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"${escapeHtml(nextMovieTitle)}" is Screening Live!</span>`;
         }
 
+        // Enter button remains permanently active and visible during live screening!
         setEntranceState(true);
         if (btnEnterText) btnEnterText.textContent = "JOIN LIVE SCREENING IN PROGRESS";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "Auditorium Stream Active • Late Arrivals Welcome";
 
       } else if (stateMode === 2) {
         // STATE 2: DOORS OPEN & SEATING NOW (10m to 0m before show OR Forced Open)
-        const minsToStart = Math.max(1, Math.ceil(diff / 60000));
+        const minsToStart = Math.max(1, Math.ceil(diffToStart / 60000));
         const isForced = (doorOverrideMode === 'force_open');
-        
+
         if (stageCategoryLabel) {
           stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5";
           stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Auditorium Doors Open • Seating Now';
@@ -1786,6 +2036,10 @@
           screenTimeEl.className = isForced ? "text-amber-400 font-bold font-mono animate-pulse" : "text-sky-400 font-bold font-mono";
         }
         if (schedTimeEl) schedTimeEl.textContent = isForced ? "OPEN" : `${minsToStart}m`;
+
+        if (countdownSubhead) {
+          countdownSubhead.textContent = isForced ? "Auditorium Doors Forced Open" : "Auditorium Doors Open • Show Starts In";
+        }
 
         if (alertBox && !alertBox.classList.contains('hidden')) {
           alertBox.classList.add('hidden');
@@ -1826,6 +2080,10 @@
           screenTimeEl.className = "text-sky-400 font-bold font-mono";
         }
         if (schedTimeEl) schedTimeEl.textContent = "--";
+
+        if (countdownSubhead) {
+          countdownSubhead.textContent = "Next Premiere Commences In";
+        }
 
         if (alertBox && !alertBox.classList.contains('hidden')) {
           alertBox.classList.add('hidden');
@@ -2402,19 +2660,33 @@
           const data = await res.json();
           if (data) {
             const now = Date.now();
-            const activeStart = 1788573600000; // Friday Sept 4, 2026 7:00 PM PST
-            const activeEnd = activeStart + (105 * 60 * 1000); // 8:45 PM PST
-            const isLive = (now >= activeStart && now < activeEnd);
+
+            // Cache schedule list in global memory
+            if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
+              window.theaterScheduleCache = data.schedule;
+            }
+
+            // Detect if a movie is actively screening
+            const schedList = window.theaterScheduleCache || [];
+            let activeItem = schedList.find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+            const liveMovie = activeItem ? activeItem.title : (data.nowPlaying && data.nowPlaying !== "No Movie Playing" ? data.nowPlaying : null);
+            const activeStart = activeItem ? activeItem.startMs : targetNextMs;
+            const activeEnd = activeItem ? activeItem.endMs : (data.endMs && data.endMs > now ? data.endMs : (activeStart + targetMovieRuntimeMs));
+            liveScreeningEndMs = activeEnd;
+
+            const isLive = Boolean(liveMovie) || (now >= activeStart && now < activeEnd);
 
             if (data.nowPlaying && data.nowPlaying !== "No Movie Playing") {
               document.getElementById('nowPlayingHeading').textContent = data.nowPlaying;
+            } else if (isLive && activeItem) {
+              document.getElementById('nowPlayingHeading').textContent = activeItem.title;
             } else if (isLive) {
-              document.getElementById('nowPlayingHeading').textContent = "Return To Silent Hill";
+              document.getElementById('nowPlayingHeading').textContent = (document.getElementById('schedNextTitle')?.textContent || "Neighbors").replace(/^🎬\s*/, '').trim();
             } else {
               document.getElementById('nowPlayingHeading').textContent = "No Movie Playing";
             }
 
-            if (isLive && data.timeLeft) {
+            if (isLive && data.timeLeft && data.timeLeft !== "--") {
               document.getElementById('screenTimeLeft').textContent = data.timeLeft;
             } else if (!isLive) {
               document.getElementById('screenTimeLeft').textContent = "--";
@@ -2912,117 +3184,7 @@
       }
     }
 
-    // Schedule Cards - Structured directly from Google Sheets Quick Schedule (Only Upcoming Movies)
-    const sampleSchedule = [
-      { 
-        title: "Neighbors", 
-        date: "Saturday, Sept 5, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:37 PM", 
-        runtime: "1h 37m", 
-        year: "2014", 
-        summary: "A young couple with a newborn baby face off in an escalating war with an unruly fraternity next door.", 
-        status: "NEXT UP", 
-        tagColor: "bg-amber-500/20 text-amber-300 border border-amber-500/40", 
-        trailerId: "kL5c2Szf3E4" 
-      },
-      { 
-        title: "Neighbors 2", 
-        date: "Sunday, Sept 6, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:32 PM", 
-        runtime: "1h 32m", 
-        year: "2016", 
-        summary: "Mac and Kelly team up with their former enemy to take on an even wilder sorority.", 
-        status: "SUNDAY", 
-        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
-        trailerId: "X2i9Zz_AqTg" 
-      },
-      { 
-        title: "Machine Gun Preacher", 
-        date: "Wednesday, Sept 9, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "9:09 PM", 
-        runtime: "2h 09m", 
-        year: "2011", 
-        summary: "The true story of Sam Childers, a former drug dealer who dedicates his life to saving Sudanese child soldiers.", 
-        status: "WEDNESDAY", 
-        tagColor: "bg-slate-800 text-slate-300", 
-        trailerId: "q5D4v8a7o4M" 
-      },
-      { 
-        title: "beast", 
-        date: "Thursday, Sept 10, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:55 PM", 
-        runtime: "1h 55m", 
-        year: "2022", 
-        summary: "A father and his two teenage daughters find themselves hunted by a rogue lion in South Africa.", 
-        status: "THURSDAY", 
-        tagColor: "bg-slate-800 text-slate-300", 
-        trailerId: "oQMc7Sq366I" 
-      },
-      { 
-        title: "mother mary", 
-        date: "Monday, Sept 14, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:52 PM", 
-        runtime: "1h 52m", 
-        year: "2026", 
-        summary: "An epic pop melodrama chronicling the relationship between a musician and an iconic fashion designer.", 
-        status: "MONDAY", 
-        tagColor: "bg-slate-800 text-slate-300", 
-        trailerId: "3VbW9A6gGgQ" 
-      },
-      { 
-        title: "Normal", 
-        date: "Tuesday, Sept 15, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:31 PM", 
-        runtime: "1h 31m", 
-        year: "2025", 
-        summary: "A temporary sheriff in the quiet town of Normal uncovers a sinister criminal conspiracy.", 
-        status: "TUESDAY", 
-        tagColor: "bg-slate-800 text-slate-300", 
-        trailerId: "dQw4w9WgXcQ" 
-      },
-      { 
-        title: "Dog Man", 
-        date: "Friday, Sept 18, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:29 PM", 
-        runtime: "1h 29m", 
-        year: "2025", 
-        summary: "Part dog, part policeman, all hero—Dog Man fights crime while trying to impress his Chief.", 
-        status: "FRIDAY", 
-        tagColor: "bg-slate-800 text-slate-300", 
-        trailerId: "Wa0B2s7E2b8" 
-      },
-      { 
-        title: "Borderlands", 
-        date: "Saturday, Sept 19, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:41 PM", 
-        runtime: "1h 41m", 
-        year: "2024", 
-        summary: "An infamous outlaw returns to her home planet to find the missing daughter of the universe's most powerful man.", 
-        status: "SATURDAY", 
-        tagColor: "bg-slate-800 text-slate-300", 
-        trailerId: "l3XzepN03KQ" 
-      },
-      { 
-        title: "Scary Movie 2026", 
-        date: "Sunday, Sept 20, 2026", 
-        startTime: "7:00 PM", 
-        endTime: "8:36 PM", 
-        runtime: "1h 36m", 
-        year: "2026", 
-        summary: "The franchise returns for a hilarious new send-up of modern horror cinema.", 
-        status: "SUNDAY", 
-        tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/40", 
-        trailerId: "gCcx85zbxz4" 
-      }
-    ];
+    // (sampleSchedule is initialized at the top of the script for immediate access)
 
     function parseMovieScheduleDetails(s) {
       const desc = s.desc || "";
