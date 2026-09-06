@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.37 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.38 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -152,18 +152,6 @@
     <!-- TAB 1: 🎬 SCREENING ROOM -->
     <div id="view-screening" class="tab-view flex flex-col gap-6">
 
-      <!-- TOP BANNER STATUS -->
-      <div class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
-        <div class="flex items-center gap-2 truncate" id="bannerLiveIndicator">
-          <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span>
-          <span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span>
-          <span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: Neighbors 2 • Sun, Sept 6 • 7:00 PM PST</span>
-        </div>
-        <div class="flex items-center gap-2 font-mono shrink-0">
-          <span class="text-slate-400" id="screenTimeLabel">Starts In:</span>
-          <span id="screenTimeLeft" class="text-sky-400 font-bold font-mono">--</span>
-        </div>
-      </div>
 
       <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4">
         <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
@@ -426,7 +414,7 @@
             <h2 class="text-lg font-bold text-slate-100">Brian's Admin Control Studio</h2>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.37</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 font-mono border border-slate-700">v4.9.38</span>
             <span class="text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">Admin Mode Active</span>
           </div>
         </div>
@@ -626,7 +614,7 @@
           <span>•</span>
           <span>Virtual Cinema Experience</span>
           <span>•</span>
-          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.37</span>
+          <span class="font-mono text-slate-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">v4.9.38</span>
           <span>•</span>
           <button type="button" onclick="showAppUpdateToast({ isUpdateAvailable: false })" class="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer underline underline-offset-2 flex items-center gap-1 transition">
             <span>✨</span> <span>What's New</span>
@@ -791,7 +779,7 @@
           <span>🔄</span> <span>Update</span>
         </button>
       </div>
-      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.37</span>
+      <span class="px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.38</span>
     </div>
 
   </aside>
@@ -990,41 +978,48 @@
     </div>
   </div>
 
-  <!-- NEW VERSION POPUP TOASTER ALERT WITH APP STORE SUMMARY -->
-  <div id="appUpdateToast" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[99999] max-w-sm sm:max-w-md w-[calc(100%-2rem)] bg-slate-950/95 backdrop-blur-xl border-2 border-sky-400/80 rounded-2xl p-4 sm:p-5 shadow-[0_0_50px_rgba(56,189,248,0.35)] transition-all transform duration-300 pointer-events-none opacity-0 translate-y-6 flex flex-col gap-3.5" role="alert" aria-live="polite">
+  <!-- FRONT & CENTER VERSION UPDATE MODAL DIALOG (USER MUST SEE & CLICK TO ENTER) -->
+  <div id="appUpdateToast" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300 pointer-events-none opacity-0" role="dialog" aria-modal="true" aria-labelledby="updateToastTitle">
     
-    <!-- Header -->
-    <div class="flex items-start justify-between gap-2.5">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow-md shrink-0">
-          ✨
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h4 id="updateToastTitle" class="text-sm font-bold text-slate-100">Update Available</h4>
-            <span id="updateToastBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.37</span>
+    <!-- Modal Card Box -->
+    <div id="appUpdateCard" class="max-w-md w-full bg-slate-950/95 border-2 border-sky-400/80 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(56,189,248,0.4)] transform transition-transform duration-300 scale-95 flex flex-col gap-4">
+
+      <!-- Header -->
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 via-teal-400 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shrink-0">
+            🎬
           </div>
-          <p id="updateToastSubtitle" class="text-[11px] text-slate-400 mt-0.5">What's New in this release:</p>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Brian's Theater Updated</h3>
+              <span id="updateToastBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.38</span>
+            </div>
+            <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Fresh improvements ready for your screening:</p>
+          </div>
         </div>
       </div>
-      <button type="button" onclick="dismissAppUpdateToast()" class="text-slate-400 hover:text-slate-200 text-lg leading-none p-1 rounded-lg hover:bg-slate-900 transition" aria-label="Dismiss">&times;</button>
-    </div>
 
-    <!-- App Store Style Feature Bullet Points -->
-    <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800/80 max-h-48 overflow-y-auto custom-scrollbar">
-      <ul id="updateToastList" class="space-y-1.5 text-xs text-slate-300 font-medium">
-        <!-- Dynamically populated release notes -->
-      </ul>
-    </div>
+      <!-- App Store Style Feature Bullet Points -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800/90 max-h-56 overflow-y-auto custom-scrollbar">
+        <div class="text-[10px] font-bold text-sky-400 uppercase tracking-widest mb-2 font-mono flex items-center gap-1.5">
+          <span>✨</span> <span>What's New in this Release</span>
+        </div>
+        <ul id="updateToastList" class="space-y-2 text-xs sm:text-sm text-slate-200 font-medium">
+          <!-- Dynamically populated release notes -->
+        </ul>
+      </div>
 
-    <!-- Actions Bar -->
-    <div class="flex items-center gap-2 pt-1">
-      <button type="button" id="btnUpdateAppRefresh" onclick="refreshAndUpdateApp()" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-sky-500 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-sky-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
-        <span>⚡</span> <span id="btnUpdateAppRefreshLabel">Update Now</span>
-      </button>
-      <button type="button" id="btnUpdateAppDismiss" onclick="dismissAppUpdateToast()" class="py-2.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold transition active:scale-95">
-        Later
-      </button>
+      <!-- Actions Bar - Big Front & Center Enter Button -->
+      <div class="flex flex-col sm:flex-row items-center gap-2.5 pt-1">
+        <button type="button" id="btnUpdateAppRefresh" onclick="refreshAndUpdateApp()" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-sky-500 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-sky-500/30 transition transform active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer">
+          <span>⚡</span> <span id="btnUpdateAppRefreshLabel">Update & Enter Theater</span>
+        </button>
+        <button type="button" id="btnUpdateAppDismiss" onclick="dismissAppUpdateToast()" class="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs font-semibold transition active:scale-95 text-center">
+          Later
+        </button>
+      </div>
+
     </div>
 
   </div>
@@ -1033,7 +1028,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.37";
+    const APP_VERSION = "4.9.38";
     window.APP_VERSION = APP_VERSION;
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
@@ -1388,6 +1383,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.38": [
+        "Removed cluttered Theater Status banner from mobile layout.",
+        "Screening room now immediately highlights the main stage.",
+        "Optimized responsive mobile design for iOS and Android.",
+        "Cleaned redundant text lines above the hero card.",
+        "Enhanced mobile layout spacing across all screen sizes."
+      ],
       "4.9.37": [
         "Fixed update loop with strict current-version check.",
         "Startup What's New prompt never auto-reloads page.",
@@ -1467,7 +1469,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.37"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.38"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "New Version Available" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -1487,7 +1489,7 @@
       if (refreshBtn && refreshLabel) {
         if (isAvailable) {
           updateCountdownSeconds = 5;
-          refreshLabel.textContent = `Update Now (${updateCountdownSeconds}s)`;
+          refreshLabel.textContent = `Update & Enter Theater (${updateCountdownSeconds}s)`;
           refreshBtn.onclick = () => {
             clearAppUpdateCountdown();
             refreshAndUpdateApp();
@@ -1498,7 +1500,7 @@
           updateCountdownTimer = setInterval(() => {
             updateCountdownSeconds--;
             if (updateCountdownSeconds > 0) {
-              refreshLabel.textContent = `Update Now (${updateCountdownSeconds}s)`;
+              refreshLabel.textContent = `Update & Enter Theater (${updateCountdownSeconds}s)`;
             } else {
               clearAppUpdateCountdown();
               refreshLabel.textContent = "Updating...";
@@ -1506,22 +1508,32 @@
             }
           }, 1000);
         } else {
-          refreshLabel.textContent = "Got it! 👍";
+          refreshLabel.textContent = "🎬 Enter Theater";
           refreshBtn.onclick = dismissAppUpdateToast;
           if (dismissBtn) dismissBtn.classList.add('hidden');
         }
       }
 
-      toast.classList.remove('opacity-0', 'translate-y-6', 'pointer-events-none');
-      toast.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'pointer-events-auto');
+      const card = document.getElementById('appUpdateCard');
+      if (card) {
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      }
     }
 
     function dismissAppUpdateToast() {
       clearAppUpdateCountdown();
       const toast = document.getElementById('appUpdateToast');
       if (toast) {
-        toast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
-        toast.classList.add('opacity-0', 'translate-y-6', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'pointer-events-auto');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+        const card = document.getElementById('appUpdateCard');
+        if (card) {
+          card.classList.remove('scale-100');
+          card.classList.add('scale-95');
+        }
       }
       try {
         localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
@@ -1539,7 +1551,7 @@
       
       const refreshBtn = document.getElementById('btnUpdateAppRefresh');
       if (refreshBtn) {
-        refreshBtn.innerHTML = '<span>⏳</span> <span>Updating App...</span>';
+        refreshBtn.innerHTML = '<span>⏳</span> <span>Updating & Entering Theater...</span>';
       }
 
       setTimeout(() => {
@@ -2356,13 +2368,10 @@
       updateStageArtwork(stateMode === 3, headingEl?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
 
       // DOM Elements
-      const screenTimeEl = document.getElementById('screenTimeLeft');
-      const screenTimeLabel = document.getElementById('screenTimeLabel');
       const schedTimeEl = document.getElementById('schedActiveTimeLeft');
       const alertBox = document.getElementById('schedActiveAlertBox');
       const schedActiveMovieTitle = document.getElementById('schedActiveMovieTitle');
       const countdownSubhead = document.getElementById('countdownSubhead');
-      const bannerLive = document.getElementById('bannerLiveIndicator');
       const stageCategoryLabel = document.getElementById('stageCategoryLabel');
       const nowPlayingDate = document.getElementById('nowPlayingDate');
       const stageCountdownLabelText = document.getElementById('stageCountdownLabelText');
@@ -2415,9 +2424,6 @@
           alertBox.classList.remove('hidden');
           alertBox.classList.add('flex');
         }
-        if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span><span class="font-bold text-red-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">"${escapeHtml(currentMovieTitle)}" is Screening Live!</span>`;
-        }
 
         // Enter button remains permanently active and visible during live screening!
         setEntranceState(true);
@@ -2441,11 +2447,6 @@
           nowPlayingDate.textContent = isForced ? `Doors Open For Seating • Premiere: ${currentDateStr}` : currentDateStr;
         }
 
-        if (screenTimeLabel) screenTimeLabel.textContent = isForced ? "Doors Status:" : "Starts In:";
-        if (screenTimeEl) {
-          screenTimeEl.textContent = isForced ? "OPEN NOW" : countdownClockStr;
-          screenTimeEl.className = isForced ? "text-amber-400 font-bold font-mono animate-pulse" : "text-sky-400 font-bold font-mono";
-        }
         if (schedTimeEl) schedTimeEl.textContent = isForced ? "OPEN" : `${minsToStart}m`;
 
         if (countdownSubhead) {
@@ -2455,11 +2456,6 @@
         if (alertBox && !alertBox.classList.contains('hidden')) {
           alertBox.classList.add('hidden');
           alertBox.classList.remove('flex');
-        }
-        if (bannerLive) {
-          bannerLive.innerHTML = isForced
-            ? `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Forced Open Now • Enter Auditorium for ${escapeHtml(currentMovieTitle)}</span>`
-            : `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span><span class="font-bold text-amber-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-amber-200 font-semibold font-mono truncate">🟡 Doors Open Now for ${escapeHtml(currentMovieTitle)}</span>`;
         }
 
         setEntranceState(true);
@@ -2485,11 +2481,6 @@
         }
         if (nowPlayingDate) nowPlayingDate.textContent = currentDateStr;
 
-        if (screenTimeLabel) screenTimeLabel.textContent = "Starts In:";
-        if (screenTimeEl) {
-          screenTimeEl.textContent = countdownClockStr;
-          screenTimeEl.className = "text-sky-400 font-bold font-mono";
-        }
         if (schedTimeEl) schedTimeEl.textContent = "--";
 
         if (countdownSubhead) {
@@ -2499,9 +2490,6 @@
         if (alertBox && !alertBox.classList.contains('hidden')) {
           alertBox.classList.add('hidden');
           alertBox.classList.remove('flex');
-        }
-        if (bannerLive) {
-          bannerLive.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0"></span><span class="font-bold text-slate-400 uppercase tracking-wider shrink-0">Theater Status:</span><span class="text-slate-100 font-semibold font-mono truncate">🎬 Next Movie: ${escapeHtml(currentMovieTitle)}</span>`;
         }
       }
     }

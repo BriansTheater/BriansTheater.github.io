@@ -1,12 +1,12 @@
 {
-  "version": "4.9.37",
+  "version": "4.9.38",
   "releaseDate": "2026-09-05",
-  "title": "Brian's Theater v4.9.37",
+  "title": "Brian's Theater v4.9.38",
   "notes": [
-    "Fixed update loop with strict current-version check.",
-    "Startup What's New prompt never auto-reloads page.",
-    "HTML navigation requests now fetch fresh from network.",
-    "Countdown timer safely disabled when running latest version.",
-    "Cleaned Service Worker activation hooks to stop loop."
+    "Front-and-center update modal with backdrop blur.",
+    "Users click Update & Enter Theater to proceed.",
+    "Removed cluttered Theater Status banner from mobile.",
+    "Screening room hero marquee is the top focus.",
+    "Optimized responsive mobile design for iOS and Android."
   ]
 }

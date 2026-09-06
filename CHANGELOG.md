@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.38] - 2026-09-05
+
+### What's New
+- Front-and-center update modal with dark backdrop blur.
+- Users click Update & Enter Theater to enter.
+- Removed cluttered Theater Status banner from mobile layout.
+- Screening room hero marquee is the top focus.
+- Optimized responsive mobile design for iOS and Android.
+
 ## [4.9.37] - 2026-09-05
 
 ### What's New
