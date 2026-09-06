@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.82] - 2026-09-06
+
+### What's New
+- Restored live theater stats overview to Movie Vault library.
+- Dynamically synchronized movies, TV shows, and days open counts.
+- Updated sidebar drawer with real-time verified catalog counts.
+- Guarded theater statistics against broken formula errors and crashes.
+- Evergreen community service days automatically calculate from launch date.
+
 ## [4.9.81] - 2026-09-06
 
 ### What's New

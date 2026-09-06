@@ -395,6 +395,26 @@
           </div>
         </div>
 
+        <!-- Restored Theater Stats Overview Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 shadow-inner">
+          <div class="flex flex-col items-center sm:items-start px-2 py-1">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🍿 Screened Movies</span>
+            <span id="vaultStatMovies" class="text-sm sm:text-base font-black text-emerald-400 font-mono">420 Movies</span>
+          </div>
+          <div class="flex flex-col items-center sm:items-start px-2 py-1">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">📺 TV Shows</span>
+            <span id="vaultStatTv" class="text-sm sm:text-base font-black text-amber-400 font-mono">37 TV Shows</span>
+          </div>
+          <div class="flex flex-col items-center sm:items-start px-2 py-1">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🏛️ Vault Archive</span>
+            <span id="vaultStatTotal" class="text-sm sm:text-base font-black text-sky-400 font-mono">457+ Archived</span>
+          </div>
+          <div class="flex flex-col items-center sm:items-start px-2 py-1">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">🗓️ Days Serving</span>
+            <span id="vaultStatDays" class="text-xs sm:text-sm font-black text-purple-300 font-mono truncate max-w-full">1 yr, 6 mos, 2 days</span>
+          </div>
+        </div>
+
         <!-- Search Input & Info Bar (Zero-Collision Responsive Layout) -->
         <div class="flex flex-col gap-2">
           <div class="relative flex items-center">
@@ -1113,12 +1133,12 @@
         <div class="grid grid-cols-2 gap-2.5">
           <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col gap-1 shadow-sm">
             <span class="text-xs">🍿 Movies</span>
-            <span id="sidebarStatMovies" class="text-lg font-black text-emerald-400 font-mono">398</span>
+            <span id="sidebarStatMovies" class="text-lg font-black text-emerald-400 font-mono">420</span>
             <span class="text-[10px] text-slate-400">Screened in vault</span>
           </div>
           <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col gap-1 shadow-sm">
             <span class="text-xs">📺 TV Shows</span>
-            <span id="sidebarStatTv" class="text-lg font-black text-amber-400 font-mono">36</span>
+            <span id="sidebarStatTv" class="text-lg font-black text-amber-400 font-mono">37</span>
             <span class="text-[10px] text-slate-400">Seasons & specials</span>
           </div>
           <div class="col-span-2 p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col gap-1 shadow-sm">
@@ -1126,7 +1146,7 @@
               <span class="text-xs">🗓️ Days Open</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-950/80 text-purple-300 border border-purple-800/60 font-semibold">Evergreen</span>
             </div>
-            <span id="sidebarStatDays" class="text-sm sm:text-base font-black text-purple-300 font-mono">1 yr, 5 mos, 30 days</span>
+            <span id="sidebarStatDays" class="text-sm sm:text-base font-black text-purple-300 font-mono">1 yr, 6 mos, 2 days</span>
             <span class="text-[10px] text-slate-400">Serving community since launch</span>
           </div>
         </div>
@@ -1151,7 +1171,7 @@
           <button onclick="switchTab('vault'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
             <span class="text-sm group-hover:scale-110 transition-transform">🔍</span>
             <span class="flex-1">Vault</span>
-            <span class="text-[10px] text-slate-500 font-mono">398+</span>
+            <span id="sidebarVaultCountBadge" class="text-[10px] text-slate-500 font-mono">457+</span>
           </button>
           <button onclick="switchTab('requests'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
             <span class="text-sm group-hover:scale-110 transition-transform">📝</span>
@@ -1553,7 +1573,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.81";
+    const APP_VERSION = "4.9.82";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4756,30 +4776,8 @@
         }
       }
 
-      if (data.moviesCount) {
-        const el1 = document.getElementById('statMoviesNum');
-        const el2 = document.getElementById('statMoviesNumBanner');
-        const el3 = document.getElementById('sidebarStatMovies');
-        if (el1) el1.textContent = data.moviesCount;
-        if (el2) el2.textContent = data.moviesCount;
-        if (el3) el3.textContent = data.moviesCount;
-      }
-      if (data.tvCount) {
-        const el1 = document.getElementById('statTvNum');
-        const el2 = document.getElementById('statTvNumBanner');
-        const el3 = document.getElementById('sidebarStatTv');
-        if (el1) el1.textContent = data.tvCount;
-        if (el2) el2.textContent = data.tvCount;
-        if (el3) el3.textContent = data.tvCount;
-      }
-      if (data.daysOpen) {
-        const el1 = document.getElementById('statDaysNum');
-        const el2 = document.getElementById('statDaysNumBanner');
-        const el3 = document.getElementById('sidebarStatDays');
-        if (el1) el1.textContent = data.daysOpen;
-        if (el2) el2.textContent = data.daysOpen;
-        if (el3) el3.textContent = data.daysOpen;
-      }
+      // Dynamically synchronize theater stats from Firebase and live catalog
+      updateTheaterStats(data);
 
       if (data.moviePosters && typeof data.moviePosters === 'object') {
         Object.assign(customMovieImages, data.moviePosters);
@@ -4930,6 +4928,102 @@
       if (/\b(tv\s*show|television\s*series|tv\s*series|miniseries)\b/i.test(overview)) return true;
 
       return false;
+    }
+
+    // Dynamic Days Open Calculation from theater launch (March 5, 2025)
+    function calculateDaysOpen(startDate = new Date('2025-03-05'), now = new Date()) {
+      let years = now.getFullYear() - startDate.getFullYear();
+      let months = now.getMonth() - startDate.getMonth();
+      let days = now.getDate() - startDate.getDate();
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      const parts = [];
+      if (years > 0) parts.push(`${years} yr${years > 1 ? 's' : ''}`);
+      if (months > 0) parts.push(`${months} mo${months > 1 ? 's' : ''}`);
+      parts.push(`${days} day${days === 1 ? '' : 's'}`);
+      return parts.join(', ');
+    }
+
+    // Dynamic Theater Stats Calculator & DOM Synchronizer
+    function updateTheaterStats(overrideStats) {
+      try {
+        let movieCount = 0;
+        let tvCount = 0;
+        let totalCount = 0;
+
+        const catalog = (Array.isArray(vaultMovies) && vaultMovies.length > 0)
+          ? vaultMovies
+          : (typeof window !== 'undefined' && Array.isArray(window.INITIAL_PAST_MOVIES) ? window.INITIAL_PAST_MOVIES : []);
+
+        if (catalog.length > 0) {
+          catalog.forEach(item => {
+            if (!item || !item.title) return;
+            totalCount++;
+            if (isTvShowItem(item)) {
+              tvCount++;
+            } else {
+              movieCount++;
+            }
+          });
+        }
+
+        // Validate override stats from Firebase (reject #REF! formula errors)
+        if (overrideStats) {
+          if (typeof overrideStats.moviesCount === 'number' && !isNaN(overrideStats.moviesCount) && overrideStats.moviesCount > 0) {
+            movieCount = overrideStats.moviesCount;
+          } else if (typeof overrideStats.moviesCount === 'string' && /^\d+$/.test(overrideStats.moviesCount.trim())) {
+            movieCount = parseInt(overrideStats.moviesCount.trim(), 10);
+          }
+
+          if (typeof overrideStats.tvCount === 'number' && !isNaN(overrideStats.tvCount) && overrideStats.tvCount > 0) {
+            tvCount = overrideStats.tvCount;
+          } else if (typeof overrideStats.tvCount === 'string' && /^\d+$/.test(overrideStats.tvCount.trim())) {
+            tvCount = parseInt(overrideStats.tvCount.trim(), 10);
+          }
+        }
+
+        if (movieCount === 0) movieCount = 420;
+        if (tvCount === 0) tvCount = 37;
+        if (totalCount === 0) totalCount = movieCount + tvCount;
+
+        let daysOpenStr = "";
+        if (overrideStats && overrideStats.daysOpen && typeof overrideStats.daysOpen === 'string' && !overrideStats.daysOpen.includes('#REF') && !overrideStats.daysOpen.includes('undefined')) {
+          daysOpenStr = overrideStats.daysOpen.trim();
+        } else {
+          daysOpenStr = calculateDaysOpen();
+        }
+
+        // 1. Sidebar Drawer Stats
+        const elSideMovies = document.getElementById('sidebarStatMovies');
+        const elSideTv = document.getElementById('sidebarStatTv');
+        const elSideDays = document.getElementById('sidebarStatDays');
+        const elSideVaultBadge = document.getElementById('sidebarVaultCountBadge');
+
+        if (elSideMovies) elSideMovies.textContent = movieCount;
+        if (elSideTv) elSideTv.textContent = tvCount;
+        if (elSideDays) elSideDays.textContent = daysOpenStr;
+        if (elSideVaultBadge) elSideVaultBadge.textContent = `${totalCount}+`;
+
+        // 2. Movie Vault Restored Theater Stats Bar
+        const elVaultMovies = document.getElementById('vaultStatMovies');
+        const elVaultTv = document.getElementById('vaultStatTv');
+        const elVaultTotal = document.getElementById('vaultStatTotal');
+        const elVaultDays = document.getElementById('vaultStatDays');
+
+        if (elVaultMovies) elVaultMovies.textContent = `${movieCount} Movies`;
+        if (elVaultTv) elVaultTv.textContent = `${tvCount} TV Shows`;
+        if (elVaultTotal) elVaultTotal.textContent = `${totalCount}+ Archived`;
+        if (elVaultDays) elVaultDays.textContent = daysOpenStr;
+      } catch(e) {
+        console.warn("Theater stats update error:", e);
+      }
     }
 
     function setVaultMediaType(type) {
@@ -5842,12 +5936,19 @@
       if (added > 0) {
         renderVault();
         populateAdminTrailerSelector();
+        updateTheaterStats();
       }
     }
 
-    // Ingest pre-cached 398+ past movies catalog on load
+    // Ingest pre-cached past movies catalog on load and sync theater stats
     if (typeof window !== 'undefined' && window.INITIAL_PAST_MOVIES && Array.isArray(window.INITIAL_PAST_MOVIES)) {
       mergePastMoviesIntoVault(window.INITIAL_PAST_MOVIES);
+      updateTheaterStats();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => updateTheaterStats());
+    } else {
+      updateTheaterStats();
     }
 
     function toggleCardTrailer(id) {

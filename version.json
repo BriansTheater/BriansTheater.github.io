@@ -1,12 +1,12 @@
 {
-  "version": "4.9.81",
+  "version": "4.9.82",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.81",
+  "title": "Brian's Theater v4.9.82",
   "notes": [
-    "Added styled scrollbars to movie card plot summaries.",
-    "Preserved clean multi-line breaks across all movie summaries.",
-    "Formatted 2025 Mystery Scary Movie Marathon full lineup.",
-    "Enhanced admin media studio summary preview with scrollbars.",
-    "Supported scrollable synopsis in both Schedule and Vault cards."
+    "Restored live theater stats overview to Movie Vault library.",
+    "Dynamically synchronized movies, TV shows, and days open counts.",
+    "Updated sidebar drawer with real-time verified catalog counts.",
+    "Guarded theater statistics against broken formula errors and crashes.",
+    "Evergreen community service days automatically calculate from launch date."
   ]
 }
