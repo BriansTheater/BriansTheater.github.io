@@ -804,50 +804,63 @@
           </div>
 
           <!-- Master Movie Selector, Title Rename & Live Google Sheets Sync Bar -->
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner">
-            <div class="md:col-span-4 flex flex-col gap-1">
-              <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                <span>🍿</span> Select Movie to Configure
-              </label>
-              <select id="adminMediaMovieSelect" onchange="onAdminSelectMediaMovie()" class="w-full mt-0.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 font-semibold focus:border-amber-400">
-                <!-- Populated dynamically with schedule + vault movies -->
-              </select>
-              <!-- Hidden compatibility mirrors -->
-              <select id="adminArtworkMovieSelect" class="hidden"></select>
-              <select id="adminTrailerMovieSelect" class="hidden"></select>
+          <div class="flex flex-col gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner">
+            <!-- Row 1: Movie Selector & TMDB Auto-Fill Engine (2 equal, spacious columns) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+              <!-- Movie Selector -->
+              <div class="lg:col-span-6 flex flex-col gap-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                    <span>🍿</span> Select Movie to Configure
+                  </label>
+                  <button type="button" onclick="syncDirectlyFromGoogleSheets()" id="btnSyncGoogleSheets" class="py-1 px-2.5 bg-slate-800 hover:bg-slate-700 text-sky-300 hover:text-sky-200 border border-sky-500/40 text-[11px] font-bold rounded-lg shadow transition active:scale-95 flex items-center gap-1" title="Pull latest updates directly from Google Sheets now">
+                    <span>🔄</span> Sync Sheets
+                  </button>
+                </div>
+                <select id="adminMediaMovieSelect" onchange="onAdminSelectMediaMovie()" class="w-full mt-0.5 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 font-semibold focus:border-amber-400">
+                  <!-- Populated dynamically with schedule + vault movies -->
+                </select>
+                <!-- Hidden compatibility mirrors -->
+                <select id="adminArtworkMovieSelect" class="hidden"></select>
+                <select id="adminTrailerMovieSelect" class="hidden"></select>
+              </div>
+
+              <!-- TMDB Search & Auto-Fill -->
+              <div class="lg:col-span-6 flex flex-col gap-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                    <span>🔍</span> Search TMDB & Auto-Fill
+                  </label>
+                  <span class="text-[10px] text-slate-400 font-mono">Find Poster, Trailer & Info</span>
+                </div>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <input type="text" id="adminMediaSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbAllMediaForSelectedMovie();}" placeholder="Search TMDB movie or TV series..." class="flex-1 min-w-0 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                  <input type="hidden" id="adminArtworkSearchTitleInput">
+                  <input type="hidden" id="adminTrailerSearchTitleInput">
+                  <button type="button" onclick="fetchTmdbAllMediaForSelectedMovie()" id="btnFetchTmdbMediaAll" class="py-2.5 px-4 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:opacity-95 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0">
+                    <span>🔍</span> Search TMDB
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <div class="md:col-span-4 flex flex-col gap-1">
-              <div class="flex items-center justify-between">
-                <label class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <span>✏️</span> Movie Title Editor
-                </label>
-                <span class="text-[10px] text-slate-400 font-mono">Rename / Fix Typos</span>
+            <!-- Row 2: Dedicated Movie Title Editor & Renaming Engine (Full Width & Spacious) -->
+            <div class="p-3 rounded-xl bg-slate-950/80 border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2 min-w-0 shrink-0">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold border border-emerald-500/30">
+                  ✏️
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                    Movie Title Editor
+                  </div>
+                  <div class="text-[10px] text-slate-400">Fix typos or rename title across site & Google Sheets</div>
+                </div>
               </div>
-              <div class="flex gap-2 mt-0.5">
-                <input type="text" id="adminMediaEditTitleInput" placeholder="Edit movie title here..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-emerald-500/50 text-slate-100 font-medium focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400">
-                <button type="button" onclick="renameCurrentMovieTitle()" id="btnRenameMovieTitle" class="py-2.5 px-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1 transition active:scale-95 shrink-0" title="Rename this movie across website and Google Sheets">
-                  <span>✏️</span> Rename
-                </button>
-              </div>
-            </div>
-
-            <div class="md:col-span-4 flex flex-col gap-1">
-              <div class="flex items-center justify-between">
-                <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                  <span>🔍</span> Search TMDB & Sync
-                </label>
-                <span class="text-[10px] text-slate-400 font-mono">Auto-Fill All</span>
-              </div>
-              <div class="flex gap-2 mt-0.5">
-                <input type="text" id="adminMediaSearchTitleInput" onkeydown="if(event.key==='Enter'){event.preventDefault();fetchTmdbAllMediaForSelectedMovie();}" placeholder="Search TMDB..." class="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-amber-500/50 text-slate-100 font-medium focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
-                <input type="hidden" id="adminArtworkSearchTitleInput">
-                <input type="hidden" id="adminTrailerSearchTitleInput">
-                <button type="button" onclick="fetchTmdbAllMediaForSelectedMovie()" id="btnFetchTmdbMediaAll" class="py-2.5 px-3 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:opacity-95 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1 transition active:scale-95 shrink-0">
-                  <span>🔍</span> Search
-                </button>
-                <button type="button" onclick="syncDirectlyFromGoogleSheets()" id="btnSyncGoogleSheets" class="py-2.5 px-2.5 bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/40 text-xs font-bold rounded-xl shadow transition active:scale-95 shrink-0" title="Pull latest updates directly from Google Sheets now">
-                  <span>🔄</span> Sheets
+              <div class="flex items-center gap-2 flex-1 min-w-0">
+                <input type="text" id="adminMediaEditTitleInput" placeholder="Edit or correct movie title here..." class="flex-1 min-w-0 px-3.5 py-2 text-xs sm:text-sm rounded-xl bg-slate-900 border border-emerald-500/50 text-slate-100 font-medium focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400">
+                <button type="button" onclick="renameCurrentMovieTitle()" id="btnRenameMovieTitle" class="py-2 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 shrink-0" title="Rename this movie across website and Google Sheets">
+                  <span>✏️</span> Rename Title
                 </button>
               </div>
             </div>
@@ -1799,7 +1812,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.90";
+    const APP_VERSION = "4.9.91";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2176,6 +2189,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.91": [
+        "Redesigned Movie Media Studio header with spacious two-tier layout.",
+        "Fixed button and input overlap in admin media header.",
+        "Expanded movie title editor into dedicated full-width input bar.",
+        "Added direct Google Sheets sync button beside movie selector.",
+        "Verified responsive layout across mobile, tablet, and desktop viewports."
+      ],
       "4.9.90": [
         "Unified Movie Media Studio into one single screen.",
         "Preview posters and official YouTube trailers side-by-side.",

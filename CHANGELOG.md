@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.91] - 2026-09-06
+
+### What's New
+- Redesigned Movie Media Studio header with spacious two-tier layout.
+- Fixed button and input overlap in admin media header.
+- Expanded movie title editor into dedicated full-width input bar.
+- Added direct Google Sheets sync button beside movie selector.
+- Verified responsive layout across mobile, tablet, and desktop viewports.
+
 ## [4.9.90] - 2026-09-06
 
 ### What's New

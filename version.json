@@ -1,15 +1,12 @@
 {
-  "version": "4.9.90",
+  "version": "4.9.91",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.90",
+  "title": "Brian's Theater v4.9.91",
   "notes": [
-    "Unified Movie Media Studio into one single screen.",
-    "Preview posters and official YouTube trailers side-by-side.",
-    "Added 1-click master save button for all movie media.",
-    "Integrated inline movie title editor to fix typos instantly.",
-    "Renamed movie titles sync to Google Sheets and site.",
-    "Added direct Google Sheets sync button to refresh catalog.",
-    "Protected Google Sheets movie titles from automatic overwriting.",
-    "Fixed 2025 Scary Movie Marathon row name and details."
+    "Redesigned Movie Media Studio header with spacious two-tier layout.",
+    "Fixed button and input overlap in admin media header.",
+    "Expanded movie title editor into dedicated full-width input bar.",
+    "Added direct Google Sheets sync button beside movie selector.",
+    "Verified responsive layout across mobile, tablet, and desktop viewports."
   ]
 }
