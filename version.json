@@ -1,12 +1,12 @@
 {
-  "version": "4.9.87",
+  "version": "4.9.88",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.87",
+  "title": "Brian's Theater v4.9.88",
   "notes": [
-    "Dynamically indexed collection movie order and total film count.",
-    "Sequenced Christmas screening festival films from 1 to 22.",
-    "Preserved sequential marathon film numbering from 1 to 11.",
-    "Added themed emerald holiday badges for Christmas festival films.",
-    "Eliminated static fallback causing all collection cards showing 1."
+    "Integrated official 2024 Christmas Festival archive with 25 movies.",
+    "Sequenced December 2024 holiday festival daily from Dec 1-25.",
+    "Added dedicated 2024 Christmas Festival showcase in Annual Hub.",
+    "Each 2024 festival film displays sequential Holiday Film badges.",
+    "Updated screening counts and vintage archives for historical accuracy."
   ]
 }

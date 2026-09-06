@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.88] - 2026-09-06
+
+### What's New
+- Integrated official 2024 Christmas Festival archive with 25 movies.
+- Sequenced December 2024 holiday festival daily from Dec 1-25.
+- Added dedicated 2024 Christmas Festival showcase in Annual Hub.
+- Each 2024 festival film displays sequential Holiday Film badges.
+- Updated screening counts and vintage archives for historical accuracy.
+
 ## [4.9.87] - 2026-09-06
 
 ### What's New

@@ -1,11 +1,11 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.87
+// VERSION: 4.9.88
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.87';
+const CACHE_NAME = 'brian-theater-v4.9.88';
 const STATIC_ASSETS = [
   './manifest.json',
   './past_movies_data.js',
