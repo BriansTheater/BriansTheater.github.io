@@ -1,12 +1,12 @@
 {
-  "version": "4.9.61",
+  "version": "4.9.62",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.61",
+  "title": "Brian's Theater v4.9.62",
   "notes": [
-    "Instant one-click past movies correction using verified library.",
-    "Automatically fixes title typos and removes calendar artifacts.",
-    "Populates rich plot summaries, runtimes, and YouTube trailer links.",
-    "Executes single batch write in two seconds without timeouts.",
-    "Synchronizes pristine movie catalog to Firebase realtime database."
+    "Automated cloud background execution for past movies formatting.",
+    "Integrated auto-correction directly into Google Sheets heartbeat sync.",
+    "Enhanced date normalizer for ISO and standard date formats.",
+    "Prevented recursive sync loops during past movies batch writes.",
+    "Synchronized live spreadsheet updates automatically without manual clicks."
   ]
 }

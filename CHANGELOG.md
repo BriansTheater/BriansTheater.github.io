@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.62] - 2026-09-06
+
+### What's New
+- Automated cloud background execution for past movies formatting.
+- Integrated auto-correction directly into Google Sheets heartbeat sync.
+- Enhanced date normalizer for ISO and standard date formats.
+- Prevented recursive sync loops during past movies batch writes.
+- Synchronized live spreadsheet updates automatically without manual clicks.
+
 ## [4.9.61] - 2026-09-06
 
 ### What's New
