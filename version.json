@@ -1,12 +1,12 @@
 {
-  "version": "4.9.88",
+  "version": "4.9.89",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.88",
+  "title": "Brian's Theater v4.9.89",
   "notes": [
-    "Integrated official 2024 Christmas Festival archive with 25 movies.",
-    "Sequenced December 2024 holiday festival daily from Dec 1-25.",
-    "Added dedicated 2024 Christmas Festival showcase in Annual Hub.",
-    "Each 2024 festival film displays sequential Holiday Film badges.",
-    "Updated screening counts and vintage archives for historical accuracy."
+    "Restored verified high-res TMDB artwork for holiday festival films.",
+    "Eliminated 404 placeholder fallbacks across 2024 Christmas lineup.",
+    "Added official poster artwork for all community movie requests.",
+    "Enhanced artwork dictionary to prevent missing poster canvas displays.",
+    "Synchronized verified poster paths across web app and catalog."
   ]
 }

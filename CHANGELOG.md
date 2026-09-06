@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.89] - 2026-09-06
+
+### What's New
+- Restored verified high-res TMDB artwork for holiday festival films.
+- Eliminated 404 placeholder fallbacks across 2024 Christmas lineup.
+- Added official poster artwork for all community movie requests.
+- Enhanced artwork dictionary to prevent missing poster canvas displays.
+- Synchronized verified poster paths across web app and catalog.
+
 ## [4.9.88] - 2026-09-06
 
 ### What's New

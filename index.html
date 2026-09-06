@@ -1785,7 +1785,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.88";
+    const APP_VERSION = "4.9.89";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2162,6 +2162,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.89": [
+        "Restored verified high-res TMDB artwork for holiday festival films.",
+        "Eliminated 404 placeholder fallbacks across 2024 Christmas lineup.",
+        "Added official poster artwork for all community movie requests.",
+        "Enhanced artwork dictionary to prevent missing poster canvas displays.",
+        "Synchronized verified poster paths across web app and catalog."
+      ],
       "4.9.88": [
         "Integrated official 2024 Christmas Festival archive with 25 movies.",
         "Sequenced December 2024 holiday festival daily from Dec 1-25.",
@@ -3076,7 +3083,32 @@
       "Normal": "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg",
       "Dog Man": "https://image.tmdb.org/t/p/w780/iXU87IdtNsYt7n6OigPJBDdbFf1.jpg",
       "Borderlands": "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg",
-      "Scary Movie 2026": "https://image.tmdb.org/t/p/w780/2tPQbPQeHEYAGoXFSW61IWNmoce.jpg"
+      "Scary Movie 2026": "https://image.tmdb.org/t/p/w780/2tPQbPQeHEYAGoXFSW61IWNmoce.jpg",
+      "The interview": "https://image.tmdb.org/t/p/w780/tIDC4xT65l7a8qbgg8GvwD5g8c5.jpg",
+      "Pineapple Express": "https://image.tmdb.org/t/p/w780/6E50WjeOYjDZg9HXgPjYdGtY2jG.jpg",
+      "The Mandalorian and Grogu": "https://image.tmdb.org/t/p/w780/cE9LAdexd9ju0yIkmCJBOKZg9JR.jpg",
+      "The President's Cake": "https://image.tmdb.org/t/p/w780/uSrozVUxIUaer6FIUHHFtOdbqj8.jpg",
+      "Fuze": "https://image.tmdb.org/t/p/w780/oMFdQE5hMJ9JjhNORegwTo0GKmh.jpg",
+      "Signal One": "https://image.tmdb.org/t/p/w780/bi7Aeaozl51cd5K6vAn8tI1lOW0.jpg",
+      "Rich Flu": "https://image.tmdb.org/t/p/w780/fKmn4SrS41loy8gMzyxups69Xof.jpg",
+      "In the Grey": "https://image.tmdb.org/t/p/w780/dQgIcW6Th08kMRf2HBoYWoFE6OD.jpg",
+      "Stop! That! Train!": "https://image.tmdb.org/t/p/w780/w90dGS6D2lVO4aO5rdQ8QECrUGY.jpg",
+      "Lifehack": "https://image.tmdb.org/t/p/w780/ab8uFG6L3gKnog7ntrUdgo28hzK.jpg",
+      "Toy Story 5": "https://image.tmdb.org/t/p/w780/sfQtVlIHljToOwYjhe21KPGzZWK.jpg",
+      "Backrooms": "https://image.tmdb.org/t/p/w780/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg",
+      "I Want Your Sex": "https://image.tmdb.org/t/p/w780/pR7SIX3AwqdoD96OI44oLG98e7g.jpg",
+      "The Hangover Part II": "https://image.tmdb.org/t/p/w780/cKZu0Fdkj7dmwbfMpgDqVVCkLJQ.jpg",
+      "The Hangover 2": "https://image.tmdb.org/t/p/w780/cKZu0Fdkj7dmwbfMpgDqVVCkLJQ.jpg",
+      "Sex": "https://image.tmdb.org/t/p/w780/pR7SIX3AwqdoD96OI44oLG98e7g.jpg",
+      "40 year old virgin": "https://image.tmdb.org/t/p/w780/mVeoqL37gzhMXQVpONi9DGOQ3tZ.jpg",
+      "The 40 Year-Old Virgin": "https://image.tmdb.org/t/p/w780/mVeoqL37gzhMXQVpONi9DGOQ3tZ.jpg",
+      "boarderlands": "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg",
+      "Deep Water": "https://image.tmdb.org/t/p/w780/ZWHxL2ETItcZzeVsVfs6gv3SZ7.jpg",
+      "Deep Water 8/16": "https://image.tmdb.org/t/p/w780/ZWHxL2ETItcZzeVsVfs6gv3SZ7.jpg",
+      "Dracula": "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg",
+      "NOSFERATU": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
+      "Nosferatu": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
+      "Hokum": "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg"
     };
 
     let customMovieImages = {};
@@ -3170,6 +3202,26 @@
         if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) {
           return v;
         }
+      }
+
+      // 4. Fallback search across vaultMovies and window.PAST_MOVIES_DATA
+      const catalogSource = (Array.isArray(vaultMovies) && vaultMovies.length > 0) 
+        ? vaultMovies 
+        : (Array.isArray(window.PAST_MOVIES_DATA) ? window.PAST_MOVIES_DATA : []);
+      
+      const foundInCat = catalogSource.find(m => {
+        if (!m || !m.title) return false;
+        const cTitle = String(m.title).replace(/^🎬\s*/, '').toLowerCase().trim();
+        if (cTitle === lower) return true;
+        const cNorm = cTitle.replace(/[^a-z0-9]/g, '');
+        if (norm && cNorm === norm) return true;
+        if (norm && cNorm && (norm.startsWith(cNorm) || cNorm.startsWith(norm))) return true;
+        return false;
+      });
+
+      if (foundInCat && (foundInCat.posterUrl || foundInCat.imageUrl)) {
+        const u = foundInCat.posterUrl || foundInCat.imageUrl;
+        if (u && typeof u === 'string' && u.startsWith('http') && !u.includes('data:image')) return u;
       }
 
       return getCinemaPlaceholder(title);
@@ -6989,21 +7041,21 @@
     }
 
     communityRequests = [
-      { title: "The interview", requester: "Dwarf", genre: "Disney+ / Hulu", status: "Under Review" },
-      { title: "Pineapple Express", requester: "Dwarf", genre: "Netflix", status: "Under Review" },
-      { title: "The Mandalorian and Grogu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
-      { title: "The President's Cake", requester: "Brian", genre: "Netflix", status: "Under Review" },
-      { title: "Fuze", requester: "Brian", genre: "HBO Max", status: "Under Review" },
-      { title: "Signal One", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
-      { title: "Rich Flu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
-      { title: "In the Grey", requester: "Brian", genre: "Starz", status: "Under Review" },
-      { title: "Stop! That! Train!", requester: "Brian", genre: "Netflix", status: "Under Review" },
-      { title: "Lifehack", requester: "Brian", genre: "Netflix", status: "Under Review" },
-      { title: "Toy Story 5", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review" },
-      { title: "Backrooms", requester: "Brian", genre: "HBO Max", status: "Under Review" },
-      { title: "Neighbors", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
-      { title: "Neighbors 2: Sorority Rising", requester: "Dwarf", genre: "Netflix", status: "Scheduled" },
-      { title: "Return to silent hill", requester: "Brian", genre: "plex", status: "Scheduled" }
+      { title: "The interview", requester: "Dwarf", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/tIDC4xT65l7a8qbgg8GvwD5g8c5.jpg" },
+      { title: "Pineapple Express", requester: "Dwarf", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/6E50WjeOYjDZg9HXgPjYdGtY2jG.jpg" },
+      { title: "The Mandalorian and Grogu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/cE9LAdexd9ju0yIkmCJBOKZg9JR.jpg" },
+      { title: "The President's Cake", requester: "Brian", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/uSrozVUxIUaer6FIUHHFtOdbqj8.jpg" },
+      { title: "Fuze", requester: "Brian", genre: "HBO Max", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/oMFdQE5hMJ9JjhNORegwTo0GKmh.jpg" },
+      { title: "Signal One", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/bi7Aeaozl51cd5K6vAn8tI1lOW0.jpg" },
+      { title: "Rich Flu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/fKmn4SrS41loy8gMzyxups69Xof.jpg" },
+      { title: "In the Grey", requester: "Brian", genre: "Starz", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/dQgIcW6Th08kMRf2HBoYWoFE6OD.jpg" },
+      { title: "Stop! That! Train!", requester: "Brian", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/w90dGS6D2lVO4aO5rdQ8QECrUGY.jpg" },
+      { title: "Lifehack", requester: "Brian", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/ab8uFG6L3gKnog7ntrUdgo28hzK.jpg" },
+      { title: "Toy Story 5", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/sfQtVlIHljToOwYjhe21KPGzZWK.jpg" },
+      { title: "Backrooms", requester: "Brian", genre: "HBO Max", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg" },
+      { title: "Neighbors", requester: "Dwarf", genre: "Netflix", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/sN1RU08CMi8xkRIibremh3AOdgw.jpg" },
+      { title: "Neighbors 2: Sorority Rising", requester: "Dwarf", genre: "Netflix", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/eyjcLLwxuRXACbglIbwWwaXK9DN.jpg" },
+      { title: "Return to silent hill", requester: "Brian", genre: "plex", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/mdw7bSnE11WpwWf3ViXtnavuqiT.jpg" }
     ];
 
     function loadRequests() {
