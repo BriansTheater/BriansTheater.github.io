@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.96] - 2026-09-06
+
+### What's New
+- Rebranded Annual Hub to Marathons across controls and modal.
+- Added franchise cards for Harry Potter and Pirates runs.
+- Added action showcase cards for Fast and Ghostbusters marathons.
+- Enabled one-tap vault filtering for legendary movie marathons.
+- Verified clean responsive layouts and zero console errors.
+
 ## [4.9.95] - 2026-09-06
 
 ### What's New

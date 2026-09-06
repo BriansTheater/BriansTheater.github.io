@@ -1,12 +1,12 @@
 {
-  "version": "4.9.95",
+  "version": "4.9.96",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.95",
+  "title": "Brian's Theater v4.9.96",
   "notes": [
-    "Reordered Vault header with stats bar positioned at the top.",
-    "Dedicated full-width second row for media and source filters.",
-    "Positioned annual years and festival theme shortcuts below filters.",
-    "Streamlined responsive spacing across mobile, tablet, and desktop screens.",
-    "Zero console errors and seamless filter interactions fully verified."
+    "Rebranded Annual Hub to Marathons across controls and modal.",
+    "Added franchise cards for Harry Potter and Pirates runs.",
+    "Added action showcase cards for Fast and Ghostbusters marathons.",
+    "Enabled one-tap vault filtering for legendary movie marathons.",
+    "Verified clean responsive layouts and zero console errors."
   ]
 }
