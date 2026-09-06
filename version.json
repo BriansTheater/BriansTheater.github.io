@@ -1,11 +1,12 @@
 {
-  "version": "4.9.84",
+  "version": "4.9.85",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.84",
+  "title": "Brian's Theater v4.9.85",
   "notes": [
-    "Added interactive expandable marathon movie cards with multi-film lineups.",
-    "Introduced dedicated Marathon badge with total film count indicator.",
-    "One-click YouTube trailer search for individual marathon titles.",
-    "Smart search automatically finds and expands matching marathon films."
+    "Added individual movie sub-cards for full marathon film collection.",
+    "Each marathon movie features verified artwork and embedded trailers.",
+    "One-click collection filter browses all marathon films in sequence.",
+    "Marathon event hub card links directly to individual sub-cards.",
+    "Zero external search windows for streamlined in-app video playback."
   ]
 }

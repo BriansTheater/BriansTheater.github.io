@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.85] - 2026-09-06
+
+### What's New
+- Added individual movie sub-cards for full marathon film collection.
+- Each marathon movie features verified artwork and embedded trailers.
+- One-click collection filter browses all marathon films in sequence.
+- Marathon event hub card links directly to individual sub-cards.
+- Zero external search windows for streamlined in-app video playback.
+
 ## [4.9.84] - 2026-09-06
 
 ### What's New

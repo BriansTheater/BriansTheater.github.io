@@ -1569,7 +1569,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.84";
+    const APP_VERSION = "4.9.85";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -1946,6 +1946,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.85": [
+        "Added individual movie sub-cards for full marathon film collection.",
+        "Each marathon movie features verified artwork and embedded trailers.",
+        "One-click collection filter browses all marathon films in sequence.",
+        "Marathon event hub card links directly to individual sub-cards.",
+        "Zero external search windows for streamlined in-app video playback."
+      ],
       "4.9.81": [
         "Added styled scrollbars to movie card plot summaries.",
         "Preserved clean multi-line breaks across all movie summaries.",
@@ -5071,7 +5078,19 @@
       "Normal": "dQw4w9WgXcQ",
       "Dog Man": "Wa0B2s7E2b8",
       "Borderlands": "l3XzepN03KQ",
-      "Scary Movie 2026": "gCcx85zbxz4"
+      "Scary Movie 2026": "gCcx85zbxz4",
+      "A Nightmare on Elm Street": "dCVh4lBfW-c",
+      "A Nightmare on Elm Street 2: Freddy's Revenge": "b-dZa6xt6hQ",
+      "A Nightmare on Elm Street 3: Dream Warriors": "oy-hgBu1h0w",
+      "A Nightmare on Elm Street 4: The Dream Master": "2m1a2Pt8Vjw",
+      "A Nightmare on Elm Street 5: The Dream Child": "qa4lBfEWBBs",
+      "Freddy's Dead: The Final Nightmare": "PhcKV5e4RoU",
+      "Wes Craven's New Nightmare": "9dLQYxBYGTQ",
+      "Freddy vs. Jason": "ipbCUW3umJU",
+      "Freddy vs Jason": "ipbCUW3umJU",
+      "A Nightmare on Elm Street (2010)": "ZuYoEtEI_go",
+      "Clown in a Cornfield": "lWUKnQVCAhk",
+      "IT Chapter Two": "Pr85vto4dbo"
     };
 
     function getTrailerIdForMovie(movie) {
@@ -5129,6 +5148,37 @@
 
     let vaultPageSize = 24;
     let vaultSearchTimer = null;
+    let activeVaultCollectionFilter = null;
+
+    function filterVaultToCollection(collectionName) {
+      activeVaultCollectionFilter = collectionName;
+      vaultPageSize = 50;
+      const searchInput = document.getElementById('vaultSearch');
+      if (searchInput) {
+        searchInput.value = '';
+        const clearBtn = document.getElementById('vaultSearchClearBtn');
+        if (clearBtn) clearBtn.classList.add('hidden');
+      }
+      renderVault();
+      const grid = document.getElementById('vaultGrid');
+      if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function clearCollectionFilter() {
+      activeVaultCollectionFilter = null;
+      vaultPageSize = 24;
+      renderVault();
+    }
+
+    function clearVaultSearch() {
+      const input = document.getElementById('vaultSearch');
+      if (input) input.value = '';
+      const clearBtn = document.getElementById('vaultSearchClearBtn');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      activeVaultCollectionFilter = null;
+      vaultPageSize = 24;
+      renderVault();
+    }
 
     function handleVaultSearchInput() {
       const input = document.getElementById('vaultSearch');
@@ -5358,6 +5408,10 @@
 
       currentFilteredVault = vaultMovies.filter(m => {
         if (!m) return false;
+        if (activeVaultCollectionFilter) {
+          const cName = activeVaultCollectionFilter.toLowerCase();
+          return Boolean(m.marathonCollection && m.marathonCollection.toLowerCase() === cName);
+        }
         if (vFilter === 'past' && !(m.source === 'past' || m.isConcluded)) return false;
         if (vFilter === 'request' && (m.source !== 'request' || m.isConcluded)) return false;
         if (vFilter !== 'all' && vFilter !== 'past' && vFilter !== 'request' && m.source !== vFilter) return false;
@@ -5373,22 +5427,41 @@
         const year = String(m.year || '').toLowerCase();
         const overview = String(m.overview || m.summary || m.desc || '').toLowerCase();
         const requester = String(m.requester || '').toLowerCase();
+        const col = String(m.marathonCollection || '').toLowerCase();
 
         const normQ = q.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
         const normOverview = overview.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
         const normTitle = title.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
 
-        return title.includes(q) || genre.includes(q) || year.includes(q) || overview.includes(q) || requester.includes(q) || (Boolean(normQ) && (normTitle.includes(normQ) || normOverview.includes(normQ)));
+        return title.includes(q) || genre.includes(q) || year.includes(q) || overview.includes(q) || requester.includes(q) || col.includes(q) || (Boolean(normQ) && (normTitle.includes(normQ) || normOverview.includes(normQ)));
       });
+
+      if (activeVaultCollectionFilter) {
+        currentFilteredVault.sort((a, b) => {
+          const ordA = a.marathonOrder || 999;
+          const ordB = b.marathonOrder || 999;
+          return ordA - ordB;
+        });
+      }
 
       const countEl = document.getElementById('vaultCount');
       const typeLabel = vMediaType === 'movie' ? 'movies' : (vMediaType === 'tv' ? 'TV shows' : 'titles');
-      if (countEl) countEl.textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} ${typeLabel}`;
+      if (countEl) {
+        if (activeVaultCollectionFilter) {
+          countEl.textContent = `Showing all ${currentFilteredVault.length} films in ${activeVaultCollectionFilter}`;
+        } else {
+          countEl.textContent = `Showing ${currentFilteredVault.length} of ${vaultMovies.length} ${typeLabel}`;
+        }
+      }
       const statusEl = document.getElementById('vaultFilterStatus');
       if (statusEl) {
-        const typeStr = vMediaType === 'movie' ? 'Movies' : (vMediaType === 'tv' ? 'TV' : 'All Types');
-        const srcStr = vFilter === 'past' ? 'Past Screenings' : (vFilter === 'request' ? 'Requests' : 'All Sources');
-        statusEl.textContent = `${typeStr} • ${srcStr}`;
+        if (activeVaultCollectionFilter) {
+          statusEl.textContent = `Marathon Collection • ${currentFilteredVault.length} Films`;
+        } else {
+          const typeStr = vMediaType === 'movie' ? 'Movies' : (vMediaType === 'tv' ? 'TV' : 'All Types');
+          const srcStr = vFilter === 'past' ? 'Past Screenings' : (vFilter === 'request' ? 'Requests' : 'All Sources');
+          statusEl.textContent = `${typeStr} • ${srcStr}`;
+        }
       }
 
       if (currentFilteredVault.length === 0) {
@@ -5437,9 +5510,9 @@
               <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(cleanTitle)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
               <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
               
-              <!-- Top-Left Tag Badge: Marathon or TV Indicator -->
+              <!-- Top-Left Tag Badge: Marathon Sub-Card, Parent Hub, or TV Indicator -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                ${isMarathon ? `<span class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 border border-rose-700/80 font-extrabold text-[10px] flex items-center gap-1 shadow-md">🎟️ Marathon • ${marathonInfo.count} Films</span>` : ''}
+                ${m.marathonCollection ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(m.marathonCollection)}')" title="Filter to this Marathon Collection" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎟️ Marathon • Film ${m.marathonOrder || 1} of ${m.marathonTotal || 11} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Mystery Scary Movie Marathon')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎟️ Marathon Hub • ${marathonInfo.count} Films ↗</button>` : '')}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
@@ -5494,38 +5567,16 @@
               <div class="text-slate-300 text-xs whitespace-pre-line leading-relaxed max-h-32 sm:max-h-36 overflow-y-auto pr-1.5 scrollbar-thin select-text">${escapeHtml(d.summary)}</div>
             </div>
 
-            <!-- Marathon Expandable Lineup Section -->
+            <!-- Marathon Hub Link to Sub-Cards -->
             ${isMarathon ? `
-            <div class="mt-2.5 flex flex-col gap-1.5">
-              <button type="button" onclick="toggleMarathonLineup('${marathonCardKey}')" id="btn-${marathonCardKey}" class="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-red-950/70 via-slate-900/90 to-red-950/70 hover:from-red-900/70 hover:to-red-900/70 text-rose-300 border border-red-800/60 text-xs font-bold transition flex items-center justify-between shadow-sm active:scale-98 cursor-pointer">
-                <span class="flex items-center gap-1.5">
-                  <span>🍿</span> <span>Marathon Lineup (${marathonInfo.count} Movies)</span>
+            <div class="mt-2.5">
+              <button type="button" onclick="filterVaultToCollection('2025 Mystery Scary Movie Marathon')" class="w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-red-950/80 via-slate-900 to-red-950/80 hover:from-red-900/90 hover:to-red-900/90 text-rose-300 hover:text-white border border-red-700/80 hover:border-rose-500 text-xs font-bold transition flex items-center justify-between shadow-md active:scale-98 cursor-pointer group/colbtn">
+                <span class="flex items-center gap-2">
+                  <span class="text-sm">🍿</span>
+                  <span>View All 11 Marathon Sub-Cards</span>
                 </span>
-                <span id="arrow-${marathonCardKey}" class="text-xs transition-transform duration-200" style="${shouldAutoExpand ? 'transform: rotate(180deg);' : ''}">▾</span>
+                <span class="font-mono text-[11px] text-rose-400 group-hover/colbtn:translate-x-0.5 transition-transform">Explore Collection →</span>
               </button>
-
-              <div id="drawer-${marathonCardKey}" class="${shouldAutoExpand ? 'flex' : 'hidden'} flex-col gap-1.5 p-2.5 rounded-xl bg-slate-950 border border-red-900/50 text-xs max-h-56 overflow-y-auto custom-scrollbar">
-                <div class="text-[10px] uppercase font-bold tracking-wider text-rose-400/90 px-1 mb-0.5 flex items-center justify-between">
-                  <span>Films Screened in Marathon:</span>
-                  <span class="font-mono text-slate-400 text-[9px]">${marathonInfo.count} Titles</span>
-                </div>
-                ${marathonInfo.movies.map((film, fIdx) => {
-                  const fLow = film.toLowerCase();
-                  const normF = fLow.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
-                  const isMatch = Boolean(q && (fLow.includes(q) || (Boolean(normQ) && normF.includes(normQ))));
-                  return `
-                <div class="flex items-center justify-between gap-2 p-1.5 rounded-lg ${isMatch ? 'bg-rose-950/50 border border-rose-600/70' : 'bg-slate-900/70 hover:bg-slate-900 border border-slate-800/60'} transition group/film">
-                  <div class="flex items-center gap-2 truncate">
-                    <span class="w-4 h-4 rounded-full ${isMatch ? 'bg-rose-600 text-white' : 'bg-red-950 text-red-400'} font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border border-red-800/50">${fIdx + 1}</span>
-                    <span class="film-title text-slate-200 font-medium truncate text-xs group-hover/film:text-amber-300 transition ${isMatch ? 'text-rose-200 font-bold' : ''}" title="${escapeHtml(film)}">${escapeHtml(film)}</span>
-                  </div>
-                  <button type="button" onclick="window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent('${escapeHtml(film)} trailer'), '_blank')" title="Watch Trailer on YouTube" class="shrink-0 text-[10px] px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition flex items-center gap-1 active:scale-95 cursor-pointer">
-                    <span>▶</span> <span class="hidden sm:inline">Trailer</span>
-                  </button>
-                </div>
-                `;
-                }).join('')}
-              </div>
             </div>
             ` : ''}
 
@@ -5608,7 +5659,28 @@
         `;
       }
 
-      grid.innerHTML = cardsHtml;
+      const collectionBannerHtml = activeVaultCollectionFilter ? `
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-red-950/80 via-slate-950 to-red-950/80 border border-red-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-red-900/50 border border-red-700/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+              🎟️
+            </div>
+            <div>
+              <div class="text-rose-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                <span>${escapeHtml(activeVaultCollectionFilter)}</span>
+              </div>
+              <div class="text-slate-400 text-xs mt-0.5">
+                Showing all ${currentFilteredVault.length} individual marathon sub-cards with artwork and embedded trailers
+              </div>
+            </div>
+          </div>
+          <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-300 hover:text-white border border-red-800/60 hover:border-red-600 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+            <span>✕</span> <span>Show All Vault Titles</span>
+          </button>
+        </div>
+      ` : '';
+
+      grid.innerHTML = collectionBannerHtml + cardsHtml;
     }
 
     function toggleVaultStory(idx) {
@@ -5955,11 +6027,17 @@
             trailerUrl: m.trailerUrl || "",
             trailerId: m.trailerId || "",
             summary: m.summary || m.overview || "",
-            overview: m.overview || m.summary || ""
+            overview: m.overview || m.summary || "",
+            marathonCollection: m.marathonCollection || "",
+            marathonOrder: m.marathonOrder || null,
+            marathonTotal: m.marathonTotal || null
           });
           added++;
         } else {
           // 100% preservation of Column N data, watch date, times, trailer, and artwork
+          if (m.marathonCollection) existing.marathonCollection = m.marathonCollection;
+          if (m.marathonOrder) existing.marathonOrder = m.marathonOrder;
+          if (m.marathonTotal) existing.marathonTotal = m.marathonTotal;
           if (artworkUrl && (!existing.posterUrl || !existing.imageUrl || existing.posterUrl.includes('data:image') || existing.posterUrl.includes('svg'))) {
             existing.posterUrl = artworkUrl;
             existing.imageUrl = artworkUrl;
