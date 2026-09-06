@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.62 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.63 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1320,7 +1320,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.62";
+    const APP_VERSION = "4.9.63";
     window.APP_VERSION = APP_VERSION;
 
     function syncAppVersionBadges() {
@@ -1695,6 +1695,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.63": [
+        "Built sleek Search & Edit Movies popup modal for sheets.",
+        "Added real-time debounced title search across past movies catalog.",
+        "Implemented instant row jumping and title renaming capabilities.",
+        "Integrated Search & Edit Movies into primary theater menus.",
+        "Pushed updated Apps Script backend across project environments."
+      ],
       "4.9.62": [
         "Automated cloud background execution for past movies formatting.",
         "Integrated auto-correction directly into Google Sheets heartbeat sync.",
@@ -1950,7 +1957,7 @@
         isAvailable = false;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.62"] || [];
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.63"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;

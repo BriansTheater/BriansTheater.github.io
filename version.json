@@ -1,12 +1,12 @@
 {
-  "version": "4.9.62",
+  "version": "4.9.63",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.62",
+  "title": "Brian's Theater v4.9.63",
   "notes": [
-    "Automated cloud background execution for past movies formatting.",
-    "Integrated auto-correction directly into Google Sheets heartbeat sync.",
-    "Enhanced date normalizer for ISO and standard date formats.",
-    "Prevented recursive sync loops during past movies batch writes.",
-    "Synchronized live spreadsheet updates automatically without manual clicks."
+    "Built sleek Search & Edit Movies popup modal for sheets.",
+    "Added real-time debounced title search across past movies catalog.",
+    "Implemented instant row jumping and title renaming capabilities.",
+    "Integrated Search & Edit Movies into primary theater menus.",
+    "Pushed updated Apps Script backend across project environments."
   ]
 }

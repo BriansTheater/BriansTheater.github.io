@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.9.63] - 2026-09-06
+
+### What's New
+- Built sleek Search & Edit Movies popup modal for sheets.
+- Added real-time debounced title search across past movies catalog.
+- Implemented instant row jumping and title renaming capabilities.
+- Integrated Search & Edit Movies into primary theater menus.
+- Pushed updated Apps Script backend across project environments.
+
 ## [4.9.62] - 2026-09-06
 
 ### What's New
