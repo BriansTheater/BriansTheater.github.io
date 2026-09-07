@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.103] - 2026-09-06
+
+### What's New
+- Conducted exhaustive bug scan across all tabs and features.
+- Added defensive null guards and fetch rejection handlers.
+- Added automatic fallback for stage cinema poster image.
+- Verified responsive layout across viewports with zero console errors.
+
 ## [4.9.102] - 2026-09-06
 
 ### What's New

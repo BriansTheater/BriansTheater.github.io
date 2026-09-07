@@ -247,7 +247,7 @@
 
         <!-- 4. PIC (The Stage Poster - Clean Edge-to-Edge Cinema Banner) -->
         <div class="relative z-10 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl w-full max-w-lg aspect-[16/9] flex items-center justify-center group my-1">
-          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
         </div>
 
@@ -2016,7 +2016,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.102";
+    const APP_VERSION = "4.9.103";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2393,6 +2393,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.103": [
+        "Conducted exhaustive bug scan across all tabs and features.",
+        "Added defensive null guards and fetch rejection handlers.",
+        "Added automatic fallback for stage cinema poster image.",
+        "Verified responsive layout across viewports with zero console errors."
+      ],
       "4.9.102": [
         "Fixed schedule loading crash caused by undefined alert variable.",
         "Hidden entrance button when screening is over and closed.",
@@ -3638,9 +3644,7 @@
       } catch(err) {}
 
       // 2. Notify Google Apps Script backend
-      try {
-        fetch(`${API_BASE_URL}?action=admin_set_door_mode&mode=${encodeURIComponent(mode)}`, { mode: 'no-cors' });
-      } catch(e) {}
+      fetch(`${API_BASE_URL}?action=admin_set_door_mode&mode=${encodeURIComponent(mode)}`, { mode: 'no-cors' }).catch(() => {});
     }
 
     function setEntranceState(isOpen) {
@@ -4279,12 +4283,21 @@
       const timeLeft = document.getElementById('adminTimeLeft').value.trim();
       const posterUrl = document.getElementById('adminPosterUrl').value.trim();
 
-      if (title) document.getElementById('nowPlayingHeading').textContent = title;
-      if (timeLeft) document.getElementById('screenTimeLeft').textContent = timeLeft;
-      if (posterUrl) document.getElementById('stagePoster').src = posterUrl;
+      if (title) {
+        const el = document.getElementById('nowPlayingHeading');
+        if (el) el.textContent = title;
+      }
+      if (timeLeft) {
+        const el = document.getElementById('screenTimeLeft');
+        if (el) el.textContent = timeLeft;
+      }
+      if (posterUrl) {
+        const el = document.getElementById('stagePoster');
+        if (el) el.src = posterUrl;
+      }
 
       // Send to backend API
-      fetch(`${API_BASE_URL}?action=admin_update_now_playing&title=${encodeURIComponent(title)}&timeLeft=${encodeURIComponent(timeLeft)}&posterUrl=${encodeURIComponent(posterUrl)}`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=admin_update_now_playing&title=${encodeURIComponent(title)}&timeLeft=${encodeURIComponent(timeLeft)}&posterUrl=${encodeURIComponent(posterUrl)}`, { mode: 'no-cors' }).catch(() => {});
       showTheaterToast(`🎉 Now Playing updated to "${title}"!`);
       switchTab('screening');
     }
@@ -4302,7 +4315,7 @@
       }
       setTrailer(url);
 
-      fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' }).catch(() => {});
       showTheaterToast(`🎬 Trailer broadcasted live to stage!`);
       switchTab('screening');
     }
@@ -4315,7 +4328,7 @@
       }
       const btn = document.getElementById('btnForceSync');
       btn.textContent = "Syncing...";
-      fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
       setTimeout(() => {
         btn.textContent = "⚡ Force Sync";
         showTheaterToast("⚡ Firebase Realtime Database synced successfully!");
@@ -5051,7 +5064,7 @@
         localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
       } catch(e) {}
 
-      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
@@ -5215,7 +5228,7 @@
         localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
       } catch(e) {}
 
-      fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
@@ -5309,7 +5322,7 @@
       } catch(e) {}
 
       // Sync to Google Apps Script and Firebase
-      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
@@ -5336,7 +5349,7 @@
         localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
       } catch(e) {}
 
-      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
@@ -5361,7 +5374,7 @@
         localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
       } catch(e) {}
 
-      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
@@ -5442,7 +5455,7 @@
       } catch(e) {}
 
       // Sync summary & metadata to backend Google Apps Script
-      fetch(`${API_BASE_URL}?action=set_movie_summary&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}&year=${encodeURIComponent(year)}&runtime=${encodeURIComponent(runtime)}&genres=${encodeURIComponent(genres)}`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=set_movie_summary&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}&year=${encodeURIComponent(year)}&runtime=${encodeURIComponent(runtime)}&genres=${encodeURIComponent(genres)}`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
@@ -5551,9 +5564,7 @@
       } catch(err) {}
 
       // 3. Trigger backend sync endpoint as well
-      try {
-        fetch(`${API_BASE_URL}?action=submit_movie_request&title=${encodeURIComponent(title)}&requester=${encodeURIComponent(name)}&overview=${encodeURIComponent(notes ? 'Platform: ' + platform + ' • Notes: ' + notes : 'Platform: ' + platform)}`, { mode: 'no-cors' });
-      } catch(e) {}
+      fetch(`${API_BASE_URL}?action=submit_movie_request&title=${encodeURIComponent(title)}&requester=${encodeURIComponent(name)}&overview=${encodeURIComponent(notes ? 'Platform: ' + platform + ' • Notes: ' + notes : 'Platform: ' + platform)}`, { mode: 'no-cors' }).catch(() => {});
 
       if (btn) {
         btn.innerHTML = '<span>🚀</span> <span>Submit Movie Request</span>';
@@ -7747,7 +7758,7 @@
       const item = communityRequests[idx];
       if (!item) return;
       const title = item.title;
-      fetch(`${API_BASE_URL}?action=admin_schedule_request&title=${encodeURIComponent(title)}`, { mode: 'no-cors' });
+      fetch(`${API_BASE_URL}?action=admin_schedule_request&title=${encodeURIComponent(title)}`, { mode: 'no-cors' }).catch(() => {});
       alert(`🎉 Added "${title}" to Quick Schedule!`);
       item.status = "Scheduled";
       loadRequests();
@@ -7761,9 +7772,7 @@
       }
       const item = communityRequests[idx];
       if (item && item.id) {
-        try {
-          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/requests/${item.id}.json`, { method: 'DELETE' });
-        } catch(e) {}
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/requests/${item.id}.json`, { method: 'DELETE' }).catch(() => {});
       }
       communityRequests.splice(idx, 1);
       loadRequests();

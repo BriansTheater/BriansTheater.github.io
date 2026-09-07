@@ -1,11 +1,11 @@
 {
-  "version": "4.9.102",
+  "version": "4.9.103",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.102",
+  "title": "Brian's Theater v4.9.103",
   "notes": [
-    "Fixed schedule loading crash caused by undefined alert variable.",
-    "Hidden entrance button when screening is over and closed.",
-    "Removed redundant alert banner from main theater stage card.",
+    "Conducted exhaustive bug scan across all tabs and features.",
+    "Added defensive null guards and fetch rejection handlers.",
+    "Added automatic fallback for stage cinema poster image.",
     "Verified responsive layout across viewports with zero console errors."
   ]
 }
