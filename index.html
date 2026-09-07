@@ -284,7 +284,7 @@
           <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
             <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2">
               <span>⭐</span>
-              <span id="btnEnterAuditoriumText">ENTER THEATER (DOORS OPEN NOW)</span>
+              <span id="btnEnterAuditoriumText">Enter</span>
               <span>⭐</span>
             </a>
             <div id="btnEnterAuditoriumSubtext" class="flex items-center justify-center text-xs text-amber-300 font-semibold text-center">
@@ -349,7 +349,7 @@
           </div>
         </div>
         <a href="http://tiny.cc/BriansTheater" target="_blank" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg transition flex items-center gap-2 shrink-0 transform active:scale-95">
-          <span>⭐</span> ENTER THEATER NOW <span>⭐</span>
+          <span>⭐</span> Enter <span>⭐</span>
         </a>
       </div>
 
@@ -2034,7 +2034,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.97";
+    const APP_VERSION = "4.9.98";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2411,6 +2411,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.98": [
+        "Simplified entrance gold button text to Enter.",
+        "Streamlined live screening alert banner button to Enter.",
+        "Maintained clean subtext indicators for active auditorium status.",
+        "Verified responsive layout with zero console errors."
+      ],
       "4.9.97": [
         "Fixed live screening runtime countdown reference error on stage.",
         "Unlocked live screening entrance button during active movie presentations.",
@@ -3647,7 +3653,7 @@
         }
         if (lockIcon) lockIcon.textContent = '🟢';
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM DOORS ARE OPEN NOW';
-        if (lockSub) lockSub.innerHTML = 'Virtual auditorium doors are unlocked! Click <b class="text-amber-300">ENTER THEATER</b> above to join the lobby & chat.';
+        if (lockSub) lockSub.innerHTML = 'Virtual auditorium doors are unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
         // Closed: Show countdown box, hide Enter Theater button
         if (countdownBox) countdownBox.classList.remove('hidden');
@@ -3973,7 +3979,7 @@
 
         // Enter button remains permanently active and visible during live screening!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "JOIN LIVE SCREENING IN PROGRESS";
+        if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "Auditorium Stream Active • Late Arrivals Welcome";
 
       } else if (stateMode === 2) {
@@ -4006,11 +4012,9 @@
 
         setEntranceState(true);
         if (btnEnterText) {
-          btnEnterText.textContent = isForced
-            ? "ENTER THEATER (DOORS OPEN NOW)"
-            : `ENTER THEATER (DOORS OPEN • STARTS IN ${minsToStart} MIN)`;
+          btnEnterText.textContent = "Enter";
         }
-        if (btnEnterSubtext) btnEnterSubtext.textContent = "Virtual Auditorium Open • Click to Enter Lobby & Chat";
+        if (btnEnterSubtext) btnEnterSubtext.textContent = isForced ? "Virtual Auditorium Open • Click to Enter Lobby & Chat" : `Auditorium Doors Open • Starts In ${minsToStart} Min`;
 
       } else {
         // STATE 1: DOORS CLOSED (> 10m before show)

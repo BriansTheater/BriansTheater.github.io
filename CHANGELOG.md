@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.98] - 2026-09-06
+
+### What's New
+- Simplified entrance gold button text to Enter.
+- Streamlined live screening alert banner button to Enter.
+- Maintained clean subtext indicators for active auditorium status.
+- Verified responsive layout with zero console errors.
+
 ## [4.9.97] - 2026-09-06
 
 ### What's New

@@ -1,11 +1,11 @@
 {
-  "version": "4.9.97",
+  "version": "4.9.98",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.97",
+  "title": "Brian's Theater v4.9.98",
   "notes": [
-    "Fixed live screening runtime countdown reference error on stage.",
-    "Unlocked live screening entrance button during active movie presentations.",
-    "Restored schedule tab rendering during live screening showtimes.",
-    "Ensured real-time countdown updates with zero console errors."
+    "Simplified entrance gold button text to Enter.",
+    "Streamlined live screening alert banner button to Enter.",
+    "Maintained clean subtext indicators for active auditorium status.",
+    "Verified responsive layout with zero console errors."
   ]
 }
