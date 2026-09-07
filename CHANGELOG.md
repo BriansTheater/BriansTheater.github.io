@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.100] - 2026-09-06
+
+### What's New
+- Removed auditorium stream active late arrivals welcome subtext.
+- Removed duplicate Enter button from Schedule tab banner.
+- Enabled permanently active Enter button on Theater stage.
+- Verified responsive layout with zero console errors.
+
 ## [4.9.99] - 2026-09-06
 
 ### What's New

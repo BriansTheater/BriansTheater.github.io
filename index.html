@@ -252,8 +252,8 @@
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
         </div>
 
-        <!-- 5. PRIMARY STAGE ENTRANCE SLOT (COUNTDOWN WHEN CLOSED -> REPLACED BY ENTER BUTTON WHEN OPEN) -->
-        <div id="stageEntranceSlot" class="relative z-10 w-full max-w-lg my-1">
+        <!-- 5. PRIMARY STAGE ENTRANCE SLOT (COUNTDOWN & ALWAYS-ACTIVE ENTER BUTTON) -->
+        <div id="stageEntranceSlot" class="relative z-10 w-full max-w-lg my-1 flex flex-col gap-3">
           
           <!-- STATE A: COUNTDOWN BOX (Visible when theater is closed) -->
           <div id="stageCountdownBox" class="bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full shadow-xl">
@@ -280,16 +280,14 @@
             </div>
           </div>
 
-          <!-- STATE B: ENTER THEATER BUTTON (Replaces countdown box when doors open / forced open) -->
-          <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
+          <!-- STATE B: ENTER THEATER BUTTON (Always active and visible) -->
+          <div id="theaterDoorsOpenCta" class="flex flex-col gap-2 w-full">
             <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2">
               <span>⭐</span>
               <span id="btnEnterAuditoriumText">Enter</span>
               <span>⭐</span>
             </a>
-            <div id="btnEnterAuditoriumSubtext" class="flex items-center justify-center text-xs text-amber-300 font-semibold text-center">
-              Click to Enter Live Cinema Lobby
-            </div>
+            <div id="btnEnterAuditoriumSubtext" class="hidden"></div>
           </div>
 
         </div>
@@ -335,8 +333,8 @@
     <!-- TAB 2: 📅 SCHEDULE -->
     <div id="view-schedule" class="tab-view hidden flex flex-col gap-6">
 
-      <!-- Active Screening In-Progress Alert Banner -->
-      <div id="schedActiveAlertBox" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse">
+      <!-- Active Screening In-Progress Alert Banner (Tapping navigates to Theater Stage) -->
+      <div id="schedActiveAlertBox" onclick="switchTab('screening')" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse cursor-pointer group hover:border-red-400/80 transition">
         <div class="flex items-center gap-3.5">
           <span class="text-3xl sm:text-4xl">🍿</span>
           <div>
@@ -348,9 +346,9 @@
             <div class="text-xs text-slate-300">Estimated Runtime Left: <span id="schedActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
           </div>
         </div>
-        <a href="http://tiny.cc/BriansTheater" target="_blank" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg transition flex items-center gap-2 shrink-0 transform active:scale-95">
-          <span>⭐</span> Enter <span>⭐</span>
-        </a>
+        <div class="px-4 py-2 rounded-xl bg-slate-800/80 group-hover:bg-slate-700/80 text-amber-300 font-bold text-xs sm:text-sm border border-slate-700 flex items-center gap-1.5 shrink-0 transition">
+          <span>Go to Theater</span> <span>→</span>
+        </div>
       </div>
 
       <!-- Compatibility Hooks for Next Movie Metadata & Countdown (Hidden) -->
@@ -2034,7 +2032,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.99";
+    const APP_VERSION = "4.9.100";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2411,6 +2409,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.100": [
+        "Removed auditorium stream active late arrivals welcome subtext.",
+        "Removed duplicate Enter button from Schedule tab banner.",
+        "Enabled permanently active Enter button on Theater stage.",
+        "Verified responsive layout with zero console errors."
+      ],
       "4.9.99": [
         "Removed auditorium doors are open from schedule banner.",
         "Cleaned stage entrance subtext and seating status labels.",
@@ -3650,23 +3654,21 @@
       const lockTitle = document.getElementById('doorsLockedStatusTitle');
       const lockSub = document.getElementById('doorsLockedSubtext');
 
+      // The primary Enter button is ALWAYS active and visible on the Theater page!
+      if (openCta) {
+        openCta.classList.remove('hidden');
+        openCta.classList.add('flex');
+      }
+
       if (isOpen) {
-        // Replace countdown box directly with the Enter Theater button!
+        // When live screening or seating: hide the countdown box
         if (countdownBox) countdownBox.classList.add('hidden');
-        if (openCta) {
-          openCta.classList.remove('hidden');
-          openCta.classList.add('flex');
-        }
         if (lockIcon) lockIcon.textContent = '🟢';
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
         if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
-        // Closed: Show countdown box, hide Enter Theater button
+        // When waiting for next show: show the countdown box above the Enter button
         if (countdownBox) countdownBox.classList.remove('hidden');
-        if (openCta) {
-          openCta.classList.add('hidden');
-          openCta.classList.remove('flex');
-        }
         if (lockIcon) lockIcon.textContent = '🔒';
         if (lockTitle) lockTitle.textContent = 'DOORS OPEN 10 MIN BEFORE SHOWTIME';
         if (lockSub) {
@@ -3986,7 +3988,7 @@
         // Enter button remains permanently active and visible during live screening!
         setEntranceState(true);
         if (btnEnterText) btnEnterText.textContent = "Enter";
-        if (btnEnterSubtext) btnEnterSubtext.textContent = "Auditorium Stream Active • Late Arrivals Welcome";
+        if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (stateMode === 2) {
         // STATE 2: DOORS OPEN & SEATING NOW (10m to 0m before show OR Forced Open)
@@ -4017,14 +4019,14 @@
         }
 
         setEntranceState(true);
-        if (btnEnterText) {
-          btnEnterText.textContent = "Enter";
-        }
-        if (btnEnterSubtext) btnEnterSubtext.textContent = isForced ? "Click to Enter Lobby & Chat" : `Starts In ${minsToStart} Min`;
+        if (btnEnterText) btnEnterText.textContent = "Enter";
+        if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else {
         // STATE 1: DOORS CLOSED (> 10m before show)
         setEntranceState(false);
+        if (btnEnterText) btnEnterText.textContent = "Enter";
+        if (btnEnterSubtext) btnEnterSubtext.textContent = "";
         if (stageCountdownLabelText) stageCountdownLabelText.textContent = "Theater Opens In";
 
         if (stageCategoryLabel) {
