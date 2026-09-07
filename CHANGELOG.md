@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.101] - 2026-09-06
+
+### What's New
+- Moved clean live screening alert banner to Theater tab.
+- Dedicated Schedule tab exclusively to upcoming movie lineup.
+- Updated stage countdown engine to control theater alert banner.
+- Verified responsive layout with zero console errors.
+
 ## [4.9.100] - 2026-09-06
 
 ### What's New

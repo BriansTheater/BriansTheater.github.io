@@ -1,11 +1,11 @@
 {
-  "version": "4.9.100",
+  "version": "4.9.101",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.100",
+  "title": "Brian's Theater v4.9.101",
   "notes": [
-    "Removed auditorium stream active late arrivals welcome subtext.",
-    "Removed duplicate Enter button from Schedule tab banner.",
-    "Enabled permanently active Enter button on Theater stage.",
+    "Moved clean live screening alert banner to Theater tab.",
+    "Dedicated Schedule tab exclusively to upcoming movie lineup.",
+    "Updated stage countdown engine to control theater alert banner.",
     "Verified responsive layout with zero console errors."
   ]
 }

@@ -227,6 +227,21 @@
     <!-- TAB 1: 🎬 SCREENING ROOM -->
     <div id="view-screening" class="tab-view flex flex-col gap-6">
 
+      <!-- Active Screening In-Progress Alert Banner (Clean Alert Banner System on Main Theater Page) -->
+      <div id="stageActiveAlertBox" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse">
+        <div class="flex items-center gap-3.5">
+          <span class="text-3xl sm:text-4xl">🍿</span>
+          <div>
+            <div class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+              <span>SCREENING IN PROGRESS RIGHT NOW</span>
+            </div>
+            <div id="stageActiveMovieTitle" class="text-base sm:text-lg font-black text-slate-100 mt-0.5">Screening is live on stage!</div>
+            <div class="text-xs text-slate-300">Estimated Runtime Left: <span id="stageActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4">
         <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
@@ -333,26 +348,11 @@
     <!-- TAB 2: 📅 SCHEDULE -->
     <div id="view-schedule" class="tab-view hidden flex flex-col gap-6">
 
-      <!-- Active Screening In-Progress Alert Banner (Tapping navigates to Theater Stage) -->
-      <div id="schedActiveAlertBox" onclick="switchTab('screening')" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse cursor-pointer group hover:border-red-400/80 transition">
-        <div class="flex items-center gap-3.5">
-          <span class="text-3xl sm:text-4xl">🍿</span>
-          <div>
-            <div class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-              <span>SCREENING IN PROGRESS RIGHT NOW</span>
-            </div>
-            <div id="schedActiveMovieTitle" class="text-base sm:text-lg font-black text-slate-100 mt-0.5">Screening is live on stage!</div>
-            <div class="text-xs text-slate-300">Estimated Runtime Left: <span id="schedActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
-          </div>
-        </div>
-        <div class="px-4 py-2 rounded-xl bg-slate-800/80 group-hover:bg-slate-700/80 text-amber-300 font-bold text-xs sm:text-sm border border-slate-700 flex items-center gap-1.5 shrink-0 transition">
-          <span>Go to Theater</span> <span>→</span>
-        </div>
-      </div>
-
       <!-- Compatibility Hooks for Next Movie Metadata & Countdown (Hidden) -->
       <div class="hidden" aria-hidden="true">
+        <div id="schedActiveAlertBox" class="hidden" style="display: none !important;"></div>
+        <span id="schedActiveMovieTitle" class="hidden" style="display: none !important;"></span>
+        <span id="schedActiveTimeLeft" class="hidden" style="display: none !important;"></span>
         <span id="schedNextTitle">🎬 Neighbors 2</span>
         <span id="schedNextDate">Sunday, Sept 6 • 7:00 PM PST</span>
         <div id="schedNextPosterContainer">
@@ -3669,6 +3669,11 @@
       } else {
         // When waiting for next show: show the countdown box above the Enter button
         if (countdownBox) countdownBox.classList.remove('hidden');
+        const stageAlertBox = document.getElementById('stageActiveAlertBox');
+        if (stageAlertBox) {
+          stageAlertBox.classList.add('hidden');
+          stageAlertBox.classList.remove('flex');
+        }
         if (lockIcon) lockIcon.textContent = '🔒';
         if (lockTitle) lockTitle.textContent = 'DOORS OPEN 10 MIN BEFORE SHOWTIME';
         if (lockSub) {
@@ -3926,9 +3931,10 @@
       updateStageArtwork(stateMode === 3, headingEl?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
 
       // DOM Elements
+      const stageAlertBox = document.getElementById('stageActiveAlertBox');
+      const stageAlertTimeEl = document.getElementById('stageActiveTimeLeft');
+      const stageAlertTitle = document.getElementById('stageActiveMovieTitle');
       const schedTimeEl = document.getElementById('schedActiveTimeLeft');
-      const alertBox = document.getElementById('schedActiveAlertBox');
-      const schedActiveMovieTitle = document.getElementById('schedActiveMovieTitle');
       const countdownSubhead = document.getElementById('countdownSubhead');
       const stageCategoryLabel = document.getElementById('stageCategoryLabel');
       const nowPlayingDate = document.getElementById('nowPlayingDate');
@@ -3972,17 +3978,18 @@
           screenTimeEl.className = "text-red-400 font-bold font-mono";
         }
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
+        if (stageAlertTimeEl) stageAlertTimeEl.textContent = formattedTime;
 
-        if (schedActiveMovieTitle) {
-          schedActiveMovieTitle.textContent = `"${currentMovieTitle}" is screening live!`;
+        if (stageAlertTitle) {
+          stageAlertTitle.textContent = `"${currentMovieTitle}" is screening live!`;
         }
         if (countdownSubhead) {
           countdownSubhead.textContent = "Live Screening Runtime Remaining";
         }
 
-        if (alertBox) {
-          alertBox.classList.remove('hidden');
-          alertBox.classList.add('flex');
+        if (stageAlertBox) {
+          stageAlertBox.classList.remove('hidden');
+          stageAlertBox.classList.add('flex');
         }
 
         // Enter button remains permanently active and visible during live screening!
@@ -4013,9 +4020,9 @@
           countdownSubhead.textContent = isForced ? "Forced Open" : "Show Starts In";
         }
 
-        if (alertBox && !alertBox.classList.contains('hidden')) {
-          alertBox.classList.add('hidden');
-          alertBox.classList.remove('flex');
+        if (stageAlertBox && !stageAlertBox.classList.contains('hidden')) {
+          stageAlertBox.classList.add('hidden');
+          stageAlertBox.classList.remove('flex');
         }
 
         setEntranceState(true);
@@ -4024,6 +4031,10 @@
 
       } else {
         // STATE 1: DOORS CLOSED (> 10m before show)
+        if (stageAlertBox && !stageAlertBox.classList.contains('hidden')) {
+          stageAlertBox.classList.add('hidden');
+          stageAlertBox.classList.remove('flex');
+        }
         setEntranceState(false);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
