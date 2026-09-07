@@ -2034,7 +2034,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.96";
+    const APP_VERSION = "4.9.97";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2411,6 +2411,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.97": [
+        "Fixed live screening runtime countdown reference error on stage.",
+        "Unlocked live screening entrance button during active movie presentations.",
+        "Restored schedule tab rendering during live screening showtimes.",
+        "Ensured real-time countdown updates with zero console errors."
+      ],
       "4.9.96": [
         "Rebranded Annual Hub to Marathons across controls and modal.",
         "Added franchise cards for Harry Potter and Pirates runs.",
@@ -3944,6 +3950,8 @@
         }
         if (nowPlayingDate) nowPlayingDate.textContent = `Screening Live On Stage • Runtime Left: ${formattedTime}`;
 
+        const screenTimeLabel = document.getElementById('screenTimeLabel');
+        const screenTimeEl = document.getElementById('screenTimeLeft');
         if (screenTimeLabel) screenTimeLabel.textContent = "Runtime Left:";
         if (screenTimeEl) {
           screenTimeEl.textContent = formattedTime;

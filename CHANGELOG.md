@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.97] - 2026-09-06
+
+### What's New
+- Fixed live screening runtime countdown reference error on stage.
+- Unlocked live screening entrance button during active movie presentations.
+- Restored schedule tab rendering during live screening showtimes.
+- Ensured real-time countdown updates with zero console errors.
+
 ## [4.9.96] - 2026-09-06
 
 ### What's New

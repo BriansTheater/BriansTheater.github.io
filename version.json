@@ -1,12 +1,11 @@
 {
-  "version": "4.9.96",
+  "version": "4.9.97",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.96",
+  "title": "Brian's Theater v4.9.97",
   "notes": [
-    "Rebranded Annual Hub to Marathons across controls and modal.",
-    "Added franchise cards for Harry Potter and Pirates runs.",
-    "Added action showcase cards for Fast and Ghostbusters marathons.",
-    "Enabled one-tap vault filtering for legendary movie marathons.",
-    "Verified clean responsive layouts and zero console errors."
+    "Fixed live screening runtime countdown reference error on stage.",
+    "Unlocked live screening entrance button during active movie presentations.",
+    "Restored schedule tab rendering during live screening showtimes.",
+    "Ensured real-time countdown updates with zero console errors."
   ]
 }
