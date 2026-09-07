@@ -227,22 +227,6 @@
     <!-- TAB 1: 🎬 SCREENING ROOM -->
     <div id="view-screening" class="tab-view flex flex-col gap-6">
 
-      <!-- Active Screening In-Progress Alert Banner (Clean Alert Banner System on Main Theater Page) -->
-      <div id="stageActiveAlertBox" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-slate-950 border-2 border-red-500/50 flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-2xl animate-pulse">
-        <div class="flex items-center gap-3.5">
-          <span class="text-3xl sm:text-4xl">🍿</span>
-          <div>
-            <div class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-              <span>SCREENING IN PROGRESS RIGHT NOW</span>
-            </div>
-            <div id="stageActiveMovieTitle" class="text-base sm:text-lg font-black text-slate-100 mt-0.5">Screening is live on stage!</div>
-            <div class="text-xs text-slate-300">Estimated Runtime Left: <span id="stageActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
-          </div>
-        </div>
-      </div>
-
-
       <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4">
         <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
 
@@ -2032,7 +2016,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.101";
+    const APP_VERSION = "4.9.102";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2409,6 +2393,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.102": [
+        "Fixed schedule loading crash caused by undefined alert variable.",
+        "Hidden entrance button when screening is over and closed.",
+        "Removed redundant alert banner from main theater stage card.",
+        "Verified responsive layout across viewports with zero console errors."
+      ],
       "4.9.101": [
         "Moved clean live screening alert banner to Theater tab.",
         "Dedicated Schedule tab exclusively to upcoming movie lineup.",
@@ -3660,25 +3650,22 @@
       const lockTitle = document.getElementById('doorsLockedStatusTitle');
       const lockSub = document.getElementById('doorsLockedSubtext');
 
-      // The primary Enter button is ALWAYS active and visible on the Theater page!
-      if (openCta) {
-        openCta.classList.remove('hidden');
-        openCta.classList.add('flex');
-      }
-
       if (isOpen) {
-        // When live screening or seating: hide the countdown box
+        // When live screening or seating: show Enter button & hide countdown box
         if (countdownBox) countdownBox.classList.add('hidden');
+        if (openCta) {
+          openCta.classList.remove('hidden');
+          openCta.classList.add('flex');
+        }
         if (lockIcon) lockIcon.textContent = '🟢';
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
         if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
-        // When waiting for next show: show the countdown box above the Enter button
+        // When waiting for next show / movie is over: show countdown box & hide Enter button
         if (countdownBox) countdownBox.classList.remove('hidden');
-        const stageAlertBox = document.getElementById('stageActiveAlertBox');
-        if (stageAlertBox) {
-          stageAlertBox.classList.add('hidden');
-          stageAlertBox.classList.remove('flex');
+        if (openCta) {
+          openCta.classList.add('hidden');
+          openCta.classList.remove('flex');
         }
         if (lockIcon) lockIcon.textContent = '🔒';
         if (lockTitle) lockTitle.textContent = 'DOORS OPEN 10 MIN BEFORE SHOWTIME';
@@ -3937,9 +3924,6 @@
       updateStageArtwork(stateMode === 3, headingEl?.textContent, document.getElementById('schedNextTitle')?.textContent, null);
 
       // DOM Elements
-      const stageAlertBox = document.getElementById('stageActiveAlertBox');
-      const stageAlertTimeEl = document.getElementById('stageActiveTimeLeft');
-      const stageAlertTitle = document.getElementById('stageActiveMovieTitle');
       const schedTimeEl = document.getElementById('schedActiveTimeLeft');
       const countdownSubhead = document.getElementById('countdownSubhead');
       const stageCategoryLabel = document.getElementById('stageCategoryLabel');
@@ -3984,21 +3968,12 @@
           screenTimeEl.className = "text-red-400 font-bold font-mono";
         }
         if (schedTimeEl) schedTimeEl.textContent = formattedTime;
-        if (stageAlertTimeEl) stageAlertTimeEl.textContent = formattedTime;
 
-        if (stageAlertTitle) {
-          stageAlertTitle.textContent = `"${currentMovieTitle}" is screening live!`;
-        }
         if (countdownSubhead) {
           countdownSubhead.textContent = "Live Screening Runtime Remaining";
         }
 
-        if (stageAlertBox) {
-          stageAlertBox.classList.remove('hidden');
-          stageAlertBox.classList.add('flex');
-        }
-
-        // Enter button remains permanently active and visible during live screening!
+        // Enter button is active and visible during live screening!
         setEntranceState(true);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
@@ -4026,21 +4001,13 @@
           countdownSubhead.textContent = isForced ? "Forced Open" : "Show Starts In";
         }
 
-        if (stageAlertBox && !stageAlertBox.classList.contains('hidden')) {
-          stageAlertBox.classList.add('hidden');
-          stageAlertBox.classList.remove('flex');
-        }
-
+        // Enter button is active and visible during pre-show seating!
         setEntranceState(true);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else {
-        // STATE 1: DOORS CLOSED (> 10m before show)
-        if (stageAlertBox && !stageAlertBox.classList.contains('hidden')) {
-          stageAlertBox.classList.add('hidden');
-          stageAlertBox.classList.remove('flex');
-        }
+        // STATE 1: DOORS CLOSED (> 10m before show or movie is over)
         setEntranceState(false);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
@@ -4060,11 +4027,6 @@
 
         if (countdownSubhead) {
           countdownSubhead.textContent = "Next Premiere Commences In";
-        }
-
-        if (alertBox && !alertBox.classList.contains('hidden')) {
-          alertBox.classList.add('hidden');
-          alertBox.classList.remove('flex');
         }
       }
     }

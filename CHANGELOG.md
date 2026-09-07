@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.102] - 2026-09-06
+
+### What's New
+- Fixed schedule loading crash caused by undefined alert variable.
+- Hidden entrance button when screening is over and closed.
+- Removed redundant alert banner from main theater stage card.
+- Verified responsive layout across viewports with zero console errors.
+
 ## [4.9.101] - 2026-09-06
 
 ### What's New
