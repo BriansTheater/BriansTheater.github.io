@@ -288,7 +288,7 @@
               <span>⭐</span>
             </a>
             <div id="btnEnterAuditoriumSubtext" class="flex items-center justify-center text-xs text-amber-300 font-semibold text-center">
-              Auditorium Doors Open • Click to Enter Live Cinema Lobby
+              Click to Enter Live Cinema Lobby
             </div>
           </div>
 
@@ -345,7 +345,7 @@
               <span>SCREENING IN PROGRESS RIGHT NOW</span>
             </div>
             <div id="schedActiveMovieTitle" class="text-base sm:text-lg font-black text-slate-100 mt-0.5">Screening is live on stage!</div>
-            <div class="text-xs text-slate-300">Auditorium doors are open • Estimated Runtime Left: <span id="schedActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
+            <div class="text-xs text-slate-300">Estimated Runtime Left: <span id="schedActiveTimeLeft" class="text-amber-300 font-mono font-bold">1h 24m</span></div>
           </div>
         </div>
         <a href="http://tiny.cc/BriansTheater" target="_blank" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg transition flex items-center gap-2 shrink-0 transform active:scale-95">
@@ -2034,7 +2034,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.98";
+    const APP_VERSION = "4.9.99";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2411,6 +2411,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.99": [
+        "Removed auditorium doors are open from schedule banner.",
+        "Cleaned stage entrance subtext and seating status labels.",
+        "Streamlined countdown subheads for show start indicators.",
+        "Verified responsive layout with zero console errors."
+      ],
       "4.9.98": [
         "Simplified entrance gold button text to Enter.",
         "Streamlined live screening alert banner button to Enter.",
@@ -3652,8 +3658,8 @@
           openCta.classList.add('flex');
         }
         if (lockIcon) lockIcon.textContent = '🟢';
-        if (lockTitle) lockTitle.textContent = 'AUDITORIUM DOORS ARE OPEN NOW';
-        if (lockSub) lockSub.innerHTML = 'Virtual auditorium doors are unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
+        if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
+        if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
         // Closed: Show countdown box, hide Enter Theater button
         if (countdownBox) countdownBox.classList.remove('hidden');
@@ -3989,20 +3995,20 @@
 
         if (stageCategoryLabel) {
           stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5";
-          stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Auditorium Doors Open • Seating Now';
+          stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Seating Now';
         }
         if (headingEl) {
           headingEl.textContent = `🎬 ${currentMovieTitle}`;
           headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
         }
         if (nowPlayingDate) {
-          nowPlayingDate.textContent = isForced ? `Doors Open For Seating • Premiere: ${currentDateStr}` : currentDateStr;
+          nowPlayingDate.textContent = isForced ? `Seating Now • Premiere: ${currentDateStr}` : currentDateStr;
         }
 
         if (schedTimeEl) schedTimeEl.textContent = isForced ? "OPEN" : `${minsToStart}m`;
 
         if (countdownSubhead) {
-          countdownSubhead.textContent = isForced ? "Auditorium Doors Forced Open" : "Auditorium Doors Open • Show Starts In";
+          countdownSubhead.textContent = isForced ? "Forced Open" : "Show Starts In";
         }
 
         if (alertBox && !alertBox.classList.contains('hidden')) {
@@ -4014,7 +4020,7 @@
         if (btnEnterText) {
           btnEnterText.textContent = "Enter";
         }
-        if (btnEnterSubtext) btnEnterSubtext.textContent = isForced ? "Virtual Auditorium Open • Click to Enter Lobby & Chat" : `Auditorium Doors Open • Starts In ${minsToStart} Min`;
+        if (btnEnterSubtext) btnEnterSubtext.textContent = isForced ? "Click to Enter Lobby & Chat" : `Starts In ${minsToStart} Min`;
 
       } else {
         // STATE 1: DOORS CLOSED (> 10m before show)

@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.99] - 2026-09-06
+
+### What's New
+- Removed auditorium doors are open from schedule banner.
+- Cleaned stage entrance subtext and seating status labels.
+- Streamlined countdown subheads for show start indicators.
+- Verified responsive layout with zero console errors.
+
 ## [4.9.98] - 2026-09-06
 
 ### What's New

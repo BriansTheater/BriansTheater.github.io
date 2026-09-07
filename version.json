@@ -1,11 +1,11 @@
 {
-  "version": "4.9.98",
+  "version": "4.9.99",
   "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.98",
+  "title": "Brian's Theater v4.9.99",
   "notes": [
-    "Simplified entrance gold button text to Enter.",
-    "Streamlined live screening alert banner button to Enter.",
-    "Maintained clean subtext indicators for active auditorium status.",
+    "Removed auditorium doors are open from schedule banner.",
+    "Cleaned stage entrance subtext and seating status labels.",
+    "Streamlined countdown subheads for show start indicators.",
     "Verified responsive layout with zero console errors."
   ]
 }
