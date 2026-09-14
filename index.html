@@ -2016,7 +2016,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.104";
+    const APP_VERSION = "4.9.105";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2393,6 +2393,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.105": [
+        "Added one-click Google Calendar duplicate cleaner and sweep tool.",
+        "Automatically purges duplicate events within a 120-day window.",
+        "Preserves richest event metadata and synopsis for each showtime.",
+        "Added calendar cleanup shortcuts to admin and maintenance menus."
+      ],
       "4.9.104": [
         "Updated calendar sync to update existing events without duplicates.",
         "Added smart event matching by normalized movie title.",

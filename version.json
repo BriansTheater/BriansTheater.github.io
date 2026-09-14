@@ -1,11 +1,11 @@
 {
-  "version": "4.9.104",
+  "version": "4.9.105",
   "releaseDate": "2026-09-13",
-  "title": "Brian's Theater v4.9.104",
+  "title": "Brian's Theater v4.9.105",
   "notes": [
-    "Updated calendar sync to update existing events without duplicates.",
-    "Added smart event matching by normalized movie title.",
-    "Automatically purged redundant duplicate events created by previous runs.",
-    "Ensured persistent event IDs and calendar links across sheets."
+    "Added one-click Google Calendar duplicate cleaner and sweep tool.",
+    "Automatically purges duplicate events within a 120-day window.",
+    "Preserves richest event metadata and synopsis for each showtime.",
+    "Added calendar cleanup shortcuts to admin and maintenance menus."
   ]
 }

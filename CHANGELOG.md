@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.105] - 2026-09-13
+
+### What's New
+- Added one-click Google Calendar duplicate cleaner and sweep tool.
+- Automatically purges duplicate events within a 120-day window.
+- Preserves richest event metadata and synopsis for each showtime.
+- Added calendar cleanup shortcuts to admin and maintenance menus.
+
 ## [4.9.104] - 2026-09-13
 
 ### What's New
