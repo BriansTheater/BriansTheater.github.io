@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.104] - 2026-09-13
+
+### What's New
+- Updated calendar sync to update existing events without duplicates.
+- Added smart event matching by normalized movie title.
+- Automatically purged redundant duplicate events created by previous runs.
+- Ensured persistent event IDs and calendar links across sheets.
+
 ## [4.9.103] - 2026-09-06
 
 ### What's New

@@ -1,11 +1,11 @@
 {
-  "version": "4.9.103",
-  "releaseDate": "2026-09-06",
-  "title": "Brian's Theater v4.9.103",
+  "version": "4.9.104",
+  "releaseDate": "2026-09-13",
+  "title": "Brian's Theater v4.9.104",
   "notes": [
-    "Conducted exhaustive bug scan across all tabs and features.",
-    "Added defensive null guards and fetch rejection handlers.",
-    "Added automatic fallback for stage cinema poster image.",
-    "Verified responsive layout across viewports with zero console errors."
+    "Updated calendar sync to update existing events without duplicates.",
+    "Added smart event matching by normalized movie title.",
+    "Automatically purged redundant duplicate events created by previous runs.",
+    "Ensured persistent event IDs and calendar links across sheets."
   ]
 }

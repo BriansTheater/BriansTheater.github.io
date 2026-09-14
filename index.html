@@ -2016,7 +2016,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.103";
+    const APP_VERSION = "4.9.104";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2393,6 +2393,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.104": [
+        "Updated calendar sync to update existing events without duplicates.",
+        "Added smart event matching by normalized movie title.",
+        "Automatically purged redundant duplicate events created by previous runs.",
+        "Ensured persistent event IDs and calendar links across sheets."
+      ],
       "4.9.103": [
         "Conducted exhaustive bug scan across all tabs and features.",
         "Added defensive null guards and fetch rejection handlers.",
