@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.107] - 2026-09-14
+
+### What's New
+- Updated calendar sync to target Data sheet exclusively.
+- Saved event IDs and calendar links into Data sheet.
+- Purged accidental duplicate entries from Quick Schedule sheet.
+- Added cross-calendar duplicate cleaner for single clean movie events.
+
 ## [4.9.106] - 2026-09-14
 
 ### What's New

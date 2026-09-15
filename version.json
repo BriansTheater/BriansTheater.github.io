@@ -1,11 +1,11 @@
 {
-  "version": "4.9.106",
+  "version": "4.9.107",
   "releaseDate": "2026-09-14",
-  "title": "Brian's Theater v4.9.106",
+  "title": "Brian's Theater v4.9.107",
   "notes": [
-    "Protected cinema database from Discord scheduled event overwrite loops.",
-    "Added smart date parser supporting flexible date inputs.",
-    "Automated Google Calendar synchronization directly on schedule edits.",
-    "Ensured automatic sync triggers activate smoothly on sheet open."
+    "Added automatic cross-calendar duplicate cleaner for movie events.",
+    "Purges duplicate movie screenings from primary personal calendar.",
+    "Ensures single clean event entry on Movies calendar.",
+    "Added one-click calendar deduplication directly to Sheets menu."
   ]
 }
