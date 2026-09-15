@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.106] - 2026-09-14
+
+### What's New
+- Protected cinema database from Discord scheduled event overwrite loops.
+- Added smart date parser supporting flexible date inputs.
+- Automated Google Calendar synchronization directly on schedule edits.
+- Ensured automatic sync triggers activate smoothly on sheet open.
+
 ## [4.9.105] - 2026-09-13
 
 ### What's New

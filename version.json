@@ -1,11 +1,11 @@
 {
-  "version": "4.9.105",
-  "releaseDate": "2026-09-13",
-  "title": "Brian's Theater v4.9.105",
+  "version": "4.9.106",
+  "releaseDate": "2026-09-14",
+  "title": "Brian's Theater v4.9.106",
   "notes": [
-    "Added one-click Google Calendar duplicate cleaner and sweep tool.",
-    "Automatically purges duplicate events within a 120-day window.",
-    "Preserves richest event metadata and synopsis for each showtime.",
-    "Added calendar cleanup shortcuts to admin and maintenance menus."
+    "Protected cinema database from Discord scheduled event overwrite loops.",
+    "Added smart date parser supporting flexible date inputs.",
+    "Automated Google Calendar synchronization directly on schedule edits.",
+    "Ensured automatic sync triggers activate smoothly on sheet open."
   ]
 }

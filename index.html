@@ -2016,7 +2016,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.105";
+    const APP_VERSION = "4.9.106";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2252,12 +2252,12 @@
         : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
 
       // 1. Check if a movie is actively screening right now
-      const liveItem = scheduleSource.find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+      const liveItem = scheduleSource.find(s => (s.status && s.status.includes('LIVE NOW')) || (s.startMs && s.endMs && (now >= s.startMs && now < s.endMs)));
       if (liveItem) {
         return {
           movie: liveItem,
           isLive: true,
-          targetMs: liveItem.endMs,
+          targetMs: liveItem.endMs || (now + 3600000),
           title: liveItem.title,
           date: liveItem.date,
           startTime: liveItem.startTime,
@@ -2393,6 +2393,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.106": [
+        "Protected cinema database from Discord scheduled event overwrite loops.",
+        "Added smart date parser supporting flexible date inputs.",
+        "Automated Google Calendar synchronization directly on schedule edits.",
+        "Ensured automatic sync triggers activate smoothly on sheet open."
+      ],
       "4.9.105": [
         "Added one-click Google Calendar duplicate cleaner and sweep tool.",
         "Automatically purges duplicate events within a 120-day window.",
@@ -5615,35 +5621,61 @@
       if (!data) return;
       const now = Date.now();
 
-      // Cache schedule list in global memory
-      if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
-        window.theaterScheduleCache = data.schedule;
+      // 1. Authoritative Cinema Schedule Resolution
+      const cinemaObj = data.cinema || {};
+      const officialSched = (data.officialSchedule && Array.isArray(data.officialSchedule) && data.officialSchedule.length > 0)
+        ? data.officialSchedule
+        : (data.cinemaSchedule && Array.isArray(data.cinemaSchedule) && data.cinemaSchedule.length > 0)
+          ? data.cinemaSchedule
+          : (cinemaObj.schedule && Array.isArray(cinemaObj.schedule) && cinemaObj.schedule.length > 0)
+            ? cinemaObj.schedule
+            : null;
+
+      if (officialSched) {
+        window.theaterScheduleCache = officialSched;
+      } else if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
+        // Protect active live screening from being stomped by external bot with no live movie
+        const existingLive = (window.theaterScheduleCache || sampleSchedule || []).find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+        const incomingHasLive = data.schedule.some(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+
+        if (existingLive && !incomingHasLive) {
+          // Prepend the active live movie to the incoming schedule so it remains live on stage
+          const withoutDuplicate = data.schedule.filter(s => s.title.toLowerCase() !== existingLive.title.toLowerCase());
+          window.theaterScheduleCache = [existingLive, ...withoutDuplicate];
+        } else {
+          window.theaterScheduleCache = data.schedule;
+        }
       }
 
-      // Check live status dynamically
+      // 2. Dynamic Live Status Resolution
       const nextObj = getActiveOrNextMovie(now);
-      const isLive = nextObj.isLive || (data.nowPlaying && data.nowPlaying !== "No Movie Playing");
+      const effectiveNowPlaying = cinemaObj.nowPlaying || data.cinemaNowPlaying || (nextObj.isLive ? nextObj.movie?.title : null) || (data.nowPlaying && data.nowPlaying !== "No Movie Playing" ? data.nowPlaying : null);
+      const isLive = nextObj.isLive || (effectiveNowPlaying && effectiveNowPlaying !== "No Movie Playing");
 
-      if (data.nowPlaying && data.nowPlaying !== "No Movie Playing") {
+      if (effectiveNowPlaying && effectiveNowPlaying !== "No Movie Playing") {
         const headingEl = document.getElementById('nowPlayingHeading');
-        if (headingEl) headingEl.textContent = data.nowPlaying.startsWith('🎬') ? data.nowPlaying : `🎬 ${data.nowPlaying}`;
+        if (headingEl) headingEl.textContent = effectiveNowPlaying.startsWith('🎬') ? effectiveNowPlaying : `🎬 ${effectiveNowPlaying}`;
       }
 
-      if (isLive && data.timeLeft && data.timeLeft !== "--") {
+      const effectiveTimeLeft = cinemaObj.timeLeft || data.cinemaTimeLeft || (data.timeLeft && data.timeLeft !== "--" ? data.timeLeft : null);
+      if (isLive && effectiveTimeLeft) {
         const screenTimeEl = document.getElementById('screenTimeLeft');
-        if (screenTimeEl) screenTimeEl.textContent = data.timeLeft;
+        if (screenTimeEl) screenTimeEl.textContent = effectiveTimeLeft;
       }
 
       // If Firebase provides a valid future next premiere, sync targetNextMs
-      if (data.nextStartMs && data.nextStartMs > now) {
-        targetNextMs = data.nextStartMs;
-        if (data.nextTitle) {
+      const effectiveNextStart = cinemaObj.nextStartMs || data.nextStartMs;
+      if (effectiveNextStart && effectiveNextStart > now) {
+        targetNextMs = effectiveNextStart;
+        const effectiveNextTitle = cinemaObj.nextTitle || data.nextTitle;
+        if (effectiveNextTitle) {
           const sTitle = document.getElementById('schedNextTitle');
-          if (sTitle) sTitle.textContent = data.nextTitle.startsWith('🎬') ? data.nextTitle : `🎬 ${data.nextTitle}`;
+          if (sTitle) sTitle.textContent = effectiveNextTitle.startsWith('🎬') ? effectiveNextTitle : `🎬 ${effectiveNextTitle}`;
         }
-        if (data.nextTime) {
+        const effectiveNextTime = cinemaObj.nextTime || data.nextTime;
+        if (effectiveNextTime) {
           const sDate = document.getElementById('schedNextDate');
-          if (sDate) sDate.textContent = data.nextTime;
+          if (sDate) sDate.textContent = effectiveNextTime;
         }
       }
 
@@ -5751,6 +5783,15 @@
         if (res.ok) {
           const data = await res.json();
           if (data) {
+            try {
+              const cinRes = await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinema.json');
+              if (cinRes.ok) {
+                const cinData = await cinRes.json();
+                if (cinData) {
+                  data.cinema = cinData;
+                }
+              }
+            } catch(cinErr) {}
             applyFirebaseData(data);
           }
         }
