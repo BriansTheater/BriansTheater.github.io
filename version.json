@@ -1,11 +1,11 @@
 {
-  "version": "4.9.107",
+  "version": "4.9.108",
   "releaseDate": "2026-09-14",
-  "title": "Brian's Theater v4.9.107",
+  "title": "Brian's Theater v4.9.108",
   "notes": [
-    "Added automatic cross-calendar duplicate cleaner for movie events.",
-    "Purges duplicate movie screenings from primary personal calendar.",
-    "Ensures single clean event entry on Movies calendar.",
-    "Added one-click calendar deduplication directly to Sheets menu."
+    "Eliminated stage reload flicker and initial movie flipping.",
+    "Added pre-paint local storage hydration for 0ms refresh continuity.",
+    "Aligned static HTML placeholders directly with active next premiere.",
+    "Synchronized default fallback objects seamlessly across all scripts."
   ]
 }

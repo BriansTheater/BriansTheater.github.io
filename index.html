@@ -128,6 +128,34 @@
       overflow-x: hidden;
     }
   </style>
+
+  <!-- Instant Pre-Paint Stage Hydration: Guarantees 0ms flicker on refresh -->
+  <script>
+    (function() {
+      try {
+        const raw = localStorage.getItem('brian_theater_last_stage');
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && s.title) {
+            document.addEventListener('DOMContentLoaded', function() {
+              const h = document.getElementById('nowPlayingHeading');
+              const d = document.getElementById('nowPlayingDate');
+              const p = document.getElementById('stagePoster');
+              const st = document.getElementById('schedNextTitle');
+              const sd = document.getElementById('schedNextDate');
+              const sp = document.getElementById('schedNextPoster');
+              if (h && s.title) h.textContent = s.title;
+              if (d && s.date) d.textContent = s.date;
+              if (p && s.poster) p.src = s.poster;
+              if (st && s.nextTitle) st.textContent = s.nextTitle;
+              if (sd && s.nextDate) sd.textContent = s.nextDate;
+              if (sp && s.nextPoster) sp.src = s.nextPoster;
+            });
+          }
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body class="bg-[#0b1120] text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-500 selection:text-white overflow-x-hidden">
 
@@ -238,16 +266,16 @@
 
           <!-- 2. TITLE -->
           <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
-            🎬 Neighbors 2
+            🎬 Normal
           </h2>
 
           <!-- 3. DATE AND TIME (Matches Schedule Date Display) -->
-          <p id="nowPlayingDate" class="text-xs sm:text-sm text-slate-400 font-mono">Sunday, Sept 6 • 7:00 PM PST</p>
+          <p id="nowPlayingDate" class="text-xs sm:text-sm text-slate-400 font-mono">Tuesday, Sept 15, 2026 • 7:00 PM PST</p>
         </div>
 
         <!-- 4. PIC (The Stage Poster - Clean Edge-to-Edge Cinema Banner) -->
         <div class="relative z-10 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl w-full max-w-lg aspect-[16/9] flex items-center justify-center group my-1">
-          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
+          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
         </div>
 
@@ -337,10 +365,10 @@
         <div id="schedActiveAlertBox" class="hidden" style="display: none !important;"></div>
         <span id="schedActiveMovieTitle" class="hidden" style="display: none !important;"></span>
         <span id="schedActiveTimeLeft" class="hidden" style="display: none !important;"></span>
-        <span id="schedNextTitle">🎬 Neighbors 2</span>
-        <span id="schedNextDate">Sunday, Sept 6 • 7:00 PM PST</span>
+        <span id="schedNextTitle">🎬 Normal</span>
+        <span id="schedNextDate">Tuesday, Sept 15, 2026 • 7:00 PM PST</span>
         <div id="schedNextPosterContainer">
-          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg" alt="" />
+          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg" alt="" />
         </div>
         <div id="schedCountdownGrid">
           <div id="schedColDays"><div id="countDays">00</div></div>
@@ -2016,7 +2044,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.107";
+    const APP_VERSION = "4.9.108";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2109,10 +2137,10 @@
       console.warn("Firebase Auth initialization:", err);
     }
     
-    // Target next upcoming premiere (Neighbors 2, Sunday Sept 6 at 7:00 PM PST)
-    let targetNextMs = 1788746400000;
-    let targetMovieRuntimeMs = 92 * 60 * 1000; // 92 mins default screening runtime
-    let activeLiveMovieTitle = "Neighbors 2";
+    // Target next upcoming premiere (Normal, Tuesday Sept 15 at 7:00 PM PST)
+    let targetNextMs = 1789524000000;
+    let targetMovieRuntimeMs = 91 * 60 * 1000; // 91 mins default screening runtime
+    let activeLiveMovieTitle = "Normal";
     let liveScreeningEndMs = 0;
     // Schedule Cards - Structured directly from Google Sheets Quick Schedule (Only Upcoming Movies)
     const sampleSchedule = [
@@ -2287,25 +2315,25 @@
         };
       }
 
-      // 3. Fallback to Neighbors 2 if schedule list is exhausted
+      // 3. Fallback to Normal if schedule list is exhausted
       return {
         movie: {
-          title: "Neighbors 2",
-          date: "Sunday, Sept 6, 2026",
+          title: "Normal",
+          date: "Tuesday, Sept 15, 2026",
           startTime: "7:00 PM",
-          startMs: 1788746400000,
-          endMs: 1788751920000,
-          runtime: "1h 32m",
-          trailerId: "X2i9Zz_AqTg"
+          startMs: 1789524000000,
+          endMs: 1789529460000,
+          runtime: "1h 31m",
+          trailerId: "dQw4w9WgXcQ"
         },
         isLive: false,
-        targetMs: 1788746400000,
-        title: "Neighbors 2",
-        date: "Sunday, Sept 6, 2026",
+        targetMs: 1789524000000,
+        title: "Normal",
+        date: "Tuesday, Sept 15, 2026",
         startTime: "7:00 PM",
-        runtime: "1h 32m",
-        trailerId: "X2i9Zz_AqTg",
-        posterUrl: typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl("Neighbors 2") : "https://image.tmdb.org/t/p/w780/zgckZ4VZM4UoZlwVS1Dk8mPwqiZ.jpg"
+        runtime: "1h 31m",
+        trailerId: "dQw4w9WgXcQ",
+        posterUrl: typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl("Normal") : "https://image.tmdb.org/t/p/w780/1nHaO4rTv1E6xVJYIMGP9nmLxE9.jpg"
       };
     }
 
@@ -2393,6 +2421,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.108": [
+        "Eliminated stage reload flicker and initial movie flipping.",
+        "Added pre-paint local storage hydration for 0ms refresh continuity.",
+        "Aligned static HTML placeholders directly with active next premiere.",
+        "Synchronized default fallback objects seamlessly across all scripts."
+      ],
       "4.9.107": [
         "Updated calendar sync to target Data sheet exclusively.",
         "Saved event IDs and calendar links into Data sheet.",
@@ -3774,8 +3808,8 @@
 
     function remindMeForNextMovie() {
       const nextObj = getActiveOrNextMovie(Date.now());
-      const currentTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Neighbors 2").replace(/^🎬\s*/, '').trim();
-      const currentDate = (nextObj.movie && nextObj.movie.date) ? `${nextObj.movie.date} at ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Sunday, Sept 6 at 7:00 PM PST");
+      const currentTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Normal").replace(/^🎬\s*/, '').trim();
+      const currentDate = (nextObj.movie && nextObj.movie.date) ? `${nextObj.movie.date} at ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Tuesday, Sept 15 at 7:00 PM PST");
       showTheaterToast(`🔔 Reminder set for "${currentTitle}"! We will alert you before showtime.`);
       alert(`🔔 Notification Enabled!\n\nYou will be alerted before "${currentTitle}" begins on ${currentDate}.`);
     }
@@ -3961,8 +3995,8 @@
       const btnEnterSubtext = document.getElementById('btnEnterAuditoriumSubtext');
       const doorsOpenAtTime = document.getElementById('doorsOpenAtTime');
 
-      const currentMovieTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Neighbors 2").replace(/^🎬\s*/, '').trim();
-      const currentDateStr = (nextObj.movie?.date && nextObj.movie?.startTime) ? `${nextObj.movie.date} • ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Sunday, Sept 6 • 7:00 PM PST");
+      const currentMovieTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Normal").replace(/^🎬\s*/, '').trim();
+      const currentDateStr = (nextObj.movie?.date && nextObj.movie?.startTime) ? `${nextObj.movie.date} • ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Tuesday, Sept 15 • 7:00 PM PST");
 
       // Display the exact time when doors open (10 mins before start)
       if (doorsOpenAtTime && targetNextMs) {
@@ -4057,6 +4091,24 @@
           countdownSubhead.textContent = "Next Premiere Commences In";
         }
       }
+
+      // Persist active stage snapshot to localStorage to eliminate any reload flicker
+      try {
+        if (headingEl && nowPlayingDate) {
+          const posterEl = document.getElementById('stagePoster');
+          const sTitle = document.getElementById('schedNextTitle');
+          const sDate = document.getElementById('schedNextDate');
+          const sPoster = document.getElementById('schedNextPoster');
+          localStorage.setItem('brian_theater_last_stage', JSON.stringify({
+            title: headingEl.textContent,
+            date: nowPlayingDate.textContent,
+            poster: posterEl ? posterEl.src : "",
+            nextTitle: sTitle ? sTitle.textContent : "",
+            nextDate: sDate ? sDate.textContent : "",
+            nextPoster: sPoster ? sPoster.src : ""
+          }));
+        }
+      } catch(e) {}
     }
     setInterval(updateCountdown, 1000);
     updateCountdown();

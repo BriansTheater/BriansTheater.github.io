@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.108] - 2026-09-14
+
+### What's New
+- Eliminated stage reload flicker and initial movie flipping.
+- Added pre-paint local storage hydration for 0ms refresh continuity.
+- Aligned static HTML placeholders directly with active next premiere.
+- Synchronized default fallback objects seamlessly across all scripts.
+
 ## [4.9.107] - 2026-09-14
 
 ### What's New
