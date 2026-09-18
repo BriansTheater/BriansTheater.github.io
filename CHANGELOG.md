@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.109] - 2026-09-18
+
+### What's New
+- Enabled Movie and Movies placeholder titles in Google Calendar sync.
+- Added default descriptions for upcoming unannounced movie nights.
+- Prevented cross-day event collisions for generic movie titles.
+- Supported Movie title synchronization when importing past events.
+
 ## [4.9.108] - 2026-09-14
 
 ### What's New

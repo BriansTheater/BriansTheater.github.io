@@ -1,11 +1,11 @@
 {
-  "version": "4.9.108",
-  "releaseDate": "2026-09-14",
-  "title": "Brian's Theater v4.9.108",
+  "version": "4.9.109",
+  "releaseDate": "2026-09-18",
+  "title": "Brian's Theater v4.9.109",
   "notes": [
-    "Eliminated stage reload flicker and initial movie flipping.",
-    "Added pre-paint local storage hydration for 0ms refresh continuity.",
-    "Aligned static HTML placeholders directly with active next premiere.",
-    "Synchronized default fallback objects seamlessly across all scripts."
+    "Enabled Movie and Movies placeholder titles in Google Calendar sync.",
+    "Added default descriptions for upcoming unannounced movie nights.",
+    "Prevented cross-day event collisions for generic movie titles.",
+    "Supported Movie title synchronization when importing past events."
   ]
 }
