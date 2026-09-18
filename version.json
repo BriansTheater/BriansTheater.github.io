@@ -1,11 +1,11 @@
 {
-  "version": "4.9.109",
+  "version": "4.9.110",
   "releaseDate": "2026-09-18",
-  "title": "Brian's Theater v4.9.109",
+  "title": "Brian's Theater v4.9.110",
   "notes": [
-    "Enabled Movie and Movies placeholder titles in Google Calendar sync.",
-    "Added default descriptions for upcoming unannounced movie nights.",
-    "Prevented cross-day event collisions for generic movie titles.",
-    "Supported Movie title synchronization when importing past events."
+    "Added Google Calendar burst rate-limit protection and pacing.",
+    "Protected calendar event creations with exponential backoff retry.",
+    "Capped duplicate event deletions per run to prevent throttling.",
+    "Preserved synced events safely when rate limits are active."
   ]
 }

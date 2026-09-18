@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.110] - 2026-09-18
+
+### What's New
+- Added Google Calendar burst rate-limit protection and pacing.
+- Protected calendar event creations with exponential backoff retry.
+- Capped duplicate event deletions per run to prevent throttling.
+- Preserved synced events safely when rate limits are active.
+
 ## [4.9.109] - 2026-09-18
 
 ### What's New
