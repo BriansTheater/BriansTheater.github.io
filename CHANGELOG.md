@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.114] - 2026-09-18
+
+### What's New
+- Fixed Scary Movie poster reverting to Chucky image.
+- Restored official Ghostface 2026 poster for Scary Movie.
+- Eliminated Normal movie flash when reloading the theater.
+- Updated upcoming premiere stage baseline to Borderlands.
+
 ## [4.9.113] - 2026-09-18
 
 ### What's New
