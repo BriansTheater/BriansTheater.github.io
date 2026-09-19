@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.113] - 2026-09-18
+
+### What's New
+- Added instant real-time auto-refresh for schedule movie images.
+- Eliminated manual page refreshes when updating movie posters.
+- Synchronized poster changes across open browser tabs instantly.
+- Streamlined Firebase real-time listeners for live card updates.
+
 ## [4.9.112] - 2026-09-18
 
 ### What's New

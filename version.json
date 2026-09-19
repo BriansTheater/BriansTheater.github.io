@@ -1,11 +1,11 @@
 {
-  "version": "4.9.112",
+  "version": "4.9.113",
   "releaseDate": "2026-09-18",
-  "title": "Brian's Theater v4.9.112",
+  "title": "Brian's Theater v4.9.113",
   "notes": [
-    "Eliminated service worker and version mismatch reload loop.",
-    "Added dismissed update memory to prevent repetitive toasts.",
-    "Synchronized app version across html, service worker, and backend.",
-    "Maintained instant single reload without recurring update prompts."
+    "Added instant real-time auto-refresh for schedule movie images.",
+    "Eliminated manual page refreshes when updating movie posters.",
+    "Synchronized poster changes across open browser tabs instantly.",
+    "Streamlined Firebase real-time listeners for live card updates."
   ]
 }

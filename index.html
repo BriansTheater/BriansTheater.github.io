@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.112 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.113 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2044,7 +2044,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.112";
+    const APP_VERSION = "4.9.113";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2421,6 +2421,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.113": [
+        "Added instant real-time auto-refresh for schedule movie images.",
+        "Eliminated manual page refreshes when updating movie posters.",
+        "Synchronized poster changes across open browser tabs instantly.",
+        "Streamlined Firebase real-time listeners for live card re-rendering."
+      ],
       "4.9.112": [
         "Eliminated service worker and version mismatch reload loop.",
         "Added dismissed update memory to prevent repetitive toasts.",
@@ -3608,44 +3614,141 @@
       return str;
     }
 
+    // Cross-Tab Real-Time Sync Channel
+    const theaterBroadcastChannel = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('brian_theater_sync') : null;
+    if (theaterBroadcastChannel) {
+      theaterBroadcastChannel.onmessage = (event) => {
+        try {
+          const msg = event.data;
+          if (msg && msg.type === 'POSTER_UPDATED' && msg.title && msg.imageUrl) {
+            applySinglePosterUpdate(msg.title, msg.imageUrl, false);
+          }
+        } catch(e) {}
+      };
+    }
+
+    function applySinglePosterUpdate(title, imageUrl, broadcast = false) {
+      if (!title || !imageUrl) return;
+      const cleanTitle = String(title).replace(/^🎬\s*/, '').trim();
+      if (!cleanTitle) return;
+      const lower = cleanTitle.toLowerCase();
+      const norm = lower.replace(/[^a-z0-9]/g, '');
+
+      // 1. Update memory cache & localStorage
+      customMovieImages[cleanTitle] = imageUrl;
+      try {
+        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+      } catch(e) {}
+
+      // 2. Broadcast to other open tabs on this browser
+      if (broadcast && theaterBroadcastChannel) {
+        try {
+          theaterBroadcastChannel.postMessage({ type: 'POSTER_UPDATED', title: cleanTitle, imageUrl });
+        } catch(e) {}
+      }
+
+      // 3. Update theaterScheduleCache in-place
+      if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
+        window.theaterScheduleCache.forEach(s => {
+          if (!s || !s.title) return;
+          const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
+          const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
+          if (sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm)))) {
+            s.posterUrl = imageUrl;
+            s.imageUrl = imageUrl;
+          }
+        });
+      }
+
+      // 4. Update sampleSchedule in-place
+      if (typeof sampleSchedule !== 'undefined' && Array.isArray(sampleSchedule)) {
+        sampleSchedule.forEach(s => {
+          if (!s || !s.title) return;
+          const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
+          const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
+          if (sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm)))) {
+            s.posterUrl = imageUrl;
+            s.imageUrl = imageUrl;
+          }
+        });
+      }
+
+      // 5. Re-render schedule cards
+      if (typeof renderSchedule === 'function') {
+        renderSchedule(window.theaterScheduleCache);
+      }
+
+      // 6. Direct visual mutation on rendered schedule card images in DOM for 0ms latency
+      try {
+        const schedGrid = document.getElementById('scheduleCardsGrid');
+        if (schedGrid) {
+          const imgs = schedGrid.querySelectorAll('img');
+          imgs.forEach(img => {
+            const alt = String(img.alt || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+            const altNorm = alt.replace(/[^a-z0-9]/g, '');
+            if (alt === lower || (norm && altNorm === norm) || (norm && altNorm && (norm.startsWith(altNorm) || altNorm.startsWith(norm)))) {
+              img.src = imageUrl;
+            }
+          });
+        }
+      } catch(e) {}
+
+      // 7. Update stage and next poster if active
+      try {
+        const nextObj = (typeof getActiveOrNextMovie === 'function') ? getActiveOrNextMovie(Date.now()) : null;
+        const activeTitle = nextObj?.title ? String(nextObj.title).replace(/^🎬\s*/, '').toLowerCase().trim() : '';
+        const activeNorm = activeTitle.replace(/[^a-z0-9]/g, '');
+        if (activeTitle === lower || (norm && activeNorm === norm)) {
+          const stagePoster = document.getElementById('stagePoster');
+          if (stagePoster) stagePoster.src = imageUrl;
+          const schedNextPoster = document.getElementById('schedNextPoster');
+          if (schedNextPoster) schedNextPoster.src = imageUrl;
+        }
+      } catch(e) {}
+    }
+
     function getMovieArtworkUrl(movieOrTitle) {
       if (!movieOrTitle) return getCinemaPlaceholder("Brian's Theater");
       let title = typeof movieOrTitle === 'string' ? movieOrTitle : (movieOrTitle.title || "");
       title = title.replace(/^🎬\s*/, '').trim();
       if (!title) return getCinemaPlaceholder("Brian's Theater");
 
-      if (customMovieImages[title]) return customMovieImages[title];
-      if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
-        const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl;
-        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4')) return url;
-      }
-      if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
-
       const lower = title.toLowerCase().trim();
       const norm = lower.replace(/[^a-z0-9]/g, '');
 
-      // 1. Exact case-insensitive match
+      // Tier 1: Custom admin overrides take absolute precedence across all matching layers
+      if (customMovieImages[title]) return customMovieImages[title];
       for (const [k, v] of Object.entries(customMovieImages)) {
         if (k.toLowerCase().trim() === lower) return v;
       }
+      for (const [k, v] of Object.entries(customMovieImages)) {
+        if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) return v;
+      }
+      for (const [k, v] of Object.entries(customMovieImages)) {
+        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
+      }
+
+      // Tier 2: Attached movie object artwork (if valid and not placeholder)
+      if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
+        const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl;
+        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4') && !url.includes('data:image')) return url;
+      }
+
+      // Tier 3: Verified default movie artwork dictionary
+      if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
       for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
         if (k.toLowerCase().trim() === lower) return v;
       }
-
-      // 2. Normalized stripped alphanumeric match
       for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
         if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) return v;
       }
-
-      // 3. Subtitle / prefix match (e.g. "Neighbors 2" vs "Neighbors 2: Sorority Rising")
       for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
         const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) {
-          return v;
-        }
+        if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
       }
 
-      // 4. Fallback search across vaultMovies and window.PAST_MOVIES_DATA
+      // Tier 4: Fallback search across vaultMovies and window.PAST_MOVIES_DATA
       const catalogSource = (Array.isArray(vaultMovies) && vaultMovies.length > 0) 
         ? vaultMovies 
         : (Array.isArray(window.PAST_MOVIES_DATA) ? window.PAST_MOVIES_DATA : []);
@@ -5134,14 +5237,22 @@
       const btn = document.getElementById('btnSaveMediaBundle');
       if (btn) btn.innerHTML = '<span>⏳</span> Pushing to Site & Sheets...';
 
-      // 1. Update local cache
-      if (artUrl) customMovieImages[title] = artUrl;
+      // 1. Update local cache & broadcast
+      if (artUrl) {
+        applySinglePosterUpdate(title, artUrl, true);
+        try {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(artUrl)
+          }).catch(() => {});
+        } catch(e) {}
+      }
       if (trailerUrl) customMovieTrailers[title] = trailerUrl;
       if (summary) customMovieSummaries[title] = summary;
       customMovieMetadata[title] = { year, runtime, genres, summary };
 
       try {
-        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
         localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
         localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries));
         localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
@@ -5348,9 +5459,15 @@
         return;
       }
 
-      customMovieImages[title] = url;
+      applySinglePosterUpdate(title, url, true);
+
+      // Direct zero-delay write to Firebase RTDB
       try {
-        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(url)
+        }).catch(() => {});
       } catch(e) {}
 
       fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(title)}&imageUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' }).catch(() => {});
@@ -5379,9 +5496,29 @@
         localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
       } catch(e) {}
 
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json`, {
+          method: 'DELETE'
+        }).catch(() => {});
+      } catch(e) {}
+
+      // Reset in schedule cache if present
+      if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
+        window.theaterScheduleCache.forEach(s => {
+          if (!s || !s.title) return;
+          if (s.title.toLowerCase().trim() === title.toLowerCase().trim()) {
+            delete s.posterUrl;
+            delete s.imageUrl;
+          }
+        });
+      }
+
       onAdminSelectMediaMovie();
-      renderSchedule();
+      renderSchedule(window.theaterScheduleCache);
       renderVault();
+      if (typeof theaterBroadcastChannel !== 'undefined' && theaterBroadcastChannel) {
+        theaterBroadcastChannel.postMessage({ type: 'POSTER_RESET', title });
+      }
       showTheaterToast(`🔄 Reset artwork for "${title}" to default.`);
     }
 
@@ -5791,6 +5928,12 @@
 
       if (data.moviePosters && typeof data.moviePosters === 'object') {
         Object.assign(customMovieImages, data.moviePosters);
+        try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+        for (const [k, v] of Object.entries(data.moviePosters)) {
+          if (typeof v === 'string') {
+            applySinglePosterUpdate(k, v, false);
+          }
+        }
       }
 
       if (data.movieTrailers && typeof data.movieTrailers === 'object') {
@@ -5819,6 +5962,8 @@
       if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
         renderSchedule(data.schedule);
         mergeScheduleIntoVault(data.schedule);
+      } else if (data.moviePosters && typeof data.moviePosters === 'object') {
+        renderSchedule(window.theaterScheduleCache);
       }
 
       // Sync full 398+ past movies catalog from Firebase
@@ -5863,9 +6008,31 @@
           firebaseEventSource.addEventListener('put', (event) => {
             try {
               const payload = JSON.parse(event.data);
-              if (payload && payload.path === '/' && payload.data) {
+              if (!payload) return;
+              if (payload.path === '/' && payload.data) {
                 applyFirebaseData(payload.data);
-              } else if (payload && payload.path) {
+              } else if (payload.path === '/moviePosters' && payload.data) {
+                if (typeof payload.data === 'object') {
+                  Object.assign(customMovieImages, payload.data);
+                  try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+                  for (const [k, v] of Object.entries(payload.data)) {
+                    if (typeof v === 'string') applySinglePosterUpdate(k, v, false);
+                  }
+                  renderSchedule(window.theaterScheduleCache);
+                }
+              } else if (payload.path && payload.path.startsWith('/moviePosters/')) {
+                const rawKey = payload.path.replace(/^\/moviePosters\//, '').replace(/\.json$/, '');
+                const movieKey = decodeURIComponent(rawKey);
+                if (movieKey && typeof payload.data === 'string') {
+                  applySinglePosterUpdate(movieKey, payload.data, false);
+                }
+              } else if (payload.path === '/schedule' && Array.isArray(payload.data)) {
+                window.theaterScheduleCache = payload.data;
+                renderSchedule(payload.data);
+                mergeScheduleIntoVault(payload.data);
+              } else if (payload.path === '/cinema' && payload.data) {
+                applyFirebaseData({ cinema: payload.data });
+              } else if (payload.path) {
                 syncFromFirebase();
               }
             } catch(err) {}
@@ -5873,9 +6040,17 @@
           firebaseEventSource.addEventListener('patch', (event) => {
             try {
               const payload = JSON.parse(event.data);
-              if (payload && payload.data) {
+              if (!payload) return;
+              if (payload.path === '/' && payload.data) {
                 applyFirebaseData(payload.data);
-              } else {
+              } else if (payload.path === '/moviePosters' && payload.data && typeof payload.data === 'object') {
+                Object.assign(customMovieImages, payload.data);
+                try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+                for (const [k, v] of Object.entries(payload.data)) {
+                  if (typeof v === 'string') applySinglePosterUpdate(k, v, false);
+                }
+                renderSchedule(window.theaterScheduleCache);
+              } else if (payload.path && payload.data) {
                 syncFromFirebase();
               }
             } catch(err) {}
@@ -7767,7 +7942,11 @@
     }
 
     function renderSchedule(scheduleItems) {
-      const raw = (scheduleItems && Array.isArray(scheduleItems) && scheduleItems.length > 0) ? scheduleItems : sampleSchedule;
+      const raw = (scheduleItems && Array.isArray(scheduleItems) && scheduleItems.length > 0) 
+        ? scheduleItems 
+        : ((window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0) 
+            ? window.theaterScheduleCache 
+            : sampleSchedule);
       const now = Date.now();
 
       const upcomingItems = [];
