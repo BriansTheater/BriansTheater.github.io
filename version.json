@@ -1,11 +1,11 @@
 {
-  "version": "4.9.111",
+  "version": "4.9.112",
   "releaseDate": "2026-09-18",
-  "title": "Brian's Theater v4.9.111",
+  "title": "Brian's Theater v4.9.112",
   "notes": [
-    "Added Google Tasks reminder integration for upcoming movie nights.",
-    "Set midnight reminder due times on scheduled movie dates.",
-    "Protected completed tasks from being duplicated or re-added.",
-    "Integrated Google Tasks syncing directly into Calendar sync tool."
+    "Eliminated service worker and version mismatch reload loop.",
+    "Added dismissed update memory to prevent repetitive toasts.",
+    "Synchronized app version across html, service worker, and backend.",
+    "Maintained instant single reload without recurring update prompts."
   ]
 }

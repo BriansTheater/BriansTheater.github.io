@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.111 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.112 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2044,7 +2044,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.108";
+    const APP_VERSION = "4.9.112";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2421,6 +2421,30 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.112": [
+        "Eliminated service worker and version mismatch reload loop.",
+        "Added dismissed update memory to prevent repetitive toasts.",
+        "Synchronized app version across html, service worker, and backend.",
+        "Maintained instant single reload without recurring update prompts."
+      ],
+      "4.9.111": [
+        "Added Google Tasks reminder integration for upcoming movie nights.",
+        "Set midnight reminder due times on scheduled movie dates.",
+        "Protected completed tasks from being duplicated or re-added.",
+        "Integrated Google Tasks syncing directly into Calendar sync tool."
+      ],
+      "4.9.110": [
+        "Protected Google Calendar from burst rate limit exceptions.",
+        "Added safe calendar call wrapper with pacing and backoff.",
+        "Capped batch calendar operations to eliminate quota errors.",
+        "Maintained instant responsive calendar and task synchronization."
+      ],
+      "4.9.109": [
+        "Allowed Movie and Movies placeholder titles to sync.",
+        "Maintained movie night scheduling when title is undecided.",
+        "Ensured placeholder movies receive calendar events smoothly.",
+        "Cleaned synopsis and badges for flexible movie night planning."
+      ],
       "4.9.108": [
         "Eliminated stage reload flicker and initial movie flipping.",
         "Added pre-paint local storage hydration for 0ms refresh continuity.",
@@ -2963,6 +2987,8 @@
       return false;
     }
 
+    let activeUpdateTargetVersion = null;
+
     function showAppUpdateToast(options = {}) {
       const toast = document.getElementById('appUpdateToast');
       const titleEl = document.getElementById('updateToastTitle');
@@ -2986,7 +3012,9 @@
         return;
       }
 
-      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.81"] || APP_STORE_RELEASES["4.9.80"] || [];
+      activeUpdateTargetVersion = version;
+
+      const changes = options.changes || APP_STORE_RELEASES[version] || APP_STORE_RELEASES[APP_VERSION] || APP_STORE_RELEASES["4.9.112"] || APP_STORE_RELEASES["4.9.111"] || [];
 
       if (titleEl) titleEl.textContent = isAvailable ? "Update Alerts" : "What's New";
       if (badgeEl) badgeEl.textContent = `v${version}`;
@@ -3040,7 +3068,9 @@
         }
       }
       try {
-        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
+        const ver = activeUpdateTargetVersion || APP_VERSION;
+        localStorage.setItem('brian_theater_last_viewed_version', ver);
+        localStorage.setItem('brian_theater_dismissed_version', ver);
       } catch(e) {}
     }
 
@@ -3050,6 +3080,8 @@
       if (refreshBtn) {
         refreshBtn.innerHTML = '<span>⚡</span> <span>Updating & Reloading Theater...</span>';
       }
+
+      const targetVer = activeUpdateTargetVersion || APP_VERSION;
 
       // 1. Tell active and waiting service workers to skip waiting immediately
       try {
@@ -3079,9 +3111,10 @@
         } catch(e) {}
       }
 
-      // 4. Mark last viewed version and timestamp so popup never loops
+      // 4. Mark target version as viewed and dismissed so popup never loops
       try {
-        localStorage.setItem('brian_theater_last_viewed_version', APP_VERSION);
+        localStorage.setItem('brian_theater_last_viewed_version', targetVer);
+        localStorage.setItem('brian_theater_dismissed_version', targetVer);
         localStorage.setItem('brian_theater_last_reload_timestamp', String(Date.now()));
       } catch(e) {}
 
@@ -3096,7 +3129,7 @@
     window.swRegistration = null;
     let isCheckingForUpdate = false;
 
-    async function checkForAppUpdate() {
+    async function checkForAppUpdate(isManual = false) {
       if (isCheckingForUpdate) return;
       isCheckingForUpdate = true;
 
@@ -3111,18 +3144,26 @@
           window.swRegistration.update().catch(() => {});
         }
 
+        const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
+        const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
+        const recentlyReloaded = (Date.now() - lastReload < 15000);
+
         // Layer 3: Direct cache-busted fetch to version.json on server
         try {
           const res = await fetch(`./version.json?_t=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
             const vData = await res.json();
             if (vData && vData.version && isNewerVersion(vData.version, APP_VERSION)) {
-              // Loop breaker: if user recently reloaded within 15 seconds, give browser time to breathe
-              const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
-              if (Date.now() - lastReload < 15000) {
-                console.log(`[UpdateDetector] Recently reloaded, suppressing duplicate popup for v${vData.version}`);
-                isCheckingForUpdate = false;
-                return;
+              if (!isManual) {
+                if (recentlyReloaded) {
+                  console.log(`[UpdateDetector] Recently reloaded, suppressing duplicate popup for v${vData.version}`);
+                  isCheckingForUpdate = false;
+                  return;
+                }
+                if (dismissedVer && !isNewerVersion(vData.version, dismissedVer)) {
+                  isCheckingForUpdate = false;
+                  return;
+                }
               }
               console.log(`[UpdateDetector] Server has newer version v${vData.version} (local: v${APP_VERSION})`);
               showAppUpdateToast({
@@ -3143,10 +3184,15 @@
             const swText = await swRes.text();
             const match = swText.match(/\/\/\s*VERSION:\s*([0-9.]+)/i);
             if (match && match[1] && isNewerVersion(match[1], APP_VERSION)) {
-              const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
-              if (Date.now() - lastReload < 15000) {
-                isCheckingForUpdate = false;
-                return;
+              if (!isManual) {
+                if (recentlyReloaded) {
+                  isCheckingForUpdate = false;
+                  return;
+                }
+                if (dismissedVer && !isNewerVersion(match[1], dismissedVer)) {
+                  isCheckingForUpdate = false;
+                  return;
+                }
               }
               console.log(`[UpdateDetector] Detected sw.js version v${match[1]} > local v${APP_VERSION}`);
               showAppUpdateToast({
@@ -3169,7 +3215,7 @@
 
     async function manualCheckForUpdates() {
       showTheaterToast("Checking for newest version...");
-      await checkForAppUpdate();
+      await checkForAppUpdate(true);
       const toast = document.getElementById('appUpdateToast');
       if (toast && toast.classList.contains('opacity-100')) {
         return;
@@ -3212,7 +3258,10 @@
             const newVer = event.data.version;
             // ONLY show update if the version is genuinely newer than what is currently running!
             if (newVer && isNewerVersion(newVer, APP_VERSION)) {
-              showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
+              const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
+              if (!dismissedVer || isNewerVersion(newVer, dismissedVer)) {
+                showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
+              }
             }
           }
         });
@@ -5757,7 +5806,10 @@
 
       // Check if Firebase broadcasts a newer app version
       if (data.appVersion && isNewerVersion(data.appVersion, APP_VERSION)) {
-        showAppUpdateToast({ version: data.appVersion, isUpdateAvailable: true });
+        const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
+        if (!dismissedVer || isNewerVersion(data.appVersion, dismissedVer)) {
+          showAppUpdateToast({ version: data.appVersion, isUpdateAvailable: true });
+        }
       }
 
       updateStageArtwork(isLive, data.nowPlaying, data.nextTitle, data);

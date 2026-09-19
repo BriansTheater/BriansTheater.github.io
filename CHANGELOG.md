@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.112] - 2026-09-18
+
+### What's New
+- Eliminated service worker and version mismatch reload loop.
+- Added dismissed update memory to prevent repetitive toasts.
+- Synchronized app version across html, service worker, and backend.
+- Maintained instant single reload without recurring update prompts.
+
 ## [4.9.111] - 2026-09-18
 
 ### What's New
