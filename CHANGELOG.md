@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.115] - 2026-09-19
+
+### What's New
+- Added automated social media scheduling via Buffer GraphQL API.
+- Scheduled announcements at 12:00 AM on screening days.
+- Dynamically integrated TMDB movie links and high-res posters.
+- Skipped generic placeholder movie titles like 'movie' automatically.
+- Enabled saving custom Poster Studio artwork to Google Drive.
+
 ## [4.9.114] - 2026-09-18
 
 ### What's New

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.114 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.115 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2047,7 +2047,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.114";
+    const APP_VERSION = "4.9.115";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2425,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.115": [
+        "Added automated social media scheduling via Buffer GraphQL API.",
+        "Scheduled announcements at 12:00 AM on screening days.",
+        "Dynamically integrated TMDB movie links and high-res posters.",
+        "Skipped generic placeholder movie titles like 'movie' automatically.",
+        "Enabled saving custom Poster Studio artwork to Google Drive."
+      ],
       "4.9.114": [
         "Fixed Scary Movie poster reverting to Chucky image.",
         "Restored official Ghostface 2026 poster for Scary Movie.",
