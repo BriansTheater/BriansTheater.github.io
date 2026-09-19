@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.111] - 2026-09-18
+
+### What's New
+- Added Google Tasks reminder integration for upcoming movie nights.
+- Set midnight reminder due times on scheduled movie dates.
+- Protected completed tasks from being duplicated or re-added.
+- Integrated Google Tasks syncing directly into Calendar sync tool.
+
 ## [4.9.110] - 2026-09-18
 
 ### What's New

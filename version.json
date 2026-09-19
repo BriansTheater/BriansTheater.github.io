@@ -1,11 +1,11 @@
 {
-  "version": "4.9.110",
+  "version": "4.9.111",
   "releaseDate": "2026-09-18",
-  "title": "Brian's Theater v4.9.110",
+  "title": "Brian's Theater v4.9.111",
   "notes": [
-    "Added Google Calendar burst rate-limit protection and pacing.",
-    "Protected calendar event creations with exponential backoff retry.",
-    "Capped duplicate event deletions per run to prevent throttling.",
-    "Preserved synced events safely when rate limits are active."
+    "Added Google Tasks reminder integration for upcoming movie nights.",
+    "Set midnight reminder due times on scheduled movie dates.",
+    "Protected completed tasks from being duplicated or re-added.",
+    "Integrated Google Tasks syncing directly into Calendar sync tool."
   ]
 }
