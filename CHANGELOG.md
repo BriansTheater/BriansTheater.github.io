@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.118] - 2026-09-19
+
+### What's New
+- Relocated studio poster storage to Column X.
+- Protected movie End Time in Column H from overwriting.
+- Synchronized studio posters to Firebase live theater instantly.
+- Buffer scheduler now pulls artwork from Column X.
+- Poster Studio schedule loader now reads Column X posters.
+
 ## [4.9.117] - 2026-09-19
 
 ### What's New
