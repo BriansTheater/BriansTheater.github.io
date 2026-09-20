@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.116] - 2026-09-19
+
+### What's New
+- Smart Search now auto-fills only your selected rows.
+- Protected Google accounts from daily UrlFetch quota limits.
+- Prevented old errors from blocking new movie auto-fills.
+- Populated full summaries and trailers for new schedule additions.
+- Added friendly one-click guidance to run Theater Bot.
+
 ## [4.9.115] - 2026-09-19
 
 ### What's New
