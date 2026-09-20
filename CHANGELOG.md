@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.122] - 2026-09-20
+
+### What's New
+- Precision 1:00 AM PST Buffer timing with zero drift.
+- Auto-queues announcement to Buffer immediately on poster save.
+- Prioritizes custom widescreen studio poster from Column Y.
+- Uses direct Google CDN links for social media images.
+- Added past-time safety guard for same-day scheduled screenings.
+- Updated Poster Studio toast with instant Buffer confirmation.
+
 ## [4.9.121] - 2026-09-20
 
 ### What's New

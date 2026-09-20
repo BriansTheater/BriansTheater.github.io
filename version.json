@@ -1,11 +1,11 @@
 {
-  "version": "4.9.121",
+  "version": "4.9.122",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.121",
+  "title": "Brian's Theater v4.9.122",
   "notes": [
-    "Added full Typography & Font Studio to Widescreen Poster Studio.",
-    "Integrated 11 curated cinema typography families with font preloading.",
-    "Smart Genre Auto-Match recommends fonts and glows for movies.",
-    "Supports live font size sliders and radiant color glow presets."
+    "Precision 1:00 AM PST Buffer timing with zero UTC drift.",
+    "Auto-queues announcement to Buffer immediately on poster save.",
+    "Prioritizes custom widescreen studio poster from Column Y.",
+    "Direct Google CDN links ensure crisp social media image attachments."
   ]
 }
