@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.117] - 2026-09-19
+
+### What's New
+- Added one-click Refresh Schedule button to Poster Studio.
+- Instant schedule loading without consuming TMDB or Google quotas.
+- Prevented placeholder movie titles from triggering false search errors.
+- Reused existing studio artwork directly from Data sheet.
+
 ## [4.9.116] - 2026-09-19
 
 ### What's New
