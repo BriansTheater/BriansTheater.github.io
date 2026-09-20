@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.126] - 2026-09-20
+
+### What's New
+- Added persistent dismissible completion dialog for poster saves.
+- Keeps save confirmations visible until you explicitly dismiss them.
+- Detailed breakdown of Drive, Buffer, and Calendar sync.
+- Upgraded bulk batch processing with persistent summary modal.
+
 ## [4.9.125] - 2026-09-20
 
 ### What's New

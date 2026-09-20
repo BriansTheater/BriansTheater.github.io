@@ -1,12 +1,11 @@
 {
-  "version": "4.9.125",
+  "version": "4.9.126",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.125",
+  "title": "Brian's Theater v4.9.126",
   "notes": [
-    "Streamlined Google Sheets Admin menus and removed clutter.",
-    "Organized Google Drive posters into automated monthly subfolders.",
-    "Automated Google Calendar event scheduling on poster save.",
-    "Added 1-Click batch studio rendering to Drive and Buffer.",
-    "Added 1-Click monthly schedule reset with Drive folder trash."
+    "Added persistent dismissible completion dialog for poster saves.",
+    "Keeps save confirmations visible until you explicitly dismiss them.",
+    "Detailed breakdown of Drive, Buffer, and Calendar sync.",
+    "Upgraded bulk batch processing with persistent summary modal."
   ]
 }
