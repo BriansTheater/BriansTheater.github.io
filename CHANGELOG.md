@@ -1,5 +1,16 @@
 # Changelog
  
+## [4.9.121] - 2026-09-20
+
+### What's New
+- Added Typography & Font Studio with custom poster controls.
+- Curated 11 cinema-grade font families via Google Fonts.
+- Smart Genre Auto-Match recommends fonts tailored to movies.
+- Added live font size sliders with real-time redraw.
+- Added radiant color glow presets for title text.
+- Preloaded typography guarantees crisp rendering with zero flash.
+- Bulk exporter renders tailored typography for all movies.
+
 ## [4.9.120] - 2026-09-19
 
 ### What's New
