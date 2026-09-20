@@ -3,14 +3,13 @@
 ## [4.9.120] - 2026-09-19
 
 ### What's New
-- Eliminated all disruptive blocking alert popups in Poster Studio.
-- Added direct high-speed client TMDB search with CORS support.
-- Cleaned movie search queries to strip dates and times.
-- Automatically select first scheduled movie upon opening Poster Studio.
-- Instant canvas redraw when picking movies from schedule dropdown.
-- Auto-resolve missing backdrops in Double Feature and Bulk export.
-- Auto-resolve missing backdrops in Monthly Feature Recap grid.
-- Replaced alert errors with sleek inline status badges.
+- Defaulted fit mode to contain with ambient blur background.
+- Fixed cropped and zoomed in movie poster backgrounds.
+- Eliminated all 16 blocking browser alert popups completely.
+- Added sleek inline status badges and floating toasts.
+- Added dismissible loading overlay to prevent frozen studio interface.
+- Smooth schedule population and first movie auto-selection.
+- Seamless tab switching with instant bulk list rendering.
 
 ## [4.9.119] - 2026-09-19
 
