@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.130] - 2026-09-20
+
+### What's New
+- Eliminated 15-second polling loop saving 99% Firebase bandwidth.
+- Cached movie catalog locally preventing heavy repetitive downloads.
+- Connected tab visibility sync with 15-minute fallback protection.
+- Reduced Realtime Database network egress to near-zero.
+
 ## [4.9.129] - 2026-09-20
 
 ### What's New

@@ -6084,15 +6084,18 @@
         renderSchedule(window.theaterScheduleCache);
       }
 
-      // Sync full 398+ past movies catalog from Firebase
-      fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
-        .then(r => r.json())
-        .then(pastData => {
-          if (Array.isArray(pastData) && pastData.length > 0) {
-            mergePastMoviesIntoVault(pastData);
-          }
-        })
-        .catch(() => {});
+      // Sync full 398+ past movies catalog from Firebase (only once if not loaded)
+      if (!window._pastMoviesLoaded && (!window.pastMoviesCatalog || window.pastMoviesCatalog.length === 0)) {
+        window._pastMoviesLoaded = true;
+        fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
+          .then(r => r.json())
+          .then(pastData => {
+            if (Array.isArray(pastData) && pastData.length > 0) {
+              mergePastMoviesIntoVault(pastData);
+            }
+          })
+          .catch(() => {});
+      }
 
       // Sync live movie requests from Firebase
       if (data.requests && Array.isArray(data.requests) && data.requests.length > 0) {
@@ -6221,7 +6224,12 @@
     }
     syncFromFirebase();
     initFirebaseRealtimeListener();
-    setInterval(syncFromFirebase, 15000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        syncFromFirebase();
+      }
+    });
+    setInterval(syncFromFirebase, 15 * 60 * 1000);
 
     // Initial Vault Library & Community Requests
     vaultMovies = [

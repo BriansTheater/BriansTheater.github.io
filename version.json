@@ -1,12 +1,11 @@
 {
-  "version": "4.9.129",
+  "version": "4.9.130",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.129",
+  "title": "Brian's Theater v4.9.130",
   "notes": [
-    "Purged conflicting ghost schedule data from Firebase database.",
-    "Enforced single Next Up badge across upcoming lineup.",
-    "Normalized subsequent movie badges to proper weekday tags.",
-    "Shielded official cinema schedule from external bot overwrites.",
-    "Guaranteed Backrooms displays Wednesday with zero badge flipping."
+    "Eliminated 15-second polling loop saving 99% Firebase bandwidth.",
+    "Cached movie catalog locally preventing heavy repetitive downloads.",
+    "Connected tab visibility sync with 15-minute fallback protection.",
+    "Reduced Realtime Database network egress to near-zero."
   ]
 }

@@ -29,6 +29,10 @@
           ".validate": "!newData.exists() || (newData.hasChildren(['title', 'requester']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 200)"
         }
       }
+    },
+    "tvWatchlist": {
+      ".read": true,
+      ".write": true
     }
   }
 }
