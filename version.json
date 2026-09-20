@@ -1,11 +1,11 @@
 {
-  "version": "4.9.126",
+  "version": "4.9.127",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.126",
+  "title": "Brian's Theater v4.9.127",
   "notes": [
-    "Added persistent dismissible completion dialog for poster saves.",
-    "Keeps save confirmations visible until you explicitly dismiss them.",
-    "Detailed breakdown of Drive, Buffer, and Calendar sync.",
-    "Upgraded bulk batch processing with persistent summary modal."
+    "Fixed 2:00 AM showtime display across schedule cards.",
+    "Enforced Pacific Time dates preventing UTC day shifts.",
+    "Shielded master movie schedule from external bot overwrites.",
+    "Guaranteed authentic 7:00 PM virtual cinema start times."
   ]
 }

@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.127] - 2026-09-20
+
+### What's New
+- Fixed 2:00 AM showtime display across schedule cards.
+- Enforced Pacific Time dates preventing UTC day shifts.
+- Shielded master movie schedule from external bot overwrites.
+- Guaranteed authentic 7:00 PM virtual cinema start times.
+
 ## [4.9.126] - 2026-09-20
 
 ### What's New

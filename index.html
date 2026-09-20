@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.126 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.127 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2047,7 +2047,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.126";
+    const APP_VERSION = "4.9.127";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2425,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.127": [
+        "Fixed 2:00 AM showtime display across schedule cards.",
+        "Enforced Pacific Time dates preventing UTC day shifts.",
+        "Shielded master movie schedule from external bot overwrites.",
+        "Guaranteed authentic 7:00 PM virtual cinema start times."
+      ],
       "4.9.126": [
         "Added persistent dismissible completion dialog for poster saves.",
         "Keeps save confirmations visible until you explicitly dismiss them.",
@@ -5967,18 +5973,24 @@
             : null;
 
       if (officialSched) {
+        window.theaterOfficialSchedule = officialSched;
         window.theaterScheduleCache = officialSched;
       } else if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
-        // Protect active live screening from being stomped by external bot with no live movie
-        const existingLive = (window.theaterScheduleCache || sampleSchedule || []).find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
-        const incomingHasLive = data.schedule.some(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
-
-        if (existingLive && !incomingHasLive) {
-          // Prepend the active live movie to the incoming schedule so it remains live on stage
-          const withoutDuplicate = data.schedule.filter(s => s.title.toLowerCase() !== existingLive.title.toLowerCase());
-          window.theaterScheduleCache = [existingLive, ...withoutDuplicate];
+        // Protect master schedule from truncated bot schedule stomping
+        if (window.theaterOfficialSchedule && window.theaterOfficialSchedule.length > data.schedule.length) {
+          window.theaterScheduleCache = window.theaterOfficialSchedule;
         } else {
-          window.theaterScheduleCache = data.schedule;
+          // Protect active live screening from being stomped by external bot with no live movie
+          const existingLive = (window.theaterScheduleCache || sampleSchedule || []).find(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+          const incomingHasLive = data.schedule.some(s => s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+
+          if (existingLive && !incomingHasLive) {
+            // Prepend the active live movie to the incoming schedule so it remains live on stage
+            const withoutDuplicate = data.schedule.filter(s => s.title.toLowerCase() !== existingLive.title.toLowerCase());
+            window.theaterScheduleCache = [existingLive, ...withoutDuplicate];
+          } else {
+            window.theaterScheduleCache = data.schedule;
+          }
         }
       }
 
@@ -6117,10 +6129,20 @@
                 if (movieKey && typeof payload.data === 'string') {
                   applySinglePosterUpdate(movieKey, payload.data, false);
                 }
-              } else if (payload.path === '/schedule' && Array.isArray(payload.data)) {
+              } else if ((payload.path === '/officialSchedule' || payload.path === '/cinema/schedule') && Array.isArray(payload.data) && payload.data.length > 0) {
+                window.theaterOfficialSchedule = payload.data;
                 window.theaterScheduleCache = payload.data;
                 renderSchedule(payload.data);
                 mergeScheduleIntoVault(payload.data);
+              } else if (payload.path === '/schedule' && Array.isArray(payload.data)) {
+                // Shield master schedule from truncated bot stomping
+                if (window.theaterOfficialSchedule && window.theaterOfficialSchedule.length > payload.data.length) {
+                  renderSchedule(window.theaterOfficialSchedule);
+                } else {
+                  window.theaterScheduleCache = payload.data;
+                  renderSchedule(payload.data);
+                  mergeScheduleIntoVault(payload.data);
+                }
               } else if (payload.path === '/cinema' && payload.data) {
                 applyFirebaseData({ cinema: payload.data });
               } else if (payload.path) {
@@ -6159,6 +6181,15 @@
         if (res.ok) {
           const data = await res.json();
           if (data) {
+            try {
+              const offRes = await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json');
+              if (offRes.ok) {
+                const offData = await offRes.json();
+                if (offData && Array.isArray(offData) && offData.length > 0) {
+                  data.officialSchedule = offData;
+                }
+              }
+            } catch(offErr) {}
             try {
               const cinRes = await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinema.json');
               if (cinRes.ok) {
@@ -7870,16 +7901,32 @@
       }
       summary = cleanSummaryText(summary);
 
-      // 4. Start Time & End Time
-      let startTime = cleanTimeString(s.startTime || s.time, false) || "7:00 PM";
-      let endTime = cleanTimeString(s.endTime, false);
-      if (!endTime && s.endMs) {
+      // 4. Start Time & End Time: Precision America/Los_Angeles Resolution
+      let startTime = cleanTimeString(s.startTime, false);
+      let pdtStartTime = "";
+      if (s.startMs && !isNaN(Number(s.startMs))) {
         try {
-          const endDate = new Date(s.endMs);
+          const startDate = new Date(Number(s.startMs));
+          pdtStartTime = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles' });
+        } catch(e) {}
+      }
+
+      // Purge invalid "2:00 AM" UTC artifacts or empty start times
+      if (!startTime || startTime === "2:00 AM" || startTime.includes("2:00 AM")) {
+        startTime = pdtStartTime || cleanTimeString(s.time, false) || "7:00 PM";
+        if (startTime === "2:00 AM" || startTime.includes("2:00 AM")) {
+          startTime = pdtStartTime || "7:00 PM";
+        }
+      }
+
+      let endTime = cleanTimeString(s.endTime, false);
+      if ((!endTime || endTime === "2:00 AM" || endTime.includes("2:00 AM")) && s.endMs && !isNaN(Number(s.endMs))) {
+        try {
+          const endDate = new Date(Number(s.endMs));
           endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles' });
         } catch(e) {}
       }
-      if (!endTime) endTime = "8:45 PM";
+      if (!endTime || endTime === "2:00 AM" || endTime.includes("2:00 AM")) endTime = "8:45 PM";
 
       // Check custom overrides for schedule movie
       const cleanTitle = (s.title || '').replace(/^🎬\s*/, '').trim();
@@ -7938,6 +7985,15 @@
       const d = parseMovieScheduleDetails(s);
       const posterUrl = getMovieArtworkUrl(s);
       const btnPrefix = isConcluded ? `concTrailer` : `trailer`;
+
+      let displayDate = s.date || '';
+      if (s.startMs && !isNaN(Number(s.startMs))) {
+        try {
+          const startDate = new Date(Number(s.startMs));
+          displayDate = startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' });
+        } catch(e) {}
+      }
+
       return `
       <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border ${isConcluded ? 'border-slate-850 opacity-80' : 'border-slate-800'} flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-700 transition group">
         <div>
@@ -7950,7 +8006,7 @@
             </div>
             <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
               <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px]">
-                <span>📅</span> ${escapeHtml(s.date || '')}
+                <span>📅</span> ${escapeHtml(displayDate)}
               </span>
               <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800">
                 ${escapeHtml(d.startTime)}
