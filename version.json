@@ -1,11 +1,11 @@
 {
-  "version": "4.9.119",
+  "version": "4.9.120",
   "releaseDate": "2026-09-19",
-  "title": "Brian's Theater v4.9.119",
+  "title": "Brian's Theater v4.9.120",
   "notes": [
-    "Relocated studio poster storage to Column Y.",
-    "Protected ETag in Column X from accidental overwriting.",
-    "Synchronized studio posters to Firebase live theater instantly.",
-    "Buffer scheduler now pulls artwork from Column Y."
+    "Permanently eliminated disruptive blocking alert popups in Poster Studio.",
+    "Added direct high-speed client TMDB search with CORS support.",
+    "Smart movie title cleaner strips dates, times, and tags.",
+    "Auto-selects first scheduled movie and updates canvas immediately."
   ]
 }

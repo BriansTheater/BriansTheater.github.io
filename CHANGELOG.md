@@ -1,5 +1,17 @@
 # Changelog
  
+## [4.9.120] - 2026-09-19
+
+### What's New
+- Eliminated all disruptive blocking alert popups in Poster Studio.
+- Added direct high-speed client TMDB search with CORS support.
+- Cleaned movie search queries to strip dates and times.
+- Automatically select first scheduled movie upon opening Poster Studio.
+- Instant canvas redraw when picking movies from schedule dropdown.
+- Auto-resolve missing backdrops in Double Feature and Bulk export.
+- Auto-resolve missing backdrops in Monthly Feature Recap grid.
+- Replaced alert errors with sleek inline status badges.
+
 ## [4.9.119] - 2026-09-19
 
 ### What's New
