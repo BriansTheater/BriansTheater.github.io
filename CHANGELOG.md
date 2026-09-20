@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.119] - 2026-09-19
+
+### What's New
+- Relocated studio poster storage to Column Y.
+- Protected Google Calendar ETag in Column X.
+- Synchronized studio posters to Firebase live theater instantly.
+- Buffer scheduler now pulls artwork from Column Y.
+- Poster Studio schedule loader now reads Column Y posters.
+
 ## [4.9.118] - 2026-09-19
 
 ### What's New

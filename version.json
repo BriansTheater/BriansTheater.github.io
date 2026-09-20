@@ -1,11 +1,11 @@
 {
-  "version": "4.9.118",
+  "version": "4.9.119",
   "releaseDate": "2026-09-19",
-  "title": "Brian's Theater v4.9.118",
+  "title": "Brian's Theater v4.9.119",
   "notes": [
-    "Relocated studio poster storage to Column X.",
-    "Protected movie End Time in Column H from overwriting.",
+    "Relocated studio poster storage to Column Y.",
+    "Protected ETag in Column X from accidental overwriting.",
     "Synchronized studio posters to Firebase live theater instantly.",
-    "Buffer scheduler now pulls artwork from Column X."
+    "Buffer scheduler now pulls artwork from Column Y."
   ]
 }
