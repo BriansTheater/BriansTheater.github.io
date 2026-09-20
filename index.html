@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.128 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.129 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2047,7 +2047,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.128";
+    const APP_VERSION = "4.9.129";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2425,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.129": [
+        "Purged conflicting ghost schedule data from Firebase database.",
+        "Enforced single Next Up badge across upcoming lineup.",
+        "Normalized subsequent movie badges to proper weekday tags.",
+        "Shielded official cinema schedule from external bot overwrites.",
+        "Guaranteed Backrooms displays Wednesday with zero badge flipping."
+      ],
       "4.9.128": [
         "Kept movie runtime strictly on one single line.",
         "Compacted details table pills across Vault and Schedule tabs.",
@@ -6069,9 +6076,10 @@
       updateCountdown();
 
       // Render schedule directly from Firebase (0 Google Sheets calls!)
-      if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
-        renderSchedule(data.schedule);
-        mergeScheduleIntoVault(data.schedule);
+      const targetSchedToRender = window.theaterScheduleCache || officialSched || data.schedule;
+      if (targetSchedToRender && Array.isArray(targetSchedToRender) && targetSchedToRender.length > 0) {
+        renderSchedule(targetSchedToRender);
+        mergeScheduleIntoVault(targetSchedToRender);
       } else if (data.moviePosters && typeof data.moviePosters === 'object') {
         renderSchedule(window.theaterScheduleCache);
       }
@@ -6143,9 +6151,9 @@
                 mergeScheduleIntoVault(payload.data);
               } else if (payload.path === '/schedule' && Array.isArray(payload.data)) {
                 // Shield master schedule from truncated bot stomping
-                if (window.theaterOfficialSchedule && window.theaterOfficialSchedule.length > payload.data.length) {
+                if (window.theaterOfficialSchedule && window.theaterOfficialSchedule.length >= payload.data.length) {
                   renderSchedule(window.theaterOfficialSchedule);
-                } else {
+                } else if (!window.theaterOfficialSchedule || window.theaterOfficialSchedule.length === 0) {
                   window.theaterScheduleCache = payload.data;
                   renderSchedule(payload.data);
                   mergeScheduleIntoVault(payload.data);
@@ -8114,6 +8122,36 @@
           pastItems.push(s);
         } else {
           upcomingItems.push(s);
+        }
+      });
+
+      // Sort upcoming items chronologically by startMs
+      upcomingItems.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+
+      // Strict Single "NEXT UP" Invariant:
+      // Only the very first chronological upcoming movie can ever display "⚡ NEXT UP".
+      // Any subsequent movies tagged as "NEXT UP" or "SCHEDULED" are normalized to their proper Pacific weekday tag or TOMORROW.
+      let assignedNextUp = false;
+      upcomingItems.forEach(item => {
+        const isLive = item.status && (item.status.includes('LIVE') || item.status.includes('NOW'));
+        if (isLive) return;
+        if (!assignedNextUp) {
+          item.status = 'NEXT UP';
+          assignedNextUp = true;
+        } else if (item.status === 'NEXT UP' || !item.status || item.status === 'SCHEDULED') {
+          if (item.startMs) {
+            try {
+              const diffHours = (Number(item.startMs) - now) / (1000 * 60 * 60);
+              if (diffHours > 0 && diffHours <= 48) {
+                item.status = 'TOMORROW';
+              } else {
+                const itemDate = new Date(Number(item.startMs));
+                item.status = itemDate.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/Los_Angeles' }).toUpperCase();
+              }
+            } catch(e) {
+              item.status = 'SCHEDULED';
+            }
+          }
         }
       });
 

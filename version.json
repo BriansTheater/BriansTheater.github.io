@@ -1,12 +1,12 @@
 {
-  "version": "4.9.128",
+  "version": "4.9.129",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.128",
+  "title": "Brian's Theater v4.9.129",
   "notes": [
-    "Kept movie runtime strictly on one single line.",
-    "Compacted details table pills across Vault and Schedule tabs.",
-    "Upgraded Poster Studio with native resizable dialog window.",
-    "Added 1-click Default, Large, and Max studio size presets.",
-    "Saved studio window dimension preferences in local storage."
+    "Purged conflicting ghost schedule data from Firebase database.",
+    "Enforced single Next Up badge across upcoming lineup.",
+    "Normalized subsequent movie badges to proper weekday tags.",
+    "Shielded official cinema schedule from external bot overwrites.",
+    "Guaranteed Backrooms displays Wednesday with zero badge flipping."
   ]
 }

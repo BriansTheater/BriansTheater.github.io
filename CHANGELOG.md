@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.129] - 2026-09-20
+
+### What's New
+- Purged conflicting ghost schedule data from Firebase database.
+- Enforced single Next Up badge across upcoming lineup.
+- Normalized subsequent movie badges to proper weekday tags.
+- Shielded official cinema schedule from external bot overwrites.
+- Guaranteed Backrooms displays Wednesday with zero badge flipping.
+
 ## [4.9.128] - 2026-09-20
 
 ### What's New
