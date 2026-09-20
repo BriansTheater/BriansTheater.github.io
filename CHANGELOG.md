@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.124] - 2026-09-20
+
+### What's New
+- Connected custom designated Google Drive posters folder.
+- Fixed binary PNG file writing for Google Drive posters.
+- Restored instant image preview and Windows Photos support.
+- Links direct Drive URLs into Data sheet Column Y.
+- Dispatches custom widescreen posters into Buffer queues.
+
 ## [4.9.123] - 2026-09-20
 
 ### What's New

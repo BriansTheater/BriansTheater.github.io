@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.123 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.124 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2047,7 +2047,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.123";
+    const APP_VERSION = "4.9.124";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2425,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.124": [
+        "Connected custom designated Google Drive posters folder.",
+        "Fixed binary PNG file writing for Google Drive posters.",
+        "Restored instant image preview and Windows Photos support.",
+        "Links direct Drive URLs into Data sheet Column Y.",
+        "Dispatches custom widescreen posters into Buffer queues."
+      ],
       "4.9.123": [
         "Fixed studio poster syncing across Quick Schedule tab.",
         "Stored custom posters in Data sheet Column Y.",

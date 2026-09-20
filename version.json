@@ -1,11 +1,12 @@
 {
-  "version": "4.9.123",
+  "version": "4.9.124",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.123",
+  "title": "Brian's Theater v4.9.124",
   "notes": [
-    "Fixed custom studio poster linking across Quick Schedule.",
-    "Synchronized studio posters with Firebase Realtime Database.",
-    "Prioritized Column Y studio posters over default TMDB artwork.",
-    "Direct integration auto-pushes custom posters to Buffer queue."
+    "Connected custom designated Google Drive posters folder.",
+    "Fixed binary PNG file writing for Google Drive posters.",
+    "Restored instant image preview and Windows Photos support.",
+    "Links direct Drive URLs into Data sheet Column Y.",
+    "Dispatches custom widescreen posters into Buffer queues."
   ]
 }
