@@ -1,11 +1,11 @@
 {
-  "version": "4.9.122",
+  "version": "4.9.123",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.122",
+  "title": "Brian's Theater v4.9.123",
   "notes": [
-    "Precision 1:00 AM PST Buffer timing with zero UTC drift.",
-    "Auto-queues announcement to Buffer immediately on poster save.",
-    "Prioritizes custom widescreen studio poster from Column Y.",
-    "Direct Google CDN links ensure crisp social media image attachments."
+    "Fixed custom studio poster linking across Quick Schedule.",
+    "Synchronized studio posters with Firebase Realtime Database.",
+    "Prioritized Column Y studio posters over default TMDB artwork.",
+    "Direct integration auto-pushes custom posters to Buffer queue."
   ]
 }

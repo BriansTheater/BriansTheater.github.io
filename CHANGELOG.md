@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.123] - 2026-09-20
+
+### What's New
+- Fixed studio poster syncing across Quick Schedule tab.
+- Stored custom posters into Data sheet Column Y.
+- Synchronized studio posters to Firebase Realtime Database.
+- Prioritized studio posters over default TMDB artwork.
+- Auto-pushes custom posters directly to Buffer queue.
+
 ## [4.9.122] - 2026-09-20
 
 ### What's New
