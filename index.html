@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.127 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.128 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2047,7 +2047,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.127";
+    const APP_VERSION = "4.9.128";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2425,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.128": [
+        "Kept movie runtime strictly on one single line.",
+        "Compacted details table pills across Vault and Schedule tabs.",
+        "Upgraded Poster Studio with native resizable dialog window.",
+        "Added 1-click Default, Large, and Max studio size presets.",
+        "Saved studio window dimension preferences in local storage."
+      ],
       "4.9.127": [
         "Fixed 2:00 AM showtime display across schedule cards.",
         "Enforced Pacific Time dates preventing UTC day shifts.",
@@ -7098,21 +7105,21 @@
 
             <!-- Google Sheets Formatted Details Table (2x2 Grid Identical to Schedule Tab) -->
             <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">🕒 Start:</span>
-                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
+              <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+                <span class="text-slate-400 truncate">🕒 Start:</span>
+                <span class="font-mono font-bold text-slate-200 whitespace-nowrap flex-shrink-0">${escapeHtml(d.startTime)}</span>
               </div>
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">🏁 End:</span>
-                <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
+              <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+                <span class="text-slate-400 truncate">🏁 End:</span>
+                <span class="font-mono font-bold text-slate-200 whitespace-nowrap flex-shrink-0">${escapeHtml(d.endTime)}</span>
               </div>
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">⏱️ Runtime:</span>
-                <span class="font-mono font-bold text-amber-300">${escapeHtml(d.runtime)}</span>
+              <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+                <span class="text-slate-400 truncate">⏱️ Runtime:</span>
+                <span class="font-mono font-bold text-amber-300 whitespace-nowrap flex-shrink-0">${escapeHtml(d.runtime)}</span>
               </div>
-              <div class="flex items-center justify-between px-1">
-                <span class="text-slate-400">📆 Year:</span>
-                <span class="font-mono font-bold text-sky-300">${escapeHtml(d.year)}</span>
+              <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+                <span class="text-slate-400 truncate">📆 Year:</span>
+                <span class="font-mono font-bold text-sky-300 whitespace-nowrap flex-shrink-0">${escapeHtml(d.year)}</span>
               </div>
             </div>
 
@@ -8021,21 +8028,21 @@
 
           <!-- Google Sheets Formatted Details Table / Pills -->
           <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
-            <div class="flex items-center justify-between px-1">
-              <span class="text-slate-400">🕒 Start Time:</span>
-              <span class="font-mono font-bold text-slate-200">${escapeHtml(d.startTime)}</span>
+            <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+              <span class="text-slate-400 truncate">🕒 Start:</span>
+              <span class="font-mono font-bold text-slate-200 whitespace-nowrap flex-shrink-0">${escapeHtml(d.startTime)}</span>
             </div>
-            <div class="flex items-center justify-between px-1">
-              <span class="text-slate-400">🏁 End Time:</span>
-              <span class="font-mono font-bold text-slate-200">${escapeHtml(d.endTime)}</span>
+            <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+              <span class="text-slate-400 truncate">🏁 End:</span>
+              <span class="font-mono font-bold text-slate-200 whitespace-nowrap flex-shrink-0">${escapeHtml(d.endTime)}</span>
             </div>
-            <div class="flex items-center justify-between px-1">
-              <span class="text-slate-400">⏱️ Runtime:</span>
-              <span class="font-mono font-bold text-amber-300">${escapeHtml(d.runtime)}</span>
+            <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+              <span class="text-slate-400 truncate">⏱️ Runtime:</span>
+              <span class="font-mono font-bold text-amber-300 whitespace-nowrap flex-shrink-0">${escapeHtml(d.runtime)}</span>
             </div>
-            <div class="flex items-center justify-between px-1">
-              <span class="text-slate-400">📆 Year:</span>
-              <span class="font-mono font-bold text-sky-300">${escapeHtml(d.year)}</span>
+            <div class="flex items-center justify-between gap-1 px-1 min-w-0">
+              <span class="text-slate-400 truncate">📆 Year:</span>
+              <span class="font-mono font-bold text-sky-300 whitespace-nowrap flex-shrink-0">${escapeHtml(d.year)}</span>
             </div>
           </div>
 

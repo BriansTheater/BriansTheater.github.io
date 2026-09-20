@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.128] - 2026-09-20
+
+### What's New
+- Kept movie runtime strictly on one single line.
+- Compacted details table pills across Vault and Schedule tabs.
+- Upgraded Poster Studio with native resizable dialog window.
+- Added 1-click Default, Large, and Max studio size presets.
+- Saved studio window dimension preferences in local storage.
+
 ## [4.9.127] - 2026-09-20
 
 ### What's New

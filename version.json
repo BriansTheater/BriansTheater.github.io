@@ -1,11 +1,12 @@
 {
-  "version": "4.9.127",
+  "version": "4.9.128",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.127",
+  "title": "Brian's Theater v4.9.128",
   "notes": [
-    "Fixed 2:00 AM showtime display across schedule cards.",
-    "Enforced Pacific Time dates preventing UTC day shifts.",
-    "Shielded master movie schedule from external bot overwrites.",
-    "Guaranteed authentic 7:00 PM virtual cinema start times."
+    "Kept movie runtime strictly on one single line.",
+    "Compacted details table pills across Vault and Schedule tabs.",
+    "Upgraded Poster Studio with native resizable dialog window.",
+    "Added 1-click Default, Large, and Max studio size presets.",
+    "Saved studio window dimension preferences in local storage."
   ]
 }
