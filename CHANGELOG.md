@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.125] - 2026-09-20
+
+### What's New
+- Streamlined Google Sheets Admin menus and removed clutter.
+- Organized Google Drive posters into automated monthly subfolders.
+- Automated Google Calendar event scheduling on poster save.
+- Added 1-Click batch studio rendering to Drive and Buffer.
+- Added 1-Click monthly schedule reset with Drive folder trash.
+
 ## [4.9.124] - 2026-09-20
 
 ### What's New

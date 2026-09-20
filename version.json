@@ -1,12 +1,12 @@
 {
-  "version": "4.9.124",
+  "version": "4.9.125",
   "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.124",
+  "title": "Brian's Theater v4.9.125",
   "notes": [
-    "Connected custom designated Google Drive posters folder.",
-    "Fixed binary PNG file writing for Google Drive posters.",
-    "Restored instant image preview and Windows Photos support.",
-    "Links direct Drive URLs into Data sheet Column Y.",
-    "Dispatches custom widescreen posters into Buffer queues."
+    "Streamlined Google Sheets Admin menus and removed clutter.",
+    "Organized Google Drive posters into automated monthly subfolders.",
+    "Automated Google Calendar event scheduling on poster save.",
+    "Added 1-Click batch studio rendering to Drive and Buffer.",
+    "Added 1-Click monthly schedule reset with Drive folder trash."
   ]
 }
