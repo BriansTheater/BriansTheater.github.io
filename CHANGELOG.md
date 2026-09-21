@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.131] - 2026-09-21
+
+### What's New
+- Fixed infinite update alert popup loop upon page reload.
+- Added session memory preventing repeated update prompts.
+- Synchronized app versions across service worker and frontend.
+- Expanded reload cooldown window for seamless background sync.
+
 ## [4.9.130] - 2026-09-20
 
 ### What's New

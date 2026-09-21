@@ -1,11 +1,11 @@
 {
-  "version": "4.9.130",
-  "releaseDate": "2026-09-20",
-  "title": "Brian's Theater v4.9.130",
+  "version": "4.9.131",
+  "releaseDate": "2026-09-21",
+  "title": "Brian's Theater v4.9.131",
   "notes": [
-    "Eliminated 15-second polling loop saving 99% Firebase bandwidth.",
-    "Cached movie catalog locally preventing heavy repetitive downloads.",
-    "Connected tab visibility sync with 15-minute fallback protection.",
-    "Reduced Realtime Database network egress to near-zero."
+    "Fixed infinite update alert popup loop upon page reload.",
+    "Added session memory preventing repeated update prompts.",
+    "Synchronized app versions across service worker and frontend.",
+    "Expanded reload cooldown window for seamless background sync."
   ]
 }

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.129 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.131 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2047,7 +2047,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.129";
+    const APP_VERSION = "4.9.131";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2425,18 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.131": [
+        "Fixed infinite update alert popup loop upon page reload.",
+        "Added session memory preventing repeated update prompts.",
+        "Synchronized app versions across service worker and frontend.",
+        "Expanded reload cooldown window for seamless background sync."
+      ],
+      "4.9.130": [
+        "Eliminated 15-second polling loop saving 99% Firebase bandwidth.",
+        "Cached movie catalog locally preventing heavy repetitive downloads.",
+        "Connected tab visibility sync with 15-minute fallback protection.",
+        "Reduced Realtime Database network egress to near-zero."
+      ],
       "4.9.129": [
         "Purged conflicting ghost schedule data from Firebase database.",
         "Enforced single Next Up badge across upcoming lineup.",
@@ -3170,7 +3182,7 @@
       }
     }
 
-    function dismissAppUpdateToast() {
+    function dismissAppUpdateToast(explicitVer) {
       clearAppUpdateCountdown();
       const toast = document.getElementById('appUpdateToast');
       if (toast) {
@@ -3183,9 +3195,10 @@
         }
       }
       try {
-        const ver = activeUpdateTargetVersion || APP_VERSION;
+        const ver = explicitVer || activeUpdateTargetVersion || APP_VERSION;
         localStorage.setItem('brian_theater_last_viewed_version', ver);
         localStorage.setItem('brian_theater_dismissed_version', ver);
+        sessionStorage.setItem('brian_theater_session_dismissed_' + ver, 'true');
       } catch(e) {}
     }
 
@@ -3226,11 +3239,12 @@
         } catch(e) {}
       }
 
-      // 4. Mark target version as viewed and dismissed so popup never loops
+      // 4. Mark target version as viewed, dismissed, and session-suppressed so popup NEVER loops
       try {
         localStorage.setItem('brian_theater_last_viewed_version', targetVer);
         localStorage.setItem('brian_theater_dismissed_version', targetVer);
         localStorage.setItem('brian_theater_last_reload_timestamp', String(Date.now()));
+        sessionStorage.setItem('brian_theater_session_dismissed_' + targetVer, 'true');
       } catch(e) {}
 
       // 5. Force hard reload bypassing browser disk cache completely!
@@ -3261,7 +3275,7 @@
 
         const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
         const lastReload = parseInt(localStorage.getItem('brian_theater_last_reload_timestamp') || '0', 10);
-        const recentlyReloaded = (Date.now() - lastReload < 15000);
+        const recentlyReloaded = (Date.now() - lastReload < 60000);
 
         // Layer 3: Direct cache-busted fetch to version.json on server
         try {
@@ -3272,6 +3286,11 @@
               if (!isManual) {
                 if (recentlyReloaded) {
                   console.log(`[UpdateDetector] Recently reloaded, suppressing duplicate popup for v${vData.version}`);
+                  isCheckingForUpdate = false;
+                  return;
+                }
+                const isSessionDismissed = sessionStorage.getItem('brian_theater_session_dismissed_' + vData.version);
+                if (isSessionDismissed === 'true') {
                   isCheckingForUpdate = false;
                   return;
                 }
@@ -3301,6 +3320,11 @@
             if (match && match[1] && isNewerVersion(match[1], APP_VERSION)) {
               if (!isManual) {
                 if (recentlyReloaded) {
+                  isCheckingForUpdate = false;
+                  return;
+                }
+                const isSessionDismissed = sessionStorage.getItem('brian_theater_session_dismissed_' + match[1]);
+                if (isSessionDismissed === 'true') {
                   isCheckingForUpdate = false;
                   return;
                 }
@@ -3373,9 +3397,12 @@
             const newVer = event.data.version;
             // ONLY show update if the version is genuinely newer than what is currently running!
             if (newVer && isNewerVersion(newVer, APP_VERSION)) {
-              const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
-              if (!dismissedVer || isNewerVersion(newVer, dismissedVer)) {
-                showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
+              const isSessionDismissed = sessionStorage.getItem('brian_theater_session_dismissed_' + newVer);
+              if (isSessionDismissed !== 'true') {
+                const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
+                if (!dismissedVer || isNewerVersion(newVer, dismissedVer)) {
+                  showAppUpdateToast({ version: newVer, isUpdateAvailable: true });
+                }
               }
             }
           }
@@ -6066,9 +6093,12 @@
 
       // Check if Firebase broadcasts a newer app version
       if (data.appVersion && isNewerVersion(data.appVersion, APP_VERSION)) {
-        const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
-        if (!dismissedVer || isNewerVersion(data.appVersion, dismissedVer)) {
-          showAppUpdateToast({ version: data.appVersion, isUpdateAvailable: true });
+        const isSessionDismissed = sessionStorage.getItem('brian_theater_session_dismissed_' + data.appVersion);
+        if (isSessionDismissed !== 'true') {
+          const dismissedVer = localStorage.getItem('brian_theater_dismissed_version');
+          if (!dismissedVer || isNewerVersion(data.appVersion, dismissedVer)) {
+            showAppUpdateToast({ version: data.appVersion, isUpdateAvailable: true });
+          }
         }
       }
 
