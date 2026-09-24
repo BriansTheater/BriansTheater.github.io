@@ -1,11 +1,12 @@
 {
-  "version": "4.9.131",
-  "releaseDate": "2026-09-21",
-  "title": "Brian's Theater v4.9.131",
+  "version": "4.9.132",
+  "releaseDate": "2026-09-23",
+  "title": "Brian's Theater v4.9.132",
   "notes": [
-    "Fixed infinite update alert popup loop upon page reload.",
-    "Added session memory preventing repeated update prompts.",
-    "Synchronized app versions across service worker and frontend.",
-    "Expanded reload cooldown window for seamless background sync."
+    "Added instant movie rescheduling options for changed release dates.",
+    "Added one-click theater closure and postponed status management.",
+    "Postponed Backrooms screening and safely closed virtual auditorium.",
+    "Advanced countdown to next upcoming premiere without interruption.",
+    "Integrated schedule manager into Brian's Admin Control Studio."
   ]
 }

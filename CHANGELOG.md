@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.132] - 2026-09-23
+
+### What's New
+- Added instant movie rescheduling options for changed release dates.
+- Added one-click theater closure and postponed status management.
+- Postponed Backrooms screening and safely closed virtual auditorium.
+- Advanced countdown to next upcoming premiere without interruption.
+- Integrated schedule manager into Brian's Admin Control Studio.
+
 ## [4.9.131] - 2026-09-21
 
 ### What's New
