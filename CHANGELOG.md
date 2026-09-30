@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.133] - 2026-09-29
+
+### What's New
+- Added dynamic monthly intermission when current schedule concludes.
+- Automatically computes upcoming month for perpetual season transitions.
+- Replaced frozen zero countdown with interactive intermission stage.
+- Added custom intermission announcement control in Admin Studio.
+- Display upcoming month request CTA on schedule tab.
+
 ## [4.9.132] - 2026-09-23
 
 ### What's New

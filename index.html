@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.132 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.133 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -860,6 +860,27 @@
             <div class="flex items-center gap-2 shrink-0">
               <button type="button" id="btnAdminReschedTonight" onclick="openRescheduleForTonight()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow flex items-center gap-1 active:scale-95">
                 <span>🗓️</span> Reschedule Tonight
+              </button>
+            </div>
+          </div>
+
+          <!-- Intermission Announcement & Status Card -->
+          <div id="adminIntermissionStatusCard" class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/30 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-base">📢</span>
+                <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Season Intermission Announcement</span>
+              </div>
+              <span id="adminIntermissionBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">Automatic Active</span>
+            </div>
+            <p class="text-[11px] text-slate-400">When all screenings have concluded, the theater automatically announces next month's upcoming season. You can add an optional custom announcement note below (e.g. "October schedule drops this Friday at 6 PM!").</p>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <input type="text" id="adminIntermissionInput" placeholder="Optional custom announcement note..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-xs font-medium outline-none focus:border-amber-400/60">
+              <button type="button" onclick="saveAdminIntermissionAnnouncement()" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow flex items-center justify-center gap-1 active:scale-95 shrink-0 cursor-pointer">
+                <span>💾</span> Save
+              </button>
+              <button type="button" onclick="clearAdminIntermissionAnnouncement()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-xs transition flex items-center justify-center gap-1 active:scale-95 shrink-0 cursor-pointer">
+                <span>✕</span> Clear
               </button>
             </div>
           </div>
@@ -2195,7 +2216,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.132";
+    const APP_VERSION = "4.9.133";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2425,6 +2446,76 @@
     ];
     window.theaterScheduleCache = sampleSchedule;
 
+    // ========================================================
+    // DYNAMIC PERPETUAL CINEMA INTERMISSION ENGINE
+    // ========================================================
+    let customIntermissionAnnouncement = "";
+    try {
+      const storedAnnounce = localStorage.getItem('brian_intermission_announcement');
+      if (storedAnnounce) customIntermissionAnnouncement = storedAnnounce;
+    } catch(e) {}
+
+    function getIntermissionMonthInfo(nowMs = Date.now()) {
+      const d = new Date(nowMs);
+      const currentMonthName = d.toLocaleDateString('en-US', { month: 'long', timeZone: 'America/Los_Angeles' });
+      const currentMonthShort = d.toLocaleDateString('en-US', { month: 'short', timeZone: 'America/Los_Angeles' }).toUpperCase();
+      const currentYear = d.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' });
+
+      const dayOfMonth = parseInt(d.toLocaleDateString('en-US', { day: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+      let concludedMonth = currentMonthName;
+      let upcomingMonth = "";
+      let upcomingMonthShort = "";
+      let upcomingYear = currentYear;
+
+      if (dayOfMonth >= 15) {
+        // Late in current month: concluded is this month, upcoming is NEXT month
+        const nextMonthDate = new Date(d.getTime() + 20 * 24 * 60 * 60 * 1000);
+        upcomingMonth = nextMonthDate.toLocaleDateString('en-US', { month: 'long', timeZone: 'America/Los_Angeles' });
+        upcomingMonthShort = nextMonthDate.toLocaleDateString('en-US', { month: 'short', timeZone: 'America/Los_Angeles' }).toUpperCase();
+        upcomingYear = nextMonthDate.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' });
+      } else {
+        // Early in current month (1st-14th) before schedule posted: concluded was PRIOR month, upcoming is THIS month
+        upcomingMonth = currentMonthName;
+        upcomingMonthShort = currentMonthShort;
+        const prevMonthDate = new Date(d.getTime() - 20 * 24 * 60 * 60 * 1000);
+        concludedMonth = prevMonthDate.toLocaleDateString('en-US', { month: 'long', timeZone: 'America/Los_Angeles' });
+      }
+
+      return {
+        concludedMonth,
+        upcomingMonth,
+        upcomingMonthShort,
+        upcomingYear
+      };
+    }
+
+    function getIntermissionCurtainSvg(upcomingMonthShort = 'OCT', upcomingYear = '2026') {
+      const monthText = (upcomingMonthShort || 'NEXT').toUpperCase();
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">` +
+        `<defs>` +
+          `<linearGradient id="bgG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23050811"/><stop offset="60%" stop-color="%230b1329"/><stop offset="100%" stop-color="%2302040a"/></linearGradient>` +
+          `<linearGradient id="gldG" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="%23d97706"/><stop offset="50%" stop-color="%23fef08a"/><stop offset="100%" stop-color="%23f59e0b"/></linearGradient>` +
+          `<linearGradient id="crtG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23831843"/><stop offset="40%" stop-color="%234c0519"/><stop offset="85%" stop-color="%231e030a"/><stop offset="100%" stop-color="%23050103"/></linearGradient>` +
+          `<filter id="glw" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter>` +
+        `</defs>` +
+        `<rect width="960" height="540" fill="url(%23bgG)"/>` +
+        `<circle cx="480" cy="270" r="280" fill="%23f59e0b" opacity="0.12" filter="url(%23glw)"/>` +
+        `<circle cx="480" cy="220" r="180" fill="%23ec4899" opacity="0.08" filter="url(%23glw)"/>` +
+        `<path d="M0,0 Q120,40 240,0 L240,540 L0,540 Z" fill="url(%23crtG)" opacity="0.95"/>` +
+        `<path d="M720,0 Q840,40 960,0 L960,540 L720,540 Z" fill="url(%23crtG)" opacity="0.95"/>` +
+        `<path d="M0,0 Q240,90 480,20 Q720,90 960,0 L960,90 Q720,130 480,60 Q240,130 0,90 Z" fill="%23700727" opacity="0.9"/>` +
+        `<path d="M0,0 Q240,60 480,10 Q720,60 960,0 L960,50 Q720,80 480,30 Q240,80 0,50 Z" fill="%239f1239" opacity="0.8"/>` +
+        `<rect x="180" y="110" width="600" height="320" rx="24" fill="%23020617" fill-opacity="0.88" stroke="%23334155" stroke-width="2"/>` +
+        `<rect x="194" y="124" width="572" height="292" rx="16" fill="none" stroke="url(%23gldG)" stroke-width="2.5" stroke-dasharray="10 8" opacity="0.85"/>` +
+        `<text x="480" y="175" font-family="system-ui,sans-serif" font-size="30" text-anchor="middle">🎬</text>` +
+        `<text x="480" y="210" font-family="system-ui,sans-serif" font-weight="900" font-size="14" text-anchor="middle" fill="%2338bdf8" letter-spacing="5">SEASON INTERMISSION</text>` +
+        `<text x="480" y="280" font-family="system-ui,sans-serif" font-weight="900" font-size="44" text-anchor="middle" fill="url(%23gldG)" filter="url(%23glw)">${monthText} LINEUP</text>` +
+        `<text x="480" y="325" font-family="system-ui,sans-serif" font-weight="800" font-size="22" text-anchor="middle" fill="%23f8fafc" letter-spacing="4">DROPPING SOON</text>` +
+        `<rect x="330" y="355" width="300" height="36" rx="18" fill="%230f172a" stroke="%23f59e0b" stroke-width="1.2" stroke-opacity="0.6"/>` +
+        `<text x="480" y="378" font-family="system-ui,sans-serif" font-weight="700" font-size="12" text-anchor="middle" fill="%23fef08a" letter-spacing="2">BRIAN%27S THEATER EXCLUSIVE</text>` +
+      `</svg>`;
+    }
+
     // Dynamic Active or Next Movie Resolver
     function getActiveOrNextMovie(now = Date.now()) {
       const scheduleSource = (window.theaterScheduleCache && window.theaterScheduleCache.length > 0)
@@ -2449,6 +2540,7 @@
         return {
           movie: liveItem,
           isLive: true,
+          isIntermission: false,
           targetMs: liveItem.endMs || (now + 3600000),
           title: liveItem.title,
           date: liveItem.date,
@@ -2472,6 +2564,7 @@
         return {
           movie: nextItem,
           isLive: false,
+          isIntermission: false,
           targetMs: nextItem.startMs,
           title: nextItem.title,
           date: nextItem.date,
@@ -2482,25 +2575,34 @@
         };
       }
 
-      // 3. Fallback to Borderlands if schedule list is exhausted
+      // 3. Dynamic Intermission Mode when schedule list is exhausted
+      const monthInfo = getIntermissionMonthInfo(now);
+      const curtainSvg = getIntermissionCurtainSvg(monthInfo.upcomingMonthShort, monthInfo.upcomingYear);
+      const customAnnounce = (typeof customIntermissionAnnouncement !== 'undefined' && customIntermissionAnnouncement)
+        ? customIntermissionAnnouncement
+        : "";
+
       return {
         movie: {
-          title: "Borderlands",
-          date: "Saturday, Sept 19, 2026",
-          startTime: "7:00 PM",
-          startMs: 1789869600000,
-          endMs: 1789875660000,
-          runtime: "1h 41m",
-          trailerId: "l3XzepN03KQ"
+          title: `${monthInfo.upcomingMonth} Lineup In Preparation`,
+          date: `All ${monthInfo.concludedMonth} Screenings Concluded`,
+          startTime: "Schedule Dropping Soon",
+          runtime: "Season Intermission",
+          posterUrl: curtainSvg,
+          isIntermission: true
         },
         isLive: false,
-        targetMs: 1789869600000,
-        title: "Borderlands",
-        date: "Saturday, Sept 19, 2026",
-        startTime: "7:00 PM",
-        runtime: "1h 41m",
-        trailerId: "l3XzepN03KQ",
-        posterUrl: typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl("Borderlands") : "https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg"
+        isIntermission: true,
+        targetMs: 0,
+        title: `${monthInfo.upcomingMonth} Lineup In Preparation`,
+        date: `All ${monthInfo.concludedMonth} Screenings Concluded • Curating the ${monthInfo.upcomingMonth} Schedule`,
+        startTime: "Schedule Dropping Soon",
+        runtime: "Season Intermission",
+        trailerId: "",
+        posterUrl: curtainSvg,
+        categoryLabel: "🎬 SEASON INTERMISSION",
+        monthInfo: monthInfo,
+        customAnnouncement: customAnnounce
       };
     }
 
@@ -2597,6 +2699,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.133": [
+        "Added dynamic monthly intermission when current schedule concludes.",
+        "Automatically computes upcoming month for perpetual season transitions.",
+        "Replaced frozen zero countdown with interactive intermission stage.",
+        "Added custom intermission announcement control in Admin Studio.",
+        "Display upcoming month request CTA on schedule tab."
+      ],
       "4.9.132": [
         "Added instant movie rescheduling options for changed release dates.",
         "Added one-click theater closure and postponed status management.",
@@ -3766,6 +3875,9 @@
           if (btn) {
             btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
           }
+          if (tab === 'schedule') {
+            renderSchedule();
+          }
           if (tab === 'admin') {
             populateAdminArtworkSelector();
             populateAdminTrailerSelector();
@@ -4112,6 +4224,15 @@
       const nextInfo = getActiveOrNextMovie(Date.now());
       const activeMovie = (nowPlayingTitle && nowPlayingTitle !== "No Movie Playing") ? nowPlayingTitle : nextInfo.title;
       const nextMovie = (nextUpTitle && nextUpTitle !== "None") ? nextUpTitle.replace(/^🎬\s*/, '') : nextInfo.title;
+
+      if (nextInfo && nextInfo.isIntermission) {
+        const curtainImg = nextInfo.posterUrl || getIntermissionCurtainSvg();
+        if (stagePoster && stagePoster.src !== curtainImg) stagePoster.src = curtainImg;
+        if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `SEASON INTERMISSION`;
+        if (stagePosterBadgeDate) stagePosterBadgeDate.textContent = `${nextInfo.monthInfo?.upcomingMonth || 'Next'} Schedule In Prep`;
+        if (schedNextPoster && schedNextPoster.src !== curtainImg) schedNextPoster.src = curtainImg;
+        return;
+      }
 
       if (isLive) {
         const activeImg = (data && data.nowPlayingPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(activeMovie);
@@ -4552,8 +4673,74 @@
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
+      } else if (nextObj.isIntermission) {
+        // STATE 0: SEASON INTERMISSION (Schedule is concluded / Next lineup in prep)
+        setEntranceState(false);
+        if (btnEnterText) btnEnterText.textContent = "Auditorium Closed";
+        if (btnEnterSubtext) btnEnterSubtext.textContent = "Season Intermission";
+
+        if (stageCategoryLabel) {
+          stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5";
+          stageCategoryLabel.innerHTML = '<span>🎬</span> <span>SEASON INTERMISSION</span>';
+        }
+        if (headingEl) {
+          headingEl.textContent = `🍿 ${nextObj.title || 'Next Lineup In Preparation'}`;
+          headingEl.className = "text-xl sm:text-2xl lg:text-3xl font-black text-amber-300 gold-marquee";
+        }
+        if (nowPlayingDate) {
+          nowPlayingDate.textContent = nextObj.date;
+        }
+
+        const stageCountdownBox = document.getElementById('stageCountdownBox');
+        if (stageCountdownBox) {
+          let intermissionCard = document.getElementById('intermissionStatusCard');
+          if (!intermissionCard) {
+            intermissionCard = document.createElement('div');
+            intermissionCard.id = 'intermissionStatusCard';
+            intermissionCard.className = "flex flex-col items-center justify-center gap-3 w-full text-center py-1";
+            stageCountdownBox.appendChild(intermissionCard);
+          }
+          intermissionCard.classList.remove('hidden');
+
+          const stageCountdownGrid = document.getElementById('stageCountdownGrid');
+          const stageCountdownLabel = document.getElementById('stageCountdownLabel');
+          if (stageCountdownGrid) stageCountdownGrid.classList.add('hidden');
+          if (stageCountdownLabel) stageCountdownLabel.classList.add('hidden');
+
+          const monthInfo = nextObj.monthInfo || getIntermissionMonthInfo(now);
+          const customAnnounce = (typeof customIntermissionAnnouncement !== 'undefined' && customIntermissionAnnouncement) ? customIntermissionAnnouncement : "";
+
+          intermissionCard.innerHTML = `
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/50 text-xs font-bold uppercase tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>Auditorium Closed • Season Intermission</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-md leading-relaxed px-1">
+              ${customAnnounce ? escapeHtml(customAnnounce) : `All ${escapeHtml(monthInfo.concludedMonth)} screenings have concluded! Brian is assembling the new ${escapeHtml(monthInfo.upcomingMonth)} lineup.`}
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-md mt-1">
+              <button type="button" onclick="switchTab('requests')" class="px-4 py-2.5 rounded-xl brand-morphic-gradient text-slate-950 font-bold text-xs hover:opacity-95 transition flex items-center justify-center gap-2 shadow-md shadow-teal-500/20 active:scale-95 cursor-pointer">
+                <span>🍿</span> <span>Suggest ${escapeHtml(monthInfo.upcomingMonth)}'s Movies</span>
+              </button>
+              <button type="button" onclick="switchTab('vault')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition flex items-center justify-center gap-2 shadow-md active:scale-95 cursor-pointer">
+                <span>🏛️</span> <span>Browse 398+ Vault Films</span>
+              </button>
+            </div>
+          `;
+        }
+
+        if (schedTimeEl) schedTimeEl.textContent = "SOON";
+        if (countdownSubhead) countdownSubhead.textContent = `${nextObj.monthInfo?.upcomingMonth || 'Next Month'} Schedule In Prep`;
+
       } else {
         // STATE 1: DOORS CLOSED (> 10m before show or movie is over)
+        const intermissionCard = document.getElementById('intermissionStatusCard');
+        if (intermissionCard) intermissionCard.classList.add('hidden');
+        const stageCountdownGrid = document.getElementById('stageCountdownGrid');
+        const stageCountdownLabel = document.getElementById('stageCountdownLabel');
+        if (stageCountdownGrid) stageCountdownGrid.classList.remove('hidden');
+        if (stageCountdownLabel) stageCountdownLabel.classList.remove('hidden');
+
         setEntranceState(false);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
@@ -5298,6 +5485,15 @@
         }
       }
 
+      const intermissionInput = document.getElementById('adminIntermissionInput');
+      const intermissionBadge = document.getElementById('adminIntermissionBadge');
+      if (intermissionInput && typeof customIntermissionAnnouncement !== 'undefined') {
+        intermissionInput.value = customIntermissionAnnouncement || "";
+      }
+      if (intermissionBadge) {
+        intermissionBadge.textContent = customIntermissionAnnouncement ? "Custom Active" : "Automatic Active";
+      }
+
       listEl.innerHTML = schedSource.map(m => {
         const title = m.title || "Untitled";
         const poster = m.posterUrl || getMovieArtworkUrl(title);
@@ -5324,6 +5520,43 @@
           </div>
         `;
       }).join('');
+    }
+
+    function saveAdminIntermissionAnnouncement() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const val = (document.getElementById('adminIntermissionInput')?.value || '').trim();
+      customIntermissionAnnouncement = val;
+      try {
+        if (val) {
+          localStorage.setItem('brian_intermission_announcement', val);
+        } else {
+          localStorage.removeItem('brian_intermission_announcement');
+        }
+      } catch(e) {}
+      updateCountdown();
+      renderSchedule();
+      showTheaterToast(val ? "📢 Intermission announcement saved!" : "📢 Reset to automatic intermission notice.");
+    }
+
+    function clearAdminIntermissionAnnouncement() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const input = document.getElementById('adminIntermissionInput');
+      if (input) input.value = "";
+      customIntermissionAnnouncement = "";
+      try {
+        localStorage.removeItem('brian_intermission_announcement');
+      } catch(e) {}
+      updateCountdown();
+      renderSchedule();
+      showTheaterToast("📢 Intermission announcement cleared.");
     }
 
     // 🎛️ Unified Movie Media Studio Sub-Tab Switcher
@@ -8813,10 +9046,50 @@
         }
       });
 
-      const items = upcomingItems.length > 0 ? upcomingItems : sampleSchedule;
       const grid = document.getElementById('scheduleCardsGrid');
-      if (grid) {
-        grid.innerHTML = items.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
+      if (upcomingItems.length > 0) {
+        if (grid) {
+          grid.innerHTML = upcomingItems.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
+        }
+      } else {
+        const monthInfo = (typeof getIntermissionMonthInfo === 'function') 
+          ? getIntermissionMonthInfo(now) 
+          : { concludedMonth: "Current", upcomingMonth: "Next", upcomingMonthShort: "NEXT", upcomingYear: "2026" };
+        const customAnnounce = (typeof customIntermissionAnnouncement !== 'undefined' && customIntermissionAnnouncement) ? customIntermissionAnnouncement : "";
+
+        if (grid) {
+          grid.innerHTML = `
+            <div id="scheduleIntermissionCard" class="col-span-full rounded-3xl morphic-panel p-6 sm:p-8 relative overflow-hidden border border-amber-500/30 text-center flex flex-col items-center gap-4 shadow-2xl my-2">
+              <div class="absolute -top-16 -left-16 w-56 h-56 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+              <div class="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-sky-500/10 blur-3xl pointer-events-none"></div>
+              
+              <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/10">
+                🍿
+              </div>
+              
+              <div class="flex flex-col items-center gap-2 max-w-xl">
+                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/50 text-[11px] font-black uppercase tracking-widest">
+                  Season Intermission
+                </span>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-100">
+                  The ${escapeHtml(monthInfo.upcomingMonth)} Schedule Is Dropping Soon!
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-lg">
+                  ${customAnnounce ? escapeHtml(customAnnounce) : `All ${escapeHtml(monthInfo.concludedMonth)} screenings have concluded! Brian is assembling the upcoming ${escapeHtml(monthInfo.upcomingMonth)} lineup. Have a movie or show you want to see?`}
+                </p>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <button type="button" onclick="switchTab('requests')" class="px-5 py-3 rounded-2xl brand-morphic-gradient hover:opacity-95 text-slate-950 text-xs sm:text-sm font-black transition flex items-center gap-2 shadow-lg shadow-teal-500/20 active:scale-95 cursor-pointer">
+                  <span>🍿</span> <span>Suggest a Title for ${escapeHtml(monthInfo.upcomingMonth)} ↗️</span>
+                </button>
+                <button type="button" onclick="switchTab('vault')" class="px-5 py-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs sm:text-sm font-bold transition flex items-center gap-2 active:scale-95 cursor-pointer">
+                  <span>🏛️</span> <span>Browse 398+ Past Vault Screenings</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
       }
 
       // Render recently concluded shelf
