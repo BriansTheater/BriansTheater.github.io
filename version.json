@@ -1,11 +1,12 @@
 {
-  "version": "4.9.139",
+  "version": "4.9.140",
   "releaseDate": "2026-10-01",
-  "title": "Brian's Theater v4.9.139",
+  "title": "Brian's Theater v4.9.140",
   "notes": [
-    "Enabled interactive Vault marathon toggle filter and showcase launcher.",
-    "Fixed marathon collection filter to display all sequential films.",
-    "Added dedicated banner and counters for marathon screening events.",
-    "Isolated franchise marathons from unrelated search substring collisions."
+    "Unified Vault marathon filter into one single toolbar button.",
+    "Clicking Marathons displays all marathons across every screening season.",
+    "Consecutively groups marathon sagas by franchise priority and sequence.",
+    "Added direct quick-jump chips for every theater marathon.",
+    "Integrated franchise marathon badges on individual movie cards."
   ]
 }

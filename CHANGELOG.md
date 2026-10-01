@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.140] - 2026-10-01
+
+### What's New
+- Unified Vault marathon filter into one single toolbar button.
+- Clicking Marathons displays all marathons across every screening season.
+- Consecutively groups marathon sagas by franchise priority and sequence.
+- Added direct quick-jump chips for every theater marathon.
+- Integrated franchise marathon badges on individual movie cards.
+
 ## [4.9.139] - 2026-10-01
 
 ### What's New
