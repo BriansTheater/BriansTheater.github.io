@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.135] - 2026-10-01
+
+### What's New
+- Locked Quick Schedule sync strictly to dedicated Movies calendar.
+- Added automatic cleanup for movie events on personal calendar.
+- Defaulted bot calendar methods to dedicated Movies calendar ID.
+- Added cross-calendar deduplication tool in Google Sheets menu.
+- Provided one-click personal calendar cleanup in Theater Bot CLI.
+
 ## [4.9.134] - 2026-09-30
 
 ### What's New

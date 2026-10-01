@@ -1,11 +1,11 @@
 {
-  "version": "4.9.134",
-  "releaseDate": "2026-09-30",
-  "title": "Brian's Theater v4.9.134",
+  "version": "4.9.135",
+  "releaseDate": "2026-10-01",
+  "title": "Brian's Theater v4.9.135",
   "notes": [
-    "Fixed Theater Bot skipping Row 2 on schedule.",
-    "Added smart title mismatch detection for movie schedules.",
-    "Support specific row auto-fill directly from command line.",
-    "Synchronized Data tab titles with live schedule updates."
+    "Locked Quick Schedule sync strictly to dedicated Movies calendar.",
+    "Added automatic cleanup for movie events on personal calendar.",
+    "Defaulted bot calendar methods to dedicated Movies calendar ID.",
+    "Added cross-calendar deduplication tool in Google Sheets menu."
   ]
 }
