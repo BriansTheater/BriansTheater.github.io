@@ -1,10 +1,11 @@
 {
-  "version": "4.9.138",
+  "version": "4.9.139",
   "releaseDate": "2026-10-01",
-  "title": "Brian's Theater v4.9.138",
+  "title": "Brian's Theater v4.9.139",
   "notes": [
-    "Restored all American Horror Story posters across the schedule.",
-    "Added smart AHS acronym artwork resolution and series matching.",
-    "Synced master season posters to all scheduled episodes."
+    "Enabled interactive Vault marathon toggle filter and showcase launcher.",
+    "Fixed marathon collection filter to display all sequential films.",
+    "Added dedicated banner and counters for marathon screening events.",
+    "Isolated franchise marathons from unrelated search substring collisions."
   ]
 }

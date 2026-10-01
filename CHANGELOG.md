@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.139] - 2026-10-01
+
+### What's New
+- Enabled interactive Vault marathon toggle filter and showcase launcher.
+- Fixed marathon collection filter to display all sequential films.
+- Added dedicated banner and counters for marathon screening events.
+- Isolated franchise marathons from unrelated search substring collisions.
+
 ## [4.9.138] - 2026-10-01
 
 ### What's New
