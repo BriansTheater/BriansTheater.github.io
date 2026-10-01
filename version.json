@@ -1,12 +1,11 @@
 {
-  "version": "4.9.133",
-  "releaseDate": "2026-09-29",
-  "title": "Brian's Theater v4.9.133",
+  "version": "4.9.134",
+  "releaseDate": "2026-09-30",
+  "title": "Brian's Theater v4.9.134",
   "notes": [
-    "Added dynamic monthly intermission when current schedule concludes.",
-    "Automatically computes upcoming month for perpetual season transitions.",
-    "Replaced frozen zero countdown with interactive intermission stage.",
-    "Added custom intermission announcement control in Admin Studio.",
-    "Display upcoming month request CTA on schedule tab."
+    "Fixed Theater Bot skipping Row 2 on schedule.",
+    "Added smart title mismatch detection for movie schedules.",
+    "Support specific row auto-fill directly from command line.",
+    "Synchronized Data tab titles with live schedule updates."
   ]
 }

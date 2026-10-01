@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.134] - 2026-09-30
+
+### What's New
+- Fixed Theater Bot skipping Row 2 on schedule.
+- Added smart title mismatch detection for movie schedules.
+- Support specific row auto-fill directly from command line.
+- Added menu option to auto-fill single designated row.
+- Synchronized Data tab titles with live schedule updates.
+- Protected Google Sheets from stale placeholder test descriptions.
+
 ## [4.9.133] - 2026-09-29
 
 ### What's New
