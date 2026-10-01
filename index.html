@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.137 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.138 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2235,7 +2235,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.137";
+    const APP_VERSION = "4.9.138";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2718,6 +2718,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.138": [
+        "Restored all American Horror Story posters across the schedule.",
+        "Added smart AHS acronym artwork resolution and series matching.",
+        "Synced master season posters to all scheduled episodes."
+      ],
       "4.9.137": [
         "Displayed 100% of scheduled movies in Admin Lineup Gallery.",
         "Added live count badge to the Upcoming Lineup Gallery.",
@@ -4019,7 +4024,12 @@
       "Dracula": "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg",
       "NOSFERATU": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
       "Nosferatu": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
-      "Hokum": "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg"
+      "Hokum": "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg",
+      "American Horror Story": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
+      "American Horror Story: Season 13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
+      "American Horror Story: Season 13, Episode 1": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
+      "AHS": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
+      "AHS: s13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw"
     };
 
     let customMovieImages = {};
@@ -4126,12 +4136,14 @@
       }
 
       // 3. Update theaterScheduleCache in-place
+      const isAhsUpdate = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
       if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
         window.theaterScheduleCache.forEach(s => {
           if (!s || !s.title) return;
           const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
           const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
-          if (sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm)))) {
+          const isMatch = sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm))) || (isAhsUpdate && (sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory')));
+          if (isMatch) {
             s.posterUrl = imageUrl;
             s.imageUrl = imageUrl;
           }
@@ -4144,7 +4156,8 @@
           if (!s || !s.title) return;
           const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
           const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
-          if (sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm)))) {
+          const isMatch = sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm))) || (isAhsUpdate && (sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory')));
+          if (isMatch) {
             s.posterUrl = imageUrl;
             s.imageUrl = imageUrl;
           }
@@ -4206,6 +4219,14 @@
         const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
         if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
       }
+      // Smart AHS Acronym Matching in Custom Overrides:
+      const isAhsTitle = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
+      if (isAhsTitle) {
+        for (const [k, v] of Object.entries(customMovieImages)) {
+          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) return v;
+        }
+      }
 
       // Tier 2: Attached movie object artwork (if valid and not placeholder)
       if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
@@ -4224,6 +4245,13 @@
       for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
         const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
         if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
+      }
+      // Smart AHS Acronym Matching in Default Artwork:
+      if (isAhsTitle) {
+        for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
+          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) return v;
+        }
       }
 
       // Tier 4: Fallback search across vaultMovies and window.PAST_MOVIES_DATA

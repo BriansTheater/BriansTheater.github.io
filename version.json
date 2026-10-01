@@ -1,10 +1,10 @@
 {
-  "version": "4.9.137",
+  "version": "4.9.138",
   "releaseDate": "2026-10-01",
-  "title": "Brian's Theater v4.9.137",
+  "title": "Brian's Theater v4.9.138",
   "notes": [
-    "Displayed 100% of scheduled movies in Admin Lineup Gallery.",
-    "Added live count badge to the Upcoming Lineup Gallery.",
-    "Added instant title search filter to the Admin Gallery."
+    "Restored all American Horror Story posters across the schedule.",
+    "Added smart AHS acronym artwork resolution and series matching.",
+    "Synced master season posters to all scheduled episodes."
   ]
 }

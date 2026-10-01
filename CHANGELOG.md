@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.138] - 2026-10-01
+
+### What's New
+- Restored all American Horror Story posters across the schedule.
+- Added smart AHS acronym artwork resolution and series matching.
+- Synced master season posters to all scheduled episodes.
+
 ## [4.9.137] - 2026-10-01
 
 ### What's New
