@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.136 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.137 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1181,10 +1181,16 @@
 
           <!-- Bottom: Upcoming Lineup Mini-Gallery -->
           <div class="mt-1 pt-3 border-t border-slate-850">
-            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-              <span>🖼️</span> Upcoming Lineup Gallery (Click to Edit Movie)
-            </h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="adminArtworkGalleryGrid">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5">
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <span>🖼️</span> Upcoming Lineup Gallery (Click to Edit Movie)
+                <span id="adminGalleryCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold"></span>
+              </h4>
+              <div class="relative w-full sm:w-64">
+                <input type="text" id="adminGallerySearchInput" oninput="filterAdminGalleryMovies()" placeholder="Search scheduled titles..." class="w-full px-2.5 py-1 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:border-amber-400 focus:outline-none">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[520px] overflow-y-auto pr-1 scrollbar-thin" id="adminArtworkGalleryGrid">
               <!-- Rendered dynamically -->
             </div>
           </div>
@@ -2229,7 +2235,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.136";
+    const APP_VERSION = "4.9.137";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2712,6 +2718,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.137": [
+        "Displayed 100% of scheduled movies in Admin Lineup Gallery.",
+        "Added live count badge to the Upcoming Lineup Gallery.",
+        "Added instant title search filter to the Admin Gallery."
+      ],
       "4.9.136": [
         "Restored postponed movies to official schedule with one click.",
         "Fixed main page premiere visibility for confirmed scheduled dates.",
@@ -5704,20 +5715,7 @@
 
       if (countBadge) countBadge.textContent = `${allTitles.length} Titles`;
 
-      if (gallery) {
-        gallery.innerHTML = schedSource.slice(0, 15).map(s => {
-          const artUrl = getMovieArtworkUrl(s.title);
-          return `
-            <div onclick="selectMovieFromMediaStudio('${escapeHtml(s.title)}', 'artwork')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/60 transition flex flex-col gap-1.5 shadow-md">
-              <div class="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-black border border-slate-800">
-                <img src="${escapeHtml(artUrl)}" alt="${escapeHtml(s.title)}" class="w-full h-full object-cover group-hover/art:scale-105 transition duration-200" loading="lazy">
-                <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-slate-950/80 text-[9px] font-mono text-amber-300">${s.status || 'SET'}</div>
-              </div>
-              <div class="text-[11px] font-bold text-slate-200 truncate group-hover/art:text-amber-300">${escapeHtml(s.title)}</div>
-            </div>
-          `;
-        }).join('');
-      }
+      renderAdminArtworkGallery(schedSource);
 
       if (currentVal && allTitles.includes(currentVal)) {
         masterSelect.value = currentVal;
@@ -5726,6 +5724,64 @@
       }
 
       onAdminSelectMediaMovie();
+    }
+
+    function renderAdminArtworkGallery(items) {
+      const gallery = document.getElementById('adminArtworkGalleryGrid');
+      const countBadge = document.getElementById('adminGalleryCountBadge');
+      if (!gallery) return;
+
+      const schedSource = (items && Array.isArray(items))
+        ? items
+        : ((window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+            ? window.theaterScheduleCache
+            : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []));
+
+      const searchInput = document.getElementById('adminGallerySearchInput');
+      const query = (searchInput?.value || '').toLowerCase().trim();
+
+      const filtered = query
+        ? schedSource.filter(s => s && s.title && s.title.toLowerCase().includes(query))
+        : schedSource;
+
+      if (countBadge) countBadge.textContent = `${filtered.length} / ${schedSource.length} Titles`;
+
+      if (filtered.length === 0) {
+        gallery.innerHTML = `
+          <div class="col-span-full py-8 text-center text-slate-500 text-xs">
+            No scheduled movies matching "${escapeHtml(query)}"
+          </div>
+        `;
+        return;
+      }
+
+      gallery.innerHTML = filtered.map(s => {
+        const title = s.title || "Untitled";
+        const artUrl = getMovieArtworkUrl(title);
+        const dateStr = s.date || '';
+        const isPostponed = s.status === 'POSTPONED' || s.rescheduled;
+        const statusClass = isPostponed ? 'text-amber-400 font-bold' : 'text-slate-400';
+
+        return `
+          <div onclick="selectMovieFromMediaStudio('${escapeHtml(title)}', 'artwork')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border ${isPostponed ? 'border-amber-500/40' : 'border-slate-800'} hover:border-amber-400 transition flex flex-col gap-1.5 shadow-md">
+            <div class="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-black border border-slate-800">
+              <img src="${escapeHtml(artUrl)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover group-hover/art:scale-105 transition duration-200" loading="lazy" onerror="this.src=getCinemaPlaceholder(this.alt);">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-slate-950/90 text-[9px] font-mono ${isPostponed ? 'text-amber-400 font-bold border border-amber-500/40' : 'text-sky-300'}">
+                ${escapeHtml(s.status || 'SCHEDULED')}
+              </div>
+            </div>
+            <div class="min-w-0">
+              <div class="text-[11px] font-bold text-slate-200 truncate group-hover/art:text-amber-300" title="${escapeHtml(title)}">${escapeHtml(title)}</div>
+              ${dateStr ? `<div class="text-[9px] text-slate-400 truncate font-mono mt-0.5">${escapeHtml(dateStr)}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterAdminGalleryMovies() {
+      renderAdminArtworkGallery();
     }
 
     function selectMovieFromMediaStudio(title, subtab = 'artwork') {

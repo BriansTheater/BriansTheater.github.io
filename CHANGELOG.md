@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.137] - 2026-10-01
+
+### What's New
+- Displayed 100% of scheduled movies in Admin Lineup Gallery.
+- Added live count badge to the Upcoming Lineup Gallery.
+- Added instant title search filter to the Admin Gallery.
+
 ## [4.9.136] - 2026-10-01
 
 ### What's New
