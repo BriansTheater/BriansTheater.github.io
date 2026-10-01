@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.135 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.136 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -1428,12 +1428,15 @@
       <div class="flex flex-col gap-3">
         <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Select Reschedule Option:</label>
         
-        <div class="grid grid-cols-2 gap-2">
-          <button type="button" id="btnReschedModeNewDate" onclick="setRescheduleOptionMode('new_date')" class="py-2.5 px-3 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1.5 shadow-sm">
-            <span>📅</span> Set New Date
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" id="btnReschedModeNewDate" onclick="setRescheduleOptionMode('new_date')" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1 shadow-sm">
+            <span>📅</span> New Date
           </button>
-          <button type="button" id="btnReschedModePostpone" onclick="setRescheduleOptionMode('postpone')" class="py-2.5 px-3 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1.5 shadow-sm">
-            <span>⏳</span> Postpone (Date TBD)
+          <button type="button" id="btnReschedModePostpone" onclick="setRescheduleOptionMode('postpone')" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1 shadow-sm">
+            <span>⏳</span> Postpone
+          </button>
+          <button type="button" id="btnReschedModeRestore" onclick="setRescheduleOptionMode('restore')" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-emerald-400/60 transition flex items-center justify-center gap-1 shadow-sm">
+            <span>↩️</span> Restore
           </button>
         </div>
 
@@ -1468,6 +1471,16 @@
           </div>
           <p class="text-xs text-slate-300 leading-relaxed">
             This will mark <b id="reschedPostponeMovieName" class="text-amber-300">the movie</b> as <b>POSTPONED (DATE TBD)</b> on the official schedule. It will remain saved in Brian's Theater until a confirmed release date is announced.
+          </p>
+        </div>
+
+        <!-- Mode C: Restore to Original Schedule -->
+        <div id="reschedFormRestore" class="hidden p-3.5 rounded-xl bg-slate-950 border border-emerald-500/30 flex flex-col gap-2">
+          <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold">
+            <span>↩️</span> Restore Original Schedule
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            This will remove the postponed status from <b id="reschedRestoreMovieName" class="text-emerald-300">the movie</b>, restore its confirmed date from the master schedule, and place it back on the main page.
           </p>
         </div>
 
@@ -2216,7 +2229,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.135";
+    const APP_VERSION = "4.9.136";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2699,6 +2712,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.136": [
+        "Restored postponed movies to official schedule with one click.",
+        "Fixed main page premiere visibility for confirmed scheduled dates.",
+        "Added intuitive reschedule and restore modal controls.",
+        "Restored Backrooms as the active upcoming theater premiere."
+      ],
       "4.9.135": [
         "Locked Quick Schedule sync strictly to dedicated Movies calendar.",
         "Added automatic cleanup for movie events on personal calendar.",
@@ -4022,15 +4041,7 @@
       if (storedTitles) customMovieTitles = JSON.parse(storedTitles);
     } catch(e) {}
 
-    const DEFAULT_RESCHEDULED_MOVIES = {
-      "Backrooms": {
-        isPostponed: true,
-        newDate: "Postponed (Release Date Changed)",
-        newTime: "7:00 PM",
-        status: "POSTPONED",
-        reason: "Studio release date changed"
-      }
-    };
+    const DEFAULT_RESCHEDULED_MOVIES = {};
     let customMovieReschedules = Object.assign({}, DEFAULT_RESCHEDULED_MOVIES);
     try {
       const storedResched = localStorage.getItem('brian_rescheduled_movies_map');
@@ -5186,20 +5197,22 @@
       currentRescheduleMode = mode;
       const btnNew = document.getElementById('btnReschedModeNewDate');
       const btnPost = document.getElementById('btnReschedModePostpone');
+      const btnRestore = document.getElementById('btnReschedModeRestore');
       const formNew = document.getElementById('reschedFormNewDate');
       const formPost = document.getElementById('reschedFormPostpone');
+      const formRestore = document.getElementById('reschedFormRestore');
 
-      if (mode === 'new_date') {
-        if (btnNew) btnNew.className = "py-2.5 px-3 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1.5 shadow-sm";
-        if (btnPost) btnPost.className = "py-2.5 px-3 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1.5 shadow-sm";
-        if (formNew) formNew.classList.remove('hidden');
-        if (formPost) formPost.classList.add('hidden');
-      } else {
-        if (btnNew) btnNew.className = "py-2.5 px-3 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1.5 shadow-sm";
-        if (btnPost) btnPost.className = "py-2.5 px-3 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1.5 shadow-sm";
-        if (formNew) formNew.classList.add('hidden');
-        if (formPost) formPost.classList.remove('hidden');
-      }
+      const activeClass = "py-2.5 px-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1 shadow-sm";
+      const inactiveClass = "py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1 shadow-sm";
+      const activeRestoreClass = "py-2.5 px-2 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 border border-emerald-400 transition flex items-center justify-center gap-1 shadow-sm";
+
+      if (btnNew) btnNew.className = (mode === 'new_date') ? activeClass : inactiveClass;
+      if (btnPost) btnPost.className = (mode === 'postpone') ? activeClass : inactiveClass;
+      if (btnRestore) btnRestore.className = (mode === 'restore') ? activeRestoreClass : inactiveClass;
+
+      if (formNew) formNew.classList.toggle('hidden', mode !== 'new_date');
+      if (formPost) formPost.classList.toggle('hidden', mode !== 'postpone');
+      if (formRestore) formRestore.classList.toggle('hidden', mode !== 'restore');
     }
 
     function openRescheduleMovieModal(movieTitle) {
@@ -5230,6 +5243,7 @@
       const dateEl = document.getElementById('rescheduleMovieCurrentDate');
       const badgeEl = document.getElementById('rescheduleMovieCurrentBadge');
       const postNameEl = document.getElementById('reschedPostponeMovieName');
+      const restoreNameEl = document.getElementById('reschedRestoreMovieName');
       const tonightBanner = document.getElementById('reschedTonightBanner');
       const dateInput = document.getElementById('reschedInputDate');
       const timeInput = document.getElementById('reschedInputTime');
@@ -5239,6 +5253,7 @@
       if (dateEl) dateEl.textContent = `${movie.date || 'TBD'} • ${movie.startTime || '7:00 PM'} PST`;
       if (badgeEl) badgeEl.textContent = movie.status || 'SCHEDULED';
       if (postNameEl) postNameEl.textContent = `"${cleanTitle}"`;
+      if (restoreNameEl) restoreNameEl.textContent = `"${cleanTitle}"`;
 
       // Set default date input to next day or movie date
       const today = new Date();
@@ -5262,7 +5277,14 @@
         }
       }
 
-      setRescheduleOptionMode('new_date');
+      // If movie is currently postponed, default to 'restore' mode for convenience
+      const isCurrentlyPostponed = movie.status === 'POSTPONED' || movie.rescheduled || (customMovieReschedules[cleanTitle] && customMovieReschedules[cleanTitle].isPostponed);
+      if (isCurrentlyPostponed) {
+        setRescheduleOptionMode('restore');
+      } else {
+        setRescheduleOptionMode('new_date');
+      }
+
       if (modal) modal.classList.remove('hidden');
     }
 
@@ -5282,9 +5304,12 @@
 
       let newDate = "";
       let newTime = "7:00 PM";
-      let isPostponed = (currentRescheduleMode === 'postpone');
+      const isRestore = (currentRescheduleMode === 'restore');
+      const isPostponed = (currentRescheduleMode === 'postpone');
 
-      if (!isPostponed) {
+      if (isRestore) {
+        // Will clear override and restore master/original schedule
+      } else if (!isPostponed) {
         const rawDate = document.getElementById('reschedInputDate')?.value;
         if (!rawDate) {
           alert("Please select a new premiere date.");
@@ -5304,17 +5329,18 @@
       }
 
       if (btn) btn.disabled = true;
-      if (label) label.textContent = "Syncing Reschedule...";
+      if (label) label.textContent = isRestore ? "Restoring Schedule..." : "Syncing Reschedule...";
 
       try {
         await applyMovieReschedule(title, {
+          isRestore,
           isPostponed,
           newDate,
           newTime,
           closeTonight
         });
         closeRescheduleMovieModal();
-        showTheaterToast(`🗓️ "${title}" rescheduled successfully!`);
+        showTheaterToast(isRestore ? `↩️ "${title}" restored to official schedule!` : `🗓️ "${title}" rescheduled successfully!`);
       } catch(err) {
         console.error("Reschedule failed:", err);
         showTheaterToast(`⚠️ Reschedule failed: ${err.message}`);
@@ -5335,48 +5361,84 @@
       let newStartMs = 0;
       let newEndMs = 0;
 
-      if (!options.isPostponed && options.newDate) {
+      if (options.isRestore) {
+        // Mode C: Restore to official schedule
+        delete customMovieReschedules[cleanTitle];
         try {
-          const d = new Date(`${options.newDate} ${options.newTime || '7:00 PM'} PST`);
-          if (!isNaN(d.getTime())) {
-            newStartMs = d.getTime();
-            newEndMs = newStartMs + (movie && movie.endMs && movie.startMs ? (movie.endMs - movie.startMs) : (105 * 60 * 1000));
+          localStorage.setItem('brian_rescheduled_movies_map', JSON.stringify(customMovieReschedules));
+        } catch(e) {}
+
+        // Look up original entry from officialSchedule if available
+        const official = (window.theaterOfficialSchedule && Array.isArray(window.theaterOfficialSchedule))
+          ? window.theaterOfficialSchedule.find(s => s && s.title && s.title.replace(/^🎬\s*/, '').trim().toLowerCase() === cleanTitle.toLowerCase())
+          : null;
+
+        if (movie) {
+          movie.status = official?.status || 'SCHEDULED';
+          movie.rescheduled = false;
+          delete movie.rescheduledNote;
+          if (official?.date) movie.date = official.date;
+          if (official?.startTime) movie.startTime = official.startTime;
+          if (official?.time) movie.time = official.time;
+          if (official?.startMs) movie.startMs = official.startMs;
+          if (official?.endMs) movie.endMs = official.endMs;
+          movie.tagColor = 'bg-slate-900/90 text-purple-300 border border-purple-500/70';
+
+          // Recalculate startMs/endMs if needed
+          if (!movie.startMs || movie.startMs === 0) {
+            try {
+              const dt = new Date(`${movie.date} ${movie.startTime || movie.time || '7:00 PM'} PST`);
+              if (!isNaN(dt.getTime())) {
+                movie.startMs = dt.getTime();
+                movie.endMs = movie.startMs + (105 * 60 * 1000);
+              }
+            } catch(e) {}
           }
+        }
+      } else {
+        if (!options.isPostponed && options.newDate) {
+          try {
+            const d = new Date(`${options.newDate} ${options.newTime || '7:00 PM'} PST`);
+            if (!isNaN(d.getTime())) {
+              newStartMs = d.getTime();
+              newEndMs = newStartMs + (movie && movie.endMs && movie.startMs ? (movie.endMs - movie.startMs) : (105 * 60 * 1000));
+            }
+          } catch(e) {}
+        }
+
+        if (movie) {
+          if (options.isPostponed) {
+            movie.status = 'POSTPONED';
+            movie.date = 'Postponed (Release Date Changed)';
+            movie.tagColor = 'bg-amber-500/20 text-amber-300 border border-amber-500/50';
+            movie.rescheduled = true;
+            movie.rescheduledNote = 'Release date changed by studio - new date TBD';
+            movie.startMs = 0;
+            movie.endMs = 0;
+          } else {
+            movie.status = 'SCHEDULED';
+            movie.date = options.newDate;
+            movie.startTime = options.newTime;
+            movie.time = options.newTime;
+            movie.startMs = newStartMs || movie.startMs;
+            movie.endMs = newEndMs || movie.endMs;
+            movie.rescheduled = false;
+          }
+        }
+
+        // Persist to customMovieReschedules map in localStorage
+        customMovieReschedules[cleanTitle] = {
+          isPostponed: !!options.isPostponed,
+          newDate: options.newDate,
+          newTime: options.newTime,
+          startMs: newStartMs,
+          endMs: newEndMs,
+          updatedAt: Date.now()
+        };
+        try {
+          localStorage.setItem('brian_rescheduled_movies_map', JSON.stringify(customMovieReschedules));
         } catch(e) {}
       }
-
-      if (movie) {
-        if (options.isPostponed) {
-          movie.status = 'POSTPONED';
-          movie.date = 'Postponed (Release Date Changed)';
-          movie.tagColor = 'bg-amber-500/20 text-amber-300 border border-amber-500/50';
-          movie.rescheduled = true;
-          movie.rescheduledNote = 'Release date changed by studio - new date TBD';
-          movie.startMs = 0;
-          movie.endMs = 0;
-        } else {
-          movie.status = 'SCHEDULED';
-          movie.date = options.newDate;
-          movie.startTime = options.newTime;
-          movie.time = options.newTime;
-          movie.startMs = newStartMs || movie.startMs;
-          movie.endMs = newEndMs || movie.endMs;
-          movie.rescheduled = false;
-        }
-      }
-
-      // Persist to customMovieReschedules map in localStorage
-      customMovieReschedules[cleanTitle] = {
-        isPostponed: !!options.isPostponed,
-        newDate: options.newDate,
-        newTime: options.newTime,
-        startMs: newStartMs,
-        endMs: newEndMs,
-        updatedAt: Date.now()
-      };
-      try {
-        localStorage.setItem('brian_rescheduled_movies_map', JSON.stringify(customMovieReschedules));
-      } catch(e) {}
 
       // If closeTonight requested or if tonight's screening was postponed:
       if (options.closeTonight) {
@@ -8929,14 +8991,16 @@
               <div class="font-semibold text-slate-300 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
                 <span>💬</span> SUMMARY
               </div>
-              ${isAdmin ? `
+              ${(isAdmin || s.status === 'POSTPONED' || s.rescheduled) ? `
               <div class="flex items-center gap-1.5">
-                <button type="button" onclick="openRescheduleMovieModal('${escapeHtml(s.title || '')}')" title="Admin: Reschedule Screening" class="text-[10px] text-amber-300 hover:text-white px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/40 border border-amber-500/40 transition flex items-center gap-1 active:scale-95 cursor-pointer">
-                  <span>🗓️</span> Reschedule
+                <button type="button" onclick="openRescheduleMovieModal('${escapeHtml(s.title || '')}')" title="${(s.status === 'POSTPONED' || s.rescheduled) ? 'Reschedule or Restore Screening' : 'Admin: Reschedule Screening'}" class="text-[10px] text-amber-300 hover:text-white px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/40 border border-amber-500/40 transition flex items-center gap-1 active:scale-95 cursor-pointer">
+                  <span>🗓️</span> ${(s.status === 'POSTPONED' || s.rescheduled) ? 'Reschedule / Restore' : 'Reschedule'}
                 </button>
+                ${isAdmin ? `
                 <button type="button" onclick="openAdminMediaStudioForMovie('${escapeHtml(s.title || '')}', 'summary')" title="Admin: Edit Summary" class="text-[10px] text-amber-400 hover:text-amber-300 px-1.5 py-0.5 rounded bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 transition flex items-center gap-1 cursor-pointer">
                   <span>✏️</span> Edit
                 </button>
+                ` : ''}
               </div>
               ` : ''}
             </div>

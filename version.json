@@ -1,11 +1,11 @@
 {
-  "version": "4.9.135",
+  "version": "4.9.136",
   "releaseDate": "2026-10-01",
-  "title": "Brian's Theater v4.9.135",
+  "title": "Brian's Theater v4.9.136",
   "notes": [
-    "Locked Quick Schedule sync strictly to dedicated Movies calendar.",
-    "Added automatic cleanup for movie events on personal calendar.",
-    "Defaulted bot calendar methods to dedicated Movies calendar ID.",
-    "Added cross-calendar deduplication tool in Google Sheets menu."
+    "Restored postponed movies to official schedule with one click.",
+    "Fixed main page premiere visibility for confirmed scheduled dates.",
+    "Added intuitive reschedule and restore modal controls.",
+    "Restored Backrooms as the active upcoming theater premiere."
   ]
 }

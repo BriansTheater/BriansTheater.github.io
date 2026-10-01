@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.136] - 2026-10-01
+
+### What's New
+- Restored postponed movies to official schedule with one click.
+- Fixed main page premiere visibility for confirmed scheduled dates.
+- Added intuitive reschedule and restore modal controls.
+- Restored Backrooms as the active upcoming theater premiere.
+- Enabled direct restore actions from postponed schedule cards.
+
 ## [4.9.135] - 2026-10-01
 
 ### What's New
