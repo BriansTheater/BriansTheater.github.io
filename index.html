@@ -2235,7 +2235,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.140";
+    const APP_VERSION = "4.9.141";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2718,6 +2718,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.141": [
+        "Restored permanently visible and active Enter button on stage.",
+        "Positioned countdown timer seamlessly above active Enter button.",
+        "Ensured continuous one-click entrance access across all door states.",
+        "Preserved live screening and pre-show countdown transition animations."
+      ],
       "4.9.140": [
         "Unified Vault marathon filter into one single toolbar button.",
         "Clicking Marathons displays all marathons across every screening season.",
@@ -4330,10 +4336,21 @@
     }
 
     let doorOverrideMode = 'auto';
+    window.doorOverrideMode = doorOverrideMode;
     try {
       const savedMode = localStorage.getItem('brian_theater_door_mode');
-      if (savedMode) doorOverrideMode = savedMode;
+      if (savedMode) {
+        doorOverrideMode = savedMode;
+        window.doorOverrideMode = savedMode;
+      }
     } catch(e) {}
+
+    window.setDoorOverrideModeDirect = function(mode) {
+      doorOverrideMode = mode;
+      window.doorOverrideMode = mode;
+      updateDoorAdminButtons();
+      updateCountdown();
+    };
 
     function showTheaterToast(message) {
       let toast = document.getElementById('theaterLiveToast');
@@ -4359,6 +4376,7 @@
         return;
       }
       doorOverrideMode = mode;
+      window.doorOverrideMode = mode;
       try {
         localStorage.setItem('brian_theater_door_mode', mode);
       } catch(e) {}
@@ -4392,23 +4410,21 @@
       const lockTitle = document.getElementById('doorsLockedStatusTitle');
       const lockSub = document.getElementById('doorsLockedSubtext');
 
+      // The primary Enter button is ALWAYS active and visible on the Theater page!
+      if (openCta) {
+        openCta.classList.remove('hidden');
+        openCta.classList.add('flex');
+      }
+
       if (isOpen) {
-        // When live screening or seating: show Enter button & hide countdown box
+        // When live screening or seating: hide countdown box
         if (countdownBox) countdownBox.classList.add('hidden');
-        if (openCta) {
-          openCta.classList.remove('hidden');
-          openCta.classList.add('flex');
-        }
         if (lockIcon) lockIcon.textContent = '🟢';
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
         if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
-        // When waiting for next show / movie is over: show countdown box & hide Enter button
+        // When waiting for next show / pre-show: show countdown box above the Enter button
         if (countdownBox) countdownBox.classList.remove('hidden');
-        if (openCta) {
-          openCta.classList.add('hidden');
-          openCta.classList.remove('flex');
-        }
         if (lockIcon) lockIcon.textContent = '🔒';
         if (lockTitle) lockTitle.textContent = 'DOORS OPEN 10 MIN BEFORE SHOWTIME';
         if (lockSub) {
@@ -7069,6 +7085,7 @@
       // Sync global door mode from Firebase in real time
       if (data.doorMode && data.doorMode !== doorOverrideMode) {
         doorOverrideMode = data.doorMode;
+        window.doorOverrideMode = doorOverrideMode;
         try { localStorage.setItem('brian_theater_door_mode', doorOverrideMode); } catch(e) {}
         updateDoorAdminButtons();
       }

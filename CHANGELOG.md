@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.141] - 2026-10-02
+
+### What's New
+- Restored permanently visible and active Enter button on stage.
+- Positioned countdown timer seamlessly above active Enter button.
+- Ensured continuous one-click entrance access across all door states.
+- Preserved live screening and pre-show countdown transition animations.
+
 ## [4.9.140] - 2026-10-01
 
 ### What's New

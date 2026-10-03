@@ -1,12 +1,11 @@
 {
-  "version": "4.9.140",
-  "releaseDate": "2026-10-01",
-  "title": "Brian's Theater v4.9.140",
+  "version": "4.9.141",
+  "releaseDate": "2026-10-02",
+  "title": "Brian's Theater v4.9.141",
   "notes": [
-    "Unified Vault marathon filter into one single toolbar button.",
-    "Clicking Marathons displays all marathons across every screening season.",
-    "Consecutively groups marathon sagas by franchise priority and sequence.",
-    "Added direct quick-jump chips for every theater marathon.",
-    "Integrated franchise marathon badges on individual movie cards."
+    "Restored permanently visible and active Enter button on theater stage.",
+    "Positioned countdown timer seamlessly above active Enter auditorium button.",
+    "Ensured continuous one-click entrance access across all door states.",
+    "Preserved live screening and pre-show countdown transition animations."
   ]
 }
