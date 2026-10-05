@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.151] - 2026-10-05
+
+### What's New
+- Added ultra-friendly 2-step Plex account onboarding decision wizard.
+- Guided new patrons through 30-second free Plex registration.
+- Transitioned Discord automation callouts to official slash command.
+- Streamlined VIP access invitations with real-time status updates.
+
 ## [4.9.150] - 2026-10-05
 
 ### What's New

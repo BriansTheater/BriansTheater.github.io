@@ -1,12 +1,11 @@
 {
-  "version": "4.9.150",
+  "version": "4.9.151",
   "releaseDate": "2026-10-05",
-  "title": "Brian's Theater v4.9.150",
+  "title": "Brian's Theater v4.9.151",
   "notes": [
-    "Built real-time Plex patron user database in Firebase.",
-    "Added full Plex user management studio to admin menu.",
-    "Enabled manual patron adding, library controls, and auto-approval.",
-    "Added search and status filters for active Plex members.",
-    "Deployed hardened Firebase database rules for Plex user endpoints."
+    "Added ultra-friendly 2-step Plex account onboarding decision wizard.",
+    "Guided new patrons through 30-second free Plex registration.",
+    "Transitioned Discord automation callouts to official slash command.",
+    "Streamlined VIP access invitations with real-time status updates."
   ]
 }
