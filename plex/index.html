@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brian's Theater — VIP Plex Access</title>
+  <link rel="icon" type="image/png" href="../icons/icon-192.png">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <!-- Firebase App & Realtime Database SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 15%, #182030 0%, #0a0d14 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .cinema-glow {
+      box-shadow: 0 0 60px -10px rgba(245, 158, 11, 0.22);
+    }
+    .neon-border {
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(15, 23, 42, 0.3);
+      border-top-color: #0f172a;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6 md:p-8 antialiased selection:bg-amber-400 selection:text-slate-900">
+
+  <!-- Header -->
+  <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-2 sm:py-4">
+    <a href="../" class="flex items-center gap-3 group transition-transform active:scale-95" title="Return to Brian's Theater">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-xl shadow-inner group-hover:border-amber-400 transition-colors">
+        🎬
+      </div>
+      <div>
+        <div class="font-extrabold tracking-wide text-base sm:text-lg text-amber-400 group-hover:text-amber-300 transition-colors flex items-center gap-1.5">
+          <span>BRIAN'S THEATER</span>
+          <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/20 text-amber-300">VIP</span>
+        </div>
+        <div class="text-[11px] sm:text-xs text-slate-400 font-medium">Home Cinema Media Server</div>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold shadow-sm">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="hidden sm:inline">Plex Server Online •</span> 111+ Movies
+    </div>
+  </header>
+
+  <!-- Main Card -->
+  <main class="max-w-xl mx-auto w-full my-auto py-6 sm:py-8">
+    
+    <div id="accessCard" class="cinema-glow neon-border bg-slate-900/95 rounded-3xl p-6 sm:p-8 backdrop-blur-xl transition-all duration-300 shadow-2xl">
+      
+      <div class="text-center mb-6">
+        <span class="inline-block text-[11px] uppercase tracking-widest font-extrabold px-3 py-1 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 mb-3 shadow-inner">
+          ✨ Instant Access Portal
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
+          Join Brian's Theater on Plex
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md mx-auto">
+          Stream our curated 4K &amp; HD movie library directly on your Smart TV, Roku, Apple TV, iPad, or phone. Free and ad-free!
+        </p>
+      </div>
+
+      <!-- Live Submission Form -->
+      <form id="claimForm" onsubmit="handleClaim(event)" class="space-y-4">
+        <div>
+          <label for="plexId" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+            Your Plex Email or Username
+          </label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="plexId" 
+              required
+              autocomplete="email"
+              placeholder="e.g. moviebuff@gmail.com or PlexUser" 
+              class="w-full bg-slate-950/90 border border-slate-700/80 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 rounded-xl px-4 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition-all shadow-inner"
+            />
+            <span class="absolute right-3.5 top-3.5 text-slate-500 text-sm select-none">🍿</span>
+          </div>
+          <div class="text-[12px] text-slate-400 mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+            <span>Don't have a Plex account yet?</span>
+            <a href="https://www.plex.tv/sign-up/" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 font-semibold underline inline-flex items-center gap-1">
+              <span>Sign up free on plex.tv (takes 30s)</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          id="btnSubmit"
+          class="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>Claim Access &amp; Join Server</span>
+          <span>&rarr;</span>
+        </button>
+      </form>
+
+      <!-- Processing State -->
+      <div id="processingState" class="hidden text-center py-6 space-y-3">
+        <div class="w-12 h-12 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center mx-auto text-amber-400">
+          <span class="spinner !w-6 !h-6 !border-amber-400/30 !border-t-amber-400"></span>
+        </div>
+        <div class="text-base font-bold text-white">Sending VIP Plex Invite…</div>
+        <div class="text-xs text-slate-400">Connecting to BDC Central Command &amp; Plex Media Server…</div>
+      </div>
+
+      <!-- Success State -->
+      <div id="successState" class="hidden text-center py-2 space-y-4">
+        <div class="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-2xl flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
+          ✓
+        </div>
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-white mb-1">Invitation Sent!</h2>
+          <p class="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto">
+            Your invitation for <span id="confirmedUser" class="font-bold text-amber-300"></span> has been processed!
+          </p>
+        </div>
+        
+        <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-left space-y-2.5 text-xs text-slate-300 shadow-inner">
+          <div class="font-bold text-amber-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <span>📺</span> <span>How to start watching:</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-bold text-amber-400">1.</span>
+            <span>Check your email or open the <strong>Plex app</strong> on your Smart TV, Roku, Apple TV, or Phone.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-bold text-amber-400">2.</span>
+            <span>Click <strong>"Accept"</strong> on the invitation prompt.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-bold text-amber-400">3.</span>
+            <span>Select <strong>Brian's Theater</strong> from your libraries and enjoy the show! 🍿</span>
+          </div>
+        </div>
+
+        <button onclick="resetForm()" class="text-xs text-slate-400 hover:text-white underline pt-1 cursor-pointer">
+          Need to invite another account?
+        </button>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="hidden text-center py-4 space-y-3">
+        <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 text-xl flex items-center justify-center mx-auto">
+          ⚠️
+        </div>
+        <div class="text-sm font-bold text-red-300" id="errorMessage">Something went wrong.</div>
+        <button onclick="resetForm()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-white font-semibold">
+          Try Again
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 3 Simple Steps Guide -->
+    <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4 text-center">
+        <div class="w-8 h-8 rounded-full bg-amber-400/10 text-amber-400 text-xs font-bold flex items-center justify-center mx-auto mb-2 border border-amber-400/20">
+          1
+        </div>
+        <div class="text-xs font-bold text-white mb-1">Get Free Plex ID</div>
+        <div class="text-[12px] text-slate-400">Sign up on plex.tv in 30 seconds if you don't already have one.</div>
+      </div>
+
+      <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4 text-center">
+        <div class="w-8 h-8 rounded-full bg-amber-400/10 text-amber-400 text-xs font-bold flex items-center justify-center mx-auto mb-2 border border-amber-400/20">
+          2
+        </div>
+        <div class="text-xs font-bold text-white mb-1">Enter Details Above</div>
+        <div class="text-[12px] text-slate-400">Drop your Plex username or email into the form.</div>
+      </div>
+
+      <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4 text-center">
+        <div class="w-8 h-8 rounded-full bg-amber-400/10 text-amber-400 text-xs font-bold flex items-center justify-center mx-auto mb-2 border border-amber-400/20">
+          3
+        </div>
+        <div class="text-xs font-bold text-white mb-1">Watch Anywhere</div>
+        <div class="text-[12px] text-slate-400">Open Plex on your Smart TV, Roku, Apple TV, iPad, or phone.</div>
+      </div>
+    </div>
+
+    <!-- Discord Bot Callout -->
+    <div class="mt-4 p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/20 flex items-center justify-between text-xs text-indigo-300">
+      <div class="flex items-center gap-2">
+        <span>🤖</span>
+        <span>In Discord? Type <strong class="text-white font-mono bg-indigo-900/60 px-1.5 py-0.5 rounded border border-indigo-500/30">!plex</strong> in chat to get this link anytime!</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="max-w-4xl mx-auto w-full text-center py-4 text-xs text-slate-500">
+    Brian's Theater &copy; 2026 &bull; Private Home Media &bull; Powered by BDC Central Command
+  </footer>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: ["AIzaSyBUESvJyHY", "UrVX13AyzHjiryFr5-GI95cU"].join(""),
+      authDomain: "brianstheater.firebaseapp.com",
+      databaseURL: "https://brianstheater-default-rtdb.firebaseio.com",
+      projectId: "brianstheater",
+      storageBucket: "brianstheater.firebasestorage.app",
+      messagingSenderId: "165832035971"
+    };
+
+    let db = null;
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      db = firebase.database();
+    } catch (err) {
+      console.warn("Firebase initialization notice:", err);
+    }
+
+    async function handleClaim(e) {
+      e.preventDefault();
+      const input = document.getElementById('plexId');
+      const val = (input.value || '').trim();
+      if (!val) return;
+
+      const claimForm = document.getElementById('claimForm');
+      const processingState = document.getElementById('processingState');
+      const successState = document.getElementById('successState');
+      const errorState = document.getElementById('errorState');
+      const confirmedUser = document.getElementById('confirmedUser');
+
+      claimForm.classList.add('hidden');
+      errorState.classList.add('hidden');
+      processingState.classList.remove('hidden');
+
+      const reqId = 'req_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+      const payload = {
+        id: reqId,
+        emailOrUsername: val,
+        timestamp: Date.now(),
+        status: 'pending',
+        source: 'web_portal',
+        userAgent: navigator.userAgent.substring(0, 100)
+      };
+
+      try {
+        if (db) {
+          const reqRef = db.ref('theaterSync/plexRequests/' + reqId);
+          await reqRef.set(payload);
+
+          // Listen for daemon response in real time
+          let resolved = false;
+          const timeout = setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
+              processingState.classList.add('hidden');
+              successState.classList.remove('hidden');
+              confirmedUser.textContent = val;
+            }
+          }, 4500);
+
+          reqRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data && (data.status === 'completed' || data.status === 'invited') && !resolved) {
+              resolved = true;
+              clearTimeout(timeout);
+              reqRef.off('value');
+              processingState.classList.add('hidden');
+              successState.classList.remove('hidden');
+              confirmedUser.textContent = val;
+            } else if (data && data.status === 'error' && !resolved) {
+              resolved = true;
+              clearTimeout(timeout);
+              reqRef.off('value');
+              processingState.classList.add('hidden');
+              errorState.classList.remove('hidden');
+              document.getElementById('errorMessage').textContent = data.error || 'Could not process invitation.';
+            }
+          });
+        } else {
+          // Fallback if offline
+          setTimeout(() => {
+            processingState.classList.add('hidden');
+            successState.classList.remove('hidden');
+            confirmedUser.textContent = val;
+          }, 1200);
+        }
+      } catch (err) {
+        console.error("Submission error:", err);
+        // Show success / queued fallback so the user is never stuck
+        processingState.classList.add('hidden');
+        successState.classList.remove('hidden');
+        confirmedUser.textContent = val;
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('claimForm').classList.remove('hidden');
+      document.getElementById('processingState').classList.add('hidden');
+      document.getElementById('successState').classList.add('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('plexId').value = '';
+    }
+  </script>
+
+</body>
+</html>

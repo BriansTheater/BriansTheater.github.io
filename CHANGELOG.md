@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.149] - 2026-10-05
+
+### What's New
+- Added instant VIP Plex access portal for theater friends.
+- Integrated automated invite claims with real-time status updates.
+- Added 3-step setup guide for Smart TVs and phones.
+- Linked Plex VIP portal to desktop and mobile navigation.
+- Added Discord bot command callout for fast link sharing.
+
 ## [4.9.148] - 2026-10-05
 
 ### What's New

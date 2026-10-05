@@ -1,12 +1,12 @@
 {
-  "version": "4.9.148",
+  "version": "4.9.149",
   "releaseDate": "2026-10-05",
-  "title": "Brian's Theater v4.9.148",
+  "title": "Brian's Theater v4.9.149",
   "notes": [
-    "Hardened Firebase Realtime Database security rules against unauthorized writes.",
-    "Locked database root to prevent global write access vulnerabilities.",
-    "Restricted administrative database modifications to verified theater administrator accounts.",
-    "Enforced strict payload validation on visitor movie request submissions.",
-    "Secured account quota and TV watchlist endpoints from writes."
+    "Added instant VIP Plex access portal for theater friends.",
+    "Integrated automated invite claims with real-time status updates.",
+    "Added 3-step setup guide for Smart TVs and phones.",
+    "Linked Plex VIP portal to desktop and mobile navigation.",
+    "Added Discord bot command callout for fast link sharing."
   ]
 }

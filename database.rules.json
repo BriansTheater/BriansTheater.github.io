@@ -25,6 +25,13 @@
           ".validate": "newData.hasChildren(['id', 'title', 'requester', 'timestamp']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('requester').isString() && newData.child('requester').val().length <= 50"
         }
       },
+      "plexRequests": {
+        ".read": true,
+        "$reqId": {
+          ".write": "true",
+          ".validate": "newData.hasChildren(['id', 'emailOrUsername', 'timestamp']) && newData.child('emailOrUsername').isString() && newData.child('emailOrUsername').val().length > 0 && newData.child('emailOrUsername').val().length <= 100"
+        }
+      },
       "requests": {
         ".read": true,
         ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')",
