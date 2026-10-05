@@ -3,6 +3,9 @@
 ## [4.9.151] - 2026-10-05
 
 ### What's New
+- Permanently eliminated Update Alerts popup loop on reload.
+- Synchronized theater release version across app and service worker.
+- Added direct top-right close button to update modal.
 - Added ultra-friendly 2-step Plex account onboarding decision wizard.
 - Guided new patrons through 30-second free Plex registration.
 - Transitioned Discord automation callouts to official slash command.

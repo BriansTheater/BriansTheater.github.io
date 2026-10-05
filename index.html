@@ -2680,10 +2680,10 @@
   </div>
 
   <!-- FRONT & CENTER VERSION UPDATE MODAL DIALOG (USER MUST SEE & CLICK TO ENTER) -->
-  <div id="appUpdateToast" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300 pointer-events-none opacity-0" role="dialog" aria-modal="true" aria-labelledby="updateToastTitle">
+  <div id="appUpdateToast" onclick="if(event.target===this)dismissAppUpdateToast()" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300 pointer-events-none opacity-0" role="dialog" aria-modal="true" aria-labelledby="updateToastTitle">
     
     <!-- Modal Card Box -->
-    <div id="appUpdateCard" class="max-w-md w-full bg-slate-950/95 border-2 border-sky-400/80 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(56,189,248,0.4)] transform transition-transform duration-300 scale-95 flex flex-col gap-4">
+    <div id="appUpdateCard" class="max-w-md w-full bg-slate-950/95 border-2 border-sky-400/80 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(56,189,248,0.4)] transform transition-transform duration-300 scale-95 flex flex-col gap-4 relative">
 
       <!-- Header -->
       <div class="flex items-start justify-between gap-3">
@@ -2694,11 +2694,14 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.53</span>
+              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.151</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
         </div>
+        <button type="button" onclick="dismissAppUpdateToast()" class="w-8 h-8 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-100 flex items-center justify-center transition cursor-pointer border border-slate-800 text-sm shrink-0" aria-label="Close update alert">
+          ✕
+        </button>
       </div>
 
       <!-- App Store Style Feature Bullet Points -->
@@ -2729,7 +2732,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.150";
+    const APP_VERSION = "4.9.151";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3234,6 +3237,28 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.151": [
+        "Permanently eliminated Update Alerts popup loop on reload.",
+        "Synchronized all theater application files to version 4.9.151.",
+        "Added ultra-friendly 2-step Plex account onboarding decision wizard.",
+        "Guided new patrons through 30-second free Plex registration.",
+        "Added direct top-right close button to update modal.",
+        "Transitioned Discord automation callouts to official slash command."
+      ],
+      "4.9.150": [
+        "Built real-time Plex patron user database in Firebase.",
+        "Added full Plex user management studio to admin menu.",
+        "Enabled manual patron adding, library controls, and auto-approval.",
+        "Added search and status filters for active Plex members.",
+        "Deployed hardened Firebase database rules for Plex user endpoints."
+      ],
+      "4.9.149": [
+        "Added instant VIP Plex access portal for theater friends.",
+        "Integrated automated invite claims with real-time status updates.",
+        "Added 3-step setup guide for Smart TVs and phones.",
+        "Linked Plex VIP portal to desktop and mobile navigation.",
+        "Added Discord bot command callout for fast link sharing."
+      ],
       "4.9.148": [
         "Hardened Firebase Realtime Database security rules against unauthorized writes.",
         "Locked database root to prevent global write access vulnerabilities.",
@@ -4223,6 +4248,11 @@
                   isCheckingForUpdate = false;
                   return;
                 }
+                const lastViewedVer = localStorage.getItem('brian_theater_last_viewed_version');
+                if (lastViewedVer && !isNewerVersion(vData.version, lastViewedVer)) {
+                  isCheckingForUpdate = false;
+                  return;
+                }
               }
               console.log(`[UpdateDetector] Server has newer version v${vData.version} (local: v${APP_VERSION})`);
               showAppUpdateToast({
@@ -4240,8 +4270,7 @@
         try {
           const swRes = await fetch(`./sw.js?_t=${Date.now()}`, { cache: 'no-store' });
           if (swRes.ok) {
-            const swText = await swRes.text();
-            const match = swText.match(/\/\/\s*VERSION:\s*([0-9.]+)/i);
+            const match = swRes.ok && (await swRes.text()).match(/\/\/\s*VERSION:\s*([0-9.]+)/i);
             if (match && match[1] && isNewerVersion(match[1], APP_VERSION)) {
               if (!isManual) {
                 if (recentlyReloaded) {
@@ -4254,6 +4283,11 @@
                   return;
                 }
                 if (dismissedVer && !isNewerVersion(match[1], dismissedVer)) {
+                  isCheckingForUpdate = false;
+                  return;
+                }
+                const lastViewedVer = localStorage.getItem('brian_theater_last_viewed_version');
+                if (lastViewedVer && !isNewerVersion(match[1], lastViewedVer)) {
                   isCheckingForUpdate = false;
                   return;
                 }
@@ -4342,6 +4376,14 @@
       if (document.visibilityState === 'visible') checkForAppUpdate();
     });
     window.addEventListener('focus', checkForAppUpdate);
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        const toast = document.getElementById('appUpdateToast');
+        if (toast && toast.classList.contains('opacity-100')) {
+          dismissAppUpdateToast();
+        }
+      }
+    });
 
     // Silently store current version so no duplicate popup appears on startup
     try {
