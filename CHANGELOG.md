@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.147] - 2026-10-05
+
+### What's New
+- Restored official Season 13 artwork across all AHS episodes.
+- Added high-definition episode stills for every AHS screening.
+- Scoped series updates to prevent episode artwork overwriting.
+- Enabled secure poster synchronization with Firebase Realtime Database.
+- Ensured bulk poster edits persist immediately across devices.
+- Cleaned legacy cached artwork on theater app launch.
+
 ## [4.9.146] - 2026-10-05
 
 ### What's New

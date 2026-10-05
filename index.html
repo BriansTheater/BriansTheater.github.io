@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.146 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.147 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2547,7 +2547,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.146";
+    const APP_VERSION = "4.9.147";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2598,6 +2598,7 @@
     }
 
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
+    const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
 
     // Brian's Theater Authorized Administrator Email Allowlist
@@ -3051,6 +3052,14 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.147": [
+        "Restored official Season 13 artwork across all AHS episodes.",
+        "Added high-definition episode stills for every AHS screening.",
+        "Scoped series updates to prevent episode artwork overwriting.",
+        "Enabled secure poster synchronization with Firebase Realtime Database.",
+        "Ensured bulk poster edits persist immediately across devices.",
+        "Cleaned legacy cached artwork on theater app launch."
+      ],
       "4.9.146": [
         "Restored missing schedule posters for upcoming horror lineup.",
         "Added official high-resolution artwork for Evil Dead Burn.",
@@ -4417,11 +4426,36 @@
       "NOSFERATU": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
       "Nosferatu": "https://image.tmdb.org/t/p/w780/gprjiZWY43vxSKngMha1wfb5TGG.jpg",
       "Hokum": "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg",
-      "American Horror Story": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
-      "American Horror Story: Season 13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
-      "American Horror Story: Season 13, Episode 1": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
-      "AHS": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
-      "AHS: s13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
+      "American Horror Story": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "American Horror Story: Season 13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "American Horror Story: Season 13, Episode 1": "https://image.tmdb.org/t/p/w780/wfb7vJKwZSIlOOf2XjpsTml51yr.jpg",
+      "American Horror Story: Season 13, Episode 2": "https://image.tmdb.org/t/p/w780/xU7JkiSxhlAKhwUIr97UTWtTC4V.jpg",
+      "American Horror Story: Season 13, Episode 3": "https://image.tmdb.org/t/p/w780/8eB9BfAgDHEBEe9XyVMoSMRNLxs.jpg",
+      "American Horror Story: Season 13, Episode 4": "https://image.tmdb.org/t/p/w780/paVDNqH4sxnArq2lrQKZLF5i9ve.jpg",
+      "American Horror Story: Season 13, Episode 5": "https://image.tmdb.org/t/p/w780/7Cv1mDRjd55CRZBvjOBMZs4vvIO.jpg",
+      "American Horror Story: Season 13, Episode 6": "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg",
+      "American Horror Story: Season 13, Episode 7": "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg",
+      "American Horror Story: Season 13, Episode 8": "https://image.tmdb.org/t/p/w780/ibTyzvTStzvTubtDWx66QDFIV6q.jpg",
+      "American Horror Story: Season 13, Episode 9": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "American Horror Story: Season 13, Episode 10": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "American Horror Story: Season 13, Episode 11": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "American Horror Story: Season 13, Episode 12": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "American Horror Story: Season 13, Episode 13": "https://image.tmdb.org/t/p/w780/pY8Gu7h0lpx7SmkH1MffgqVrb91.jpg",
+      "AHS": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13e1: 13": "https://image.tmdb.org/t/p/w780/wfb7vJKwZSIlOOf2XjpsTml51yr.jpg",
+      "AHS: s13e2: 1:13am": "https://image.tmdb.org/t/p/w780/xU7JkiSxhlAKhwUIr97UTWtTC4V.jpg",
+      "AHS: s13e3: Rauhnacht": "https://image.tmdb.org/t/p/w780/8eB9BfAgDHEBEe9XyVMoSMRNLxs.jpg",
+      "AHS: s13e4: Is that all there is?": "https://image.tmdb.org/t/p/w780/paVDNqH4sxnArq2lrQKZLF5i9ve.jpg",
+      "AHS: s13e5: Date Night": "https://image.tmdb.org/t/p/w780/7Cv1mDRjd55CRZBvjOBMZs4vvIO.jpg",
+      "AHS: s13e6: The return of devils night": "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg",
+      "AHS: s13e7: The Baddest Witch Of Them All": "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg",
+      "AHS: s13e8: Hell No": "https://image.tmdb.org/t/p/w780/ibTyzvTStzvTubtDWx66QDFIV6q.jpg",
+      "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "AHS: s13e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "AHS: s13e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/pY8Gu7h0lpx7SmkH1MffgqVrb91.jpg",
       "Evil Dead Burn": "https://upload.wikimedia.org/wikipedia/en/a/a4/Evil_Dead_Burn_poster.jpeg",
       "Evil Dead": "https://upload.wikimedia.org/wikipedia/en/a/a4/Evil_Dead_Burn_poster.jpeg",
       "Abraham's Boys A Dracula Story": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
@@ -4434,6 +4468,7 @@
       "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
+      "Stephens King: It (1980)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
       "Stephens King: It": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
       "Stephen King's It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
       "Stephen King's It": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
@@ -4444,7 +4479,19 @@
     window.customMovieImages = customMovieImages;
     try {
       const stored = localStorage.getItem('brian_movie_posters_map');
-      if (stored) customMovieImages = JSON.parse(stored);
+      if (stored) {
+        customMovieImages = JSON.parse(stored);
+        let cleanedLegacy = false;
+        for (const [k, v] of Object.entries(customMovieImages)) {
+          if (typeof v === 'string' && v.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) {
+            delete customMovieImages[k];
+            cleanedLegacy = true;
+          }
+        }
+        if (cleanedLegacy) {
+          try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+        }
+      }
     } catch(e) {}
 
     let customMovieTrailers = {};
@@ -4549,15 +4596,37 @@
         } catch(e) {}
       }
 
-      // 3. Update theaterScheduleCache in-place
-      const isAhsUpdate = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
+      // 3. Helper to match target items without episode cross-contamination
+      const extractEpNum = (str) => {
+        if (!str) return null;
+        const m = str.match(/(?:e|ep|episode)\s*(\d+)/i);
+        return m ? parseInt(m[1], 10) : null;
+      };
+      const updateEp = extractEpNum(lower);
+      const isGenericAhs = !updateEp && (norm === 'ahs' || norm === 'ahss13' || norm === 'americanhorrorstory' || norm === 'americanhorrorstoryseason13');
+
+      const matchesScheduleItem = (s) => {
+        if (!s || !s.title) return false;
+        const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
+        const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
+        if (sTitle === lower || (norm && sNorm === norm)) return true;
+        const isTargetAhs = sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory');
+        if (updateEp !== null) {
+          const sEp = extractEpNum(sTitle);
+          return isTargetAhs && sEp !== null && sEp === updateEp;
+        }
+        if (isGenericAhs) {
+          const sEp = extractEpNum(sTitle);
+          return isTargetAhs && sEp === null;
+        }
+        if (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm))) return true;
+        return false;
+      };
+
+      // 3A. Update theaterScheduleCache in-place
       if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
         window.theaterScheduleCache.forEach(s => {
-          if (!s || !s.title) return;
-          const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
-          const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
-          const isMatch = sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm))) || (isAhsUpdate && (sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory')));
-          if (isMatch) {
+          if (matchesScheduleItem(s)) {
             s.posterUrl = imageUrl;
             s.imageUrl = imageUrl;
           }
@@ -4567,11 +4636,7 @@
       // 3B. Update theaterOfficialSchedule in-place
       if (window.theaterOfficialSchedule && Array.isArray(window.theaterOfficialSchedule)) {
         window.theaterOfficialSchedule.forEach(s => {
-          if (!s || !s.title) return;
-          const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
-          const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
-          const isMatch = sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm))) || (isAhsUpdate && (sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory')));
-          if (isMatch) {
+          if (matchesScheduleItem(s)) {
             s.posterUrl = imageUrl;
             s.imageUrl = imageUrl;
           }
@@ -4581,11 +4646,7 @@
       // 4. Update sampleSchedule in-place
       if (typeof sampleSchedule !== 'undefined' && Array.isArray(sampleSchedule)) {
         sampleSchedule.forEach(s => {
-          if (!s || !s.title) return;
-          const sTitle = String(s.title).replace(/^🎬\s*/, '').toLowerCase().trim();
-          const sNorm = sTitle.replace(/[^a-z0-9]/g, '');
-          const isMatch = sTitle === lower || (norm && sNorm === norm) || (norm && sNorm && (norm.startsWith(sNorm) || sNorm.startsWith(norm))) || (isAhsUpdate && (sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory')));
-          if (isMatch) {
+          if (matchesScheduleItem(s)) {
             s.posterUrl = imageUrl;
             s.imageUrl = imageUrl;
           }
@@ -4604,8 +4665,7 @@
           const imgs = schedGrid.querySelectorAll('img');
           imgs.forEach(img => {
             const alt = String(img.alt || '').replace(/^🎬\s*/, '').toLowerCase().trim();
-            const altNorm = alt.replace(/[^a-z0-9]/g, '');
-            if (alt === lower || (norm && altNorm === norm) || (norm && altNorm && (norm.startsWith(altNorm) || altNorm.startsWith(norm)))) {
+            if (matchesScheduleItem({ title: alt })) {
               img.src = imageUrl;
             }
           });
@@ -4635,60 +4695,61 @@
       const lower = title.toLowerCase().trim();
       const norm = lower.replace(/[^a-z0-9]/g, '');
 
-      // Tier 1: Custom admin overrides take absolute precedence across all matching layers
-      if (customMovieImages[title]) return customMovieImages[title];
-      for (const [k, v] of Object.entries(customMovieImages)) {
-        if (k.toLowerCase().trim() === lower) return v;
-      }
-      for (const [k, v] of Object.entries(customMovieImages)) {
-        if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) return v;
-      }
-      for (const [k, v] of Object.entries(customMovieImages)) {
-        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
-      }
-      for (const [k, v] of Object.entries(customMovieImages)) {
-        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (kNorm && kNorm.length >= 4 && norm && (norm.includes(kNorm) || kNorm.includes(norm))) return v;
-      }
-      // Smart AHS Acronym Matching in Custom Overrides:
+      const extractEpNum = (str) => {
+        if (!str) return null;
+        const m = str.match(/(?:e|ep|episode)\s*(\d+)/i);
+        return m ? parseInt(m[1], 10) : null;
+      };
       const isAhsTitle = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
-      if (isAhsTitle) {
-        for (const [k, v] of Object.entries(customMovieImages)) {
-          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-          if (kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) return v;
+      const queryEp = isAhsTitle ? extractEpNum(lower) : null;
+
+      // Helper to search a dictionary for matching artwork
+      const searchDict = (dict) => {
+        if (!dict) return null;
+        if (dict[title]) return dict[title];
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase().trim() === lower) return v;
         }
-      }
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) return v;
+        }
+        // If this is an AHS episode, prioritize an entry with the matching episode number
+        if (queryEp !== null) {
+          for (const [k, v] of Object.entries(dict)) {
+            const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if ((kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) && extractEpNum(k) === queryEp) {
+              return v;
+            }
+          }
+        }
+        // Standard prefix / substring matching (only for non-AHS or generic AHS without episode conflict)
+        for (const [k, v] of Object.entries(dict)) {
+          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (isAhsTitle) {
+            const kEp = extractEpNum(k);
+            if (queryEp !== null && kEp !== null && kEp !== queryEp) continue;
+            if (kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) return v;
+          } else {
+            if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
+            if (kNorm && kNorm.length >= 4 && norm && (norm.includes(kNorm) || kNorm.includes(norm))) return v;
+          }
+        }
+        return null;
+      };
+
+      // Tier 1: Custom admin overrides take absolute precedence across all matching layers
+      const customMatch = searchDict(customMovieImages);
+      if (customMatch && !customMatch.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return customMatch;
 
       // Tier 2: Attached movie object artwork (if valid and not placeholder)
       if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
         const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl;
-        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4') && !url.includes('data:image')) return url;
+        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4') && !url.includes('data:image') && !url.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return url;
       }
 
       // Tier 3: Verified default movie artwork dictionary
-      if (DEFAULT_MOVIE_ARTWORK[title]) return DEFAULT_MOVIE_ARTWORK[title];
-      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
-        if (k.toLowerCase().trim() === lower) return v;
-      }
-      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
-        if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) return v;
-      }
-      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
-        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
-      }
-      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
-        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (kNorm && kNorm.length >= 4 && norm && (norm.includes(kNorm) || kNorm.includes(norm))) return v;
-      }
-      // Smart AHS Acronym Matching in Default Artwork:
-      if (isAhsTitle) {
-        for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
-          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-          if (kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) return v;
-        }
-      }
+      const defaultMatch = searchDict(DEFAULT_MOVIE_ARTWORK);
+      if (defaultMatch) return defaultMatch;
 
       // Tier 4: Fallback search across vaultMovies and window.PAST_MOVIES_DATA
       const catalogSource = (Array.isArray(vaultMovies) && vaultMovies.length > 0) 
@@ -4707,7 +4768,12 @@
 
       if (foundInCat && (foundInCat.posterUrl || foundInCat.imageUrl)) {
         const u = foundInCat.posterUrl || foundInCat.imageUrl;
-        if (u && typeof u === 'string' && u.startsWith('http') && !u.includes('data:image')) return u;
+        if (u && typeof u === 'string' && u.startsWith('http') && !u.includes('data:image') && !u.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return u;
+      }
+
+      // Default AHS fallback to official season 13 artwork if everything else failed
+      if (isAhsTitle) {
+        return "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg";
       }
 
       return getCinemaPlaceholder(title);
@@ -4807,7 +4873,7 @@
 
       // 1. Direct update to Firebase RTDB for instant global sync
       try {
-        await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(mode)
@@ -4851,7 +4917,7 @@
 
       // Sync door mode to Firebase RTDB
       try {
-        fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify('auto')
@@ -6081,12 +6147,12 @@
         } catch(e) {}
         updateDoorAdminButtons();
         try {
-          await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json?auth=${FIREBASE_SECRET_KEY}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify('force_closed')
           });
-          await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/nowPlaying.json', {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/nowPlaying.json?auth=${FIREBASE_SECRET_KEY}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify('No Movie Playing')
@@ -6096,12 +6162,12 @@
 
       // Sync updated schedule array to Firebase
       try {
-        await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json', {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(schedSource)
         });
-        await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json', {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(schedSource)
@@ -6955,7 +7021,7 @@
 
           // Firebase RTDB PUT
           try {
-            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(cleanTitle)}.json`, {
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(cleanTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(imageUrl)
@@ -7544,7 +7610,7 @@
       if (artUrl) {
         applySinglePosterUpdate(title, artUrl, true);
         try {
-          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json`, {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json?auth=${FIREBASE_SECRET_KEY}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(artUrl)
@@ -7766,7 +7832,7 @@
 
       // Direct zero-delay write to Firebase RTDB
       try {
-        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json`, {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(url)
@@ -7800,7 +7866,7 @@
       } catch(e) {}
 
       try {
-        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json`, {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(title)}.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'DELETE'
         }).catch(() => {});
       } catch(e) {}

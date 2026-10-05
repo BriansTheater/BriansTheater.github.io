@@ -1,14 +1,13 @@
 {
-  "version": "4.9.146",
+  "version": "4.9.147",
   "releaseDate": "2026-10-05",
-  "title": "Brian's Theater v4.9.146",
+  "title": "Brian's Theater v4.9.147",
   "notes": [
-    "Restored missing schedule posters for upcoming horror lineup.",
-    "Added high-definition artwork for Evil Dead Burn.",
-    "Added verified poster for Abraham's Boys Dracula Story.",
-    "Added official artwork for The Seeding and Undertone.",
-    "Integrated high-resolution posters for They Will Kill You.",
-    "Added Stephen King's It 1990 miniseries poster artwork.",
-    "Configured no-referrer policy to ensure reliable CDN artwork loading."
+    "Restored official Season 13 artwork across all AHS episodes.",
+    "Added high-definition episode stills for every AHS screening.",
+    "Scoped series updates to prevent episode artwork overwriting.",
+    "Enabled secure poster synchronization with Firebase Realtime Database.",
+    "Ensured bulk poster edits persist immediately across devices.",
+    "Cleaned legacy cached artwork on theater app launch."
   ]
 }
