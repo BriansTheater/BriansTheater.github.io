@@ -798,8 +798,14 @@
                   Force Close
                 </button>
               </div>
+              <div class="mt-1 pt-2 border-t border-slate-800 flex flex-col gap-1.5">
+                <button type="button" id="btnConcludeShowEarly" onclick="concludeCurrentShowEarly()" class="w-full py-2 px-3 rounded-lg text-xs font-black bg-gradient-to-r from-rose-950 via-slate-900 to-amber-950/80 hover:brightness-110 text-rose-300 border border-rose-600/50 hover:border-rose-400 transition active:scale-95 shadow flex items-center justify-center gap-1.5 cursor-pointer" title="Concludes the currently playing movie immediately, locking doors until the next scheduled show's 10-minute window">
+                  <span>⏹️</span>
+                  <span>End Movie Early & Close Doors (Keep Auto ON)</span>
+                </button>
+              </div>
               <p class="text-[10px] text-slate-400 leading-normal">
-                Auto opens doors 10 min before show. Force Open unlocks doors now for early seating/testing.
+                Auto opens doors 10 min before show. Ending a movie early locks doors now, while keeping Auto mode active so doors reopen on schedule for the next show.
               </p>
             </div>
           </div>
@@ -881,6 +887,38 @@
               </button>
               <button type="button" onclick="clearAdminIntermissionAnnouncement()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-xs transition flex items-center justify-center gap-1 active:scale-95 shrink-0 cursor-pointer">
                 <span>✕</span> Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Annual Holiday Marathon & Festival Setup Card -->
+          <div id="adminHolidayMarathonSetupCard" class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/30 flex flex-col gap-3 shadow-md">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🍿</span>
+                <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Annual Holiday Marathons & Festival Manager</span>
+              </div>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">October & December</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Easily launch, schedule, or view annual marathons for Halloween (October) and Christmas (December). One-click setup configures festival hubs, dates, and film lineups.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button type="button" onclick="openAnnualMarathonSetupModal('halloween')" class="p-3 rounded-xl bg-slate-950 hover:bg-orange-950/40 border border-orange-500/40 hover:border-orange-400 text-left transition flex items-center justify-between group active:scale-95 cursor-pointer shadow-sm">
+                <div>
+                  <div class="text-xs font-bold text-orange-300 flex items-center gap-1.5">
+                    <span>🎃</span> <span>Setup Annual Halloween Marathon</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">October Scary Movie Sagas, Horror Nights & Ghostbusters</div>
+                </div>
+                <span class="text-xs text-orange-400 group-hover:translate-x-1 transition-transform">→</span>
+              </button>
+              <button type="button" onclick="openAnnualMarathonSetupModal('christmas')" class="p-3 rounded-xl bg-slate-950 hover:bg-emerald-950/40 border border-emerald-500/40 hover:border-emerald-400 text-left transition flex items-center justify-between group active:scale-95 cursor-pointer shadow-sm">
+                <div>
+                  <div class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                    <span>🎄</span> <span>Setup Annual Christmas Festival</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">December 1–25 Holiday Film Festival & Family Classics</div>
+                </div>
+                <span class="text-xs text-emerald-400 group-hover:translate-x-1 transition-transform">→</span>
               </button>
             </div>
           </div>
@@ -1057,8 +1095,8 @@
                 --
               </div>
 
-              <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
-                <label class="cursor-pointer py-2 px-3 bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95 text-center flex-1">
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-800 flex-wrap">
+                <label class="cursor-pointer py-2 px-3 bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg border border-slate-750 flex items-center justify-center gap-1.5 transition active:scale-95 text-center flex-1 min-w-[120px]">
                   <span>📁</span> Browse Local
                   <input type="file" id="adminArtworkFileInput" accept="image/*" class="hidden">
                 </label>
@@ -1067,6 +1105,9 @@
                 </button>
                 <button type="button" onclick="saveSelectedMovieArtwork()" id="btnSaveArtwork" class="py-2 px-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-lg transition active:scale-95 shadow">
                   <span>💾</span> Save Image
+                </button>
+                <button type="button" onclick="openBulkApplyToSeriesModal()" id="btnBulkApplySeries" class="py-2 px-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-xs rounded-lg transition active:scale-95 shadow flex items-center gap-1.5 cursor-pointer" title="Bulk apply this artwork to all matching series or franchise movies in the schedule">
+                  <span>⚡</span> <span>Bulk Apply to Series...</span>
                 </button>
               </div>
             </div>
@@ -1179,17 +1220,60 @@
             </div>
           </div>
 
-          <!-- Bottom: Upcoming Lineup Mini-Gallery -->
-          <div class="mt-1 pt-3 border-t border-slate-850">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5">
-              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🖼️</span> Upcoming Lineup Gallery (Click to Edit Movie)
-                <span id="adminGalleryCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold"></span>
-              </h4>
-              <div class="relative w-full sm:w-64">
-                <input type="text" id="adminGallerySearchInput" oninput="filterAdminGalleryMovies()" placeholder="Search scheduled titles..." class="w-full px-2.5 py-1 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:border-amber-400 focus:outline-none">
+          <!-- Bottom: Upcoming Lineup Mini-Gallery with Bulk Apply Support -->
+          <div class="mt-1 pt-3 border-t border-slate-850" id="adminArtworkGalleryContainer">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 mb-2.5">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>🖼️</span> Upcoming Lineup Gallery
+                  <span id="adminGalleryCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold"></span>
+                </h4>
+                <button type="button" onclick="toggleAdminGalleryBulkSelect()" id="btnAdminGalleryBulkSelectToggle" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition flex items-center gap-1.5 bg-slate-900 border-slate-700 text-slate-300 hover:border-amber-400 hover:text-amber-300 cursor-pointer shadow-sm active:scale-95">
+                  <span id="adminGalleryBulkToggleIcon">☑️</span>
+                  <span id="adminGalleryBulkToggleLabel">Bulk Select</span>
+                </button>
+                <div id="adminGalleryBulkQuickActions" class="hidden items-center gap-1.5 flex-wrap">
+                  <button type="button" onclick="selectAllFilteredAdminGalleryTitles()" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition active:scale-95 cursor-pointer">Select All Filtered</button>
+                  <button type="button" onclick="selectFranchiseInAdminGallery('ahs')" class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-950/70 hover:bg-amber-900 text-amber-300 border border-amber-500/40 transition active:scale-95 cursor-pointer">⚡ Select All AHS</button>
+                  <button type="button" onclick="clearAdminGallerySelection()" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 hover:bg-rose-950/80 text-slate-400 hover:text-rose-300 border border-slate-700 transition active:scale-95 cursor-pointer">Clear</button>
+                </div>
+              </div>
+              <div class="relative w-full md:w-64">
+                <input type="text" id="adminGallerySearchInput" oninput="filterAdminGalleryMovies()" placeholder="Search scheduled titles (e.g. AHS)..." class="w-full px-2.5 py-1 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:border-amber-400 focus:outline-none">
               </div>
             </div>
+
+            <!-- Sticky / Docked Bulk Selection Action Bar -->
+            <div id="adminGalleryBulkActionBar" class="hidden mb-3 p-3 rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-900/95 to-slate-950 border border-amber-500/60 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-300 text-base shrink-0">
+                  ⚡
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-black text-amber-300 flex items-center gap-1.5 flex-wrap">
+                    <span id="adminGalleryBulkSelectedCountText">0 Titles Selected</span>
+                    <span class="text-[10px] text-slate-400 font-normal hidden sm:inline">(Ready for Bulk Apply)</span>
+                  </div>
+                  <div class="text-[10px] text-slate-300 truncate max-w-sm sm:max-w-md font-mono" id="adminGalleryBulkSelectedNames">
+                    None selected
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 flex-wrap shrink-0 justify-end">
+                <button type="button" onclick="applyCurrentEditorPosterToSelected()" id="btnApplyEditorPosterToBulk" class="py-1.5 px-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs rounded-xl transition active:scale-95 shadow-md flex items-center gap-1.5 cursor-pointer">
+                  <span>⚡</span>
+                  <span>Apply Editor Poster to Selected</span>
+                </button>
+                <button type="button" onclick="openBulkApplyModalFromSelection()" id="btnOpenBulkConfigModal" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-xs rounded-xl border border-sky-500/40 transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                  <span>🎨</span>
+                  <span>Bulk Configure...</span>
+                </button>
+                <button type="button" onclick="clearAdminGallerySelection()" class="py-1.5 px-2.5 bg-slate-900 hover:bg-rose-950/80 text-slate-400 hover:text-rose-300 font-semibold text-xs rounded-xl border border-slate-700 transition active:scale-95" title="Clear selection">
+                  ✕
+                </button>
+              </div>
+            </div>
+
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[520px] overflow-y-auto pr-1 scrollbar-thin" id="adminArtworkGalleryGrid">
               <!-- Rendered dynamically -->
             </div>
@@ -2185,6 +2269,207 @@
     </div>
   </div>
 
+  <!-- BULK APPLY MEDIA MODAL (POSTER, TRAILER & METADATA) -->
+  <div id="bulkApplyMediaModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeBulkApplyModal()">
+    <div class="morphic-panel bg-slate-900/95 border border-amber-400/40 rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(251,191,36,0.3)] relative flex flex-col gap-4 text-slate-100 max-h-[90vh] overflow-hidden">
+      
+      <!-- Top Glowing Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-orange-400 to-sky-400 rounded-t-3xl"></div>
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-3 border-b border-white/10 pb-3 pt-1">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-black text-xl shrink-0 shadow">
+            ⚡
+          </div>
+          <div class="min-w-0">
+            <h3 class="text-base sm:text-lg font-black text-amber-300 truncate flex items-center gap-2">
+              <span>Bulk Apply Movie Info & Artwork</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5 truncate" id="bulkApplyModalSubtitle">Update multiple scheduled movies with identical poster, trailer, or metadata.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeBulkApplyModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition cursor-pointer" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-1 py-1">
+        
+        <!-- Artwork Input & Preview -->
+        <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="bulkOptionPoster" checked class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700 cursor-pointer">
+              <span>🖼️ Poster Image URL</span>
+            </label>
+            <span class="text-[10px] text-amber-300 font-mono font-bold" id="bulkPreviewBadge">Primary Target</span>
+          </div>
+          <div class="flex gap-2">
+            <input type="url" id="bulkModalArtworkUrl" oninput="previewBulkArtworkUrl()" placeholder="https://image.tmdb.org/t/p/w780/... or https://lh3.googleusercontent.com/..." class="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:border-amber-400 focus:outline-none font-mono">
+            <button type="button" onclick="copyCurrentEditorArtworkToBulk()" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-300 text-xs font-semibold border border-slate-700 transition" title="Use current editor poster">
+              Paste Editor URL
+            </button>
+          </div>
+          <!-- Live Preview Card -->
+          <div class="flex items-center gap-3 p-2 rounded-xl bg-slate-900/60 border border-slate-800/80">
+            <img id="bulkModalPreviewImg" src="https://image.tmdb.org/t/p/w780/tqSR6GOG2Hde0gwG3vO1Bw6TTo5.jpg" alt="Bulk Poster Preview" class="w-14 h-20 rounded-lg object-cover bg-black border border-slate-700 shrink-0" onerror="this.onerror=null; if(typeof getCinemaPlaceholder==='function') this.src=getCinemaPlaceholder('Movie');">
+            <div class="min-w-0 text-xs">
+              <div class="font-bold text-slate-200">Live Artwork Preview</div>
+              <div class="text-[10px] text-slate-400 font-mono truncate" id="bulkModalPreviewUrlCaption">No URL specified</div>
+              <div class="text-[10px] text-emerald-400 mt-1">✓ Will sync to cache, Firebase, and Google Sheets</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional: Trailer & Metadata Sync Checkboxes -->
+        <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col gap-3 text-xs">
+          <div class="font-bold text-slate-300">Additional Options (Optional)</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <label class="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+              <input type="checkbox" id="bulkOptionTrailer" class="w-4 h-4 mt-0.5 rounded text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700 cursor-pointer">
+              <div>
+                <div class="font-semibold text-slate-200">Sync Trailer</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Apply current editor trailer to all selected</div>
+              </div>
+            </label>
+            <label class="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+              <input type="checkbox" id="bulkOptionSummary" class="w-4 h-4 mt-0.5 rounded text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700 cursor-pointer">
+              <div>
+                <div class="font-semibold text-slate-200">Sync Summary & Genres</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Apply current summary, genres, and metadata</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Target Movies Checklist -->
+        <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="font-bold text-xs text-slate-300 flex items-center gap-1.5">
+              <span>🎯 Target Scheduled Movies</span>
+              <span id="bulkTargetCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">0 Selected</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="toggleAllBulkModalTitles(true)" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-teal-300 font-bold border border-teal-500/30 transition cursor-pointer">Select All</button>
+              <button type="button" onclick="toggleAllBulkModalTitles(false)" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 font-semibold border border-slate-700 transition cursor-pointer">None</button>
+            </div>
+          </div>
+          <div class="relative">
+            <input type="text" id="bulkModalSearchInput" oninput="filterBulkModalItemsList()" placeholder="Filter target titles..." class="w-full px-2.5 py-1 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:border-amber-400 focus:outline-none">
+          </div>
+          <div id="bulkModalItemsList" class="flex flex-col gap-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+            <!-- Dynamically rendered checkbox rows -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-3 text-xs">
+        <button type="button" onclick="closeBulkApplyModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition active:scale-95 cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" onclick="executeBulkApplyFromModal()" id="btnExecuteBulkApply" class="py-2.5 px-5 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-xs rounded-xl shadow-lg transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+          <span>🚀</span>
+          <span id="btnExecuteBulkApplyText">Apply to 0 Movies</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ANNUAL MARATHON SETUP MODAL (HALLOWEEN & CHRISTMAS) -->
+  <div id="annualMarathonSetupModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeAnnualMarathonSetupModal()">
+    <div class="morphic-panel bg-slate-900/95 border border-amber-400/40 rounded-3xl max-w-xl w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(251,191,36,0.3)] relative flex flex-col gap-4 text-slate-100 max-h-[90vh] overflow-hidden">
+      
+      <!-- Top Glowing Bar -->
+      <div id="annualSetupGlowingBar" class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-400 rounded-t-3xl"></div>
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-3 border-b border-white/10 pb-3 pt-1">
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="annualSetupIconBox" class="w-10 h-10 rounded-2xl bg-orange-500/20 border border-orange-500/40 flex items-center justify-center text-xl shrink-0 shadow">
+            🎃
+          </div>
+          <div class="min-w-0">
+            <h3 id="annualSetupTitle" class="text-base sm:text-lg font-black text-amber-300 truncate">
+              Annual Festival Setup Wizard
+            </h3>
+            <p id="annualSetupSubtitle" class="text-xs text-slate-400 mt-0.5 truncate">Setup and schedule upcoming annual holiday festival lineup.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAnnualMarathonSetupModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition cursor-pointer" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="flex flex-col gap-3.5 overflow-y-auto custom-scrollbar pr-1 py-1 text-xs">
+        
+        <!-- Year & Festival Type -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1">
+            <label class="font-bold text-slate-300">Target Screening Year</label>
+            <select id="annualSetupYear" onchange="updateAnnualSetupPreset()" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs font-semibold focus:border-amber-400 outline-none">
+              <option value="2026" selected>2026 Season</option>
+              <option value="2025">2025 Season</option>
+              <option value="2027">2027 Season</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-bold text-slate-300">Festival Category</label>
+            <select id="annualSetupType" onchange="updateAnnualSetupPreset()" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs font-semibold focus:border-amber-400 outline-none">
+              <option value="halloween">🎃 Halloween Horror Marathon</option>
+              <option value="christmas">🎄 Christmas Holiday Festival</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Festival Title & Collection Tag -->
+        <div class="flex flex-col gap-1">
+          <label class="font-bold text-slate-300">Marathon Collection Title</label>
+          <input type="text" id="annualSetupCollectionName" placeholder="e.g. 2026 Mystery Scary Movie Marathon" class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 font-medium outline-none focus:border-amber-400">
+        </div>
+
+        <!-- Dates & Showtimes -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1">
+            <label class="font-bold text-slate-300">Festival Date Range</label>
+            <input type="text" id="annualSetupDateRange" placeholder="e.g. Oct 19–31, 2026" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 font-mono outline-none focus:border-amber-400">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-bold text-slate-300">Screening Showtime</label>
+            <input type="text" id="annualSetupShowtime" value="7:00 PM PST" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 font-mono outline-none focus:border-amber-400">
+          </div>
+        </div>
+
+        <!-- Lineup Checklist / Text Area -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-slate-300">Film Lineup (One per line)</label>
+            <span id="annualSetupFilmCountBadge" class="text-[10px] font-mono font-bold text-amber-300">0 Films</span>
+          </div>
+          <textarea id="annualSetupFilmsText" rows="6" oninput="updateAnnualSetupFilmCount()" placeholder="Enter movies, one title per line..." class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 font-mono text-xs outline-none focus:border-amber-400 custom-scrollbar leading-relaxed"></textarea>
+          <div class="flex items-center justify-between text-[10px] text-slate-400">
+            <span>💡 Curated favorites pre-loaded automatically.</span>
+            <button type="button" onclick="loadDefaultAnnualFestivalTitles()" class="text-amber-400 hover:underline cursor-pointer">Reset to Default Curated Lineup</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-3 text-xs">
+        <button type="button" onclick="closeAnnualMarathonSetupModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition active:scale-95 cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" onclick="executeAnnualMarathonSetup()" id="btnExecuteAnnualSetup" class="py-2.5 px-5 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-xs rounded-xl shadow-lg transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+          <span>🚀</span>
+          <span>Save & Schedule Annual Festival</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- FRONT & CENTER VERSION UPDATE MODAL DIALOG (USER MUST SEE & CLICK TO ENTER) -->
   <div id="appUpdateToast" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300 pointer-events-none opacity-0" role="dialog" aria-modal="true" aria-labelledby="updateToastTitle">
     
@@ -2235,7 +2520,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.142";
+    const APP_VERSION = "4.9.143";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -2718,6 +3003,15 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.143": [
+        "Added Bulk Select mode to Upcoming Lineup Gallery.",
+        "Added Bulk Apply to Series button in Media Studio.",
+        "Implemented instant multi-title poster and trailer synchronization.",
+        "Added smart franchise detection for American Horror Story series.",
+        "Added Master Annual Festival Hubs for Halloween and Christmas.",
+        "Added Annual Holiday Marathon setup wizard in admin portal.",
+        "Ending movies early locks doors while keeping Auto mode active."
+      ],
       "4.9.142": [
         "Cleaned up Vault marathons with master placeholder hub cards.",
         "Collapsed 89 individual marathon titles into 7 clean hubs.",
@@ -4135,6 +4429,8 @@
           const msg = event.data;
           if (msg && msg.type === 'POSTER_UPDATED' && msg.title && msg.imageUrl) {
             applySinglePosterUpdate(msg.title, msg.imageUrl, false);
+          } else if (msg && msg.type === 'BULK_MEDIA_UPDATED' && Array.isArray(msg.titles) && msg.imageUrl) {
+            msg.titles.forEach(t => applySinglePosterUpdate(t, msg.imageUrl, false));
           }
         } catch(e) {}
       };
@@ -4351,6 +4647,15 @@
       }
     } catch(e) {}
 
+    let movieEarlyConclusionUntilMs = 0;
+    try {
+      const savedEarly = localStorage.getItem('brian_movie_concluded_early_until_ms');
+      if (savedEarly) {
+        movieEarlyConclusionUntilMs = parseInt(savedEarly, 10) || 0;
+      }
+    } catch(e) {}
+    window.movieEarlyConclusionUntilMs = movieEarlyConclusionUntilMs;
+
     window.setDoorOverrideModeDirect = function(mode) {
       doorOverrideMode = mode;
       window.doorOverrideMode = mode;
@@ -4381,6 +4686,11 @@
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
+      if (mode === 'force_open') {
+        movieEarlyConclusionUntilMs = 0;
+        window.movieEarlyConclusionUntilMs = 0;
+        try { localStorage.removeItem('brian_movie_concluded_early_until_ms'); } catch(e) {}
+      }
       doorOverrideMode = mode;
       window.doorOverrideMode = mode;
       try {
@@ -4407,6 +4717,48 @@
 
       // 2. Notify Google Apps Script backend
       fetch(`${API_BASE_URL}?action=admin_set_door_mode&mode=${encodeURIComponent(mode)}`, { mode: 'no-cors' }).catch(() => {});
+    }
+
+    function concludeCurrentShowEarly() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const now = Date.now();
+      const nextObj = getActiveOrNextMovie(now);
+      const isLiveBySchedule = nextObj.isLive;
+      const movieItem = nextObj.movie;
+      const activeEnd = isLiveBySchedule ? nextObj.targetMs : (nextObj.targetMs + ((movieItem?.endMs && movieItem.endMs > movieItem.startMs) ? (movieItem.endMs - movieItem.startMs) : targetMovieRuntimeMs));
+
+      // End this movie until either its scheduled end or at least 1 hour from now
+      movieEarlyConclusionUntilMs = Math.max(activeEnd, now + 3600000);
+      window.movieEarlyConclusionUntilMs = movieEarlyConclusionUntilMs;
+      try {
+        localStorage.setItem('brian_movie_concluded_early_until_ms', movieEarlyConclusionUntilMs);
+      } catch(e) {}
+
+      // Keep doorOverrideMode in 'auto' so it automatically opens for the next event!
+      doorOverrideMode = 'auto';
+      window.doorOverrideMode = 'auto';
+      try {
+        localStorage.setItem('brian_theater_door_mode', 'auto');
+      } catch(e) {}
+
+      updateDoorAdminButtons();
+      updateCountdown();
+
+      // Sync door mode to Firebase RTDB
+      try {
+        fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/doorMode.json', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify('auto')
+        }).catch(() => {});
+      } catch(e) {}
+
+      showTheaterToast("⏹️ Movie ended early! Doors closed; Auto mode will reopen for the next show.");
     }
 
     function setEntranceState(isOpen) {
@@ -4611,13 +4963,30 @@
 
       const headingEl = document.getElementById('nowPlayingHeading');
       const isExplicitLive = headingEl && headingEl.getAttribute('data-live') === 'true';
-      const isLiveScreening = isLiveBySchedule || (now >= activeStart && now < activeEnd) || isExplicitLive;
+
+      // Check if movie was concluded early by Admin
+      if (movieEarlyConclusionUntilMs && now >= movieEarlyConclusionUntilMs) {
+        movieEarlyConclusionUntilMs = 0;
+        window.movieEarlyConclusionUntilMs = 0;
+        try { localStorage.removeItem('brian_movie_concluded_early_until_ms'); } catch(e) {}
+      }
+      const isConcludedEarly = (movieEarlyConclusionUntilMs && now < movieEarlyConclusionUntilMs);
+
+      const isLiveScreening = !isConcludedEarly && (isLiveBySchedule || (now >= activeStart && now < activeEnd) || isExplicitLive);
 
       // 10-Minute Pre-Show Seating Window (600,000 ms before start)
       const diffToStart = Math.max(0, targetNextMs - now);
       const doorsOpenMs = targetNextMs - 600000;
       const diffDoors = Math.max(0, doorsOpenMs - now);
       const isWithin10Mins = (diffDoors <= 0 && diffToStart > 0);
+
+      // Failsafe auto-reset: if manual force_closed was active, automatically reset to 'auto' when next show arrives
+      if (doorOverrideMode === 'force_closed' && isWithin10Mins) {
+        doorOverrideMode = 'auto';
+        window.doorOverrideMode = 'auto';
+        try { localStorage.setItem('brian_theater_door_mode', 'auto'); } catch(e) {}
+        updateDoorAdminButtons();
+      }
 
       // Determine State Mode: 1 = Doors Closed (>10m), 2 = Doors Open (10m-0m), 3 = Live Screening (0m through runtime)
       let stateMode = 1;
@@ -5747,6 +6116,9 @@
         : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
 
       schedSource.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
+      if (typeof sampleSchedule !== 'undefined' && Array.isArray(sampleSchedule)) {
+        sampleSchedule.forEach(s => { if (s && s.title) titleSet.add(s.title.replace(/^🎬\s*/, '').trim()); });
+      }
       if (Array.isArray(vaultMovies)) {
         vaultMovies.forEach(v => { if (v && v.title) titleSet.add(v.title.replace(/^🎬\s*/, '').trim()); });
       }
@@ -5789,6 +6161,174 @@
       onAdminSelectMediaMovie();
     }
 
+    // ==========================================
+    // 🎨 Admin Upcoming Lineup Gallery Bulk Apply System
+    // ==========================================
+    let adminGalleryBulkSelectMode = false;
+    window.adminGalleryBulkSelectMode = false;
+    const adminGallerySelectedTitles = new Set();
+    window.adminGallerySelectedTitles = adminGallerySelectedTitles;
+    const bulkModalSelectedTitles = new Set();
+    window.bulkModalSelectedTitles = bulkModalSelectedTitles;
+
+    function toggleAdminGalleryBulkSelect() {
+      adminGalleryBulkSelectMode = !adminGalleryBulkSelectMode;
+      window.adminGalleryBulkSelectMode = adminGalleryBulkSelectMode;
+      const toggleBtn = document.getElementById('btnAdminGalleryBulkSelectToggle');
+      const toggleIcon = document.getElementById('adminGalleryBulkToggleIcon');
+      const toggleLabel = document.getElementById('adminGalleryBulkToggleLabel');
+      const quickActions = document.getElementById('adminGalleryBulkQuickActions');
+
+      if (toggleBtn) {
+        if (adminGalleryBulkSelectMode) {
+          toggleBtn.className = "px-2.5 py-1 rounded-lg text-xs font-black border transition flex items-center gap-1.5 bg-amber-400 text-slate-950 border-amber-300 shadow-md active:scale-95 cursor-pointer";
+          if (toggleIcon) toggleIcon.textContent = "✅";
+          if (toggleLabel) toggleLabel.textContent = "Bulk Select ON";
+        } else {
+          toggleBtn.className = "px-2.5 py-1 rounded-lg text-xs font-bold border transition flex items-center gap-1.5 bg-slate-900 border-slate-700 text-slate-300 hover:border-amber-400 hover:text-amber-300 cursor-pointer shadow-sm active:scale-95";
+          if (toggleIcon) toggleIcon.textContent = "☑️";
+          if (toggleLabel) toggleLabel.textContent = "Bulk Select";
+        }
+      }
+
+      if (quickActions) {
+        if (adminGalleryBulkSelectMode) {
+          quickActions.classList.remove('hidden');
+          quickActions.classList.add('flex');
+        } else {
+          quickActions.classList.add('hidden');
+          quickActions.classList.remove('flex');
+        }
+      }
+
+      updateAdminGalleryBulkActionBar();
+      renderAdminArtworkGallery();
+    }
+
+    function toggleAdminGalleryItemSelection(title, event) {
+      if (event) {
+        event.stopPropagation();
+      }
+      const clean = String(title || '').replace(/^🎬\s*/, '').trim();
+      if (!clean) return;
+
+      if (adminGallerySelectedTitles.has(clean)) {
+        adminGallerySelectedTitles.delete(clean);
+      } else {
+        adminGallerySelectedTitles.add(clean);
+      }
+
+      updateAdminGalleryBulkActionBar();
+      renderAdminArtworkGallery();
+    }
+
+    function selectAllFilteredAdminGalleryTitles() {
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      const searchInput = document.getElementById('adminGallerySearchInput');
+      const query = (searchInput?.value || '').toLowerCase().trim();
+
+      const filtered = query
+        ? schedSource.filter(s => s && s.title && s.title.toLowerCase().includes(query))
+        : schedSource;
+
+      filtered.forEach(s => {
+        if (s && s.title) {
+          const clean = s.title.replace(/^🎬\s*/, '').trim();
+          adminGallerySelectedTitles.add(clean);
+        }
+      });
+
+      if (!adminGalleryBulkSelectMode) {
+        adminGalleryBulkSelectMode = true;
+        const toggleBtn = document.getElementById('btnAdminGalleryBulkSelectToggle');
+        const toggleIcon = document.getElementById('adminGalleryBulkToggleIcon');
+        const toggleLabel = document.getElementById('adminGalleryBulkToggleLabel');
+        const quickActions = document.getElementById('adminGalleryBulkQuickActions');
+        if (toggleBtn) toggleBtn.className = "px-2.5 py-1 rounded-lg text-xs font-black border transition flex items-center gap-1.5 bg-amber-400 text-slate-950 border-amber-300 shadow-md active:scale-95 cursor-pointer";
+        if (toggleIcon) toggleIcon.textContent = "✅";
+        if (toggleLabel) toggleLabel.textContent = "Bulk Select ON";
+        if (quickActions) { quickActions.classList.remove('hidden'); quickActions.classList.add('flex'); }
+      }
+
+      updateAdminGalleryBulkActionBar();
+      renderAdminArtworkGallery();
+      showTheaterToast(`🎯 Selected ${filtered.length} filtered titles in gallery.`);
+    }
+
+    function selectFranchiseInAdminGallery(prefix = 'ahs') {
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      let count = 0;
+      schedSource.forEach(s => {
+        if (!s || !s.title) return;
+        const clean = s.title.replace(/^🎬\s*/, '').trim();
+        const norm = clean.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (prefix === 'ahs') {
+          if (norm.startsWith('ahs') || norm.startsWith('americanhorrorstory')) {
+            adminGallerySelectedTitles.add(clean);
+            count++;
+          }
+        } else {
+          if (norm.startsWith(prefix.toLowerCase().replace(/[^a-z0-9]/g, ''))) {
+            adminGallerySelectedTitles.add(clean);
+            count++;
+          }
+        }
+      });
+
+      if (!adminGalleryBulkSelectMode) {
+        adminGalleryBulkSelectMode = true;
+        const toggleBtn = document.getElementById('btnAdminGalleryBulkSelectToggle');
+        const toggleIcon = document.getElementById('adminGalleryBulkToggleIcon');
+        const toggleLabel = document.getElementById('adminGalleryBulkToggleLabel');
+        const quickActions = document.getElementById('adminGalleryBulkQuickActions');
+        if (toggleBtn) toggleBtn.className = "px-2.5 py-1 rounded-lg text-xs font-black border transition flex items-center gap-1.5 bg-amber-400 text-slate-950 border-amber-300 shadow-md active:scale-95 cursor-pointer";
+        if (toggleIcon) toggleIcon.textContent = "✅";
+        if (toggleLabel) toggleLabel.textContent = "Bulk Select ON";
+        if (quickActions) { quickActions.classList.remove('hidden'); quickActions.classList.add('flex'); }
+      }
+
+      updateAdminGalleryBulkActionBar();
+      renderAdminArtworkGallery();
+      showTheaterToast(`⚡ Selected ${count} matching series titles.`);
+    }
+
+    function clearAdminGallerySelection() {
+      adminGallerySelectedTitles.clear();
+      updateAdminGalleryBulkActionBar();
+      renderAdminArtworkGallery();
+    }
+
+    function updateAdminGalleryBulkActionBar() {
+      const bar = document.getElementById('adminGalleryBulkActionBar');
+      const countText = document.getElementById('adminGalleryBulkSelectedCountText');
+      const namesText = document.getElementById('adminGalleryBulkSelectedNames');
+      const applyBtn = document.getElementById('btnApplyEditorPosterToBulk');
+      if (!bar) return;
+
+      const count = adminGallerySelectedTitles.size;
+      if (adminGalleryBulkSelectMode && count > 0) {
+        bar.classList.remove('hidden');
+        bar.classList.add('flex');
+        if (countText) countText.textContent = `${count} Title${count === 1 ? '' : 's'} Selected`;
+        if (namesText) {
+          const arr = Array.from(adminGallerySelectedTitles);
+          namesText.textContent = arr.slice(0, 4).join(', ') + (arr.length > 4 ? ` +${arr.length - 4} more` : '');
+        }
+        if (applyBtn) {
+          applyBtn.innerHTML = `<span>⚡</span> <span>Apply Editor Poster to Selected (${count})</span>`;
+        }
+      } else {
+        bar.classList.add('hidden');
+        bar.classList.remove('flex');
+      }
+    }
+
     function renderAdminArtworkGallery(items) {
       const gallery = document.getElementById('adminArtworkGalleryGrid');
       const countBadge = document.getElementById('adminGalleryCountBadge');
@@ -5820,22 +6360,42 @@
 
       gallery.innerHTML = filtered.map(s => {
         const title = s.title || "Untitled";
+        const cleanTitle = title.replace(/^🎬\s*/, '').trim();
         const artUrl = getMovieArtworkUrl(title);
         const dateStr = s.date || '';
         const isPostponed = s.status === 'POSTPONED' || s.rescheduled;
-        const statusClass = isPostponed ? 'text-amber-400 font-bold' : 'text-slate-400';
+        const isSelected = adminGallerySelectedTitles.has(cleanTitle);
+
+        const cardBorderClass = isSelected
+          ? 'border-amber-400 ring-2 ring-amber-400 bg-amber-950/40 shadow-[0_0_20px_rgba(251,191,36,0.35)]'
+          : (isPostponed ? 'border-amber-500/40 bg-slate-900' : 'border-slate-800 bg-slate-900 hover:border-amber-400/80');
+
+        const clickHandler = adminGalleryBulkSelectMode
+          ? `toggleAdminGalleryItemSelection('${escapeHtml(cleanTitle)}', event)`
+          : `selectMovieFromMediaStudio('${escapeHtml(cleanTitle)}', 'artwork')`;
 
         return `
-          <div onclick="selectMovieFromMediaStudio('${escapeHtml(title)}', 'artwork')" class="cursor-pointer group/art p-2 rounded-xl bg-slate-900 border ${isPostponed ? 'border-amber-500/40' : 'border-slate-800'} hover:border-amber-400 transition flex flex-col gap-1.5 shadow-md">
-            <div class="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-black border border-slate-800">
+          <div onclick="${clickHandler}" class="cursor-pointer group/art p-2 rounded-xl border ${cardBorderClass} transition flex flex-col gap-1.5 shadow-md relative select-none">
+            ${adminGalleryBulkSelectMode ? `
+              <div class="absolute top-3 left-3 z-20 flex items-center justify-center">
+                <input type="checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); toggleAdminGalleryItemSelection('${escapeHtml(cleanTitle)}', event);" class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-slate-950 border-2 border-amber-400 cursor-pointer shadow-md">
+              </div>
+            ` : ''}
+            <div class="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-black border ${isSelected ? 'border-amber-400/60' : 'border-slate-800'}">
               <img src="${escapeHtml(artUrl)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover group-hover/art:scale-105 transition duration-200" loading="lazy" onerror="this.src=getCinemaPlaceholder(this.alt);">
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-              <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-slate-950/90 text-[9px] font-mono ${isPostponed ? 'text-amber-400 font-bold border border-amber-500/40' : 'text-sky-300'}">
-                ${escapeHtml(s.status || 'SCHEDULED')}
-              </div>
+              ${isSelected ? `
+                <div class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 text-[9px] font-black shadow flex items-center gap-0.5">
+                  <span>✓</span> <span>SELECTED</span>
+                </div>
+              ` : `
+                <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-slate-950/90 text-[9px] font-mono ${isPostponed ? 'text-amber-400 font-bold border border-amber-500/40' : 'text-sky-300'}">
+                  ${escapeHtml(s.status || 'SCHEDULED')}
+                </div>
+              `}
             </div>
             <div class="min-w-0">
-              <div class="text-[11px] font-bold text-slate-200 truncate group-hover/art:text-amber-300" title="${escapeHtml(title)}">${escapeHtml(title)}</div>
+              <div class="text-[11px] font-bold ${isSelected ? 'text-amber-300' : 'text-slate-200'} truncate group-hover/art:text-amber-300" title="${escapeHtml(title)}">${escapeHtml(title)}</div>
               ${dateStr ? `<div class="text-[9px] text-slate-400 truncate font-mono mt-0.5">${escapeHtml(dateStr)}</div>` : ''}
             </div>
           </div>
@@ -5847,15 +6407,450 @@
       renderAdminArtworkGallery();
     }
 
+    function applyCurrentEditorPosterToSelected() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required for bulk apply.");
+        return;
+      }
+      if (adminGallerySelectedTitles.size === 0) {
+        showTheaterToast("⚠️ Please select at least one movie first.");
+        return;
+      }
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const url = urlInput?.value.trim();
+      if (!url) {
+        showTheaterToast("⚠️ Please provide an image URL in the editor first.");
+        return;
+      }
+
+      const titles = Array.from(adminGallerySelectedTitles);
+      executeBulkMediaUpdate(titles, {
+        syncPoster: true,
+        imageUrl: url
+      });
+    }
+
+    function findRelatedSeriesTitles(targetTitle, scheduleSource) {
+      if (!targetTitle) return [];
+      const clean = String(targetTitle).replace(/^🎬\s*/, '').trim();
+      const lower = clean.toLowerCase();
+      const norm = lower.replace(/[^a-z0-9]/g, '');
+
+      const matchedTitles = new Set();
+      matchedTitles.add(clean);
+
+      // Collect candidates across active schedule, sample schedule, vault, requests, and trailers
+      const candidates = new Set();
+
+      const sched = (scheduleSource && Array.isArray(scheduleSource))
+        ? scheduleSource
+        : ((window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+            ? window.theaterScheduleCache
+            : []);
+
+      sched.forEach(s => { if (s && s.title) candidates.add(s.title); });
+      if (typeof sampleSchedule !== 'undefined' && Array.isArray(sampleSchedule)) {
+        sampleSchedule.forEach(s => { if (s && s.title) candidates.add(s.title); });
+      }
+      if (typeof vaultMovies !== 'undefined' && Array.isArray(vaultMovies)) {
+        vaultMovies.forEach(m => { if (m && m.title) candidates.add(m.title); });
+      }
+      if (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests)) {
+        communityRequests.forEach(r => { if (r && r.title) candidates.add(r.title); });
+      }
+      if (typeof SCHEDULE_TRAILERS !== 'undefined' && typeof SCHEDULE_TRAILERS === 'object') {
+        Object.keys(SCHEDULE_TRAILERS).forEach(t => candidates.add(t));
+      }
+      if (typeof customMovieImages !== 'undefined' && typeof customMovieImages === 'object') {
+        Object.keys(customMovieImages).forEach(t => candidates.add(t));
+      }
+
+      const isAhs = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
+
+      let seriesPrefix = '';
+      if (clean.includes(':')) {
+        seriesPrefix = clean.split(':')[0].trim().toLowerCase();
+      } else if (clean.includes('-')) {
+        seriesPrefix = clean.split('-')[0].trim().toLowerCase();
+      }
+
+      const strippedNumber = clean.replace(/(\s+\d+|\s+ii+|\s+iv|\s+v|\s+vi+|\s+part.*|\s+chapter.*).*$/i, '').trim().toLowerCase();
+
+      candidates.forEach(cand => {
+        if (!cand) return;
+        const sClean = cand.replace(/^🎬\s*/, '').trim();
+        const sLower = sClean.toLowerCase();
+        const sNorm = sLower.replace(/[^a-z0-9]/g, '');
+        const sStripped = sLower.replace(/(\s+\d+|\s+ii+|\s+iv|\s+v|\s+vi+|\s+part.*|\s+chapter.*).*$/i, '').trim();
+
+        if (sClean === clean) {
+          matchedTitles.add(sClean);
+          return;
+        }
+
+        if (isAhs && (sNorm.startsWith('ahs') || sNorm.startsWith('americanhorrorstory'))) {
+          matchedTitles.add(sClean);
+          return;
+        }
+
+        if (seriesPrefix && seriesPrefix.length >= 3 && (sLower.startsWith(seriesPrefix) || sLower.includes(seriesPrefix))) {
+          matchedTitles.add(sClean);
+          return;
+        }
+
+        if (strippedNumber && strippedNumber.length >= 3) {
+          if (sLower.startsWith(strippedNumber) || sStripped === strippedNumber || sLower.includes(strippedNumber)) {
+            matchedTitles.add(sClean);
+            return;
+          }
+        }
+      });
+
+      return Array.from(matchedTitles);
+    }
+
+    function openBulkApplyToSeriesModal() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const select = document.getElementById('adminMediaMovieSelect');
+      const searchInput = document.getElementById('adminMediaSearchTitleInput');
+      const currentTitle = (select?.value.trim()) || (select?.options?.[select.selectedIndex]?.value?.trim()) || (searchInput?.value.trim()) || "";
+      const currentUrl = document.getElementById('adminArtworkUrlInput')?.value.trim() || "";
+
+      let related = [];
+      if (currentTitle) {
+        related = findRelatedSeriesTitles(currentTitle);
+      }
+
+      if (adminGallerySelectedTitles.size > 0) {
+        adminGallerySelectedTitles.forEach(t => {
+          if (!related.includes(t)) related.push(t);
+        });
+      }
+
+      populateBulkApplyModal(related, currentUrl, currentTitle);
+    }
+
+    function openBulkApplyModalFromSelection() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const currentUrl = document.getElementById('adminArtworkUrlInput')?.value.trim() || "";
+      const select = document.getElementById('adminMediaMovieSelect');
+      const currentTitle = select?.value.trim() || "";
+      const titles = Array.from(adminGallerySelectedTitles);
+      populateBulkApplyModal(titles, currentUrl, currentTitle);
+    }
+
+    function populateBulkApplyModal(initialTitles = [], initialImageUrl = '', currentTitle = '') {
+      const modal = document.getElementById('bulkApplyMediaModal');
+      const urlInput = document.getElementById('bulkModalArtworkUrl');
+      const subtitle = document.getElementById('bulkApplyModalSubtitle');
+      if (!modal) return;
+
+      bulkModalSelectedTitles.clear();
+      (initialTitles || []).forEach(t => bulkModalSelectedTitles.add(t));
+
+      if (urlInput) {
+        urlInput.value = initialImageUrl || (currentTitle ? getMovieArtworkUrl(currentTitle) : '');
+      }
+
+      if (subtitle) {
+        subtitle.textContent = currentTitle
+          ? `Series & related titles matching "${currentTitle}"`
+          : `Bulk apply artwork and metadata to scheduled lineup`;
+      }
+
+      previewBulkArtworkUrl();
+      renderBulkModalItemsList();
+      updateBulkModalSelectedCount();
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeBulkApplyModal() {
+      const modal = document.getElementById('bulkApplyMediaModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function previewBulkArtworkUrl() {
+      const urlInput = document.getElementById('bulkModalArtworkUrl');
+      const img = document.getElementById('bulkModalPreviewImg');
+      const caption = document.getElementById('bulkModalPreviewUrlCaption');
+      const url = urlInput?.value.trim() || '';
+
+      if (img) {
+        img.src = url || getCinemaPlaceholder('Movie');
+      }
+      if (caption) {
+        caption.textContent = url || 'No URL specified';
+      }
+    }
+
+    function copyCurrentEditorArtworkToBulk() {
+      const editorUrl = document.getElementById('adminArtworkUrlInput')?.value.trim();
+      const urlInput = document.getElementById('bulkModalArtworkUrl');
+      if (editorUrl && urlInput) {
+        urlInput.value = editorUrl;
+        previewBulkArtworkUrl();
+        showTheaterToast("📋 Pasted artwork URL from editor.");
+      } else {
+        showTheaterToast("⚠️ No artwork URL found in editor.");
+      }
+    }
+
+    function renderBulkModalItemsList() {
+      const container = document.getElementById('bulkModalItemsList');
+      if (!container) return;
+
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      const searchInput = document.getElementById('bulkModalSearchInput');
+      const query = (searchInput?.value || '').toLowerCase().trim();
+
+      const scheduledSet = new Set(schedSource.map(s => s && s.title ? s.title.replace(/^🎬\s*/, '').trim() : '').filter(Boolean));
+      const titleSet = new Set();
+
+      // 1. All currently selected titles in bulk modal
+      bulkModalSelectedTitles.forEach(t => {
+        if (t) titleSet.add(String(t).replace(/^🎬\s*/, '').trim());
+      });
+
+      // 2. All scheduled titles
+      scheduledSet.forEach(t => titleSet.add(t));
+
+      const allScheduledTitles = Array.from(titleSet);
+      const filteredTitles = allScheduledTitles.filter(t => !query || t.toLowerCase().includes(query));
+
+      if (filteredTitles.length === 0) {
+        container.innerHTML = `<div class="py-4 text-center text-slate-500 text-xs">No matching titles found</div>`;
+        return;
+      }
+
+      container.innerHTML = filteredTitles.map(t => {
+        const isChecked = bulkModalSelectedTitles.has(t);
+        const art = getMovieArtworkUrl(t);
+        const isScheduled = scheduledSet.has(t);
+        const badgeLabel = isScheduled ? 'Scheduled' : 'Library';
+        return `
+          <label class="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border ${isChecked ? 'border-amber-500/60 bg-amber-950/20' : 'border-slate-800'} hover:border-slate-700 cursor-pointer transition select-none">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleBulkModalTitleCheckbox('${escapeHtml(t)}', this.checked)" class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-slate-950 border-slate-700 cursor-pointer shrink-0">
+              <img src="${escapeHtml(art)}" class="w-7 h-9 rounded object-cover bg-black border border-slate-800 shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+              <span class="text-xs font-semibold ${isChecked ? 'text-amber-300 font-bold' : 'text-slate-200'} truncate" title="${escapeHtml(t)}">${escapeHtml(t)}</span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-mono shrink-0 pl-2">${badgeLabel}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleBulkModalTitleCheckbox(title, isChecked) {
+      if (isChecked) {
+        bulkModalSelectedTitles.add(title);
+      } else {
+        bulkModalSelectedTitles.delete(title);
+      }
+      updateBulkModalSelectedCount();
+    }
+
+    function toggleAllBulkModalTitles(selectAll) {
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      const searchInput = document.getElementById('bulkModalSearchInput');
+      const query = (searchInput?.value || '').toLowerCase().trim();
+
+      const titleSet = new Set();
+      bulkModalSelectedTitles.forEach(t => { if (t) titleSet.add(String(t).replace(/^🎬\s*/, '').trim()); });
+      schedSource.forEach(s => { if (s && s.title) titleSet.add(String(s.title).replace(/^🎬\s*/, '').trim()); });
+
+      const targetTitles = Array.from(titleSet).filter(t => !query || t.toLowerCase().includes(query));
+
+      targetTitles.forEach(t => {
+        if (selectAll) {
+          bulkModalSelectedTitles.add(t);
+        } else {
+          bulkModalSelectedTitles.delete(t);
+        }
+      });
+
+      renderBulkModalItemsList();
+      updateBulkModalSelectedCount();
+    }
+
+    function filterBulkModalItemsList() {
+      renderBulkModalItemsList();
+    }
+
+    function updateBulkModalSelectedCount() {
+      const count = bulkModalSelectedTitles.size;
+      const countBadge = document.getElementById('bulkTargetCountBadge');
+      const executeBtnText = document.getElementById('btnExecuteBulkApplyText');
+
+      if (countBadge) countBadge.textContent = `${count} Selected`;
+      if (executeBtnText) executeBtnText.textContent = `Apply to ${count} Movie${count === 1 ? '' : 's'}`;
+    }
+
+    function executeBulkApplyFromModal() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const syncPoster = document.getElementById('bulkOptionPoster')?.checked ?? true;
+      const syncTrailer = document.getElementById('bulkOptionTrailer')?.checked ?? false;
+      const syncSummary = document.getElementById('bulkOptionSummary')?.checked ?? false;
+
+      const imageUrl = document.getElementById('bulkModalArtworkUrl')?.value.trim();
+      const trailerUrl = document.getElementById('adminTrailerCustomUrlInput')?.value.trim() || '';
+      const summary = document.getElementById('adminMediaSummaryInput')?.value.trim() || '';
+      const year = document.getElementById('adminMediaYearInput')?.value.trim() || '';
+      const runtime = document.getElementById('adminMediaRuntimeInput')?.value.trim() || '';
+      const genres = document.getElementById('adminMediaGenreInput')?.value.trim() || '';
+
+      if (syncPoster && !imageUrl) {
+        showTheaterToast("⚠️ Please specify a valid poster image URL.");
+        return;
+      }
+
+      if (bulkModalSelectedTitles.size === 0) {
+        showTheaterToast("⚠️ Please select at least one movie to update.");
+        return;
+      }
+
+      const titles = Array.from(bulkModalSelectedTitles);
+      closeBulkApplyModal();
+
+      executeBulkMediaUpdate(titles, {
+        syncPoster,
+        imageUrl,
+        syncTrailer,
+        trailerUrl,
+        syncSummary,
+        metadata: { summary, year, runtime, genres }
+      });
+    }
+
+    function executeBulkMediaUpdate(titles, options = {}) {
+      if (!titles || !Array.isArray(titles) || titles.length === 0) return;
+
+      const { syncPoster = true, imageUrl = '', syncTrailer = false, trailerUrl = '', syncSummary = false, metadata = null } = options;
+
+      let postersUpdated = 0;
+      let trailersUpdated = 0;
+      let summariesUpdated = 0;
+
+      titles.forEach(title => {
+        const cleanTitle = String(title).replace(/^🎬\s*/, '').trim();
+        if (!cleanTitle) return;
+
+        // 1. Poster Update
+        if (syncPoster && imageUrl) {
+          applySinglePosterUpdate(cleanTitle, imageUrl, true);
+
+          // Firebase RTDB PUT
+          try {
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(cleanTitle)}.json`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(imageUrl)
+            }).catch(() => {});
+          } catch(e) {}
+
+          // Google Sheets Webhook
+          fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(cleanTitle)}&imageUrl=${encodeURIComponent(imageUrl)}`, { mode: 'no-cors' }).catch(() => {});
+          postersUpdated++;
+        }
+
+        // 2. Trailer Update
+        if (syncTrailer && trailerUrl) {
+          const ytid = extractYouTubeId(trailerUrl) || (/^[\w-]{11}$/.test(trailerUrl) ? trailerUrl : null);
+          const fullTrailerUrl = ytid ? `https://www.youtube.com/watch?v=${ytid}` : trailerUrl;
+          customMovieTrailers[cleanTitle] = fullTrailerUrl;
+          fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(cleanTitle)}&trailerUrl=${encodeURIComponent(fullTrailerUrl)}`, { mode: 'no-cors' }).catch(() => {});
+          trailersUpdated++;
+        }
+
+        // 3. Summary & Metadata Update
+        if (syncSummary && metadata) {
+          customMovieSummaries[cleanTitle] = metadata.summary || '';
+          customMovieMetadata[cleanTitle] = metadata;
+          fetch(`${API_BASE_URL}?action=set_movie_summary&title=${encodeURIComponent(cleanTitle)}&summary=${encodeURIComponent(metadata.summary || '')}&year=${encodeURIComponent(metadata.year || '')}&runtime=${encodeURIComponent(metadata.runtime || '')}&genres=${encodeURIComponent(metadata.genres || '')}`, { mode: 'no-cors' }).catch(() => {});
+          summariesUpdated++;
+        }
+      });
+
+      // LocalStorage persisting
+      if (syncPoster) {
+        try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+      }
+      if (syncTrailer) {
+        try { localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers)); } catch(e) {}
+      }
+      if (syncSummary) {
+        try {
+          localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries));
+          localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata));
+        } catch(e) {}
+      }
+
+      // Re-render UI & Gallery
+      renderSchedule();
+      renderVault();
+      renderAdminArtworkGallery();
+      populateAdminMediaStudio(true);
+
+      // Clear Gallery selection after successful application
+      adminGallerySelectedTitles.clear();
+      updateAdminGalleryBulkActionBar();
+
+      // Broadcast update across tabs
+      if (typeof theaterBroadcastChannel !== 'undefined' && theaterBroadcastChannel) {
+        try {
+          theaterBroadcastChannel.postMessage({
+            type: 'BULK_MEDIA_UPDATED',
+            titles,
+            imageUrl: syncPoster ? imageUrl : null
+          });
+        } catch(e) {}
+      }
+
+      showTheaterToast(`🎉 Bulk updated ${titles.length} movies successfully!`);
+    }
+
     function selectMovieFromMediaStudio(title, subtab = 'artwork') {
       const select = document.getElementById('adminMediaMovieSelect');
       if (select && title) {
         const clean = title.replace(/^🎬\s*/, '').trim();
+        let found = false;
         for (let i = 0; i < select.options.length; i++) {
           if (select.options[i].value.toLowerCase() === clean.toLowerCase()) {
             select.selectedIndex = i;
+            found = true;
             break;
           }
+        }
+        if (!found) {
+          const opt = document.createElement('option');
+          opt.value = clean;
+          opt.textContent = clean;
+          select.appendChild(opt);
+          select.value = clean;
         }
         if (subtab) switchMediaSubTab(subtab);
         onAdminSelectMediaMovie();
@@ -7583,6 +8578,7 @@
     }
 
     function toggleVaultHolidayFilter(holiday) {
+      vaultShowAllHolidayIndividual = false;
       if (activeVaultHolidayFilter === holiday) {
         activeVaultHolidayFilter = null;
       } else {
@@ -7886,8 +8882,11 @@
     }
 
     function toggleMarathonHubLineup(cardKey) {
-      const drawer = document.getElementById(`drawerLineup-${cardKey}`);
-      const arrow = document.getElementById(`arrowLineup-${cardKey}`);
+      let drawer = document.getElementById(`drawerLineup-${cardKey}`);
+      if (!drawer) {
+        drawer = document.querySelector(`[id^="drawerLineup-"][id*="${cardKey}"]`);
+      }
+      const arrow = document.getElementById(`arrowLineup-${cardKey}`) || document.querySelector(`[id^="arrowLineup-"][id*="${cardKey}"]`);
       if (!drawer) return;
       const isHidden = drawer.classList.contains('hidden');
       if (isHidden) {
@@ -7902,8 +8901,15 @@
     }
 
     function backToAllMarathons() {
+      const priorCol = activeVaultCollectionFilter || '';
       activeVaultCollectionFilter = null;
-      activeVaultHolidayFilter = 'marathon';
+      if (/scary|halloween/i.test(priorCol) || activeVaultHolidayFilter === 'halloween') {
+        activeVaultHolidayFilter = 'halloween';
+      } else if (/christmas|holiday/i.test(priorCol) || activeVaultHolidayFilter === 'christmas') {
+        activeVaultHolidayFilter = 'christmas';
+      } else {
+        activeVaultHolidayFilter = 'marathon';
+      }
       activeVaultYearFilter = 'all';
       const yearOptions = ['all', '2026', '2025', '2024', 'older'];
       yearOptions.forEach(y => {
@@ -7923,12 +8929,166 @@
       if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    let vaultShowAllHolidayIndividual = false;
+    function toggleShowAllIndividualHolidayFilms(showIndividual) {
+      vaultShowAllHolidayIndividual = showIndividual;
+      renderVault();
+      const grid = document.getElementById('vaultGrid');
+      if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    const ANNUAL_DEFAULT_FILMS = {
+      halloween: [
+        "A Nightmare on Elm Street (1984)",
+        "A Nightmare on Elm Street 2: Freddy's Revenge",
+        "A Nightmare on Elm Street 3: Dream Warriors",
+        "A Nightmare on Elm Street 4: The Dream Master",
+        "Freddy's Dead: The Final Nightmare",
+        "Wes Craven's New Nightmare",
+        "Freddy vs. Jason",
+        "Clown in a Cornfield",
+        "IT Chapter Two",
+        "Ghostbusters: Afterlife",
+        "Ghostbusters: Frozen Empire"
+      ],
+      christmas: [
+        "Home Alone",
+        "Home Alone 2: Lost in New York",
+        "The Polar Express",
+        "Elf",
+        "National Lampoon's Christmas Vacation",
+        "The Santa Clause",
+        "How the Grinch Stole Christmas",
+        "Miracle on 34th Street",
+        "Holiday Ever After",
+        "Christmas on Candy Cane Lane"
+      ]
+    };
+
+    function openAnnualMarathonSetupModal(type = 'halloween') {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const modal = document.getElementById('annualMarathonSetupModal');
+      const typeSelect = document.getElementById('annualSetupType');
+      if (typeSelect) typeSelect.value = type;
+      updateAnnualSetupPreset();
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeAnnualMarathonSetupModal() {
+      const modal = document.getElementById('annualMarathonSetupModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function updateAnnualSetupPreset() {
+      const year = document.getElementById('annualSetupYear')?.value || '2026';
+      const type = document.getElementById('annualSetupType')?.value || 'halloween';
+      const nameInput = document.getElementById('annualSetupCollectionName');
+      const datesInput = document.getElementById('annualSetupDateRange');
+      const iconBox = document.getElementById('annualSetupIconBox');
+      const titleEl = document.getElementById('annualSetupTitle');
+
+      if (type === 'halloween') {
+        if (nameInput) nameInput.value = `${year} Mystery Scary Movie Marathon`;
+        if (datesInput) datesInput.value = `Oct 19–31, ${year}`;
+        if (iconBox) { iconBox.textContent = '🎃'; iconBox.className = 'w-10 h-10 rounded-2xl bg-orange-500/20 border border-orange-500/40 flex items-center justify-center text-xl shrink-0 shadow'; }
+        if (titleEl) titleEl.textContent = `${year} Halloween Marathon Setup Wizard`;
+      } else {
+        if (nameInput) nameInput.value = `${year} Christmas & Holiday Festival`;
+        if (datesInput) datesInput.value = `Dec 1–25, ${year}`;
+        if (iconBox) { iconBox.textContent = '🎄'; iconBox.className = 'w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl shrink-0 shadow'; }
+        if (titleEl) titleEl.textContent = `${year} Christmas Festival Setup Wizard`;
+      }
+
+      loadDefaultAnnualFestivalTitles();
+    }
+
+    function loadDefaultAnnualFestivalTitles() {
+      const type = document.getElementById('annualSetupType')?.value || 'halloween';
+      const textarea = document.getElementById('annualSetupFilmsText');
+      const defaults = ANNUAL_DEFAULT_FILMS[type] || [];
+      if (textarea) {
+        textarea.value = defaults.join('\n');
+      }
+      updateAnnualSetupFilmCount();
+    }
+
+    function updateAnnualSetupFilmCount() {
+      const textarea = document.getElementById('annualSetupFilmsText');
+      const badge = document.getElementById('annualSetupFilmCountBadge');
+      if (!textarea || !badge) return;
+      const lines = textarea.value.split('\n').map(l => l.trim()).filter(Boolean);
+      badge.textContent = `${lines.length} Films`;
+    }
+
+    function executeAnnualMarathonSetup() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const year = document.getElementById('annualSetupYear')?.value || '2026';
+      const type = document.getElementById('annualSetupType')?.value || 'halloween';
+      const collectionName = document.getElementById('annualSetupCollectionName')?.value.trim() || `${year} Annual Festival`;
+      const dates = document.getElementById('annualSetupDateRange')?.value.trim() || `${year} Season`;
+      const textarea = document.getElementById('annualSetupFilmsText');
+      const films = (textarea?.value || '').split('\n').map(l => l.trim()).filter(Boolean);
+
+      if (films.length === 0) {
+        showTheaterToast("⚠️ Please specify at least one film for the festival lineup.");
+        return;
+      }
+
+      const hubId = `${type}-${year}`;
+      let existingHub = MASTER_MARATHON_HUBS.find(h => h.id === hubId || h.collectionName.toLowerCase() === collectionName.toLowerCase());
+      if (existingHub) {
+        existingHub.films = films;
+        existingHub.defaultCount = films.length;
+        existingHub.dates = dates;
+      } else {
+        MASTER_MARATHON_HUBS.unshift({
+          id: hubId,
+          key: hubId,
+          collectionName: collectionName,
+          title: collectionName,
+          tag: type === 'halloween' ? '🎃 HALLOWEEN MARATHON' : '🎄 HOLIDAY FESTIVAL',
+          badgeClass: type === 'halloween' ? 'bg-orange-500/20 text-orange-300 border border-orange-400/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40',
+          cardBorder: type === 'halloween' ? 'border-orange-500/40 hover:border-orange-400' : 'border-emerald-500/40 hover:border-emerald-400',
+          glowColor: type === 'halloween' ? 'rgba(249, 115, 22, 0.25)' : 'rgba(16, 185, 129, 0.25)',
+          btnGradient: type === 'halloween' ? 'bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-black' : 'bg-gradient-to-r from-emerald-400 via-green-300 to-teal-400 hover:brightness-110 text-slate-950 font-black',
+          icon: type === 'halloween' ? '🎃' : '🎄',
+          dates: dates,
+          defaultCount: films.length,
+          format: 'Annual Holiday Festival',
+          runtimeTotal: `${films.length * 2}h Approx Run`,
+          era: `${year} Season`,
+          posterUrl: type === 'halloween' ? 'https://image.tmdb.org/t/p/w780/xWBiXclrRmTggQHMRsIn84YHavs.jpg' : 'https://image.tmdb.org/t/p/w780/of6Ds591FJTKoBHYjDFzH6jlTyK.jpg',
+          trailerId: type === 'halloween' ? 'dCVh4lBfW-c' : 'Z2X3j_e4r5T',
+          summary: `Annual ${year} ${type === 'halloween' ? 'Halloween Horror' : 'Christmas & Holiday'} screening festival featuring ${films.length} curated seasonal classics.`,
+          films: films
+        });
+      }
+
+      closeAnnualMarathonSetupModal();
+      renderVault();
+      showTheaterToast(`🎉 Successfully configured "${collectionName}" with ${films.length} films!`);
+    }
+
     function renderMarathonPlaceholderCard(hub, idx, q) {
       const filmCount = getMarathonHubFilmCount(hub);
       const filmList = getMarathonHubFilms(hub);
       const trailerId = hub.trailerId || "";
       const hasTrailer = Boolean(trailerId && trailerId.trim() !== "");
-      const cardKey = `mhub-${idx}`;
+      const cardKey = hub.id || hub.key || `mhub-${idx}`;
 
       return `
       <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border ${hub.cardBorder} flex flex-col justify-between gap-3.5 shadow-xl hover:border-slate-600 transition group relative overflow-hidden"
@@ -8598,10 +9758,22 @@
       // Reset active vault trailer when filtering or searching
       activeVaultTrailerIdx = null;
 
-      // Master Marathon Hub Cards (Collapses 89+ individual marathon screening movies into 7 Master Hub Cards)
-      if (activeVaultHolidayFilter === 'marathon' && !activeVaultCollectionFilter) {
+      // Master Marathon Hub Cards (Collapses individual marathon screening movies into Master Hub Cards)
+      const isHolidayHubView = (activeVaultHolidayFilter === 'halloween' || activeVaultHolidayFilter === 'christmas') && !activeVaultCollectionFilter && !vaultShowAllHolidayIndividual;
+      if ((activeVaultHolidayFilter === 'marathon' || isHolidayHubView) && !activeVaultCollectionFilter) {
+        let relevantHubs = MASTER_MARATHON_HUBS;
+        if (activeVaultHolidayFilter === 'halloween') {
+          relevantHubs = MASTER_MARATHON_HUBS.filter(hub => {
+            return hub.category === 'halloween' || /scary|halloween|ghostbusters/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.tag + ' ' + hub.id);
+          });
+        } else if (activeVaultHolidayFilter === 'christmas') {
+          relevantHubs = MASTER_MARATHON_HUBS.filter(hub => {
+            return hub.category === 'christmas' || /christmas|holiday/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.tag + ' ' + hub.id);
+          });
+        }
+
         const normQ = q ? q.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim() : '';
-        const visibleHubs = MASTER_MARATHON_HUBS.filter(hub => {
+        const visibleHubs = relevantHubs.filter(hub => {
           if (!q) return true;
           const matchTitle = hub.title.toLowerCase().includes(q);
           const matchTag = hub.tag.toLowerCase().includes(q);
@@ -8614,15 +9786,27 @@
           return matchTitle || matchTag || matchSummary || matchFilms;
         });
 
-        const totalMarathonFilms = MASTER_MARATHON_HUBS.reduce((acc, h) => acc + getMarathonHubFilmCount(h), 0);
+        const totalMarathonFilms = relevantHubs.reduce((acc, h) => acc + getMarathonHubFilmCount(h), 0);
 
         const countEl = document.getElementById('vaultCount');
         if (countEl) {
-          countEl.textContent = `Showing ${visibleHubs.length} Master Marathon Hubs (${totalMarathonFilms} Films Total)`;
+          if (activeVaultHolidayFilter === 'halloween') {
+            countEl.textContent = `Showing ${visibleHubs.length} Annual Halloween Hubs (${totalMarathonFilms} Spooky Screenings Total)`;
+          } else if (activeVaultHolidayFilter === 'christmas') {
+            countEl.textContent = `Showing ${visibleHubs.length} Annual Christmas Festival Hubs (${totalMarathonFilms} Holiday Classics Total)`;
+          } else {
+            countEl.textContent = `Showing ${visibleHubs.length} Master Marathon Hubs (${totalMarathonFilms} Films Total)`;
+          }
         }
         const statusEl = document.getElementById('vaultFilterStatus');
         if (statusEl) {
-          statusEl.textContent = `🍿 All Marathons • ${visibleHubs.length} Master Hubs`;
+          if (activeVaultHolidayFilter === 'halloween') {
+            statusEl.textContent = `🎃 Halloween Marathons • ${visibleHubs.length} Annual Hubs`;
+          } else if (activeVaultHolidayFilter === 'christmas') {
+            statusEl.textContent = `🎄 Christmas Festivals • ${visibleHubs.length} Annual Hubs`;
+          } else {
+            statusEl.textContent = `🍿 All Marathons • ${visibleHubs.length} Master Hubs`;
+          }
         }
 
         if (visibleHubs.length === 0) {
@@ -8641,43 +9825,112 @@
 
         const cardsHtml = visibleHubs.map((hub, idx) => renderMarathonPlaceholderCard(hub, idx, q)).join('');
 
-        const collectionBannerHtml = `
-        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-950 to-orange-950/90 border border-amber-600/80 flex flex-col gap-3 shadow-xl">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-900/50 border border-amber-500/60 flex items-center justify-center text-xl shrink-0 shadow-md">
-                🍿
+        let collectionBannerHtml = '';
+        if (activeVaultHolidayFilter === 'halloween') {
+          collectionBannerHtml = `
+          <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-orange-950/90 via-slate-950 to-red-950/90 border border-orange-700/80 flex flex-col gap-3 shadow-xl">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-orange-900/50 border border-orange-600/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+                  🎃
+                </div>
+                <div>
+                  <div class="text-orange-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                    <span>Annual Halloween & Horror Marathon Hubs</span>
+                  </div>
+                  <div class="text-slate-400 text-xs mt-0.5">
+                    Showing ${visibleHubs.length} Master Halloween Sagas & Festivals (${totalMarathonFilms} Films Total) • Select any marathon below to view individual movie cards
+                  </div>
+                </div>
               </div>
-              <div>
-                <div class="text-amber-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                  <span>Brian's Theater Marathons</span>
-                </div>
-                <div class="text-slate-400 text-xs mt-0.5">
-                  Showing 7 Master Marathon Sagas & Festivals (${totalMarathonFilms} Films Total) • Select any marathon below to view individual movie cards
-                </div>
+              <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                <button type="button" onclick="toggleShowAllIndividualHolidayFilms(true)" class="shrink-0 px-3 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                  <span>📜</span> <span>Show All Spooky Films</span>
+                </button>
+                <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 hover:text-white border border-orange-800/60 hover:border-orange-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                  <span>✕</span> <span>Show All Vault Titles</span>
+                </button>
               </div>
             </div>
-            <div class="flex items-center gap-2 shrink-0 flex-wrap">
-              <button type="button" onclick="openAnnualCollectionsModal()" class="shrink-0 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                <span>🏛️</span> <span>Showcase Hub</span>
-              </button>
-              <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                <span>✕</span> <span>Show All Vault Titles</span>
-              </button>
+            <!-- Quick Jump Chips -->
+            <div class="w-full flex items-center gap-2 pt-2.5 border-t border-orange-800/40 overflow-x-auto custom-scrollbar">
+              <span class="text-[11px] font-bold text-orange-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
+              <button type="button" onclick="filterVaultToCollection('2025 Scary Movie Marathon')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 Scary Movie (11)</button>
+              <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
             </div>
-          </div>
-          <!-- Quick Jump Marathon Chips -->
-          <div class="w-full flex items-center gap-2 pt-2.5 border-t border-amber-800/40 overflow-x-auto custom-scrollbar">
-            <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
-            <button type="button" onclick="filterVaultToCollection('2025 Scary Movie Marathon')" class="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-900/80 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 Scary Movie (11)</button>
-            <button type="button" onclick="filterVaultToCollection('Harry Potter Wizarding Marathon')" class="px-2.5 py-1 rounded-lg bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 hover:text-white border border-amber-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">⚡ Harry Potter (8)</button>
-            <button type="button" onclick="filterVaultToCollection('Pirates of the Caribbean Marathon')" class="px-2.5 py-1 rounded-lg bg-sky-950/70 hover:bg-sky-900/80 text-sky-300 hover:text-white border border-sky-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏴‍☠️ Pirates (5)</button>
-            <button type="button" onclick="filterVaultToCollection('Fast & Furious Saga Marathon')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏎️ Fast & Furious (10)</button>
-            <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
-            <button type="button" onclick="filterVaultToCollection('2025 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2025 Christmas (26)</button>
-            <button type="button" onclick="filterVaultToCollection('2024 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2024 Christmas (25)</button>
-          </div>
-        </div>`;
+          </div>`;
+        } else if (activeVaultHolidayFilter === 'christmas') {
+          collectionBannerHtml = `
+          <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-950 to-red-950/90 border border-emerald-700/80 flex flex-col gap-3 shadow-xl">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-900/50 border border-emerald-600/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+                  🎄
+                </div>
+                <div>
+                  <div class="text-emerald-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                    <span>Annual Christmas & Holiday Festival Hubs</span>
+                  </div>
+                  <div class="text-slate-400 text-xs mt-0.5">
+                    Showing ${visibleHubs.length} Master Holiday Festivals (${totalMarathonFilms} Films Total) • Select any festival below to view individual movie cards
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                <button type="button" onclick="toggleShowAllIndividualHolidayFilms(true)" class="shrink-0 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                  <span>📜</span> <span>Show All Holiday Films</span>
+                </button>
+                <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 hover:text-white border border-emerald-800/60 hover:border-emerald-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                  <span>✕</span> <span>Show All Vault Titles</span>
+                </button>
+              </div>
+            </div>
+            <!-- Quick Jump Chips -->
+            <div class="w-full flex items-center gap-2 pt-2.5 border-t border-emerald-800/40 overflow-x-auto custom-scrollbar">
+              <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
+              <button type="button" onclick="filterVaultToCollection('2025 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2025 Christmas (26)</button>
+              <button type="button" onclick="filterVaultToCollection('2024 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2024 Christmas (25)</button>
+            </div>
+          </div>`;
+        } else {
+          collectionBannerHtml = `
+          <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-950 to-orange-950/90 border border-amber-600/80 flex flex-col gap-3 shadow-xl">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-900/50 border border-amber-500/60 flex items-center justify-center text-xl shrink-0 shadow-md">
+                  🍿
+                </div>
+                <div>
+                  <div class="text-amber-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
+                    <span>Brian's Theater Marathons</span>
+                  </div>
+                  <div class="text-slate-400 text-xs mt-0.5">
+                    Showing 7 Master Marathon Sagas & Festivals (${totalMarathonFilms} Films Total) • Select any marathon below to view individual movie cards
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                <button type="button" onclick="openAnnualCollectionsModal()" class="shrink-0 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                  <span>🏛️</span> <span>Showcase Hub</span>
+                </button>
+                <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                  <span>✕</span> <span>Show All Vault Titles</span>
+                </button>
+              </div>
+            </div>
+            <!-- Quick Jump Marathon Chips -->
+            <div class="w-full flex items-center gap-2 pt-2.5 border-t border-amber-800/40 overflow-x-auto custom-scrollbar">
+              <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
+              <button type="button" onclick="filterVaultToCollection('2025 Scary Movie Marathon')" class="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-900/80 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 Scary Movie (11)</button>
+              <button type="button" onclick="filterVaultToCollection('Harry Potter Wizarding Marathon')" class="px-2.5 py-1 rounded-lg bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 hover:text-white border border-amber-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">⚡ Harry Potter (8)</button>
+              <button type="button" onclick="filterVaultToCollection('Pirates of the Caribbean Marathon')" class="px-2.5 py-1 rounded-lg bg-sky-950/70 hover:bg-sky-900/80 text-sky-300 hover:text-white border border-sky-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏴‍☠️ Pirates (5)</button>
+              <button type="button" onclick="filterVaultToCollection('Fast & Furious Saga Marathon')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏎️ Fast & Furious (10)</button>
+              <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
+              <button type="button" onclick="filterVaultToCollection('2025 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2025 Christmas (26)</button>
+              <button type="button" onclick="filterVaultToCollection('2024 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2024 Christmas (25)</button>
+            </div>
+          </div>`;
+        }
 
         grid.innerHTML = collectionBannerHtml + cardsHtml;
         return;
@@ -9053,7 +10306,7 @@
           </div>
           <div class="flex items-center gap-2 shrink-0 flex-wrap">
             <button type="button" onclick="backToAllMarathons()" id="backToMarathonsBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-110 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-              <span>←</span> <span>Back to All Marathons</span>
+              <span>←</span> <span>${/scary|halloween/i.test(activeVaultCollectionFilter) ? 'Back to Halloween Hubs' : (/christmas|holiday/i.test(activeVaultCollectionFilter) ? 'Back to Christmas Hubs' : 'Back to All Marathons')}</span>
             </button>
             <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 ${colBtnClass} text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
               <span>✕</span> <span>Show All Vault Titles</span>
@@ -9116,9 +10369,14 @@
               </div>
             </div>
           </div>
-          <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 hover:text-white border border-orange-800/60 hover:border-orange-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-            <span>✕</span> <span>Show All Vault Titles</span>
-          </button>
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
+            <button type="button" onclick="toggleShowAllIndividualHolidayFilms(false)" class="shrink-0 px-3 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+              <span>🎃</span> <span>Back to Annual Hubs</span>
+            </button>
+            <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 hover:text-white border border-orange-800/60 hover:border-orange-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+              <span>✕</span> <span>Show All Vault Titles</span>
+            </button>
+          </div>
         </div>`;
       } else if (activeVaultHolidayFilter === 'christmas') {
         const yrLabel = activeVaultYearFilter !== 'all' ? (activeVaultYearFilter === 'older' ? 'Vintage ' : activeVaultYearFilter + ' ') : '';
@@ -9137,9 +10395,14 @@
               </div>
             </div>
           </div>
-          <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 hover:text-white border border-emerald-800/60 hover:border-emerald-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-            <span>✕</span> <span>Show All Vault Titles</span>
-          </button>
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
+            <button type="button" onclick="toggleShowAllIndividualHolidayFilms(false)" class="shrink-0 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+              <span>🎄</span> <span>Back to Annual Hubs</span>
+            </button>
+            <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 hover:text-white border border-emerald-800/60 hover:border-emerald-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+              <span>✕</span> <span>Show All Vault Titles</span>
+            </button>
+          </div>
         </div>`;
       } else if (activeVaultYearFilter !== 'all') {
         const yrLabel = activeVaultYearFilter === 'older' ? 'Vintage Screenings (2018 - 2024)' : `${activeVaultYearFilter} Screening Season`;

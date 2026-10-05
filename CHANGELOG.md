@@ -1,5 +1,16 @@
 # Changelog
  
+## [4.9.143] - 2026-10-04
+
+### What's New
+- Added Bulk Select mode to Upcoming Lineup Gallery.
+- Added Bulk Apply to Series button in Media Studio.
+- Implemented instant multi-title poster and trailer synchronization.
+- Added smart franchise detection for American Horror Story series.
+- Added Master Annual Festival Hubs for Halloween and Christmas.
+- Added Annual Holiday Marathon setup wizard in admin portal.
+- Ending movies early locks doors while keeping Auto mode active.
+
 ## [4.9.142] - 2026-10-04
 
 ### What's New
