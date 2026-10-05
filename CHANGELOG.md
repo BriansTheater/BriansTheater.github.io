@@ -1,5 +1,17 @@
 # Changelog
  
+## [4.9.146] - 2026-10-05
+
+### What's New
+- Restored missing schedule posters for upcoming horror lineup.
+- Added official high-resolution artwork for Evil Dead Burn.
+- Added verified poster for Abraham's Boys Dracula Story.
+- Added official high-definition artwork for The Seeding.
+- Added verified movie poster for Undertone release.
+- Integrated official high-resolution poster for They Will Kill You.
+- Added Stephen King's It 1990 miniseries poster.
+- Ensured reliable cross-origin poster loading across all devices.
+
 ## [4.9.145] - 2026-10-05
 
 ### What's New

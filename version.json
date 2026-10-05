@@ -1,12 +1,14 @@
 {
-  "version": "4.9.145",
+  "version": "4.9.146",
   "releaseDate": "2026-10-05",
-  "title": "Brian's Theater v4.9.145",
+  "title": "Brian's Theater v4.9.146",
   "notes": [
-    "Fixed Google Sign-In initialization and variable hoisting sequence.",
-    "Prevented auth state change ReferenceErrors during theater startup.",
-    "Bypassed Service Worker caching for Firebase authentication endpoints.",
-    "Added one-click full page redirect option for Google login.",
-    "Protected admin studio tab access and session status."
+    "Restored missing schedule posters for upcoming horror lineup.",
+    "Added high-definition artwork for Evil Dead Burn.",
+    "Added verified poster for Abraham's Boys Dracula Story.",
+    "Added official artwork for The Seeding and Undertone.",
+    "Integrated high-resolution posters for They Will Kill You.",
+    "Added Stephen King's It 1990 miniseries poster artwork.",
+    "Configured no-referrer policy to ensure reliable CDN artwork loading."
   ]
 }

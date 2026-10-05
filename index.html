@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.138 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.146 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -278,7 +278,7 @@
 
         <!-- 4. PIC (The Stage Poster - Clean Edge-to-Edge Cinema Banner) -->
         <div class="relative z-10 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shadow-2xl w-full max-w-lg aspect-[16/9] flex items-center justify-center group my-1">
-          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
+          <img id="stagePoster" src="https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg" alt="Now Playing / Next Up Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
         </div>
 
@@ -393,7 +393,7 @@
         <span id="schedNextTitle">🎬 Borderlands</span>
         <span id="schedNextDate">Saturday, Sept 19, 2026 • 7:00 PM PST</span>
         <div id="schedNextPosterContainer">
-          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg" alt="" />
+          <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg" alt="" referrerpolicy="no-referrer" />
         </div>
         <div id="schedCountdownGrid">
           <div id="schedColDays"><div id="countDays">00</div></div>
@@ -2547,7 +2547,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.145";
+    const APP_VERSION = "4.9.146";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3051,6 +3051,16 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.146": [
+        "Restored missing schedule posters for upcoming horror lineup.",
+        "Added official high-resolution artwork for Evil Dead Burn.",
+        "Added verified poster for Abraham's Boys Dracula Story.",
+        "Added official high-definition artwork for The Seeding.",
+        "Added verified movie poster for Undertone release.",
+        "Integrated official high-resolution poster for They Will Kill You.",
+        "Added Stephen King's It 1990 miniseries poster.",
+        "Ensured reliable cross-origin poster loading across all devices."
+      ],
       "4.9.145": [
         "Fixed Google Sign-In initialization and variable hoisting sequence.",
         "Prevented auth state change ReferenceErrors during theater startup.",
@@ -4411,7 +4421,23 @@
       "American Horror Story: Season 13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
       "American Horror Story: Season 13, Episode 1": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
       "AHS": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
-      "AHS: s13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw"
+      "AHS: s13": "https://lh3.googleusercontent.com/d/1w0QfpxWgayIb4zs4YieZFNK153KKvPnw",
+      "Evil Dead Burn": "https://upload.wikimedia.org/wikipedia/en/a/a4/Evil_Dead_Burn_poster.jpeg",
+      "Evil Dead": "https://upload.wikimedia.org/wikipedia/en/a/a4/Evil_Dead_Burn_poster.jpeg",
+      "Abraham's Boys A Dracula Story": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "Abraham's Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "Abrahams Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "The Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
+      "Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
+      "UnderTone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "Undertone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
+      "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
+      "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
+      "Stephens King: It": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
+      "Stephen King's It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
+      "Stephen King's It": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
+      "It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg"
     };
 
     let customMovieImages = {};
@@ -4621,6 +4647,10 @@
         const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
         if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
       }
+      for (const [k, v] of Object.entries(customMovieImages)) {
+        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (kNorm && kNorm.length >= 4 && norm && (norm.includes(kNorm) || kNorm.includes(norm))) return v;
+      }
       // Smart AHS Acronym Matching in Custom Overrides:
       const isAhsTitle = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
       if (isAhsTitle) {
@@ -4647,6 +4677,10 @@
       for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
         const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
         if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) return v;
+      }
+      for (const [k, v] of Object.entries(DEFAULT_MOVIE_ARTWORK)) {
+        const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (kNorm && kNorm.length >= 4 && norm && (norm.includes(kNorm) || kNorm.includes(norm))) return v;
       }
       // Smart AHS Acronym Matching in Default Artwork:
       if (isAhsTitle) {
@@ -11319,7 +11353,7 @@
         <div>
           <!-- Movie Poster / Artwork Thumbnail Banner -->
           <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
-            <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
+            <img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(s.title || '')}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src=getCinemaPlaceholder(this.alt);">
             <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95 pointer-events-none"></div>
             <div class="absolute top-2.5 left-2.5">
               ${renderScheduleTagBadge(s.status, s.tagColor, isConcluded)}
