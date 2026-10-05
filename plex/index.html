@@ -260,6 +260,24 @@
           const reqRef = db.ref('theaterSync/plexRequests/' + reqId);
           await reqRef.set(payload);
 
+          // Also record in central plexUsers database as pending
+          try {
+            const userKey = val.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+            const userPayload = {
+              id: userKey,
+              usernameOrEmail: val,
+              status: 'pending',
+              tier: 'Standard',
+              libraries: ['Movies', 'TV Shows'],
+              source: 'portal',
+              requestedAt: new Date().toISOString(),
+              notes: 'Submitted via Plex VIP Portal'
+            };
+            await db.ref('theaterSync/plexUsers/' + userKey).set(userPayload);
+          } catch (uErr) {
+            console.warn("User recording notice:", uErr);
+          }
+
           // Listen for daemon response in real time
           let resolved = false;
           const timeout = setTimeout(() => {

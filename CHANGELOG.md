@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.150] - 2026-10-05
+
+### What's New
+- Built real-time Plex patron user database in Firebase.
+- Added full Plex user management studio to admin menu.
+- Enabled manual patron adding, library controls, and auto-approval.
+- Added search and status filters for active Plex members.
+- Deployed hardened Firebase database rules for Plex user endpoints.
+
 ## [4.9.149] - 2026-10-05
 
 ### What's New

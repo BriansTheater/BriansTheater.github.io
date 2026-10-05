@@ -772,8 +772,11 @@
           <button type="button" onclick="setAdminSectionFilter('requests')" id="adminSecBtn-requests" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>📥</span> Review Queue
           </button>
-          <a href="plex/" target="_blank" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 transition shrink-0 flex items-center gap-1.5">
-            <span>🎟️</span> Plex Portal ↗
+          <button type="button" onclick="setAdminSectionFilter('plex')" id="adminSecBtn-plex" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 transition shrink-0 flex items-center gap-1.5">
+            <span>🍿</span> Plex Users
+          </button>
+          <a href="plex/" target="_blank" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
+            <span>🎟️</span> Public Portal ↗
           </a>
         </div>
 
@@ -1328,6 +1331,174 @@
           </div>
 
           <div class="flex flex-col gap-2 mt-2" id="adminRequestsQueueList"></div>
+        </div>
+
+        <!-- 6. 🍿 Plex VIP User Management Studio -->
+        <div id="adminSection-plex" class="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-950 border border-amber-500/40 flex flex-col gap-6 shadow-2xl admin-section">
+          
+          <!-- Header & Live Actions -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+            <div>
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">🍿</span>
+                <h3 class="text-base sm:text-lg font-bold text-white tracking-wide flex items-center gap-2">
+                  Plex VIP User Management
+                  <span class="text-[10px] font-mono uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full font-bold">Live Database</span>
+                </h3>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Manage patron server invitations, library permissions, and portal requests in real-time.</p>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="openAddPlexUserModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5 cursor-pointer">
+                <span>➕</span> Add User
+              </button>
+              <button type="button" onclick="batchApprovePendingPlexUsers()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5 cursor-pointer">
+                <span>⚡</span> Approve All
+              </button>
+              <button type="button" onclick="syncPlexUsersFromFirebase(true)" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition cursor-pointer" title="Refresh Users">
+                <span id="plexRefreshIcon">🔄</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Metric Badges Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-lg font-bold">👥</div>
+              <div>
+                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Users</div>
+                <div class="text-lg font-extrabold text-white" id="plexMetricTotal">0</div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-900/60 border border-amber-500/30 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center text-lg font-bold">⏳</div>
+              <div>
+                <div class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">Pending</div>
+                <div class="text-lg font-extrabold text-amber-300 flex items-center gap-1.5">
+                  <span id="plexMetricPending">0</span>
+                  <span id="plexPendingPulse" class="hidden w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-900/60 border border-emerald-500/30 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-lg font-bold">🟢</div>
+              <div>
+                <div class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Active</div>
+                <div class="text-lg font-extrabold text-emerald-300" id="plexMetricActive">0</div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-900/60 border border-rose-500/30 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 flex items-center justify-center text-lg font-bold">🚫</div>
+              <div>
+                <div class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Revoked</div>
+                <div class="text-lg font-extrabold text-rose-300" id="plexMetricRevoked">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search & Filter Toolbar -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
+            <div class="relative flex-1">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">🔍</span>
+              <input type="text" id="plexUserSearchInput" oninput="filterPlexUsersList()" placeholder="Search by username, email, tier, or notes..." class="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/80 transition" />
+            </div>
+
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+              <button type="button" onclick="setPlexStatusFilter('all')" id="plexFilterBtn-all" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-400 text-slate-950 transition">All</button>
+              <button type="button" onclick="setPlexStatusFilter('pending')" id="plexFilterBtn-pending" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 transition">Pending</button>
+              <button type="button" onclick="setPlexStatusFilter('active')" id="plexFilterBtn-active" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-800 transition">Active</button>
+              <button type="button" onclick="setPlexStatusFilter('revoked')" id="plexFilterBtn-revoked" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-rose-300 border border-slate-800 transition">Revoked</button>
+            </div>
+          </div>
+
+          <!-- User List Container -->
+          <div id="plexUsersListContainer" class="flex flex-col gap-2.5 min-h-[140px]">
+            <!-- Rendered via renderPlexUsersList() -->
+          </div>
+
+        </div>
+
+        <!-- Manual Add / Edit User Modal Dialog -->
+        <div id="plexUserModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>🍿</span> <span id="plexModalTitle">Add Plex Patron</span>
+              </h4>
+              <button type="button" onclick="closePlexUserModal()" class="text-slate-400 hover:text-white p-1">✕</button>
+            </div>
+
+            <form onsubmit="handleSavePlexUser(event)" class="space-y-3.5">
+              <input type="hidden" id="plexEditUserId" value="" />
+              
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Plex Username or Email *</label>
+                <input type="text" id="plexInputUserOrEmail" required placeholder="e.g. cinema_fan or patron@gmail.com" class="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400" />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Display Name (Optional)</label>
+                <input type="text" id="plexInputDisplayName" placeholder="e.g. Brian Diva Cox" class="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">VIP Tier</label>
+                  <select id="plexInputTier" class="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400">
+                    <option value="VIP">🌟 VIP Patron</option>
+                    <option value="Standard" selected>🎟️ Standard</option>
+                    <option value="Staff">🛡️ Staff / Admin</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Account Status</label>
+                  <select id="plexInputStatus" class="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400">
+                    <option value="active" selected>🟢 Active</option>
+                    <option value="pending">⏳ Pending</option>
+                    <option value="invited">🟡 Invited</option>
+                    <option value="revoked">🔴 Revoked</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1.5">Accessible Libraries</label>
+                <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+                  <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950/60 border border-slate-800 cursor-pointer">
+                    <input type="checkbox" id="plexLibMovies" checked class="rounded border-slate-700 text-amber-500 focus:ring-0" />
+                    <span>🎬 Movies (HD)</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950/60 border border-slate-800 cursor-pointer">
+                    <input type="checkbox" id="plexLibTV" checked class="rounded border-slate-700 text-amber-500 focus:ring-0" />
+                    <span>📺 TV Shows</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950/60 border border-slate-800 cursor-pointer">
+                    <input type="checkbox" id="plexLib4K" checked class="rounded border-slate-700 text-amber-500 focus:ring-0" />
+                    <span>✨ 4K HDR Remux</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950/60 border border-slate-800 cursor-pointer">
+                    <input type="checkbox" id="plexLibMarathons" checked class="rounded border-slate-700 text-amber-500 focus:ring-0" />
+                    <span>🎃 Vault Marathons</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Admin Notes</label>
+                <input type="text" id="plexInputNotes" placeholder="e.g. Invited via Discord or Theater VIP" class="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400" />
+              </div>
+
+              <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                <button type="button" onclick="closePlexUserModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition cursor-pointer">Save Patron</button>
+              </div>
+            </form>
+          </div>
         </div>
 
       </div>
@@ -2558,7 +2729,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.148";
+    const APP_VERSION = "4.9.150";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5853,12 +6024,12 @@
 
     // 🎛️ Admin Section Navigation Filter
     function setAdminSectionFilter(section) {
-      const valid = ['all', 'stage', 'reschedule', 'media', 'artwork', 'trailers', 'summary', 'requests'];
+      const valid = ['all', 'stage', 'reschedule', 'media', 'artwork', 'trailers', 'summary', 'requests', 'plex'];
       const raw = valid.includes(section) ? section : 'all';
       const isMediaSub = ['media', 'artwork', 'trailers', 'summary'].includes(raw);
       const activeNavKey = isMediaSub ? 'media' : raw;
 
-      ['all', 'stage', 'reschedule', 'media', 'requests'].forEach(s => {
+      ['all', 'stage', 'reschedule', 'media', 'requests', 'plex'].forEach(s => {
         const btn = document.getElementById(`adminSecBtn-${s}`);
         if (!btn) return;
         if (s === activeNavKey) {
@@ -5872,29 +6043,35 @@
       const reschedEl = document.getElementById('adminSection-reschedule');
       const mediaEl = document.getElementById('adminSection-unified-media');
       const reqEl = document.getElementById('adminSection-requests');
+      const plexEl = document.getElementById('adminSection-plex');
 
       if (raw === 'all') {
         if (stageEl) stageEl.classList.remove('hidden');
         if (reschedEl) reschedEl.classList.remove('hidden');
         if (mediaEl) mediaEl.classList.remove('hidden');
         if (reqEl) reqEl.classList.remove('hidden');
+        if (plexEl) plexEl.classList.remove('hidden');
         renderAdminRescheduleList();
+        if (typeof renderPlexUsersList === 'function') renderPlexUsersList();
       } else if (raw === 'stage') {
         if (stageEl) stageEl.classList.remove('hidden');
         if (reschedEl) reschedEl.classList.add('hidden');
         if (mediaEl) mediaEl.classList.add('hidden');
         if (reqEl) reqEl.classList.add('hidden');
+        if (plexEl) plexEl.classList.add('hidden');
       } else if (raw === 'reschedule') {
         if (stageEl) stageEl.classList.add('hidden');
         if (reschedEl) reschedEl.classList.remove('hidden');
         if (mediaEl) mediaEl.classList.add('hidden');
         if (reqEl) reqEl.classList.add('hidden');
+        if (plexEl) plexEl.classList.add('hidden');
         renderAdminRescheduleList();
       } else if (isMediaSub) {
         if (stageEl) stageEl.classList.add('hidden');
         if (reschedEl) reschedEl.classList.add('hidden');
         if (mediaEl) mediaEl.classList.remove('hidden');
         if (reqEl) reqEl.classList.add('hidden');
+        if (plexEl) plexEl.classList.add('hidden');
         if (raw === 'artwork' || raw === 'trailers' || raw === 'summary') {
           switchMediaSubTab(raw);
         }
@@ -5903,6 +6080,14 @@
         if (reschedEl) reschedEl.classList.add('hidden');
         if (mediaEl) mediaEl.classList.add('hidden');
         if (reqEl) reqEl.classList.remove('hidden');
+        if (plexEl) plexEl.classList.add('hidden');
+      } else if (raw === 'plex') {
+        if (stageEl) stageEl.classList.add('hidden');
+        if (reschedEl) reschedEl.classList.add('hidden');
+        if (mediaEl) mediaEl.classList.add('hidden');
+        if (reqEl) reqEl.classList.add('hidden');
+        if (plexEl) plexEl.classList.remove('hidden');
+        if (typeof renderPlexUsersList === 'function') renderPlexUsersList();
       }
     }
 
@@ -8475,6 +8660,13 @@
           })
           .catch(() => {});
       }
+
+      // Sync live Plex VIP users database from Firebase
+      if (data.plexUsers) {
+        applyPlexUsersFromData(data.plexUsers);
+      } else {
+        syncPlexUsersFromFirebase(false);
+      }
     }
 
     // Live Firebase Realtime EventSource Listener (Real-Time SSE Sync)
@@ -8523,6 +8715,19 @@
                 }
               } else if (payload.path === '/cinema' && payload.data) {
                 applyFirebaseData({ cinema: payload.data });
+              } else if (payload.path === '/plexUsers' && payload.data) {
+                applyPlexUsersFromData(payload.data);
+              } else if (payload.path && payload.path.startsWith('/plexUsers/')) {
+                const rawKey = payload.path.replace(/^\/plexUsers\//, '').replace(/\.json$/, '');
+                if (rawKey) {
+                  if (payload.data) {
+                    plexUsersMap[rawKey] = payload.data;
+                  } else {
+                    delete plexUsersMap[rawKey];
+                  }
+                  updatePlexMetrics();
+                  renderPlexUsersList();
+                }
               } else if (payload.path) {
                 syncFromFirebase();
               }
@@ -11811,6 +12016,437 @@
       communityRequests.splice(idx, 1);
       loadRequests();
       showTheaterToast("🗑️ Request dismissed.");
+    }
+
+    // =========================================================================
+    // 🍿 PLEX VIP USER MANAGEMENT ENGINE & DATABASE SUITE (v4.9.150)
+    // =========================================================================
+    let plexUsersMap = {};
+    let currentPlexStatusFilter = 'all'; // 'all' | 'pending' | 'active' | 'revoked'
+    let currentPlexSearchQuery = '';
+
+    const defaultSeedPlexUsers = {
+      "briandivacox": {
+        id: "briandivacox",
+        usernameOrEmail: "briandivacox@gmail.com",
+        displayName: "Brian Diva Cox (Chief)",
+        tier: "Staff",
+        status: "active",
+        libraries: ["Movies", "TV Shows", "4K HDR", "Vault Marathons"],
+        source: "admin",
+        requestedAt: "2026-09-01T12:00:00Z",
+        invitedAt: "2026-09-01T12:00:00Z",
+        notes: "Server Master & Theater Chief"
+      },
+      "dwarf": {
+        id: "dwarf",
+        usernameOrEmail: "Dwarf",
+        displayName: "Dwarf (VIP)",
+        tier: "VIP",
+        status: "active",
+        libraries: ["Movies", "TV Shows", "Vault Marathons"],
+        source: "portal",
+        requestedAt: "2026-09-15T18:30:00Z",
+        invitedAt: "2026-09-15T18:32:00Z",
+        notes: "Longtime theater patron and regular"
+      },
+      "alex_cinema": {
+        id: "alex_cinema",
+        usernameOrEmail: "alex_cinema",
+        displayName: "Alex",
+        tier: "Standard",
+        status: "invited",
+        libraries: ["Movies", "TV Shows"],
+        source: "portal",
+        requestedAt: "2026-10-04T22:15:00Z",
+        invitedAt: "2026-10-04T22:20:00Z",
+        notes: "Invited via Plex VIP claim portal"
+      }
+    };
+
+    function applyPlexUsersFromData(data) {
+      if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+        plexUsersMap = Object.assign({}, data);
+      } else if (!plexUsersMap || Object.keys(plexUsersMap).length === 0) {
+        // Fallback to seed data and populate Firebase
+        plexUsersMap = Object.assign({}, defaultSeedPlexUsers);
+        try {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/plexUsers.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(defaultSeedPlexUsers)
+          }).catch(() => {});
+        } catch(e) {}
+      }
+      updatePlexMetrics();
+      renderPlexUsersList();
+    }
+
+    function updatePlexMetrics() {
+      const users = Object.values(plexUsersMap || {});
+      const total = users.length;
+      const pending = users.filter(u => u && u.status === 'pending').length;
+      const active = users.filter(u => u && (u.status === 'active' || u.status === 'invited')).length;
+      const revoked = users.filter(u => u && u.status === 'revoked').length;
+
+      const totalEl = document.getElementById('plexMetricTotal');
+      const pendEl = document.getElementById('plexMetricPending');
+      const actEl = document.getElementById('plexMetricActive');
+      const revEl = document.getElementById('plexMetricRevoked');
+      const pulseEl = document.getElementById('plexPendingPulse');
+
+      if (totalEl) totalEl.textContent = total;
+      if (pendEl) pendEl.textContent = pending;
+      if (actEl) actEl.textContent = active;
+      if (revEl) revEl.textContent = revoked;
+
+      if (pulseEl) {
+        if (pending > 0) pulseEl.classList.remove('hidden');
+        else pulseEl.classList.add('hidden');
+      }
+    }
+
+    function setPlexStatusFilter(status) {
+      currentPlexStatusFilter = status;
+      ['all', 'pending', 'active', 'revoked'].forEach(s => {
+        const btn = document.getElementById(`plexFilterBtn-${s}`);
+        if (!btn) return;
+        if (s === status) {
+          btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-400 text-slate-950 transition cursor-pointer";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition cursor-pointer";
+        }
+      });
+      renderPlexUsersList();
+    }
+
+    function filterPlexUsersList() {
+      const input = document.getElementById('plexUserSearchInput');
+      currentPlexSearchQuery = (input ? input.value : '').toLowerCase().trim();
+      renderPlexUsersList();
+    }
+
+    function renderPlexUsersList() {
+      const container = document.getElementById('plexUsersListContainer');
+      if (!container) return;
+
+      const users = Object.values(plexUsersMap || {});
+      const query = currentPlexSearchQuery;
+      const filter = currentPlexStatusFilter;
+
+      const filtered = users.filter(u => {
+        if (!u) return false;
+        // Status filter
+        if (filter === 'pending' && u.status !== 'pending') return false;
+        if (filter === 'active' && u.status !== 'active' && u.status !== 'invited') return false;
+        if (filter === 'revoked' && u.status !== 'revoked') return false;
+
+        // Search query
+        if (query) {
+          const matchUser = (u.usernameOrEmail || '').toLowerCase().includes(query);
+          const matchName = (u.displayName || '').toLowerCase().includes(query);
+          const matchTier = (u.tier || '').toLowerCase().includes(query);
+          const matchNotes = (u.notes || '').toLowerCase().includes(query);
+          if (!matchUser && !matchName && !matchTier && !matchNotes) return false;
+        }
+        return true;
+      });
+
+      // Sort: pending first, then active, then alphabetical
+      filtered.sort((a, b) => {
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        if (b.status === 'pending' && a.status !== 'pending') return 1;
+        return (a.displayName || a.usernameOrEmail || '').localeCompare(b.displayName || b.usernameOrEmail || '');
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center rounded-xl bg-slate-900/30 border border-dashed border-slate-800 flex flex-col items-center justify-center gap-2">
+            <span class="text-3xl">🍿</span>
+            <div class="text-sm font-semibold text-slate-300">No Plex Patrons Found</div>
+            <div class="text-xs text-slate-500">Try modifying your search or filter pills above.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(u => {
+        const uId = u.id || (u.usernameOrEmail || '').toLowerCase().replace(/[^a-z0-9_]/g, '_');
+        const isPending = u.status === 'pending';
+        const isActive = u.status === 'active' || u.status === 'invited';
+        const isRevoked = u.status === 'revoked';
+
+        const statusPill = isPending 
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse flex items-center gap-1"><span>⏳</span> Pending Request</span>`
+          : isActive 
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1"><span>🟢</span> Active Patron</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-1"><span>🚫</span> Revoked</span>`;
+
+        const tierPill = u.tier === 'VIP'
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-950">🌟 VIP</span>`
+          : u.tier === 'Staff'
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">🛡️ Staff</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">🎟️ Standard</span>`;
+
+        const libs = Array.isArray(u.libraries) ? u.libraries : ['Movies', 'TV Shows'];
+        const libBadges = libs.map(l => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700/60">${escapeHtml(l)}</span>`).join('');
+
+        const initials = ((u.displayName || u.usernameOrEmail || 'P').trim().substring(0, 2)).toUpperCase();
+
+        return `
+          <div class="p-3.5 sm:p-4 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-slate-700 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 shadow-sm">
+            <div class="flex items-start sm:items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 text-amber-300 font-bold text-xs flex items-center justify-center shrink-0 shadow-inner">
+                ${initials}
+              </div>
+              <div class="flex flex-col gap-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs sm:text-sm font-bold text-white truncate">${escapeHtml(u.displayName || u.usernameOrEmail)}</span>
+                  ${tierPill}
+                  ${statusPill}
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono truncate">${escapeHtml(u.usernameOrEmail)}</div>
+                ${u.notes ? `<div class="text-[11px] text-amber-400/80 italic line-clamp-1">${escapeHtml(u.notes)}</div>` : ''}
+                <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
+                  <span class="text-[10px] text-slate-500">Libraries:</span>
+                  ${libBadges}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center flex-wrap">
+              ${isPending ? `
+                <button type="button" onclick="togglePlexUserStatus('${uId}', 'active')" class="px-2.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition flex items-center gap-1 shadow cursor-pointer">
+                  <span>✅</span> Approve
+                </button>
+              ` : isActive ? `
+                <button type="button" onclick="togglePlexUserStatus('${uId}', 'revoked')" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/60 text-rose-300 border border-rose-500/30 text-xs font-semibold transition flex items-center gap-1 cursor-pointer">
+                  <span>🔒</span> Revoke
+                </button>
+              ` : `
+                <button type="button" onclick="togglePlexUserStatus('${uId}', 'active')" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition flex items-center gap-1 cursor-pointer">
+                  <span>🔓</span> Activate
+                </button>
+              `}
+              <button type="button" onclick="editPlexUser('${uId}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs transition cursor-pointer" title="Edit User">
+                ✏️
+              </button>
+              <button type="button" onclick="copyPlexInviteLink('${escapeHtml(u.usernameOrEmail)}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs transition cursor-pointer" title="Copy Invite Link">
+                📋
+              </button>
+              <button type="button" onclick="deletePlexUser('${uId}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-red-950/60 text-red-400 border border-slate-800 hover:border-red-500/40 text-xs transition cursor-pointer" title="Delete User">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openAddPlexUserModal(userObj = null) {
+      const modal = document.getElementById('plexUserModal');
+      const title = document.getElementById('plexModalTitle');
+      const editId = document.getElementById('plexEditUserId');
+      const userInput = document.getElementById('plexInputUserOrEmail');
+      const nameInput = document.getElementById('plexInputDisplayName');
+      const tierInput = document.getElementById('plexInputTier');
+      const statusInput = document.getElementById('plexInputStatus');
+      const notesInput = document.getElementById('plexInputNotes');
+
+      const libMovies = document.getElementById('plexLibMovies');
+      const libTV = document.getElementById('plexLibTV');
+      const lib4K = document.getElementById('plexLib4K');
+      const libMarathons = document.getElementById('plexLibMarathons');
+
+      if (!modal) return;
+
+      if (userObj) {
+        if (title) title.textContent = "Edit Plex Patron";
+        if (editId) editId.value = userObj.id || '';
+        if (userInput) userInput.value = userObj.usernameOrEmail || '';
+        if (nameInput) nameInput.value = userObj.displayName || '';
+        if (tierInput) tierInput.value = userObj.tier || 'Standard';
+        if (statusInput) statusInput.value = userObj.status || 'active';
+        if (notesInput) notesInput.value = userObj.notes || '';
+
+        const libs = Array.isArray(userObj.libraries) ? userObj.libraries : [];
+        if (libMovies) libMovies.checked = libs.includes('Movies');
+        if (libTV) libTV.checked = libs.includes('TV Shows');
+        if (lib4K) lib4K.checked = libs.includes('4K HDR');
+        if (libMarathons) libMarathons.checked = libs.includes('Vault Marathons');
+      } else {
+        if (title) title.textContent = "Add Plex Patron";
+        if (editId) editId.value = '';
+        if (userInput) userInput.value = '';
+        if (nameInput) nameInput.value = '';
+        if (tierInput) tierInput.value = 'Standard';
+        if (statusInput) statusInput.value = 'active';
+        if (notesInput) notesInput.value = '';
+
+        if (libMovies) libMovies.checked = true;
+        if (libTV) libTV.checked = true;
+        if (lib4K) lib4K.checked = true;
+        if (libMarathons) libMarathons.checked = true;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePlexUserModal() {
+      const modal = document.getElementById('plexUserModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function editPlexUser(uId) {
+      const user = plexUsersMap[uId];
+      if (user) {
+        openAddPlexUserModal(user);
+      }
+    }
+
+    async function handleSavePlexUser(e) {
+      if (e) e.preventDefault();
+      const editId = document.getElementById('plexEditUserId').value;
+      const userVal = document.getElementById('plexInputUserOrEmail').value.trim();
+      if (!userVal) return;
+
+      const uKey = editId || userVal.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+      const existing = plexUsersMap[uKey] || {};
+
+      const libs = [];
+      if (document.getElementById('plexLibMovies').checked) libs.push('Movies');
+      if (document.getElementById('plexLibTV').checked) libs.push('TV Shows');
+      if (document.getElementById('plexLib4K').checked) libs.push('4K HDR');
+      if (document.getElementById('plexLibMarathons').checked) libs.push('Vault Marathons');
+
+      const payload = {
+        id: uKey,
+        usernameOrEmail: userVal,
+        displayName: document.getElementById('plexInputDisplayName').value.trim() || userVal,
+        tier: document.getElementById('plexInputTier').value,
+        status: document.getElementById('plexInputStatus').value,
+        libraries: libs,
+        notes: document.getElementById('plexInputNotes').value.trim(),
+        source: existing.source || 'admin',
+        requestedAt: existing.requestedAt || new Date().toISOString(),
+        invitedAt: new Date().toISOString()
+      };
+
+      plexUsersMap[uKey] = payload;
+      updatePlexMetrics();
+      renderPlexUsersList();
+      closePlexUserModal();
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/plexUsers/${uKey}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showTheaterToast(`Saved Plex patron: ${payload.displayName}`);
+      } catch(err) {
+        console.error("Save Plex user error:", err);
+        showTheaterToast(`Saved locally: ${payload.displayName}`);
+      }
+    }
+
+    async function togglePlexUserStatus(uId, newStatus) {
+      const user = plexUsersMap[uId];
+      if (!user) return;
+      user.status = newStatus;
+      if (newStatus === 'active' && !user.invitedAt) {
+        user.invitedAt = new Date().toISOString();
+      }
+
+      updatePlexMetrics();
+      renderPlexUsersList();
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/plexUsers/${uId}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user)
+        });
+        showTheaterToast(`Patron status updated to: ${newStatus.toUpperCase()}`);
+      } catch(err) {
+        console.error("Status update error:", err);
+      }
+    }
+
+    async function deletePlexUser(uId) {
+      const user = plexUsersMap[uId];
+      if (!user) return;
+      if (!confirm(`Are you sure you want to delete ${user.displayName || user.usernameOrEmail} from the database?`)) return;
+
+      delete plexUsersMap[uId];
+      updatePlexMetrics();
+      renderPlexUsersList();
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/plexUsers/${uId}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'DELETE'
+        });
+        showTheaterToast("Patron deleted from database.");
+      } catch(err) {
+        console.error("Delete error:", err);
+      }
+    }
+
+    async function batchApprovePendingPlexUsers() {
+      const users = Object.values(plexUsersMap || {});
+      const pendingUsers = users.filter(u => u && u.status === 'pending');
+      if (pendingUsers.length === 0) {
+        showTheaterToast("No pending Plex requests found.");
+        return;
+      }
+
+      for (const u of pendingUsers) {
+        const uId = u.id || (u.usernameOrEmail || '').toLowerCase().replace(/[^a-z0-9_]/g, '_');
+        u.status = 'active';
+        u.invitedAt = new Date().toISOString();
+        try {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/plexUsers/${uId}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(u)
+          });
+        } catch(e) {}
+      }
+
+      updatePlexMetrics();
+      renderPlexUsersList();
+      showTheaterToast(`Approved ${pendingUsers.length} pending Plex requests!`);
+    }
+
+    function copyPlexInviteLink(username) {
+      const link = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '') + '/plex';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(link).then(() => {
+          showTheaterToast("Plex VIP portal link copied to clipboard!");
+        });
+      } else {
+        showTheaterToast("Portal link: " + link);
+      }
+    }
+
+    async function syncPlexUsersFromFirebase(forceRefresh = false) {
+      const icon = document.getElementById('plexRefreshIcon');
+      if (icon) icon.classList.add('animate-spin');
+
+      try {
+        const resp = await fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/plexUsers.json');
+        if (resp.ok) {
+          const data = await resp.json();
+          applyPlexUsersFromData(data);
+          if (forceRefresh) showTheaterToast("Plex database synced from cloud.");
+        }
+      } catch(err) {
+        console.warn("Plex sync notice:", err);
+      } finally {
+        if (icon) {
+          setTimeout(() => icon.classList.remove('animate-spin'), 600);
+        }
+      }
     }
 
     // =========================================================================
