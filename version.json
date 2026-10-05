@@ -1,13 +1,12 @@
 {
-  "version": "4.9.144",
-  "releaseDate": "2026-10-04",
-  "title": "Brian's Theater v4.9.144",
+  "version": "4.9.145",
+  "releaseDate": "2026-10-05",
+  "title": "Brian's Theater v4.9.145",
   "notes": [
-    "Fixed stage door closure hiding Enter button when closed.",
-    "Added prominent locked auditorium status banner on closed stage.",
-    "Protected door mode overrides from Firebase permission reset loops.",
-    "Protected custom artwork and bulk posters against Firebase overwrites.",
-    "Merged persistent bulk images automatically on schedule data sync.",
-    "Added quick 1-click admin door controls on stage."
+    "Fixed Google Sign-In initialization and variable hoisting sequence.",
+    "Prevented auth state change ReferenceErrors during theater startup.",
+    "Bypassed Service Worker caching for Firebase authentication endpoints.",
+    "Added one-click full page redirect option for Google login.",
+    "Protected admin studio tab access and session status."
   ]
 }

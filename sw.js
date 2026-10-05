@@ -1,11 +1,11 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.144
+// VERSION: 4.9.145
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.144';
+const CACHE_NAME = 'brian-theater-v4.9.145';
 const STATIC_ASSETS = [
   './manifest.json',
   './past_movies_data.js',
@@ -48,14 +48,23 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // 0. Only intercept GET requests - bypass all POST, PUT, DELETE requests directly to network
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const requestUrl = new URL(event.request.url);
 
-  // 1. Network-only: version.json, sw.js, Firebase, APIs, YouTube
+  // 1. Network-only: version.json, sw.js, Firebase Auth & RTDB, Google APIs, YouTube
   if (
     requestUrl.pathname.endsWith('version.json') ||
     requestUrl.pathname.endsWith('sw.js') ||
     requestUrl.hostname.includes('firebaseio.com') ||
+    requestUrl.hostname.includes('firebaseapp.com') ||
+    requestUrl.hostname.includes('googleapis.com') ||
+    requestUrl.hostname.includes('accounts.google.com') ||
     requestUrl.hostname.includes('script.google.com') ||
+    requestUrl.hostname.includes('gstatic.com') ||
     requestUrl.hostname.includes('youtube.com') ||
     requestUrl.hostname.includes('tmdb.org')
   ) {

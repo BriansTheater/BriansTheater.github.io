@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.145] - 2026-10-05
+
+### What's New
+- Fixed Google Sign-In initialization and variable hoisting sequence.
+- Prevented auth state change ReferenceErrors during theater startup.
+- Bypassed Service Worker caching for Firebase authentication endpoints.
+- Added one-click full page redirect option for Google login.
+- Protected admin studio tab access and session status.
+
 ## [4.9.144] - 2026-10-04
 
 ### What's New

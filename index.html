@@ -1507,6 +1507,7 @@
       </div>
       <span id="sidebarAppVersionBadge" class="app-version-badge px-2 py-0.5 rounded-md bg-slate-900 text-sky-400 border border-slate-800">v4.9.81</span>
     </div>
+  </aside>
 
   <!-- RESCHEDULE MOVIE MODAL -->
   <div id="rescheduleMovieModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeRescheduleMovieModal()">
@@ -1622,7 +1623,7 @@
   </div>
 
   <!-- AUTH MODAL -->
-  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-200" onclick="handleAuthModalBackdrop(event)">
+  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4 transition-opacity duration-200" onclick="handleAuthModalBackdrop(event)">
     <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-xs w-full p-5 shadow-2xl relative flex flex-col gap-3.5">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
@@ -1643,6 +1644,10 @@
           <span id="btnGoogleSignInLabel">Sign in with Google</span>
         </button>
 
+        <!-- Full page redirect fallback option -->
+        <button type="button" onclick="signInWithGoogle(true)" id="btnModalGoogleRedirect" class="w-full py-1.5 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white text-[11px] font-medium flex items-center justify-center gap-1.5 transition border border-slate-700/60 active:scale-95">
+          <span>↪️</span> <span>Sign in via Full Page Redirect</span>
+        </button>
 
         <div id="authErrorMsg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2.5 rounded-xl text-center leading-relaxed"></div>
       </div>
@@ -2542,10 +2547,36 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.144";
+    const APP_VERSION = "4.9.145";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
+
+    // Global Core State & Admin Session (Declared at script top to eliminate TDZ ReferenceErrors)
+    let isAdmin = false;
+    try {
+      Object.defineProperty(window, 'isAdmin', {
+        get() { return isAdmin; },
+        set(v) { isAdmin = !!v; },
+        configurable: true
+      });
+    } catch(e) {
+      window.isAdmin = false;
+    }
+
+    let doorOverrideMode = 'auto';
+    try {
+      const savedMode = localStorage.getItem('brian_theater_door_mode');
+      if (savedMode) doorOverrideMode = savedMode;
+    } catch(e) {}
+    window.doorOverrideMode = doorOverrideMode;
+
+    let movieEarlyConclusionUntilMs = 0;
+    try {
+      const savedEarly = localStorage.getItem('brian_movie_concluded_early_until_ms');
+      if (savedEarly) movieEarlyConclusionUntilMs = parseInt(savedEarly, 10) || 0;
+    } catch(e) {}
+    window.movieEarlyConclusionUntilMs = movieEarlyConclusionUntilMs;
 
     function syncAppVersionBadges() {
       try {
@@ -2616,17 +2647,21 @@
           authInstance.getRedirectResult().then(result => {
             if (result && result.user) {
               handleAuthUser(result.user);
-              if (isAdmin) switchTab('admin');
+              if (typeof isAdmin !== 'undefined' && isAdmin) switchTab('admin');
             }
           }).catch(err => {
             console.warn("Firebase redirect auth result:", err);
           });
 
           authInstance.onAuthStateChanged(user => {
-            if (user) {
-              handleAuthUser(user);
-            } else {
-              handleAuthSignedOut();
+            try {
+              if (user) {
+                handleAuthUser(user);
+              } else {
+                handleAuthSignedOut();
+              }
+            } catch(authErr) {
+              console.warn("Error in onAuthStateChanged handler:", authErr);
             }
           });
         }
@@ -2932,16 +2967,7 @@
       };
     }
 
-    let isAdmin = false;
-    try {
-      Object.defineProperty(window, 'isAdmin', {
-        get() { return isAdmin; },
-        set(v) { isAdmin = !!v; },
-        configurable: true
-      });
-    } catch(e) {
-      window.isAdmin = false;
-    }
+    // (isAdmin state declared and defined at script top)
 
     // ========================================================
     // PROGRESSIVE WEB APP (PWA): DIRECT 1-CLICK & SMART GUIDE
@@ -3025,6 +3051,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.145": [
+        "Fixed Google Sign-In initialization and variable hoisting sequence.",
+        "Prevented auth state change ReferenceErrors during theater startup.",
+        "Bypassed Service Worker caching for Firebase authentication endpoints.",
+        "Added one-click full page redirect option for Google login.",
+        "Protected admin studio tab access and session status."
+      ],
       "4.9.144": [
         "Fixed stage door closure hiding Enter button when closed.",
         "Added prominent locked auditorium status banner on closed stage.",
@@ -4685,24 +4718,7 @@
       }
     }
 
-    let doorOverrideMode = 'auto';
-    window.doorOverrideMode = doorOverrideMode;
-    try {
-      const savedMode = localStorage.getItem('brian_theater_door_mode');
-      if (savedMode) {
-        doorOverrideMode = savedMode;
-        window.doorOverrideMode = savedMode;
-      }
-    } catch(e) {}
-
-    let movieEarlyConclusionUntilMs = 0;
-    try {
-      const savedEarly = localStorage.getItem('brian_movie_concluded_early_until_ms');
-      if (savedEarly) {
-        movieEarlyConclusionUntilMs = parseInt(savedEarly, 10) || 0;
-      }
-    } catch(e) {}
-    window.movieEarlyConclusionUntilMs = movieEarlyConclusionUntilMs;
+    // (doorOverrideMode & movieEarlyConclusionUntilMs declared and initialized at script top)
 
     window.setDoorOverrideModeDirect = function(mode) {
       doorOverrideMode = mode;
@@ -4840,10 +4856,12 @@
           countdownBox.classList.remove('hidden');
         }
         if (lockIcon) lockIcon.textContent = '🔒';
-        if (doorOverrideMode === 'force_closed') {
+        const curDoorMode = (typeof doorOverrideMode !== 'undefined') ? doorOverrideMode : (window.doorOverrideMode || 'auto');
+        const curEarlyMs = (typeof movieEarlyConclusionUntilMs !== 'undefined') ? movieEarlyConclusionUntilMs : (window.movieEarlyConclusionUntilMs || 0);
+        if (curDoorMode === 'force_closed') {
           if (lockTitle) lockTitle.textContent = 'AUDITORIUM CLOSED (LOCKED BY ADMIN)';
           if (lockSub) lockSub.innerHTML = 'Virtual auditorium doors are locked by administration. They will reopen before the next show.';
-        } else if (movieEarlyConclusionUntilMs && Date.now() < movieEarlyConclusionUntilMs) {
+        } else if (curEarlyMs && Date.now() < curEarlyMs) {
           if (lockTitle) lockTitle.textContent = 'SCREENING CONCLUDED (AUDITORIUM CLOSED)';
           if (lockSub) lockSub.innerHTML = 'This screening concluded early. Doors reopen 10 min before next scheduled premiere.';
         } else {
@@ -4857,6 +4875,9 @@
     }
 
     function updateDoorAdminButtons() {
+      const curDoorMode = (typeof doorOverrideMode !== 'undefined') ? doorOverrideMode : (window.doorOverrideMode || 'auto');
+      const curIsAdmin = (typeof isAdmin !== 'undefined') ? isAdmin : (window.isAdmin || false);
+
       // 1. Tab 6 Admin Studio controls
       const btnAuto = document.getElementById('btnDoorAuto');
       const btnOpen = document.getElementById('btnDoorForceOpen');
@@ -4864,26 +4885,26 @@
       const badge = document.getElementById('adminDoorModeBadge');
 
       if (btnAuto) {
-        btnAuto.className = (doorOverrideMode === 'auto')
+        btnAuto.className = (curDoorMode === 'auto')
           ? 'py-2 px-1.5 rounded-lg text-xs font-bold bg-sky-500 text-slate-950 border border-sky-400 transition shadow-sm'
           : 'py-2 px-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-400 transition shadow-sm';
       }
       if (btnOpen) {
-        btnOpen.className = (doorOverrideMode === 'force_open')
+        btnOpen.className = (curDoorMode === 'force_open')
           ? 'py-2 px-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition shadow-sm'
           : 'py-2 px-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400 transition shadow-sm';
       }
       if (btnClose) {
-        btnClose.className = (doorOverrideMode === 'force_closed')
+        btnClose.className = (curDoorMode === 'force_closed')
           ? 'py-2 px-1.5 rounded-lg text-xs font-bold bg-red-500 text-white border border-red-400 transition shadow-sm'
           : 'py-2 px-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-red-400 transition shadow-sm';
       }
 
       if (badge) {
-        if (doorOverrideMode === 'auto') {
+        if (curDoorMode === 'auto') {
           badge.textContent = 'AUTO (10m)';
           badge.className = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800';
-        } else if (doorOverrideMode === 'force_open') {
+        } else if (curDoorMode === 'force_open') {
           badge.textContent = 'FORCE OPEN';
           badge.className = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800';
         } else {
@@ -4895,7 +4916,7 @@
       // 2. Stage Admin Door Bar (quick controls for admin on theater stage)
       const stageBar = document.getElementById('stageAdminDoorBar');
       if (stageBar) {
-        if (isAdmin) {
+        if (curIsAdmin) {
           stageBar.classList.remove('hidden');
           stageBar.classList.add('flex');
         } else {
@@ -4909,25 +4930,25 @@
       const stageBadge = document.getElementById('stageAdminDoorBadge');
 
       if (stageBtnAuto) {
-        stageBtnAuto.className = (doorOverrideMode === 'auto')
+        stageBtnAuto.className = (curDoorMode === 'auto')
           ? 'py-1.5 px-2 rounded-lg text-[11px] font-bold bg-sky-500 text-slate-950 border border-sky-400 transition active:scale-95 shadow-sm cursor-pointer'
           : 'py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-400 transition active:scale-95 shadow-sm cursor-pointer';
       }
       if (stageBtnOpen) {
-        stageBtnOpen.className = (doorOverrideMode === 'force_open')
+        stageBtnOpen.className = (curDoorMode === 'force_open')
           ? 'py-1.5 px-2 rounded-lg text-[11px] font-bold bg-amber-500 text-slate-950 border border-amber-400 transition active:scale-95 shadow-sm cursor-pointer'
           : 'py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400 transition active:scale-95 shadow-sm cursor-pointer';
       }
       if (stageBtnClose) {
-        stageBtnClose.className = (doorOverrideMode === 'force_closed')
+        stageBtnClose.className = (curDoorMode === 'force_closed')
           ? 'py-1.5 px-2 rounded-lg text-[11px] font-bold bg-red-500 text-white border border-red-400 transition active:scale-95 shadow-sm cursor-pointer'
           : 'py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-red-400 transition active:scale-95 shadow-sm cursor-pointer';
       }
       if (stageBadge) {
-        if (doorOverrideMode === 'auto') {
+        if (curDoorMode === 'auto') {
           stageBadge.textContent = 'AUTO';
           stageBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800';
-        } else if (doorOverrideMode === 'force_open') {
+        } else if (curDoorMode === 'force_open') {
           stageBadge.textContent = 'OPEN';
           stageBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800';
         } else {
@@ -5380,16 +5401,22 @@
     }
 
     function openAdminAuthModal() {
+      const modal = document.getElementById('authModal');
+      if (!modal) return;
       const errBox = document.getElementById('authErrorMsg');
       if (errBox) {
         errBox.classList.add('hidden');
         errBox.textContent = '';
       }
-      document.getElementById('authModal').classList.remove('hidden');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeAdminAuthModal() {
-      document.getElementById('authModal').classList.add('hidden');
+      const modal = document.getElementById('authModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
     async function handleAuthUser(user) {
@@ -5434,6 +5461,7 @@
 
       // Verified Authorized Administrator
       isAdmin = true;
+      window.isAdmin = true;
       const name = user.displayName || user.email || "Brian";
       const nameLabel = document.getElementById('userNameLabel');
       if (nameLabel) nameLabel.textContent = `${name} (Admin)`;
@@ -5479,13 +5507,14 @@
       const sidebarNavAdmin = document.getElementById('sidebarNavAdmin');
       if (sidebarNavAdmin) sidebarNavAdmin.classList.remove('hidden');
 
-      updateDoorAdminButtons();
+      try { updateDoorAdminButtons(); } catch(e) {}
       closeAdminAuthModal();
       showTheaterToast(`👋 Welcome, ${name}! Administrator verified.`);
     }
 
     function handleAuthSignedOut() {
       isAdmin = false;
+      window.isAdmin = false;
       ['btnLoginGoogle', 'sidebarBtnLoginGoogle'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) btn.classList.remove('hidden');
@@ -5502,7 +5531,7 @@
       const sidebarNavAdmin = document.getElementById('sidebarNavAdmin');
       if (sidebarNavAdmin) sidebarNavAdmin.classList.add('hidden');
 
-      updateDoorAdminButtons();
+      try { updateDoorAdminButtons(); } catch(e) {}
 
       const curAdminTab = document.getElementById('view-admin');
       if (curAdminTab && !curAdminTab.classList.contains('hidden')) {
@@ -5512,17 +5541,18 @@
 
     let isSigningInWithGoogle = false;
 
-    async function signInWithGoogle() {
+    async function signInWithGoogle(forceRedirect = false) {
       if (isSigningInWithGoogle) return;
       isSigningInWithGoogle = true;
       const errBox = document.getElementById('authErrorMsg');
       const btnLabel = document.getElementById('btnGoogleSignInLabel');
       if (errBox) { errBox.classList.add('hidden'); errBox.textContent = ''; }
-      if (btnLabel) btnLabel.textContent = 'Connecting to Google...';
+      if (btnLabel) btnLabel.textContent = forceRedirect ? 'Redirecting to Google...' : 'Connecting to Google...';
 
       try {
         if (!authInstance && typeof firebase !== 'undefined' && firebase.auth) {
           authInstance = firebase.auth();
+          window.authInstance = authInstance;
         }
 
         if (!authInstance) {
@@ -5536,19 +5566,28 @@
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
 
+        if (forceRedirect) {
+          if (btnLabel) btnLabel.textContent = 'Redirecting to Google...';
+          await authInstance.signInWithRedirect(provider);
+          return;
+        }
+
         try {
           const result = await authInstance.signInWithPopup(provider);
           if (result && result.user) {
             await handleAuthUser(result.user);
-            if (isAdmin) switchTab('admin');
+            if (typeof isAdmin !== 'undefined' && isAdmin) switchTab('admin');
           }
         } catch(popupErr) {
-          if (popupErr.code === 'auth/popup-blocked') {
+          const isBlockedOrUnsupported = 
+            popupErr.code === 'auth/popup-blocked' ||
+            popupErr.code === 'auth/operation-not-supported-in-this-environment' ||
+            popupErr.code === 'auth/cancelled-popup-request';
+
+          if (isBlockedOrUnsupported) {
+            console.log("Popup unavailable or blocked; redirecting directly:", popupErr.code);
             if (btnLabel) btnLabel.textContent = 'Redirecting to Google...';
             await authInstance.signInWithRedirect(provider);
-            return;
-          }
-          if (popupErr.code === 'auth/cancelled-popup-request') {
             return;
           }
           throw popupErr;
@@ -5557,7 +5596,12 @@
         console.error("Firebase Google Sign-In Error:", error);
         if (errBox) {
           if (error.code === 'auth/popup-closed-by-user') {
-            errBox.textContent = "Google sign-in window was closed before completing.";
+            errBox.innerHTML = `
+              <div class="flex flex-col gap-1 text-center">
+                <span>Google sign-in popup was closed before completing.</span>
+                <button type="button" onclick="signInWithGoogle(true)" class="text-sky-400 hover:text-sky-300 underline font-semibold text-[11px] mt-0.5">Click here to sign in via full redirect</button>
+              </div>
+            `;
           } else if (error.code === 'auth/popup-blocked') {
             errBox.textContent = "Pop-up was blocked by your browser. Redirecting to Google...";
           } else if (error.code === 'auth/unauthorized-domain') {
