@@ -1,38 +1,65 @@
 {
   "rules": {
     ".read": false,
-    ".write": "auth != null",
+    ".write": false,
     "accountQuota": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+      ".read": false,
+      ".write": false
+    },
+    "tvWatchlist": {
+      ".read": true,
+      ".write": false
     },
     "theaterSync": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": false,
       "doorMode": {
         ".read": true,
-        ".write": "auth != null || (newData.isString() && (newData.val() == 'force_open' || newData.val() == 'force_closed' || newData.val() == 'auto'))"
+        ".write": "(auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')) || (newData.isString() && (newData.val() == 'force_open' || newData.val() == 'force_closed' || newData.val() == 'auto'))"
       },
       "pendingRequests": {
         ".read": true,
-        ".write": "auth != null",
+        ".write": false,
         "$reqId": {
-          ".write": "auth != null || (!data.exists() && newData.exists())",
-          ".validate": "!newData.exists() || (newData.hasChildren(['id', 'title', 'requester', 'timestamp']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('requester').isString() && newData.child('requester').val().length <= 50)"
+          ".write": "!data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['id', 'title', 'requester', 'timestamp']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('requester').isString() && newData.child('requester').val().length <= 50"
         }
       },
       "requests": {
         ".read": true,
-        ".write": "auth != null",
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')",
         "$reqId": {
-          ".write": "auth != null || !data.exists() || !newData.exists()",
+          ".write": "(!data.exists() && newData.exists()) || (auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com'))",
           ".validate": "!newData.exists() || (newData.hasChildren(['title', 'requester']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 200)"
         }
+      },
+      "moviePosters": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')",
+        "$movieTitle": {
+          ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
+        }
+      },
+      "officialSchedule": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
+      },
+      "schedule": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
+      },
+      "nowPlaying": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
+      },
+      "cinema": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
+      },
+      "pastMovies": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
       }
-    },
-    "tvWatchlist": {
-      ".read": true,
-      ".write": true
     }
   }
 }

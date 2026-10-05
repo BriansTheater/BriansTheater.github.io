@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.148] - 2026-10-05
+
+### What's New
+- Hardened Firebase Realtime Database security rules against unauthorized writes.
+- Locked database root to prevent global write access vulnerabilities.
+- Restricted administrative database modifications to verified theater administrator accounts.
+- Enforced strict payload validation on visitor movie request submissions.
+- Secured account quota and TV watchlist endpoints from writes.
+
 ## [4.9.147] - 2026-10-05
 
 ### What's New

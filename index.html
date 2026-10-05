@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.147 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.148 — Virtual Cinema</title>
   
   <!-- Progressive Web App (PWA) & Mobile App Configuration -->
   <link rel="manifest" href="manifest.json">
@@ -2547,7 +2547,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.147";
+    const APP_VERSION = "4.9.148";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3052,6 +3052,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.148": [
+        "Hardened Firebase Realtime Database security rules against unauthorized writes.",
+        "Locked database root to prevent global write access vulnerabilities.",
+        "Restricted administrative database modifications to verified theater administrator accounts.",
+        "Enforced strict payload validation on visitor movie request submissions.",
+        "Secured account quota and TV watchlist endpoints from writes."
+      ],
       "4.9.147": [
         "Restored official Season 13 artwork across all AHS episodes.",
         "Added high-definition episode stills for every AHS screening.",
