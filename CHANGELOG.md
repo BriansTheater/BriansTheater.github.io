@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.142] - 2026-10-04
+
+### What's New
+- Cleaned up Vault marathons with master placeholder hub cards.
+- Collapsed 89 individual marathon titles into 7 clean hubs.
+- Added interactive film lineup preview drawer on marathon cards.
+- Added seamless Back to All Marathons navigation in collections.
+
 ## [4.9.141] - 2026-10-02
 
 ### What's New

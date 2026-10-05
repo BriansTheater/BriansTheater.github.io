@@ -1,11 +1,11 @@
 {
-  "version": "4.9.141",
-  "releaseDate": "2026-10-02",
-  "title": "Brian's Theater v4.9.141",
+  "version": "4.9.142",
+  "releaseDate": "2026-10-04",
+  "title": "Brian's Theater v4.9.142",
   "notes": [
-    "Restored permanently visible and active Enter button on theater stage.",
-    "Positioned countdown timer seamlessly above active Enter auditorium button.",
-    "Ensured continuous one-click entrance access across all door states.",
-    "Preserved live screening and pre-show countdown transition animations."
+    "Cleaned up Vault marathons with master placeholder hub cards.",
+    "Collapsed 89+ individual marathon titles into 7 clean hubs.",
+    "Added interactive film lineup preview drawer on marathon cards.",
+    "Added seamless Back to All Marathons navigation in collections."
   ]
 }
