@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.144] - 2026-10-04
+
+### What's New
+- Fixed stage door closure hiding Enter button when closed.
+- Added prominent locked auditorium status banner on closed stage.
+- Protected door mode overrides from Firebase permission reset loops.
+- Protected custom artwork and bulk posters against Firebase overwrites.
+- Merged persistent bulk images automatically on schedule data sync.
+- Added quick 1-click admin door controls on stage.
+
 ## [4.9.143] - 2026-10-04
 
 ### What's New
