@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.152] - 2026-10-06
+
+### What's New
+- Added 4-layer Plex library discovery guide for new patrons.
+- Highlighted MORE menu and sidebar library pinning instructions.
+- Added direct 1-click Plex Web app launch button.
+- Upgraded Discord slash command responses with library guide buttons.
+- Added 1-click setup guide emailer to admin patron studio.
+
 ## [4.9.151] - 2026-10-05
 
 ### What's New

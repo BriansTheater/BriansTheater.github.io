@@ -1,14 +1,12 @@
 {
-  "version": "4.9.151",
-  "releaseDate": "2026-10-05",
-  "title": "Brian's Theater v4.9.151",
+  "version": "4.9.152",
+  "releaseDate": "2026-10-06",
+  "title": "Brian's Theater v4.9.152",
   "notes": [
-    "Permanently eliminated Update Alerts popup loop on reload.",
-    "Synchronized theater release version across app and service worker.",
-    "Added direct top-right close button to update modal.",
-    "Added ultra-friendly 2-step Plex account onboarding decision wizard.",
-    "Guided new patrons through 30-second free Plex registration.",
-    "Transitioned Discord automation callouts to official slash command.",
-    "Streamlined VIP access invitations with real-time status updates."
+    "Added 4-layer Plex library discovery guide for new patrons.",
+    "Highlighted MORE menu and sidebar library pinning instructions.",
+    "Added direct 1-click Plex Web app launch button.",
+    "Upgraded Discord slash command responses with library guide buttons.",
+    "Added 1-click setup guide emailer to admin patron studio."
   ]
 }

@@ -2694,7 +2694,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.151</span>
+              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.152</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -2732,7 +2732,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.151";
+    const APP_VERSION = "4.9.152";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3237,6 +3237,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.152": [
+        "Added 4-layer Plex library discovery guide for new patrons.",
+        "Highlighted MORE menu and sidebar library pinning instructions.",
+        "Added direct 1-click Plex Web app launch button.",
+        "Upgraded Discord slash command responses with library guide buttons.",
+        "Added 1-click setup guide emailer to admin patron studio."
+      ],
       "4.9.151": [
         "Permanently eliminated Update Alerts popup loop on reload.",
         "Synchronized all theater application files to version 4.9.151.",
@@ -12273,6 +12280,9 @@
               <button type="button" onclick="editPlexUser('${uId}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs transition cursor-pointer" title="Edit User">
                 ✏️
               </button>
+              <button type="button" onclick="sendPlexSetupGuide('${escapeHtml(u.usernameOrEmail)}', '${escapeHtml(u.displayName || '')}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-amber-950/60 text-amber-300 border border-slate-800 hover:border-amber-500/40 text-xs transition cursor-pointer" title="Send Guide / Copy Setup Instructions">
+                📩
+              </button>
               <button type="button" onclick="copyPlexInviteLink('${escapeHtml(u.usernameOrEmail)}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs transition cursor-pointer" title="Copy Invite Link">
                 📋
               </button>
@@ -12468,6 +12478,32 @@
         });
       } else {
         showTheaterToast("Portal link: " + link);
+      }
+    }
+
+    function sendPlexSetupGuide(emailOrUser, displayName) {
+      const name = displayName || emailOrUser || 'Patron';
+      const guideText = `🍿 Welcome to Brian's Theater VIP Plex!
+
+Your access has been granted! To start streaming our Movies, TV Shows, and VIP libraries:
+
+1. Open Plex on your TV, phone, or computer (or launch https://app.plex.tv/desktop/).
+2. Look at the left sidebar, scroll down to the bottom, and click "MORE >".
+3. Find "Media Server" (Brian's Theater) and click the 📌 Pin icon next to Movies and TV Shows so they appear on your home screen!
+
+Enjoy the show! 🎬✨`;
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(guideText).catch(e => console.warn(e));
+      }
+
+      if (emailOrUser && emailOrUser.includes('@')) {
+        const subject = encodeURIComponent("🍿 Welcome to Brian's Theater Plex - Setup & Library Guide");
+        const body = encodeURIComponent(`Hi ${name},\n\n` + guideText);
+        window.open(`mailto:${encodeURIComponent(emailOrUser)}?subject=${subject}&body=${body}`, '_blank');
+        showTheaterToast(`Opened email & copied setup guide for ${name}!`);
+      } else {
+        showTheaterToast(`Setup guide copied to clipboard for ${name}! (Paste in Discord/DM)`);
       }
     }
 
