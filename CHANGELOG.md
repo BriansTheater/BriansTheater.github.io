@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.155] - 2026-10-10
+
+### What's New
+- Integrated Kevin's work calendar to automatically detect open nights.
+- Auto-generated open movie night placeholders with date and showtimes.
+- Prioritized open placeholder slots when approving movie requests.
+- Added 1-click Kevin schedule scan in Google Sheets menu.
+
 ## [4.9.154] - 2026-10-10
 
 ### What's New
