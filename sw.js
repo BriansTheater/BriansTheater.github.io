@@ -1,11 +1,12 @@
 // ==========================================
 // FILE: sw.js
-// VERSION: 4.9.155
+// VERSION: 4.9.156
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.155';
+const CACHE_NAME = 'brian-theater-v4.9.156';
+const MEDIA_CACHE_NAME = 'brian-theater-media-v1';
 const STATIC_ASSETS = [
   './manifest.json',
   './past_movies_data.js',
@@ -33,11 +34,11 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    // Purge all old and stale caches across all version iterations
+    // Purge outdated version caches while preserving media cache
     caches.keys().then(keys => {
       return Promise.all(
         keys.map(key => {
-          if (key !== CACHE_NAME) {
+          if (key !== CACHE_NAME && key !== MEDIA_CACHE_NAME) {
             console.log('[SW] Purging outdated cache storage:', key);
             return caches.delete(key);
           }
@@ -55,18 +56,14 @@ self.addEventListener('fetch', event => {
 
   const requestUrl = new URL(event.request.url);
 
-  // 1. Network-only: version.json, sw.js, Firebase Auth & RTDB, Google APIs, YouTube
+  // 1. Network-only: version.json, sw.js, Firebase Auth & RTDB, Google APIs
   if (
     requestUrl.pathname.endsWith('version.json') ||
     requestUrl.pathname.endsWith('sw.js') ||
     requestUrl.hostname.includes('firebaseio.com') ||
     requestUrl.hostname.includes('firebaseapp.com') ||
-    requestUrl.hostname.includes('googleapis.com') ||
     requestUrl.hostname.includes('accounts.google.com') ||
-    requestUrl.hostname.includes('script.google.com') ||
-    requestUrl.hostname.includes('gstatic.com') ||
-    requestUrl.hostname.includes('youtube.com') ||
-    requestUrl.hostname.includes('tmdb.org')
+    requestUrl.hostname.includes('script.google.com')
   ) {
     return event.respondWith(fetch(event.request, { cache: 'no-store' }));
   }
@@ -84,13 +81,54 @@ self.addEventListener('fetch', event => {
     );
   }
 
-  // 3. Cache-first, fallback to network for static assets (icons, manifest)
+  // 3. Fast Stale-While-Revalidate / Cache-First for Posters & Artwork
+  if (
+    event.request.destination === 'image' ||
+    requestUrl.hostname.includes('image.tmdb.org') ||
+    requestUrl.hostname.includes('upload.wikimedia.org') ||
+    requestUrl.hostname.includes('lh3.googleusercontent.com')
+  ) {
+    return event.respondWith(
+      caches.open(MEDIA_CACHE_NAME).then(cache => {
+        return cache.match(event.request).then(cachedResponse => {
+          if (cachedResponse) {
+            // Return cached response instantly and refresh in background
+            fetch(event.request).then(networkResponse => {
+              if (networkResponse && networkResponse.status === 200) {
+                cache.put(event.request, networkResponse);
+              }
+            }).catch(() => {});
+            return cachedResponse;
+          }
+          return fetch(event.request).then(networkResponse => {
+            if (networkResponse && networkResponse.status === 200) {
+              cache.put(event.request, networkResponse.clone());
+            }
+            return networkResponse;
+          }).catch(() => cachedResponse);
+        });
+      })
+    );
+  }
+
+  // 4. Cache-first, fallback to network for static assets and CDN libraries
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request);
+      return fetch(event.request).then(networkResponse => {
+        if (
+          networkResponse &&
+          networkResponse.status === 200 &&
+          (requestUrl.hostname.includes('gstatic.com') || requestUrl.origin === self.location.origin)
+        ) {
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkResponse.clone());
+          });
+        }
+        return networkResponse;
+      });
     })
   );
 });

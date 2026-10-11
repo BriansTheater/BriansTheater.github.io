@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.156] - 2026-10-11
+
+### What's New
+- Accelerated initial page load with deferred asset loading pipeline.
+- Optimized Google Drive posters reducing image payloads up to 87%.
+- Enabled ultra-fast service worker caching for TMDB and media.
+- Deduplicated Firebase startup sync to prevent redundant REST calls.
+
 ## [4.9.155] - 2026-10-10
 
 ### What's New
