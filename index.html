@@ -328,14 +328,14 @@
               </div>
             </div>
 
-            <!-- Visible Door Lock Status Bar -->
-            <div id="stageDoorLockedStatusRow" class="pt-2.5 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-1 text-xs">
+            <!-- Visible Door Lock Status Bar (Visible only when admin locks or screening concludes early) -->
+            <div id="stageDoorLockedStatusRow" class="hidden pt-2.5 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-1 text-xs">
               <div class="flex items-center gap-1.5 font-bold text-amber-300">
                 <span id="doorsLockIcon">🔒</span>
-                <span id="doorsLockedStatusTitle">DOORS OPEN 10 MIN BEFORE SHOWTIME</span>
+                <span id="doorsLockedStatusTitle"></span>
               </div>
               <div id="doorsLockedSubtext" class="text-[11px] font-mono text-slate-400">
-                Doors open at <span id="doorsOpenAtTime" class="text-sky-300 font-bold">6:50 PM PST</span>
+                <span id="doorsOpenAtTime" class="hidden text-sky-300 font-bold"></span>
               </div>
             </div>
           </div>
@@ -2694,7 +2694,7 @@
           <div>
             <div class="flex items-center gap-2">
               <h3 id="updateToastTitle" class="text-base sm:text-lg font-black text-slate-100">Update Alerts</h3>
-              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.152</span>
+              <span id="updateToastBadge" class="app-version-badge text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">v4.9.153</span>
             </div>
             <p id="updateToastSubtitle" class="text-xs text-slate-400 mt-0.5">Summary of latest updates:</p>
           </div>
@@ -2732,7 +2732,7 @@
   <script src="past_movies_data.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://brianstheater.github.io/past_movies_data.js'; document.head.appendChild(s);"></script>
 
   <script>
-    const APP_VERSION = "4.9.152";
+    const APP_VERSION = "4.9.153";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3237,6 +3237,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.153": [
+        "Removed redundant doors open status from stage countdown.",
+        "Eliminated duplicate virtual auditorium doors text below timer.",
+        "Kept administrative override indicators active when doors are locked.",
+        "Polished stage countdown layout for clean widescreen presentation."
+      ],
       "4.9.152": [
         "Added 4-layer Plex library discovery guide for new patrons.",
         "Highlighted MORE menu and sidebar library pinning instructions.",
@@ -5168,6 +5174,7 @@
     function setEntranceState(isOpen) {
       const countdownBox = document.getElementById('stageCountdownBox');
       const openCta = document.getElementById('theaterDoorsOpenCta');
+      const lockRow = document.getElementById('stageDoorLockedStatusRow');
       const lockIcon = document.getElementById('doorsLockIcon');
       const lockTitle = document.getElementById('doorsLockedStatusTitle');
       const lockSub = document.getElementById('doorsLockedSubtext');
@@ -5181,11 +5188,14 @@
         if (countdownBox) {
           countdownBox.classList.add('hidden');
         }
+        if (lockRow) {
+          lockRow.classList.add('hidden');
+        }
         if (lockIcon) lockIcon.textContent = '🟢';
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
         if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
-        // When waiting for next show or forced closed: Hide Enter button, show countdown box with locked status
+        // When waiting for next show or forced closed: Hide Enter button, show countdown box
         if (openCta) {
           openCta.classList.add('hidden');
           openCta.classList.remove('flex');
@@ -5197,17 +5207,18 @@
         const curDoorMode = (typeof doorOverrideMode !== 'undefined') ? doorOverrideMode : (window.doorOverrideMode || 'auto');
         const curEarlyMs = (typeof movieEarlyConclusionUntilMs !== 'undefined') ? movieEarlyConclusionUntilMs : (window.movieEarlyConclusionUntilMs || 0);
         if (curDoorMode === 'force_closed') {
+          if (lockRow) lockRow.classList.remove('hidden');
           if (lockTitle) lockTitle.textContent = 'AUDITORIUM CLOSED (LOCKED BY ADMIN)';
           if (lockSub) lockSub.innerHTML = 'Virtual auditorium doors are locked by administration. They will reopen before the next show.';
         } else if (curEarlyMs && Date.now() < curEarlyMs) {
+          if (lockRow) lockRow.classList.remove('hidden');
           if (lockTitle) lockTitle.textContent = 'SCREENING CONCLUDED (AUDITORIUM CLOSED)';
           if (lockSub) lockSub.innerHTML = 'This screening concluded early. Doors reopen 10 min before next scheduled premiere.';
         } else {
-          if (lockTitle) lockTitle.textContent = 'DOORS OPEN 10 MIN BEFORE SHOWTIME';
-          if (lockSub) {
-            const openTimeText = document.getElementById('doorsOpenAtTime')?.textContent || '6:50 PM PST';
-            lockSub.innerHTML = `Virtual auditorium doors open 10 minutes prior to premiere (<span id="doorsOpenAtTime" class="text-amber-300 font-semibold font-mono">${escapeHtml(openTimeText)}</span>).`;
-          }
+          // Standard countdown: completely hide status bar to eliminate redundant "DOORS OPEN 10 MIN" text
+          if (lockRow) lockRow.classList.add('hidden');
+          if (lockTitle) lockTitle.textContent = '';
+          if (lockSub) lockSub.innerHTML = '';
         }
       }
     }

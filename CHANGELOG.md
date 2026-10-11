@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.153] - 2026-10-10
+
+### What's New
+- Removed redundant doors open status from stage countdown.
+- Eliminated duplicate virtual auditorium doors text below timer.
+- Kept administrative override indicators active when doors are locked.
+- Polished stage countdown layout for clean widescreen presentation.
+
 ## [4.9.152] - 2026-10-06
 
 ### What's New
