@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.154] - 2026-10-10
+
+### What's New
+- Restored missing requested movies spill formula on Quick Schedule.
+- Automated self-healing live next movie countdown and status indicators.
+- Overhauled played movie removal script with fuzzy title matching.
+- Synchronized live screening schedule directly to theater website.
+
 ## [4.9.153] - 2026-10-10
 
 ### What's New

@@ -1,11 +1,11 @@
 {
-  "version": "4.9.153",
+  "version": "4.9.154",
   "releaseDate": "2026-10-10",
-  "title": "Brian's Theater v4.9.153",
+  "title": "Brian's Theater v4.9.154",
   "notes": [
-    "Removed redundant doors open status from stage countdown.",
-    "Eliminated duplicate virtual auditorium doors text below timer.",
-    "Kept administrative override indicators active when doors are locked.",
-    "Polished stage countdown layout for clean widescreen presentation."
+    "Restored missing requested movies spill formula on Quick Schedule.",
+    "Automated self-healing live next movie countdown and status indicators.",
+    "Overhauled played movie removal script with fuzzy title matching.",
+    "Synchronized live screening schedule directly to theater website."
   ]
 }
