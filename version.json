@@ -1,11 +1,12 @@
 {
-  "version": "4.9.156",
-  "releaseDate": "2026-10-11",
-  "title": "Brian's Theater v4.9.156",
+  "version": "4.9.157",
+  "releaseDate": "2026-10-12",
+  "title": "Brian's Theater v4.9.157",
   "notes": [
-    "Accelerated initial page load with deferred asset loading pipeline.",
-    "Optimized Google Drive posters reducing image payloads up to 87%.",
-    "Enabled ultra-fast service worker caching for TMDB and media.",
-    "Deduplicated Firebase startup sync to prevent redundant REST calls."
+    "Added instant movie switcher for active and scheduled screenings.",
+    "Real-time TMDb autocomplete suggestions while typing replacement titles.",
+    "Automatic extraction of posters, runtimes, genres, and trailers.",
+    "Live synchronization to theater stage, countdown, and Firebase.",
+    "Dynamic tonight screening detection across admin controls."
   ]
 }

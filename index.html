@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.156 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.157 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -795,9 +795,17 @@
               <span>🖼️</span> Now Playing Stage Controls
             </h3>
 
-            <div>
-              <label class="text-xs font-semibold text-slate-300">Active Movie Title</label>
-              <input type="text" id="adminTitle" value="Neighbors 2" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400">
+            <button type="button" onclick="openSwitchMovieForStage()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-500 via-teal-400 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-md flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+              <span>🎬</span> <span>Switch Active Movie (Auto TMDb & Poster)</span>
+            </button>
+
+            <div class="relative">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-slate-300">Active Movie Title</label>
+                <button type="button" onclick="openSwitchMovieForStage()" class="text-[11px] text-sky-400 hover:text-sky-300 underline font-medium cursor-pointer">Use Switcher Modal</button>
+              </div>
+              <input type="text" id="adminTitle" value="Neighbors 2" autocomplete="off" oninput="onAdminTitleQuickSearch(this.value)" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400">
+              <div id="adminTitleQuickSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 z-50 bg-slate-950 border border-sky-500/40 rounded-xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto divide-y divide-slate-800"></div>
             </div>
 
             <div>
@@ -903,7 +911,10 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button type="button" id="btnAdminReschedTonight" onclick="openRescheduleForTonight()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow flex items-center gap-1 active:scale-95">
+              <button type="button" id="btnAdminSwitchTonight" onclick="openSwitchMovieForTonight()" class="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition shadow flex items-center gap-1 active:scale-95 cursor-pointer">
+                <span>🎬</span> Switch Movie
+              </button>
+              <button type="button" id="btnAdminReschedTonight" onclick="openRescheduleForTonight()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow flex items-center gap-1 active:scale-95 cursor-pointer">
                 <span>🗓️</span> Reschedule Tonight
               </button>
             </div>
@@ -1731,15 +1742,18 @@
       <div class="flex flex-col gap-3">
         <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Select Reschedule Option:</label>
         
-        <div class="grid grid-cols-3 gap-2">
-          <button type="button" id="btnReschedModeNewDate" onclick="setRescheduleOptionMode('new_date')" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1 shadow-sm">
-            <span>📅</span> New Date
+        <div class="grid grid-cols-4 gap-1.5">
+          <button type="button" id="btnReschedModeNewDate" onclick="setRescheduleOptionMode('new_date')" class="py-2.5 px-1.5 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 transition flex items-center justify-center gap-1 shadow-sm">
+            <span>📅</span> Date
           </button>
-          <button type="button" id="btnReschedModePostpone" onclick="setRescheduleOptionMode('postpone')" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1 shadow-sm">
+          <button type="button" id="btnReschedModePostpone" onclick="setRescheduleOptionMode('postpone')" class="py-2.5 px-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-amber-400/60 transition flex items-center justify-center gap-1 shadow-sm">
             <span>⏳</span> Postpone
           </button>
-          <button type="button" id="btnReschedModeRestore" onclick="setRescheduleOptionMode('restore')" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-emerald-400/60 transition flex items-center justify-center gap-1 shadow-sm">
+          <button type="button" id="btnReschedModeRestore" onclick="setRescheduleOptionMode('restore')" class="py-2.5 px-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:border-emerald-400/60 transition flex items-center justify-center gap-1 shadow-sm">
             <span>↩️</span> Restore
+          </button>
+          <button type="button" id="btnReschedModeSwitch" onclick="switchToMovieSwitchModal()" class="py-2.5 px-1.5 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/40 transition flex items-center justify-center gap-1 shadow-sm cursor-pointer" title="Switch movie screening with live TMDb search">
+            <span>🎬</span> Switch
           </button>
         </div>
 
@@ -1806,6 +1820,100 @@
         </button>
         <button type="button" id="btnSubmitReschedule" onclick="submitMovieReschedule()" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-lg flex items-center gap-1.5 active:scale-95">
           <span>⚡</span> <span id="btnSubmitRescheduleLabel">Save & Sync Reschedule</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SWITCH MOVIE MODAL (Live TMDb Autocomplete & Metadata Extraction) -->
+  <div id="switchMovieModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeSwitchMovieModal()">
+    <div class="bg-slate-900 border border-sky-500/50 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl relative flex flex-col gap-4 text-slate-200 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-black text-lg">
+            🎬
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-100 flex items-center gap-2">
+              <span>Switch Movie Screening</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">TMDb Powered</span>
+            </h3>
+            <p class="text-xs text-slate-400">Replace a screening with automatic metadata, posters, runtime & trailers</p>
+          </div>
+        </div>
+        <button onclick="closeSwitchMovieModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition cursor-pointer" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Current Movie Banner (What is being replaced) -->
+      <div class="flex gap-3.5 p-3 rounded-xl bg-slate-950 border border-slate-800 items-center">
+        <img id="switchMovieCurrentPoster" src="" alt="Current Movie" class="w-14 h-18 sm:w-16 sm:h-22 object-cover rounded-lg border border-slate-700 bg-slate-900 shrink-0" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
+        <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full w-fit bg-rose-500/20 text-rose-300 border border-rose-500/40">CURRENTLY SCHEDULED (REPLACING)</span>
+          <h4 id="switchMovieCurrentTitle" class="text-sm sm:text-base font-bold text-white truncate">Movie Title</h4>
+          <p id="switchMovieCurrentMeta" class="text-xs text-slate-400 font-mono">Date • Time</p>
+        </div>
+      </div>
+
+      <!-- Search Input with Live TMDb Autocomplete Suggestions -->
+      <div class="flex flex-col gap-1.5 relative">
+        <label class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+          <span>Search Replacement Movie:</span>
+          <span class="text-[11px] text-teal-300 font-normal normal-case">Type title for live suggestions</span>
+        </label>
+        
+        <div class="relative">
+          <input type="text" id="switchMovieSearchInput" placeholder="Type new movie title (e.g. Alien: Romulus, The Substance)..." autocomplete="off" oninput="onSwitchMovieSearchInput(this.value)" class="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:border-sky-400 focus:outline-none transition font-medium pr-10">
+          <button type="button" id="btnSwitchClearSearch" onclick="clearSwitchMovieSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-sm p-1 cursor-pointer">✕</button>
+        </div>
+
+        <!-- Floating Suggestions Dropdown -->
+        <div id="switchMovieSuggestions" class="hidden absolute left-0 right-0 top-full mt-2 z-50 morphic-panel rounded-2xl shadow-2xl overflow-hidden max-h-72 overflow-y-auto divide-y divide-white/5 border border-sky-500/30">
+          <!-- Dynamically populated via fetchTmdbSuggestionsForSwitch -->
+        </div>
+      </div>
+
+      <!-- Selected New Movie Live Metadata Preview Card -->
+      <div id="switchNewMoviePreviewCard" class="hidden flex flex-col gap-2.5 p-3.5 rounded-xl bg-sky-950/20 border border-sky-500/40">
+        <div class="flex items-center justify-between text-xs font-bold text-sky-300">
+          <span class="flex items-center gap-1.5"><span>✨</span> <span>Verified Replacement Details:</span></span>
+          <span id="switchNewMovieYearBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">2026</span>
+        </div>
+
+        <div class="flex gap-3 items-start">
+          <img id="switchNewMoviePosterImg" src="" alt="Poster" class="w-16 h-22 sm:w-20 sm:h-28 object-cover rounded-lg border border-sky-500/30 bg-black shrink-0 shadow-md" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
+          <div class="flex flex-col gap-1 min-w-0 flex-1">
+            <h4 id="switchNewMovieTitleText" class="text-sm sm:text-base font-extrabold text-white truncate">Movie Title</h4>
+            <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-300">
+              <span id="switchNewMovieRuntimeText" class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700">-- Runtime</span>
+              <span id="switchNewMovieGenresText" class="px-1.5 py-0.5 rounded bg-slate-800 text-teal-300 border border-slate-700 truncate max-w-[180px]">-- Genres</span>
+            </div>
+            <p id="switchNewMovieOverviewText" class="text-[11px] text-slate-300 line-clamp-3 leading-relaxed mt-0.5">Overview...</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span id="switchNewMovieTrailerBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Trailer Linked</span>
+              <span id="switchNewMovieEndTimeBadge" class="text-[10px] font-mono text-slate-400">Ends at --</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Stage Update Checkbox (Auto-checked if editing tonight's/active movie) -->
+      <div id="switchMovieStageOptionRow" class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+        <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer select-none">
+          <input type="checkbox" id="switchMovieUpdateStageCheckbox" checked class="w-4 h-4 rounded text-sky-500 focus:ring-sky-400 border-slate-700 bg-slate-900 cursor-pointer">
+          <span><b>Update Live Stage & Now Playing immediately</b> (Syncs to all patrons live)</span>
+        </label>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeSwitchMovieModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="btnConfirmMovieSwitch" onclick="confirmAndExecuteMovieSwitch()" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-lg flex items-center gap-1.5 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+          <span>🚀</span> <span>Confirm & Switch Movie</span>
         </button>
       </div>
 
@@ -2739,7 +2847,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.156";
+    const APP_VERSION = "4.9.157";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3244,6 +3352,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.157": [
+        "Added instant movie switcher for active and scheduled screenings.",
+        "Real-time TMDb autocomplete suggestions while typing replacement titles.",
+        "Automatic extraction of posters, runtimes, genres, and trailers.",
+        "Live synchronization to theater stage, countdown, and Firebase.",
+        "Dynamic tonight screening detection across admin controls."
+      ],
       "4.9.156": [
         "Accelerated initial page load with deferred asset loading pipeline.",
         "Optimized Google Drive posters reducing image payloads up to 87%.",
@@ -6520,10 +6635,13 @@
     }
 
     function openRescheduleForTonight() {
+      const activeObj = (typeof getActiveOrNextMovie === 'function') ? getActiveOrNextMovie() : null;
       const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
         ? window.theaterScheduleCache
         : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
-      const tonightMovie = schedSource.find(s => s && s.title && s.title.includes('Backrooms')) || schedSource[0];
+      const tonightMovie = (activeObj && activeObj.movie) 
+        ? activeObj.movie 
+        : (schedSource.find(s => s && s.title && (s.status === '🔴 LIVE NOW' || s.status === 'NEXT UP')) || schedSource[0]);
       if (tonightMovie) {
         openRescheduleMovieModal(tonightMovie.title);
       }
@@ -6542,20 +6660,21 @@
 
       if (countBadge) countBadge.textContent = `${schedSource.length} Titles`;
 
-      // Update Tonight's summary card
-      const backroomsOrActive = schedSource.find(s => s && s.title && s.title.includes('Backrooms'));
-      if (tonightTitle && tonightSub) {
-        if (backroomsOrActive && (backroomsOrActive.status === 'POSTPONED' || backroomsOrActive.rescheduled)) {
-          tonightTitle.textContent = `${backroomsOrActive.title} — Postponed (Release Date Changed)`;
+      // Update Tonight's summary card dynamically
+      const activeObj = (typeof getActiveOrNextMovie === 'function') ? getActiveOrNextMovie() : null;
+      const tonightMovie = (activeObj && activeObj.movie) 
+        ? activeObj.movie 
+        : (schedSource.find(s => s && s.title && (s.status === '🔴 LIVE NOW' || s.status === 'NEXT UP')) || schedSource[0]);
+
+      if (tonightTitle && tonightSub && tonightMovie) {
+        if (tonightMovie.status === 'POSTPONED' || tonightMovie.rescheduled) {
+          tonightTitle.textContent = `${tonightMovie.title} — Postponed (Release Date Changed)`;
           tonightTitle.className = "text-sm sm:text-base font-bold text-amber-300";
-          tonightSub.textContent = `Auditorium Doors Closed • Next Up: Toy Story 5`;
-        } else if (backroomsOrActive) {
-          tonightTitle.textContent = `${backroomsOrActive.title}`;
-          tonightTitle.className = "text-sm sm:text-base font-bold text-white";
-          tonightSub.textContent = `${backroomsOrActive.date || 'Tonight'} • ${backroomsOrActive.startTime || '7:00 PM'} PST`;
+          tonightSub.textContent = `Auditorium Doors Closed • Next Up: ${(schedSource[1]?.title || 'Upcoming Show')}`;
         } else {
-          tonightTitle.textContent = "Auditorium Closed Tonight";
-          tonightSub.textContent = "Next Premiere: Toy Story 5";
+          tonightTitle.textContent = `${tonightMovie.title}`;
+          tonightTitle.className = "text-sm sm:text-base font-bold text-white";
+          tonightSub.textContent = `${tonightMovie.date || 'Tonight'} • ${tonightMovie.startTime || tonightMovie.time || '7:00 PM'} PST`;
         }
       }
 
@@ -6588,9 +6707,14 @@
                 <p class="text-[11px] text-slate-400 font-mono mt-0.5">${escapeHtml(m.date || '')} • ${escapeHtml(m.startTime || m.time || '7:00 PM')}</p>
               </div>
             </div>
-            <button type="button" onclick="openRescheduleMovieModal('${escapeHtml(title)}')" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition shrink-0 flex items-center gap-1 active:scale-95 cursor-pointer">
-              <span>🗓️</span> Reschedule
-            </button>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" onclick="openSwitchMovieModal('${escapeHtml(title)}')" class="px-2.5 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-xs font-semibold transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Switch Movie (TMDb Auto-fetch)">
+                <span>🎬</span> Switch
+              </button>
+              <button type="button" onclick="openRescheduleMovieModal('${escapeHtml(title)}')" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition flex items-center gap-1 active:scale-95 cursor-pointer">
+                <span>🗓️</span> Reschedule
+              </button>
+            </div>
           </div>
         `;
       }).join('');
@@ -6631,6 +6755,702 @@
       updateCountdown();
       renderSchedule();
       showTheaterToast("📢 Intermission announcement cleared.");
+    }
+
+    // =========================================================================
+    // 🎬 MOVIE SWITCHER & TMDB AUTOCOMPLETE ENGINE (v4.9.157)
+    // =========================================================================
+    let currentSwitchTargetMovie = null;
+    let switchSelectedMovieMetadata = null;
+    let switchSearchDebounceTimer = null;
+    let adminTitleQuickDebounceTimer = null;
+
+    function openSwitchMovieModal(movieTitle) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      let cleanTarget = (movieTitle || '').replace(/^🎬\s*/, '').trim();
+      let targetMovie = null;
+
+      if (cleanTarget) {
+        targetMovie = schedSource.find(s => s && s.title && s.title.replace(/^🎬\s*/, '').trim().toLowerCase() === cleanTarget.toLowerCase());
+      }
+
+      if (!targetMovie) {
+        // Attempt to find active or tonight's movie
+        const activeObj = (typeof getActiveOrNextMovie === 'function') ? getActiveOrNextMovie() : null;
+        if (activeObj && activeObj.movie) {
+          targetMovie = activeObj.movie;
+        } else if (schedSource.length > 0) {
+          targetMovie = schedSource[0];
+        } else {
+          targetMovie = {
+            title: cleanTarget || "Active Screening",
+            date: "Tonight",
+            startTime: "7:00 PM",
+            status: "SCHEDULED"
+          };
+        }
+      }
+
+      currentSwitchTargetMovie = targetMovie;
+      switchSelectedMovieMetadata = null;
+
+      // Populate current movie banner
+      const curTitle = currentSwitchTargetMovie.title || 'Movie';
+      const curPoster = currentSwitchTargetMovie.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(curTitle) : '');
+      const curDate = currentSwitchTargetMovie.date || 'Tonight';
+      const curTime = currentSwitchTargetMovie.startTime || currentSwitchTargetMovie.time || '7:00 PM';
+
+      const posterEl = document.getElementById('switchMovieCurrentPoster');
+      const titleEl = document.getElementById('switchMovieCurrentTitle');
+      const metaEl = document.getElementById('switchMovieCurrentMeta');
+      if (posterEl) posterEl.src = curPoster;
+      if (titleEl) titleEl.textContent = curTitle;
+      if (metaEl) metaEl.textContent = `${curDate} • ${curTime} PST`;
+
+      // Reset search input and suggestions
+      const searchInput = document.getElementById('switchMovieSearchInput');
+      const clearBtn = document.getElementById('btnSwitchClearSearch');
+      const suggBox = document.getElementById('switchMovieSuggestions');
+      const previewCard = document.getElementById('switchNewMoviePreviewCard');
+      const confirmBtn = document.getElementById('btnConfirmMovieSwitch');
+
+      if (searchInput) {
+        searchInput.value = '';
+        setTimeout(() => searchInput.focus(), 100);
+      }
+      if (clearBtn) clearBtn.classList.add('hidden');
+      if (suggBox) {
+        suggBox.classList.add('hidden');
+        suggBox.innerHTML = '';
+      }
+      if (previewCard) previewCard.classList.add('hidden');
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span>🚀</span> <span>Confirm & Switch Movie</span>';
+      }
+
+      // Check stage checkbox by default if this is tonight/active or if user wants immediate stage update
+      const stageCheck = document.getElementById('switchMovieUpdateStageCheckbox');
+      if (stageCheck) {
+        stageCheck.checked = true;
+      }
+
+      const modal = document.getElementById('switchMovieModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSwitchMovieModal() {
+      const modal = document.getElementById('switchMovieModal');
+      if (modal) modal.classList.add('hidden');
+      if (switchSearchDebounceTimer) {
+        clearTimeout(switchSearchDebounceTimer);
+        switchSearchDebounceTimer = null;
+      }
+      const suggBox = document.getElementById('switchMovieSuggestions');
+      if (suggBox) suggBox.classList.add('hidden');
+      currentSwitchTargetMovie = null;
+      switchSelectedMovieMetadata = null;
+    }
+
+    function clearSwitchMovieSearch() {
+      const input = document.getElementById('switchMovieSearchInput');
+      const clearBtn = document.getElementById('btnSwitchClearSearch');
+      const suggBox = document.getElementById('switchMovieSuggestions');
+      const previewCard = document.getElementById('switchNewMoviePreviewCard');
+      const confirmBtn = document.getElementById('btnConfirmMovieSwitch');
+
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      if (clearBtn) clearBtn.classList.add('hidden');
+      if (suggBox) {
+        suggBox.classList.add('hidden');
+        suggBox.innerHTML = '';
+      }
+      if (previewCard) previewCard.classList.add('hidden');
+      if (confirmBtn) confirmBtn.disabled = true;
+      switchSelectedMovieMetadata = null;
+    }
+
+    function onSwitchMovieSearchInput(val) {
+      const trimmed = (val || '').trim();
+      const clearBtn = document.getElementById('btnSwitchClearSearch');
+      const suggBox = document.getElementById('switchMovieSuggestions');
+
+      if (clearBtn) {
+        if (trimmed.length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+
+      if (switchSearchDebounceTimer) clearTimeout(switchSearchDebounceTimer);
+
+      if (trimmed.length < 2) {
+        if (suggBox) {
+          suggBox.classList.add('hidden');
+          suggBox.innerHTML = '';
+        }
+        return;
+      }
+
+      switchSearchDebounceTimer = setTimeout(() => {
+        fetchTmdbSuggestionsForSwitch(trimmed);
+      }, 250);
+    }
+
+    async function fetchTmdbSuggestionsForSwitch(query) {
+      const suggBox = document.getElementById('switchMovieSuggestions');
+      if (!suggBox) return;
+
+      suggBox.classList.remove('hidden');
+      suggBox.innerHTML = `
+        <div class="p-3.5 text-center text-xs text-sky-300 font-mono flex items-center justify-center gap-2">
+          <span class="animate-spin text-sm">🔄</span>
+          <span>Searching TMDb database...</span>
+        </div>
+      `;
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        let searchTitle = query;
+        let searchYear = '';
+        const yearMatch = query.match(/\b(19\d\d|20\d\d)\b/);
+        if (yearMatch) {
+          searchYear = yearMatch[1];
+          searchTitle = query.replace(/\b(19\d\d|20\d\d)\b/, '').replace(/[()]/g, '').trim();
+        }
+
+        let url = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}&include_adult=false`;
+        if (searchYear) url += `&primary_release_year=${searchYear}`;
+
+        let res = await fetch(url);
+        let results = [];
+        if (res.ok) {
+          const data = await res.json();
+          results = data.results || [];
+        }
+
+        if (results.length === 0 && searchYear) {
+          const retryRes = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}&include_adult=false`);
+          if (retryRes.ok) {
+            const data = await retryRes.json();
+            results = data.results || [];
+          }
+        }
+
+        if (results.length === 0 || /\b(tv|season|series|show|episode)\b/i.test(query)) {
+          const tvRes = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`);
+          if (tvRes.ok) {
+            const tvData = await tvRes.json();
+            if (tvData.results && tvData.results.length > 0) {
+              const tvFormatted = tvData.results.map(t => ({
+                ...t,
+                title: t.name,
+                release_date: t.first_air_date,
+                isTv: true
+              }));
+              results = results.concat(tvFormatted);
+            }
+          }
+        }
+
+        if (results.length === 0) {
+          suggBox.innerHTML = `
+            <div class="p-4 text-center text-xs text-slate-400">
+              No TMDb matches found for "${escapeHtml(query)}". Try another title.
+            </div>
+          `;
+          return;
+        }
+
+        const topMatches = results.slice(0, 7);
+        suggBox.innerHTML = topMatches.map(m => {
+          const title = m.title || m.name || 'Untitled';
+          const year = (m.release_date || m.first_air_date || '').split('-')[0] || 'N/A';
+          const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
+          const rating = m.vote_average ? m.vote_average.toFixed(1) : null;
+          const overview = m.overview ? escapeHtml(m.overview) : 'No overview available';
+
+          return `
+            <div onclick="selectSwitchMovieSuggestion(${m.id}, '${escapeHtml(title).replace(/'/g, "\\'")}', ${m.isTv ? 'true' : 'false'})" 
+                 class="p-2.5 sm:p-3 hover:bg-sky-500/15 cursor-pointer transition flex items-center gap-3 group text-left">
+              <img src="${poster || getCinemaPlaceholder(title)}" alt="${escapeHtml(title)}" class="w-10 h-14 object-cover rounded border border-slate-700 bg-slate-900 shrink-0 group-hover:border-sky-400 transition" onerror="this.src=getCinemaPlaceholder(this.alt);">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <h5 class="text-xs sm:text-sm font-bold text-slate-100 group-hover:text-sky-300 transition truncate">${escapeHtml(title)}</h5>
+                  <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700 shrink-0">${escapeHtml(year)}</span>
+                  ${m.isTv ? '<span class="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">TV</span>' : ''}
+                </div>
+                <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5 leading-snug">${overview}</p>
+                ${rating ? `<span class="text-[10px] font-mono font-bold text-amber-400 mt-0.5 inline-block">★ ${rating} TMDb</span>` : ''}
+              </div>
+              <span class="text-xs text-sky-400 font-bold opacity-0 group-hover:opacity-100 transition shrink-0">Select ➔</span>
+            </div>
+          `;
+        }).join('');
+
+      } catch(err) {
+        console.error("fetchTmdbSuggestionsForSwitch failed:", err);
+        suggBox.innerHTML = `
+          <div class="p-3.5 text-center text-xs text-rose-400">
+            Failed to connect to TMDb. Check internet connection.
+          </div>
+        `;
+      }
+    }
+
+    async function selectSwitchMovieSuggestion(tmdbId, displayTitle, isTv = false) {
+      const searchInput = document.getElementById('switchMovieSearchInput');
+      const suggBox = document.getElementById('switchMovieSuggestions');
+      const previewCard = document.getElementById('switchNewMoviePreviewCard');
+      const confirmBtn = document.getElementById('btnConfirmMovieSwitch');
+
+      if (searchInput) searchInput.value = displayTitle;
+      if (suggBox) suggBox.classList.add('hidden');
+
+      if (previewCard) {
+        previewCard.classList.remove('hidden');
+        previewCard.classList.add('opacity-50');
+      }
+
+      showTheaterToast(`🔍 Fetching full TMDb metadata for "${displayTitle}"...`);
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const endpoint = isTv
+          ? `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=${_k}&append_to_response=videos`
+          : `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${_k}&append_to_response=videos`;
+
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error(`TMDb responded with status ${res.status}`);
+        const data = await res.json();
+
+        const cleanTitle = data.title || data.name || displayTitle;
+        const year = (data.release_date || data.first_air_date || '').split('-')[0] || '2026';
+        let runtimeMinutes = data.runtime || (data.episode_run_time && data.episode_run_time[0]) || 105;
+        if (runtimeMinutes <= 0) runtimeMinutes = 105;
+
+        const h = Math.floor(runtimeMinutes / 60);
+        const m = runtimeMinutes % 60;
+        const runtimeStr = `${h > 0 ? h + 'h ' : ''}${m}m`;
+
+        const genres = (data.genres && Array.isArray(data.genres) && data.genres.length > 0)
+          ? data.genres.map(g => g.name).join(', ')
+          : 'Cinema';
+
+        const overview = data.overview || 'No synopsis provided.';
+        const posterUrl = data.poster_path
+          ? `https://image.tmdb.org/t/p/w780${data.poster_path}`
+          : (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(cleanTitle) : '');
+        const backdropUrl = data.backdrop_path
+          ? `https://image.tmdb.org/t/p/w1280${data.backdrop_path}`
+          : posterUrl;
+
+        // Trailer lookup
+        let trailerUrl = null;
+        let trailerKey = null;
+        const vList = (data.videos && data.videos.results)
+          ? data.videos.results.filter(v => v.site === 'YouTube' && v.key)
+          : [];
+
+        vList.sort((a, b) => {
+          const aScore = (a.type === 'Trailer' ? 2 : 0) + (a.official ? 1 : 0);
+          const bScore = (b.type === 'Trailer' ? 2 : 0) + (b.official ? 1 : 0);
+          return bScore - aScore;
+        });
+
+        if (vList.length > 0) {
+          trailerKey = vList[0].key;
+          trailerUrl = `https://www.youtube.com/watch?v=${trailerKey}`;
+        }
+
+        // Calculate end time
+        let calcEndTimeStr = "8:45 PM";
+        try {
+          const startTimeStr = (currentSwitchTargetMovie && (currentSwitchTargetMovie.startTime || currentSwitchTargetMovie.time)) || '7:00 PM';
+          const match = startTimeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+          if (match) {
+            let startH = parseInt(match[1], 10);
+            const startM = parseInt(match[2], 10);
+            const isPM = match[3].toUpperCase() === 'PM';
+            if (isPM && startH < 12) startH += 12;
+            if (!isPM && startH === 12) startH = 0;
+
+            const totalEndMin = (startH * 60) + startM + runtimeMinutes;
+            let endH = Math.floor(totalEndMin / 60) % 24;
+            const endM = totalEndMin % 60;
+            const endPeriod = endH >= 12 ? 'PM' : 'AM';
+            let endDisplayH = endH % 12;
+            if (endDisplayH === 0) endDisplayH = 12;
+            calcEndTimeStr = `${endDisplayH}:${endM.toString().padStart(2, '0')} ${endPeriod}`;
+          }
+        } catch(e) {}
+
+        switchSelectedMovieMetadata = {
+          cleanTitle,
+          year,
+          runtimeMinutes,
+          runtimeStr,
+          genres,
+          overview,
+          posterUrl,
+          backdropUrl,
+          trailerUrl,
+          trailerKey,
+          calcEndTimeStr
+        };
+
+        // Render in preview card
+        const posterImg = document.getElementById('switchNewMoviePosterImg');
+        const titleText = document.getElementById('switchNewMovieTitleText');
+        const yearBadge = document.getElementById('switchNewMovieYearBadge');
+        const runtimeText = document.getElementById('switchNewMovieRuntimeText');
+        const genresText = document.getElementById('switchNewMovieGenresText');
+        const overviewText = document.getElementById('switchNewMovieOverviewText');
+        const trailerBadge = document.getElementById('switchNewMovieTrailerBadge');
+        const endTimeBadge = document.getElementById('switchNewMovieEndTimeBadge');
+
+        if (posterImg) posterImg.src = posterUrl;
+        if (titleText) titleText.textContent = cleanTitle;
+        if (yearBadge) yearBadge.textContent = year;
+        if (runtimeText) runtimeText.textContent = `⏱️ ${runtimeStr}`;
+        if (genresText) genresText.textContent = `🎭 ${genres}`;
+        if (overviewText) overviewText.textContent = overview;
+
+        if (trailerBadge) {
+          if (trailerUrl) {
+            trailerBadge.textContent = '🎬 Trailer Linked';
+            trailerBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+          } else {
+            trailerBadge.textContent = 'No Trailer';
+            trailerBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+          }
+        }
+
+        if (endTimeBadge) {
+          endTimeBadge.textContent = `Ends at ~${calcEndTimeStr}`;
+        }
+
+        if (previewCard) {
+          previewCard.classList.remove('opacity-50');
+        }
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+        }
+
+        showTheaterToast(`✨ Ready to switch to "${cleanTitle}" (${runtimeStr})!`);
+
+      } catch(err) {
+        console.error("selectSwitchMovieSuggestion failed:", err);
+        showTheaterToast(`⚠️ Failed to load details: ${err.message}`);
+        if (previewCard) previewCard.classList.remove('opacity-50');
+      }
+    }
+
+    async function confirmAndExecuteMovieSwitch() {
+      if (!currentSwitchTargetMovie || !switchSelectedMovieMetadata) {
+        showTheaterToast("⚠️ Please select a movie from suggestions first.");
+        return;
+      }
+
+      const oldTitle = currentSwitchTargetMovie.title || '';
+      const meta = switchSelectedMovieMetadata;
+      const newTitle = meta.cleanTitle;
+      const updateStageChecked = document.getElementById('switchMovieUpdateStageCheckbox')?.checked ?? true;
+
+      const confirmBtn = document.getElementById('btnConfirmMovieSwitch');
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span>⏳</span> <span>Switching Movie & Syncing...</span>';
+      }
+
+      try {
+        // 1. Update in-memory schedules
+        const lowerOld = oldTitle.toLowerCase().trim();
+        const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+          ? window.theaterScheduleCache
+          : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+        schedSource.forEach(s => {
+          if (s && s.title && s.title.toLowerCase().trim() === lowerOld) {
+            s.title = newTitle;
+            s.posterUrl = meta.posterUrl;
+            s.runtime = meta.runtimeStr;
+            s.desc = meta.overview;
+            s.summary = meta.overview;
+            s.genre = meta.genres;
+            s.endTime = meta.calcEndTimeStr;
+            if (meta.trailerKey) s.trailerId = meta.trailerKey;
+            if (s.startMs) {
+              s.endMs = s.startMs + (meta.runtimeMinutes * 60 * 1000);
+            }
+          }
+        });
+
+        if (window.theaterOfficialSchedule && Array.isArray(window.theaterOfficialSchedule)) {
+          window.theaterOfficialSchedule.forEach(s => {
+            if (s && s.title && s.title.toLowerCase().trim() === lowerOld) {
+              s.title = newTitle;
+              s.posterUrl = meta.posterUrl;
+              s.runtime = meta.runtimeStr;
+              s.desc = meta.overview;
+              s.summary = meta.overview;
+              s.genre = meta.genres;
+              s.endTime = meta.calcEndTimeStr;
+              if (meta.trailerKey) s.trailerId = meta.trailerKey;
+              if (s.startMs) {
+                s.endMs = s.startMs + (meta.runtimeMinutes * 60 * 1000);
+              }
+            }
+          });
+        }
+
+        // 2. Persist custom overrides in local memory & localStorage
+        if (typeof customMovieImages !== 'undefined') {
+          customMovieImages[newTitle] = meta.posterUrl;
+          try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
+        }
+        if (typeof customMovieTrailers !== 'undefined' && meta.trailerUrl) {
+          customMovieTrailers[newTitle] = meta.trailerUrl;
+          try { localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers)); } catch(e) {}
+        }
+        if (typeof customMovieSummaries !== 'undefined') {
+          customMovieSummaries[newTitle] = meta.overview;
+          try { localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries)); } catch(e) {}
+        }
+        if (typeof customMovieMetadata !== 'undefined') {
+          customMovieMetadata[newTitle] = {
+            runtime: meta.runtimeStr,
+            genres: meta.genres,
+            year: meta.year,
+            desc: meta.overview,
+            posterUrl: meta.posterUrl,
+            trailerUrl: meta.trailerUrl
+          };
+          try { localStorage.setItem('brian_movie_metadata_map', JSON.stringify(customMovieMetadata)); } catch(e) {}
+        }
+
+        // 3. Prepare concurrent Firebase RTDB sync operations
+        const firebaseSyncPromises = [];
+
+        if (updateStageChecked) {
+          const stageHeading = document.getElementById('nowPlayingHeading');
+          const stagePoster = document.getElementById('stagePoster');
+          const stageTimeLeft = document.getElementById('screenTimeLeft');
+          const adminTitleInput = document.getElementById('adminTitle');
+          const adminTimeInput = document.getElementById('adminTimeLeft');
+          const adminPosterInput = document.getElementById('adminPosterUrl');
+
+          if (stageHeading) stageHeading.textContent = newTitle;
+          if (stagePoster) stagePoster.src = meta.posterUrl;
+          if (stageTimeLeft) stageTimeLeft.textContent = meta.runtimeStr;
+
+          if (adminTitleInput) adminTitleInput.value = newTitle;
+          if (adminTimeInput) adminTimeInput.value = meta.runtimeStr;
+          if (adminPosterInput) adminPosterInput.value = meta.posterUrl;
+
+          try {
+            localStorage.setItem('brian_theater_last_stage', JSON.stringify({
+              title: newTitle,
+              poster: meta.posterUrl,
+              timeLeft: meta.runtimeStr,
+              updatedAt: Date.now()
+            }));
+          } catch(e) {}
+
+          // Concurrent stage updates
+          firebaseSyncPromises.push(
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/nowPlaying.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(newTitle)
+            }).catch(e => console.warn("Firebase nowPlaying sync warning:", e)),
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinemaNowPlaying.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(newTitle)
+            }).catch(e => console.warn("Firebase cinemaNowPlaying sync warning:", e)),
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/timeLeft.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(meta.runtimeStr)
+            }).catch(e => console.warn("Firebase timeLeft sync warning:", e)),
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinema.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                nowPlaying: newTitle,
+                posterUrl: meta.posterUrl,
+                backdropUrl: meta.backdropUrl,
+                runtime: meta.runtimeStr,
+                genres: meta.genres,
+                overview: meta.overview,
+                trailerUrl: meta.trailerUrl || "",
+                trailerId: meta.trailerKey || "",
+                updatedAt: Date.now()
+              })
+            }).catch(e => console.warn("Firebase cinema sync warning:", e))
+          );
+        }
+
+        // 4. Concurrent schedule and poster sync to Firebase RTDB
+        firebaseSyncPromises.push(
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(schedSource)
+          }).catch(e => console.warn("Firebase officialSchedule sync warning:", e)),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(schedSource)
+          }).catch(e => console.warn("Firebase schedule sync warning:", e)),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters/${encodeURIComponent(newTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(meta.posterUrl)
+          }).catch(e => console.warn("Firebase moviePosters sync warning:", e))
+        );
+
+        await Promise.all(firebaseSyncPromises);
+
+        // 5. Send backend Webhooks to Google Apps Script
+        try {
+          fetch(`${API_BASE_URL}?action=rename_movie_title&oldTitle=${encodeURIComponent(oldTitle)}&newTitle=${encodeURIComponent(newTitle)}`, { mode: 'no-cors' }).catch(() => {});
+          fetch(`${API_BASE_URL}?action=set_movie_image&title=${encodeURIComponent(newTitle)}&imageUrl=${encodeURIComponent(meta.posterUrl)}`, { mode: 'no-cors' }).catch(() => {});
+          if (meta.trailerUrl) {
+            fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(newTitle)}&trailerUrl=${encodeURIComponent(meta.trailerUrl)}`, { mode: 'no-cors' }).catch(() => {});
+          }
+          fetch(`${API_BASE_URL}?action=set_movie_summary&title=${encodeURIComponent(newTitle)}&summary=${encodeURIComponent(meta.overview)}&year=${encodeURIComponent(meta.year)}&runtime=${encodeURIComponent(meta.runtimeStr)}&genres=${encodeURIComponent(meta.genres)}`, { mode: 'no-cors' }).catch(() => {});
+          if (updateStageChecked) {
+            fetch(`${API_BASE_URL}?action=admin_update_now_playing&title=${encodeURIComponent(newTitle)}&timeLeft=${encodeURIComponent(meta.runtimeStr)}&posterUrl=${encodeURIComponent(meta.posterUrl)}`, { mode: 'no-cors' }).catch(() => {});
+          }
+        } catch(appsScriptErr) {
+          console.warn("Google Apps Script sync warning:", appsScriptErr);
+        }
+
+        // 6. Refresh UI & Toast
+        renderSchedule(schedSource);
+        updateCountdown();
+        renderAdminRescheduleList();
+        closeSwitchMovieModal();
+
+        showTheaterToast(`🎉 Successfully switched "${oldTitle}" to "${newTitle}"! All posters, trailers & stage synced live.`);
+
+      } catch(err) {
+        console.error("confirmAndExecuteMovieSwitch failed:", err);
+        showTheaterToast(`⚠️ Movie switch failed: ${err.message}`);
+      } finally {
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = '<span>🚀</span> <span>Confirm & Switch Movie</span>';
+        }
+      }
+    }
+
+    function openSwitchMovieForStage() {
+      const heading = document.getElementById('nowPlayingHeading');
+      const curTitle = heading ? heading.textContent.trim() : '';
+      openSwitchMovieModal(curTitle);
+    }
+
+    function openSwitchMovieForTonight() {
+      const activeObj = (typeof getActiveOrNextMovie === 'function') ? getActiveOrNextMovie() : null;
+      if (activeObj && activeObj.movie && activeObj.movie.title) {
+        openSwitchMovieModal(activeObj.movie.title);
+      } else {
+        openSwitchMovieModal('');
+      }
+    }
+
+    function switchToMovieSwitchModal() {
+      const curTitle = currentRescheduleMovie ? currentRescheduleMovie.title : '';
+      closeRescheduleMovieModal();
+      openSwitchMovieModal(curTitle);
+    }
+
+    // Quick Search on #adminTitle in Now Playing Controls
+    function onAdminTitleQuickSearch(val) {
+      const trimmed = (val || '').trim();
+      const drop = document.getElementById('adminTitleQuickSuggestions');
+      if (!drop) return;
+
+      if (adminTitleQuickDebounceTimer) clearTimeout(adminTitleQuickDebounceTimer);
+      if (trimmed.length < 2) {
+        drop.classList.add('hidden');
+        drop.innerHTML = '';
+        return;
+      }
+
+      adminTitleQuickDebounceTimer = setTimeout(async () => {
+        try {
+          drop.classList.remove('hidden');
+          drop.innerHTML = '<div class="p-2 text-center text-xs text-sky-300 font-mono">Searching TMDb...</div>';
+
+          const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+          const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(trimmed)}&include_adult=false`);
+          if (!res.ok) return;
+          const data = await res.json();
+          const items = (data.results || []).slice(0, 5);
+
+          if (items.length === 0) {
+            drop.innerHTML = '<div class="p-2 text-center text-xs text-slate-400">No matches found.</div>';
+            return;
+          }
+
+          drop.innerHTML = items.map(m => {
+            const title = m.title || 'Untitled';
+            const year = (m.release_date || '').split('-')[0] || '';
+            const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
+            return `
+              <div onclick="selectAdminTitleQuickSuggestion(${m.id}, '${escapeHtml(title).replace(/'/g, "\\'")}')" class="p-2 hover:bg-sky-500/20 cursor-pointer flex items-center gap-2 text-left">
+                <img src="${poster || getCinemaPlaceholder(title)}" class="w-7 h-9 object-cover rounded border border-slate-700 shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+                <div class="min-w-0 flex-1">
+                  <div class="text-xs font-bold text-slate-100 truncate">${escapeHtml(title)}</div>
+                  <div class="text-[10px] text-slate-400 font-mono">${escapeHtml(year)}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } catch(e) {
+          drop.classList.add('hidden');
+        }
+      }, 250);
+    }
+
+    async function selectAdminTitleQuickSuggestion(id, title) {
+      const drop = document.getElementById('adminTitleQuickSuggestions');
+      if (drop) drop.classList.add('hidden');
+      const titleInput = document.getElementById('adminTitle');
+      const timeInput = document.getElementById('adminTimeLeft');
+      const posterInput = document.getElementById('adminPosterUrl');
+      if (titleInput) titleInput.value = title;
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${_k}`);
+        if (res.ok) {
+          const d = await res.json();
+          if (d.runtime && timeInput) {
+            const h = Math.floor(d.runtime / 60);
+            const m = d.runtime % 60;
+            timeInput.value = `${h > 0 ? h + 'h ' : ''}${m}m`;
+          }
+          if (d.poster_path && posterInput) {
+            posterInput.value = `https://image.tmdb.org/t/p/w780${d.poster_path}`;
+          }
+        }
+      } catch(e) {}
+      showTheaterToast(`✨ Selected "${title}"! Click "Update Now Playing Live" to publish.`);
     }
 
     // 🎛️ Unified Movie Media Studio Sub-Tab Switcher
@@ -11837,6 +12657,11 @@
               </div>
               ${(isAdmin || s.status === 'POSTPONED' || s.rescheduled) ? `
               <div class="flex items-center gap-1.5">
+                ${isAdmin ? `
+                <button type="button" onclick="openSwitchMovieModal('${escapeHtml(s.title || '')}')" title="Admin: Switch Movie Screening" class="text-[10px] text-sky-300 hover:text-white px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/40 border border-sky-500/40 transition flex items-center gap-1 active:scale-95 cursor-pointer">
+                  <span>🎬</span> Switch
+                </button>
+                ` : ''}
                 <button type="button" onclick="openRescheduleMovieModal('${escapeHtml(s.title || '')}')" title="${(s.status === 'POSTPONED' || s.rescheduled) ? 'Reschedule or Restore Screening' : 'Admin: Reschedule Screening'}" class="text-[10px] text-amber-300 hover:text-white px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/40 border border-amber-500/40 transition flex items-center gap-1 active:scale-95 cursor-pointer">
                   <span>🗓️</span> ${(s.status === 'POSTPONED' || s.rescheduled) ? 'Reschedule / Restore' : 'Reschedule'}
                 </button>

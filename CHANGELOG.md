@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.157] - 2026-10-12
+
+### What's New
+- Added instant movie switcher for active and scheduled screenings.
+- Real-time TMDb autocomplete suggestions while typing replacement titles.
+- Automatic extraction of posters, runtimes, genres, and trailers.
+- Live synchronization to theater stage, countdown, and Firebase.
+- Dynamic tonight screening detection across admin controls.
+
 ## [4.9.156] - 2026-10-11
 
 ### What's New
