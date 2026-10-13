@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.159] - 2026-10-13
+
+### What's New
+- Hidden reminder buttons when auditorium doors are open.
+- Streamlined stage entrance UI during live and seating events.
+- Display reminder and calendar buttons exclusively during countdowns.
+
 ## [4.9.158] - 2026-10-12
 
 ### What's New

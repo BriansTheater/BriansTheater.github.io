@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.158 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.159 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -361,7 +361,7 @@
         </div>
 
         <!-- 6. REMINDER BUTTON (Matches Schedule Tab Add to Calendar / Remind Me) -->
-        <button type="button" onclick="remindMeForNextMovie()" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center justify-center gap-2 w-full max-w-lg shadow-md active:scale-95 relative z-10 cursor-pointer">
+        <button type="button" id="stageRemindBtn" onclick="remindMeForNextMovie()" class="px-6 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center justify-center gap-2 w-full max-w-lg shadow-md active:scale-95 relative z-10 cursor-pointer">
           <span>🔔</span> <span id="stageRemindBtnText">Add to Calendar / Remind Me</span>
         </button>
 
@@ -2847,7 +2847,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.158";
+    const APP_VERSION = "4.9.159";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3373,6 +3373,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.159": [
+        "Hidden reminder buttons when auditorium doors are open.",
+        "Streamlined stage entrance UI during live and seating events.",
+        "Display reminder and calendar buttons exclusively during countdowns."
+      ],
       "4.9.158": [
         "Auditorium doors automatically lock when screenings conclude.",
         "Eliminated persistent live status for completed movie showtimes.",
@@ -5358,15 +5363,20 @@
       const lockIcon = document.getElementById('doorsLockIcon');
       const lockTitle = document.getElementById('doorsLockedStatusTitle');
       const lockSub = document.getElementById('doorsLockedSubtext');
+      const remindBtn = document.getElementById('stageRemindBtn');
 
       if (isOpen) {
-        // When live screening or seating (doors open): Show Enter button, hide countdown box
+        // When live screening or seating (doors open): Show Enter button, hide countdown box, hide reminder button
         if (openCta) {
           openCta.classList.remove('hidden');
           openCta.classList.add('flex');
         }
         if (countdownBox) {
           countdownBox.classList.add('hidden');
+        }
+        if (remindBtn) {
+          remindBtn.classList.add('hidden');
+          remindBtn.classList.remove('flex');
         }
         if (lockRow) {
           lockRow.classList.add('hidden');
@@ -5375,13 +5385,17 @@
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
         if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
       } else {
-        // When waiting for next show or forced closed: Hide Enter button, show countdown box
+        // When waiting for next show or forced closed: Hide Enter button, show countdown box, show reminder button
         if (openCta) {
           openCta.classList.add('hidden');
           openCta.classList.remove('flex');
         }
         if (countdownBox) {
           countdownBox.classList.remove('hidden');
+        }
+        if (remindBtn) {
+          remindBtn.classList.remove('hidden');
+          remindBtn.classList.add('flex');
         }
         if (lockIcon) lockIcon.textContent = '🔒';
         const curDoorMode = (typeof doorOverrideMode !== 'undefined') ? doorOverrideMode : (window.doorOverrideMode || 'auto');

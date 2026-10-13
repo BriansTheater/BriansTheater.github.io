@@ -1,11 +1,10 @@
 {
-  "version": "4.9.158",
-  "releaseDate": "2026-10-12",
-  "title": "Brian's Theater v4.9.158",
+  "version": "4.9.159",
+  "releaseDate": "2026-10-13",
+  "title": "Brian's Theater v4.9.159",
   "notes": [
-    "Auditorium doors automatically lock when screenings conclude.",
-    "Eliminated persistent live status for completed movie showtimes.",
-    "Self-healing schedule automatically transitions finished movies to concluded.",
-    "Synchronized live Firebase state to reset now playing."
+    "Hidden reminder buttons when auditorium doors are open.",
+    "Streamlined stage entrance UI during live and seating events.",
+    "Display reminder and calendar buttons exclusively during countdowns."
   ]
 }
