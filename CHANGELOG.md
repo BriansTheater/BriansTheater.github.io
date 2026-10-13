@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.158] - 2026-10-12
+
+### What's New
+- Auditorium doors automatically lock when screenings conclude.
+- Eliminated persistent live status for completed movie showtimes.
+- Self-healing schedule automatically transitions finished movies to concluded.
+- Synchronized live Firebase state to reset now playing.
+
 ## [4.9.157] - 2026-10-12
 
 ### What's New

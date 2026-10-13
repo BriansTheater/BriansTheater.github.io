@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.157 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.158 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2847,7 +2847,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.157";
+    const APP_VERSION = "4.9.158";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3193,10 +3193,31 @@
         return false;
       };
 
+      const isMovieConcluded = (s) => {
+        if (!s) return true;
+        if (s.status === 'CONCLUDED') return true;
+        const end = Number(s.endMs) || 0;
+        const start = Number(s.startMs) || 0;
+        if (end > 0 && now >= end) return true;
+        if (start > 0 && now >= start + (4 * 3600000)) return true;
+        return false;
+      };
+
+      // Self-heal in-memory schedule statuses if a movie has passed its endMs
+      scheduleSource.forEach(s => {
+        if (s && s.status && s.status.includes('LIVE NOW') && isMovieConcluded(s)) {
+          s.status = 'CONCLUDED';
+        }
+      });
+
       // 1. Check if a movie is actively screening right now
       const liveItem = scheduleSource.find(s => {
-        if (isMoviePostponed(s)) return false;
-        return (s.status && s.status.includes('LIVE NOW')) || (s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
+        if (isMoviePostponed(s) || isMovieConcluded(s)) return false;
+        const start = Number(s.startMs) || 0;
+        const end = Number(s.endMs) || (start ? start + (105 * 60 * 1000) : 0);
+        const isTimeMatch = start > 0 && end > 0 && now >= start && now < end;
+        const isLiveTag = s.status && s.status.includes('LIVE NOW');
+        return (!end || now < end) && (isLiveTag || isTimeMatch);
       });
       if (liveItem) {
         return {
@@ -3216,10 +3237,10 @@
       // 2. Find upcoming movies with future endMs or future startMs
       const upcomingList = scheduleSource
         .filter(s => {
-          if (isMoviePostponed(s)) return false;
-          return (s.endMs ? s.endMs > now : (s.startMs ? s.startMs > now : false));
+          if (isMoviePostponed(s) || isMovieConcluded(s)) return false;
+          return (s.endMs ? Number(s.endMs) > now : (s.startMs ? Number(s.startMs) > now : false));
         })
-        .sort((a, b) => (a.startMs || 0) - (b.startMs || 0));
+        .sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
 
       if (upcomingList.length > 0) {
         const nextItem = upcomingList[0];
@@ -3352,6 +3373,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.158": [
+        "Auditorium doors automatically lock when screenings conclude.",
+        "Eliminated persistent live status for completed movie showtimes.",
+        "Self-healing schedule automatically transitions finished movies to concluded.",
+        "Synchronized live Firebase state to reset now playing."
+      ],
       "4.9.157": [
         "Added instant movie switcher for active and scheduled screenings.",
         "Real-time TMDb autocomplete suggestions while typing replacement titles.",
@@ -5594,7 +5621,15 @@
       }
 
       const headingEl = document.getElementById('nowPlayingHeading');
-      const isExplicitLive = headingEl && headingEl.getAttribute('data-live') === 'true';
+      let isExplicitLive = headingEl && headingEl.getAttribute('data-live') === 'true';
+
+      // Clear any stale explicit live flag if show is past end time or schedule is not live
+      if (!isLiveBySchedule && (now >= activeEnd || !activeEnd)) {
+        if (headingEl && headingEl.getAttribute('data-live') === 'true') {
+          headingEl.removeAttribute('data-live');
+        }
+        isExplicitLive = false;
+      }
 
       // Check if movie was concluded early by Admin
       if (movieEarlyConclusionUntilMs && now >= movieEarlyConclusionUntilMs) {
@@ -5604,7 +5639,7 @@
       }
       const isConcludedEarly = (movieEarlyConclusionUntilMs && now < movieEarlyConclusionUntilMs);
 
-      const isLiveScreening = !isConcludedEarly && (isLiveBySchedule || (now >= activeStart && now < activeEnd) || isExplicitLive);
+      const isLiveScreening = !isConcludedEarly && (isLiveBySchedule || (activeStart > 0 && activeEnd > 0 && now >= activeStart && now < activeEnd) || isExplicitLive);
 
       // 10-Minute Pre-Show Seating Window (600,000 ms before start)
       const diffToStart = Math.max(0, targetNextMs - now);
@@ -9436,13 +9471,36 @@
       }
 
       // 2. Dynamic Live Status Resolution
-      const nextObj = getActiveOrNextMovie(now);
-      const effectiveNowPlaying = cinemaObj.nowPlaying || data.cinemaNowPlaying || (nextObj.isLive ? nextObj.movie?.title : null) || (data.nowPlaying && data.nowPlaying !== "No Movie Playing" ? data.nowPlaying : null);
-      const isLive = nextObj.isLive || (effectiveNowPlaying && effectiveNowPlaying !== "No Movie Playing");
+      const isMovieConcludedTitle = (title) => {
+        if (!title) return true;
+        const clean = title.replace(/^🎬\s*/, '').trim().toLowerCase();
+        const schedSource = (window.theaterScheduleCache && window.theaterScheduleCache.length > 0)
+          ? window.theaterScheduleCache
+          : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+        const match = schedSource.find(s => s && s.title && s.title.replace(/^🎬\s*/, '').trim().toLowerCase() === clean);
+        if (match) {
+          if (match.status === 'CONCLUDED') return true;
+          if (match.endMs && now >= Number(match.endMs)) return true;
+          if (match.startMs && now >= Number(match.startMs) + (4 * 3600000)) return true;
+        }
+        return false;
+      };
 
-      if (effectiveNowPlaying && effectiveNowPlaying !== "No Movie Playing") {
-        const headingEl = document.getElementById('nowPlayingHeading');
-        if (headingEl) headingEl.textContent = effectiveNowPlaying.startsWith('🎬') ? effectiveNowPlaying : `🎬 ${effectiveNowPlaying}`;
+      const nextObj = getActiveOrNextMovie(now);
+      const isLive = nextObj.isLive;
+      const candidateNow = (cinemaObj.nowPlaying || data.cinemaNowPlaying || data.nowPlaying || "");
+      const effectiveNowPlaying = nextObj.isLive
+        ? (nextObj.movie?.title || candidateNow)
+        : ((candidateNow && candidateNow !== "No Movie Playing" && !isMovieConcludedTitle(candidateNow)) ? candidateNow : null);
+
+      const headingEl = document.getElementById('nowPlayingHeading');
+      if (effectiveNowPlaying && isLive) {
+        if (headingEl) {
+          headingEl.textContent = effectiveNowPlaying.startsWith('🎬') ? effectiveNowPlaying : `🎬 ${effectiveNowPlaying}`;
+          headingEl.setAttribute('data-live', 'true');
+        }
+      } else {
+        if (headingEl) headingEl.removeAttribute('data-live');
       }
 
       const effectiveTimeLeft = cinemaObj.timeLeft || data.cinemaTimeLeft || (data.timeLeft && data.timeLeft !== "--" ? data.timeLeft : null);
