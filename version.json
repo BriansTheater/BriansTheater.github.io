@@ -1,13 +1,13 @@
 {
-  "version": "4.9.162",
+  "version": "4.9.163",
   "releaseDate": "2026-10-13",
-  "title": "Brian's Theater v4.9.162",
+  "title": "Brian's Theater v4.9.163",
   "notes": [
-    "Added 1-click schedule & database auto-import to Annual Marathon Wizard.",
-    "Added collapsible item picker to browse and select seasonal screenings.",
-    "Added instant local search for theater schedule and database titles.",
-    "Upgraded TMDb search to multi-search with full TV show support.",
-    "Added TV show and scheduled status badges to search results.",
-    "Integrated live detected titles counter for festival lineups."
+    "Scoped auto-import strictly to scheduled festival month calendar screenings.",
+    "Eliminated historical past database clutter from annual festival lineups.",
+    "Added dedicated On Schedule tab inside festival picker drawer.",
+    "Added separate Vault Classics tab for optional past movies.",
+    "Updated detected count badge to show exact scheduled screenings.",
+    "Enriched sample schedule with complete October 2026 screenings."
   ]
 }

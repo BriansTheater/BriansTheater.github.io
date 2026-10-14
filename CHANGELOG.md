@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.163] - 2026-10-13
+
+### What's New
+- Scoped auto-import strictly to scheduled festival month calendar screenings.
+- Eliminated historical past database clutter from annual festival lineups.
+- Added dedicated On Schedule tab inside festival picker drawer.
+- Added separate Vault Classics tab for optional past movies.
+- Updated detected count badge to show exact scheduled screenings.
+- Enriched sample schedule with complete October 2026 screenings.
+
 ## [4.9.162] - 2026-10-13
 
 ### What's New
