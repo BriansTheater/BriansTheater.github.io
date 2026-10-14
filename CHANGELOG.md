@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.161] - 2026-10-13
+
+### What's New
+- Rebranded October 2026 screenings to month-long 2026 Shocktoberfest.
+- Added vibrant pumpkin orange festival badges for Shocktoberfest titles.
+- Added Annual Marathon sub-filter tabs for focused festival browsing.
+- Preserved crimson badges for historical single-day horror marathons.
+- Preserved emerald holiday badges for annual Christmas movie festivals.
+- Integrated interactive category filter tabs in Showcase Hub modal.
+
 ## [4.9.160] - 2026-10-13
 
 ### What's New
