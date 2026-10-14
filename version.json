@@ -1,10 +1,12 @@
 {
-  "version": "4.9.174",
+  "version": "4.9.175",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.174",
+  "title": "Brian's Theater v4.9.175",
   "notes": [
-    "Fully rebranded 2025 marathon across all catalogs and databases.",
-    "Standardized 2025 Shocktoberfest pumpkin orange badges on all cards.",
-    "Added cache buster preventing stale catalog script loading."
+    "Accelerated movie card rendering with off-screen content deferral.",
+    "Debounced search input eliminating keystroke lag in Vault.",
+    "Lazy-mounted Movie Vault for lightning-fast initial page load.",
+    "Fixed broken poster URLs and eliminated phantom network calls.",
+    "Optimized memory footprint and smoothed animation frame rates."
   ]
 }

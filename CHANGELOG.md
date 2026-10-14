@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.175] - 2026-10-14
+
+### What's New
+- Accelerated movie card rendering with off-screen content deferral.
+- Debounced search input eliminating keystroke lag in Vault.
+- Lazy-mounted Movie Vault for lightning-fast initial page load.
+- Fixed broken poster URLs and eliminated phantom network calls.
+- Optimized memory footprint and smoothed animation frame rates.
+
 ## [4.9.174] - 2026-10-14
 
 ### What's New

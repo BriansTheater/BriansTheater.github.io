@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.174 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.175 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -100,6 +100,11 @@
     .scrollbar-thin {
       scrollbar-width: thin;
       scrollbar-color: rgba(56, 189, 248, 0.35) rgba(15, 23, 42, 0.6);
+    }
+    /* High-Performance Rendering & Off-Screen Deferral */
+    .vault-movie-card {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 380px;
     }
     /* Morphic Multi-Color Theme (Glassmorphism & Iridescent Gradients) */
     .morphic-panel {
@@ -209,7 +214,7 @@
 
           <div id="userProfile" class="hidden items-center gap-2">
             <button onclick="switchTab('admin')" title="Open Admin Control Studio" class="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/50 flex items-center gap-2 text-xs transition group">
-              <img id="userAvatarImg" src="" alt="Avatar" class="w-5 h-5 rounded-full object-cover hidden border border-amber-400" />
+              <img id="userAvatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Avatar" class="w-5 h-5 rounded-full object-cover hidden border border-amber-400" />
               <span id="userAvatarInitial" class="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-[10px]">B</span>
               <div class="flex flex-col text-left">
                 <span id="userNameLabel" class="font-bold text-amber-300 leading-tight group-hover:text-amber-200">Brian (Admin)</span>
@@ -622,7 +627,7 @@
 
             <!-- Selected Movie Poster Preview Card (Morphic Glass Style) -->
             <div id="reqSelectedMoviePreview" class="hidden p-3.5 rounded-2xl bg-slate-950/70 border border-teal-500/30 flex items-center gap-3.5 mt-1.5 shadow-inner backdrop-blur-md">
-              <img id="reqPreviewPosterImg" src="" alt="Movie Poster" class="w-11 h-15 rounded-lg object-cover border border-slate-700 bg-black shrink-0">
+              <img id="reqPreviewPosterImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Movie Poster" class="w-11 h-15 rounded-lg object-cover border border-slate-700 bg-black shrink-0">
               <div class="flex-1 min-w-0">
                 <div class="text-xs font-bold text-slate-100 truncate" id="reqPreviewTitleText">Movie Title</div>
                 <div class="text-[11px] text-teal-300 font-medium mt-0.5" id="reqPreviewMetaText">2024 • Verified via TMDb</div>
@@ -686,7 +691,7 @@
             <div class="absolute -left-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#070c18] border border-white/10"></div>
             <div class="absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#070c18] border border-white/10"></div>
 
-            <img id="successTicketPosterImg" src="" alt="Movie Poster" class="w-16 h-24 rounded-xl object-cover bg-slate-900 border border-slate-700 shrink-0 hidden shadow-md">
+            <img id="successTicketPosterImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Movie Poster" class="w-16 h-24 rounded-xl object-cover bg-slate-900 border border-slate-700 shrink-0 hidden shadow-md">
             <div id="successTicketDefaultIcon" class="w-16 h-24 rounded-xl bg-gradient-to-tr from-sky-500/20 via-teal-500/20 to-amber-500/20 border border-teal-500/30 flex items-center justify-center text-3xl shrink-0">
               🎬
             </div>
@@ -1681,7 +1686,7 @@
 
         <div id="sidebarUserProfile" class="hidden items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-amber-500/50">
           <div class="flex items-center gap-2 min-w-0">
-            <img id="sidebarUserAvatarImg" src="" alt="Avatar" class="w-6 h-6 rounded-full object-cover hidden border border-amber-400 shrink-0" />
+            <img id="sidebarUserAvatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Avatar" class="w-6 h-6 rounded-full object-cover hidden border border-amber-400 shrink-0" />
             <span id="sidebarUserAvatarInitial" class="w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-bold flex items-center justify-center text-xs shrink-0">B</span>
             <div class="flex flex-col min-w-0">
               <span id="sidebarUserNameLabel" class="text-xs font-bold text-amber-300 truncate">Brian (Admin)</span>
@@ -1730,7 +1735,7 @@
 
       <!-- Movie Card Preview Banner -->
       <div class="flex gap-3.5 p-3 rounded-xl bg-slate-950 border border-slate-800 items-center">
-        <img id="rescheduleMoviePoster" src="" alt="Movie" class="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-lg border border-slate-700 bg-slate-900 shrink-0">
+        <img id="rescheduleMoviePoster" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Movie" class="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-lg border border-slate-700 bg-slate-900 shrink-0">
         <div class="flex flex-col gap-1 min-w-0 flex-1">
           <span id="rescheduleMovieCurrentBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full w-fit bg-amber-500/20 text-amber-300 border border-amber-500/40">CURRENT SCHEDULE</span>
           <h4 id="rescheduleMovieTitle" class="text-sm sm:text-base font-bold text-white truncate">Movie Title</h4>
@@ -1849,7 +1854,7 @@
 
       <!-- Current Movie Banner (What is being replaced) -->
       <div class="flex gap-3.5 p-3 rounded-xl bg-slate-950 border border-slate-800 items-center">
-        <img id="switchMovieCurrentPoster" src="" alt="Current Movie" class="w-14 h-18 sm:w-16 sm:h-22 object-cover rounded-lg border border-slate-700 bg-slate-900 shrink-0" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
+        <img id="switchMovieCurrentPoster" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Current Movie" class="w-14 h-18 sm:w-16 sm:h-22 object-cover rounded-lg border border-slate-700 bg-slate-900 shrink-0" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
         <div class="flex flex-col gap-0.5 min-w-0 flex-1">
           <span class="text-[10px] font-bold px-2 py-0.5 rounded-full w-fit bg-rose-500/20 text-rose-300 border border-rose-500/40">CURRENTLY SCHEDULED (REPLACING)</span>
           <h4 id="switchMovieCurrentTitle" class="text-sm sm:text-base font-bold text-white truncate">Movie Title</h4>
@@ -1883,7 +1888,7 @@
         </div>
 
         <div class="flex gap-3 items-start">
-          <img id="switchNewMoviePosterImg" src="" alt="Poster" class="w-16 h-22 sm:w-20 sm:h-28 object-cover rounded-lg border border-sky-500/30 bg-black shrink-0 shadow-md" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
+          <img id="switchNewMoviePosterImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Poster" class="w-16 h-22 sm:w-20 sm:h-28 object-cover rounded-lg border border-sky-500/30 bg-black shrink-0 shadow-md" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
           <div class="flex flex-col gap-1 min-w-0 flex-1">
             <h4 id="switchNewMovieTitleText" class="text-sm sm:text-base font-extrabold text-white truncate">Movie Title</h4>
             <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-300">
@@ -2129,7 +2134,7 @@
       <!-- Modal Header -->
       <div class="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5 pt-1">
         <div class="flex items-center gap-3 min-w-0">
-          <img id="franchiseModalPoster" src="" alt="Franchise" class="w-12 h-16 sm:w-14 sm:h-20 rounded-xl object-cover border border-amber-400/30 bg-slate-950 shrink-0 shadow-md">
+          <img id="franchiseModalPoster" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Franchise" class="w-12 h-16 sm:w-14 sm:h-20 rounded-xl object-cover border border-amber-400/30 bg-slate-950 shrink-0 shadow-md">
           <div class="min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
               <h3 id="franchiseModalTitle" class="text-base sm:text-lg font-black text-amber-300 truncate">Franchise Collection</h3>
@@ -3010,7 +3015,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.174";
+    const APP_VERSION = "4.9.175";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3392,7 +3397,7 @@
         summary: "Two estranged sisters reunite in an LA apartment complex when flesh-possessing demons thrust them into a primal battle for family survival.",
         status: "MONDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/mIBCtPvKZQjjx0NeVDPtho9232y.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg"
       },
       {
         title: "AHS: s13 e7: The Baddest Witch Of Them All",
@@ -3420,7 +3425,7 @@
         summary: "American Horror Story: Season 13, Episode 8.",
         status: "TUESDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/ibTyzvTStzvTubtDWx66QDFIV6q.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg"
       },
       {
         title: "Hokum",
@@ -3560,7 +3565,7 @@
         summary: "American Horror Story: Season 13, Episode 13.",
         status: "FRIDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/pY8Gu7h0lpx7SmkH1MffgqVrb91.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg"
       },
       {
         title: "Stephens King: It (1990)",
@@ -3844,6 +3849,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.175": [
+        "Accelerated movie card rendering with off-screen content deferral.",
+        "Debounced search input eliminating keystroke lag in Vault.",
+        "Lazy-mounted Movie Vault for lightning-fast initial page load.",
+        "Fixed broken poster URLs and eliminated phantom network calls.",
+        "Optimized memory footprint and smoothed animation frame rates."
+      ],
       "4.9.174": [
         "Fully rebranded 2025 marathon across all catalogs and databases.",
         "Standardized 2025 Shocktoberfest pumpkin orange badges on all cards.",
@@ -5423,12 +5435,12 @@
       "American Horror Story: Season 13, Episode 5": "https://image.tmdb.org/t/p/w780/7Cv1mDRjd55CRZBvjOBMZs4vvIO.jpg",
       "American Horror Story: Season 13, Episode 6": "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg",
       "American Horror Story: Season 13, Episode 7": "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg",
-      "American Horror Story: Season 13, Episode 8": "https://image.tmdb.org/t/p/w780/ibTyzvTStzvTubtDWx66QDFIV6q.jpg",
+      "American Horror Story: Season 13, Episode 8": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
       "American Horror Story: Season 13, Episode 9": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
       "American Horror Story: Season 13, Episode 10": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "American Horror Story: Season 13, Episode 11": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
       "American Horror Story: Season 13, Episode 12": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
-      "American Horror Story: Season 13, Episode 13": "https://image.tmdb.org/t/p/w780/pY8Gu7h0lpx7SmkH1MffgqVrb91.jpg",
+      "American Horror Story: Season 13, Episode 13": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
       "AHS": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13e1: 13": "https://image.tmdb.org/t/p/w780/wfb7vJKwZSIlOOf2XjpsTml51yr.jpg",
@@ -5438,14 +5450,14 @@
       "AHS: s13e5: Date Night": "https://image.tmdb.org/t/p/w780/7Cv1mDRjd55CRZBvjOBMZs4vvIO.jpg",
       "AHS: s13e6: The return of devils night": "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg",
       "AHS: s13e7: The Baddest Witch Of Them All": "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg",
-      "AHS: s13e8: Hell No": "https://image.tmdb.org/t/p/w780/ibTyzvTStzvTubtDWx66QDFIV6q.jpg",
+      "AHS: s13e8: Hell No": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
       "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
       "AHS: s13e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
       "AHS: s13e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
-      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/pY8Gu7h0lpx7SmkH1MffgqVrb91.jpg",
-      "Evil Dead Burn": "https://upload.wikimedia.org/wikipedia/en/a/a4/Evil_Dead_Burn_poster.jpeg",
-      "Evil Dead": "https://upload.wikimedia.org/wikipedia/en/a/a4/Evil_Dead_Burn_poster.jpeg",
+      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
+      "Evil Dead Burn": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
+      "Evil Dead": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
       "Abraham's Boys A Dracula Story": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
       "Abraham's Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
       "Abrahams Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
@@ -5455,12 +5467,12 @@
       "Undertone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
       "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
-      "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
-      "Stephens King: It (1980)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
-      "Stephens King: It": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
-      "Stephen King's It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
-      "Stephen King's It": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg",
-      "It (1990)": "https://image.tmdb.org/t/p/w780/1w4fBsW9UtcR1u4F9MQZlhY4Oa8.jpg"
+      "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephens King: It (1980)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephens King: It": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephen King's It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephen King's It": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg"
     };
 
     let customMovieImages = {};
@@ -12745,8 +12757,10 @@
       clearTimeout(vaultSearchTimer);
       vaultSearchTimer = setTimeout(() => {
         vaultPageSize = 24;
-        renderVault();
-      }, 120);
+        requestAnimationFrame(() => {
+          renderVault();
+        });
+      }, 150);
     }
 
     function loadMoreVaultMovies() {
@@ -13005,8 +13019,11 @@
           });
         }
       });
-      renderVault();
-      if (added > 0) {
+      const vaultViewEl = document.getElementById('view-vault');
+      if (vaultViewEl && !vaultViewEl.classList.contains('hidden')) {
+        renderVault();
+      }
+      if (added > 0 && typeof isAdmin !== 'undefined' && isAdmin) {
         populateAdminTrailerSelector();
       }
     }
@@ -13017,8 +13034,9 @@
       const grid = document.getElementById('vaultGrid');
       if (!grid) return;
 
-      // Auto-sanitize and normalize any legacy 2025 marathon titles or collections
-      if (Array.isArray(vaultMovies)) {
+      // Auto-sanitize and normalize any legacy 2025 marathon titles or collections once on load
+      if (Array.isArray(vaultMovies) && !window._vaultNormalizedOnce) {
+        window._vaultNormalizedOnce = true;
         vaultMovies.forEach(v => {
           if (!v) return;
           if (v.title && /^2025\s*(mystery\s*)?scary\s*movie\s*marathon$/i.test(v.title)) {
@@ -13240,7 +13258,7 @@
         }
 
         return `
-        <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
+        <div class="vault-movie-card p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
           <div>
             <!-- Movie Poster / Artwork Thumbnail Banner (16:9 Aspect Ratio) -->
             <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-md mb-3">
@@ -14049,8 +14067,13 @@
         }
       });
       if (added > 0) {
-        renderVault();
-        populateAdminTrailerSelector();
+        const vaultViewEl = document.getElementById('view-vault');
+        if (vaultViewEl && !vaultViewEl.classList.contains('hidden')) {
+          renderVault();
+        }
+        if (typeof isAdmin !== 'undefined' && isAdmin) {
+          populateAdminTrailerSelector();
+        }
         updateTheaterStats();
       }
     }
@@ -14723,7 +14746,10 @@
       });
 
       if (typeof renderVault === 'function') {
-        renderVault();
+        const vaultViewEl = document.getElementById('view-vault');
+        if (vaultViewEl && !vaultViewEl.classList.contains('hidden')) {
+          renderVault();
+        }
       }
     }
 
@@ -16087,13 +16113,21 @@ Enjoy the show! 🎬✨`;
       mergeScheduleIntoVault(sampleSchedule);
     }
 
-    renderVault();
+    // Primary active views rendered immediately
     renderSchedule();
     loadRequests();
     initCustomRequestForm();
-    populateAdminArtworkSelector();
-    populateAdminTrailerSelector();
+    if (typeof isAdmin !== 'undefined' && isAdmin) {
+      populateAdminArtworkSelector();
+      populateAdminTrailerSelector();
+    }
     updateDoorAdminButtons();
+
+    // Lazy-mount Vault: only render if vault tab is active upon initial load (otherwise switchTab('vault') handles it)
+    const vaultViewEl = document.getElementById('view-vault');
+    if (vaultViewEl && !vaultViewEl.classList.contains('hidden')) {
+      renderVault();
+    }
   </script>
 </body>
 </html>
