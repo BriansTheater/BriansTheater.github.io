@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.167] - 2026-10-14
+
+### What's New
+- Rebranded 2025 Scary Movie Marathon to 2025 Shocktoberfest.
+- Removed vintage horror option from Halloween edition dropdown.
+- Unified all seasonal movies under official Shocktoberfest brand.
+- Updated marathon badges and sub-cards to 2025 Shocktoberfest.
+
 ## [4.9.166] - 2026-10-14
 
 ### What's New

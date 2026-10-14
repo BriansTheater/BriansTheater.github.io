@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.166 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.167 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.166";
+    const APP_VERSION = "4.9.167";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.167": [
+        "Rebranded 2025 Scary Movie Marathon to 2025 Shocktoberfest.",
+        "Removed vintage horror option from Halloween edition dropdown.",
+        "Unified all seasonal movies under official Shocktoberfest brand.",
+        "Updated marathon badges and sub-cards to 2025 Shocktoberfest."
+      ],
       "4.9.166": [
         "Bypassed intermediate hub cards for direct holiday movie browsing.",
         "Added interactive Shocktoberfest year dropdown inside festive Halloween banner.",
@@ -10628,10 +10634,7 @@
         activeVaultCollectionFilter = '2026 Shocktoberfest';
       } else if (val === '2025') {
         activeVaultYearFilter = '2025';
-        activeVaultCollectionFilter = '2025 Mystery Scary Movie Marathon';
-      } else if (val === 'older') {
-        activeVaultYearFilter = 'older';
-        activeVaultCollectionFilter = null;
+        activeVaultCollectionFilter = '2025 Shocktoberfest';
       } else {
         activeVaultYearFilter = 'all';
         activeVaultCollectionFilter = null;
@@ -10747,14 +10750,14 @@
         ]
       },
       {
-        id: 'scary-2025',
-        key: 'scary',
+        id: 'shocktober-2025',
+        key: 'shocktober_2025',
         category: 'halloween',
         type: 'annual',
         year: '2025',
-        collectionName: '2025 Scary Movie Marathon',
-        title: '2025 Mystery Scary Movie Marathon',
-        tag: '🎃 HALLOWEEN MARATHON',
+        collectionName: '2025 Shocktoberfest',
+        title: '2025 Shocktoberfest',
+        tag: '🎃 SHOCKTOBERFEST 2025',
         badgeClass: 'bg-orange-500/20 text-orange-300 border border-orange-400/40',
         cardBorder: 'border-orange-500/40 hover:border-orange-400',
         glowColor: 'rgba(249, 115, 22, 0.25)',
@@ -10986,15 +10989,15 @@
 
     function getMarathonHubFilmCount(hub) {
       if (!hub) return 0;
-      if (/shocktober/i.test(hub.collectionName) && typeof getFestivalScheduledScreenings === 'function') {
+      if (/shocktober/i.test(hub.collectionName) && (hub.year === '2026' || /2026/i.test(hub.collectionName)) && typeof getFestivalScheduledScreenings === 'function') {
         const sched = getFestivalScheduledScreenings('halloween', '2026');
         if (sched && sched.length > 0) return sched.length;
       }
       if (!Array.isArray(vaultMovies) || vaultMovies.length === 0) return hub.defaultCount || 0;
       const matches = vaultMovies.filter(m => matchesVaultCollection(m, hub.collectionName));
       if (matches.length > 0) {
-        if (/scary/i.test(hub.collectionName)) {
-          const subCount = matches.filter(m => !/2025 Scary Movie Marathon/i.test(m.title)).length;
+        if (/scary|shocktober/i.test(hub.collectionName) && (hub.year === '2025' || /2025/i.test(hub.collectionName))) {
+          const subCount = matches.filter(m => !/2025\s*(scary\s*movie\s*marathon|shocktoberfest)/i.test(m.title)).length;
           return subCount > 0 ? subCount : matches.length;
         }
         return matches.length;
@@ -11004,7 +11007,7 @@
 
     function getMarathonHubFilms(hub) {
       if (!hub) return [];
-      if (/shocktober/i.test(hub.collectionName) && typeof getFestivalScheduledScreenings === 'function') {
+      if (/shocktober/i.test(hub.collectionName) && (hub.year === '2026' || /2026/i.test(hub.collectionName)) && typeof getFestivalScheduledScreenings === 'function') {
         const sched = getFestivalScheduledScreenings('halloween', '2026');
         if (sched && sched.length > 0) {
           return sched.map(s => String(s.title || '').replace(/^🎬\s*/, '').trim());
@@ -11015,7 +11018,7 @@
       if (matches.length > 0) {
         const cleanFilms = matches
           .map(m => String(m.title || '').replace(/^🎬\s*/, '').trim())
-          .filter(t => !/2025 Scary Movie Marathon/i.test(t) || matches.length === 1);
+          .filter(t => !/2025\s*(scary\s*movie\s*marathon|shocktoberfest)/i.test(t) || matches.length === 1);
         if (cleanFilms.length > 0) return cleanFilms;
       }
       return hub.films || [];
@@ -11043,7 +11046,7 @@
     function backToAllMarathons() {
       const priorCol = activeVaultCollectionFilter || '';
       activeVaultCollectionFilter = null;
-      if (/scary|halloween/i.test(priorCol) || activeVaultHolidayFilter === 'halloween') {
+      if (/scary|halloween|shocktober/i.test(priorCol) || activeVaultHolidayFilter === 'halloween') {
         activeVaultHolidayFilter = 'halloween';
       } else if (/christmas|holiday/i.test(priorCol) || activeVaultHolidayFilter === 'christmas') {
         activeVaultHolidayFilter = 'christmas';
@@ -12177,10 +12180,10 @@
       const isOct2026 = isOctober2026Date(mDate);
 
       // 0. 2026 Shocktoberfest (Month-Long October 2026 Festival)
-      if (/shocktober/i.test(col) || (/2026/i.test(col) && /horror|scary|halloween/i.test(col)) ||
-          /shocktober/i.test(title) ||
+      if (((/shocktober/i.test(col) && !/2025/i.test(col)) || (/2026/i.test(col) && /horror|scary|halloween/i.test(col)) ||
+          /shocktober\s*2026|2026\s*shocktober/i.test(title) ||
           /american horror story|\bahs\b/i.test(title) ||
-          isOct2026) {
+          isOct2026)) {
         return {
           key: 'shocktober_2026',
           name: '🎃 2026 Shocktoberfest',
@@ -12191,13 +12194,13 @@
         };
       }
 
-      // 1. 2025 Scary Movie Marathon (Freddy Krueger Saga + Hub + Featured)
-      if (SCARY_MARATHON_REGEX.test(title) || /scary/i.test(col)) {
+      // 1. 2025 Shocktoberfest (Freddy Krueger Saga + Hub + Featured)
+      if (SCARY_MARATHON_REGEX.test(title) || /scary/i.test(col) || /2025\s*shocktober|shocktober\s*2025/i.test(col + ' ' + title)) {
         return {
-          key: 'scary',
-          name: '🎃 2025 Scary Movie Marathon',
-          collectionName: '2025 Scary Movie Marathon',
-          badgeText: '🎃 Scary Marathon',
+          key: 'shocktober_2025',
+          name: '🎃 2025 Shocktoberfest',
+          collectionName: '2025 Shocktoberfest',
+          badgeText: '🎃 2025 Shocktoberfest',
           priority: 1,
           icon: '🎃'
         };
@@ -12325,17 +12328,31 @@
       }
 
       // 2026 Shocktoberfest (matches Shocktoberfest, AHS Season 13, and all October 2026 scheduled screenings)
+      // Shocktoberfest Screenings (2026 vs 2025 vs generic)
       if (/shocktober/i.test(normTarget)) {
-        if (mCol && /shocktober/i.test(mCol)) return true;
-        if (/american horror story|\bahs\b/i.test(mTitle)) return true;
-        const mDate = String(m.watchDate || m.date || m.scheduledDate || m.dateText || '');
-        if (isOctober2026Date(mDate)) return true;
+        if (normTarget.includes('2026')) {
+          if (mCol && /shocktober/i.test(mCol) && mCol.includes('2026')) return true;
+          if (/american horror story|\bahs\b/i.test(mTitle)) return true;
+          const mDate = String(m.watchDate || m.date || m.scheduledDate || m.dateText || '');
+          if (isOctober2026Date(mDate)) return true;
+          return false;
+        } else if (normTarget.includes('2025')) {
+          if (/^2025\s*(mystery\s*)?(scary\s*movie\s*marathon|shocktoberfest)$/i.test(mTitle)) return false;
+          if (mCol && (/scary/i.test(mCol) || (/shocktober/i.test(mCol) && mCol.includes('2025')))) return true;
+          if (SCARY_MARATHON_REGEX.test(mTitle)) return true;
+          return false;
+        } else {
+          if (mCol && /shocktober|scary/i.test(mCol)) return true;
+          if (/american horror story|\bahs\b/i.test(mTitle) || SCARY_MARATHON_REGEX.test(mTitle)) return true;
+          const mDate = String(m.watchDate || m.date || m.scheduledDate || m.dateText || '');
+          if (isOctober2026Date(mDate)) return true;
+        }
       }
 
-      // Scary Movie Marathon (matches both 2025 Scary Movie Marathon and with "Mystery")
+      // Scary Movie Marathon (Backwards compatibility for legacy queries)
       if (/scary/i.test(normTarget)) {
-        if (/^2025\s*(mystery\s*)?scary\s*movie\s*marathon$/i.test(mTitle)) return false;
-        if (mCol && /scary/i.test(mCol)) return true;
+        if (/^2025\s*(mystery\s*)?(scary\s*movie\s*marathon|shocktoberfest)$/i.test(mTitle)) return false;
+        if (mCol && (/scary/i.test(mCol) || /shocktober/i.test(mCol))) return true;
         if (SCARY_MARATHON_REGEX.test(mTitle)) return true;
       }
 
@@ -12952,7 +12969,7 @@
             <div class="w-full flex items-center gap-2 pt-2.5 border-t border-orange-800/40 overflow-x-auto custom-scrollbar">
               <span class="text-[11px] font-bold text-orange-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
               <button type="button" onclick="filterVaultToCollection('2026 Shocktoberfest')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 2026 Shocktoberfest</button>
-              <button type="button" onclick="filterVaultToCollection('2025 Scary Movie Marathon')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎟️ Scary Movie (11)</button>
+              <button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 2025 Shocktoberfest (11)</button>
               <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
             </div>
           </div>`;
@@ -13227,7 +13244,7 @@
               
               <!-- Top-Left Tag Badge: Marathon Sub-Card, Parent Hub, or TV Indicator -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                ${(m.marathonCollection || isShocktoberCol) ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(m.marathonCollection || (marathonGroup && marathonGroup.collectionName) || '2026 Shocktoberfest')}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Scary Movie Marathon')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎟️ Marathon Hub • ${marathonInfo.count} Films ↗</button>` : (marathonGroup && marathonGroup.priority <= 5 ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(marathonGroup.collectionName)}')" title="Filter to ${escapeHtml(marathonGroup.name)}" class="px-2 py-0.5 rounded-lg ${marathonGroup.key === 'shocktober_2026' ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400' : 'bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 hover:text-white border border-amber-700/80 hover:border-amber-400'} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${marathonGroup.icon} ${escapeHtml(marathonGroup.badgeText)} ↗</button>` : ''))}
+                ${(m.marathonCollection || isShocktoberCol) ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(m.marathonCollection || (marathonGroup && marathonGroup.collectionName) || '2026 Shocktoberfest')}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-orange-950 to-amber-950 text-orange-300 hover:text-white border border-orange-700/80 hover:border-orange-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎃 Shocktoberfest Hub • ${marathonInfo.count} Films ↗</button>` : (marathonGroup && marathonGroup.priority <= 5 ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(marathonGroup.collectionName)}')" title="Filter to ${escapeHtml(marathonGroup.name)}" class="px-2 py-0.5 rounded-lg ${marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400' : 'bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 hover:text-white border border-amber-700/80 hover:border-amber-400'} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${marathonGroup.icon} ${escapeHtml(marathonGroup.badgeText)} ↗</button>` : ''))}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
@@ -13291,12 +13308,12 @@
             <!-- Marathon Hub Link to Sub-Cards -->
             ${isMarathon ? `
             <div class="mt-2.5">
-              <button type="button" onclick="filterVaultToCollection('2025 Scary Movie Marathon')" class="w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-red-950/80 via-slate-900 to-red-950/80 hover:from-red-900/90 hover:to-red-900/90 text-rose-300 hover:text-white border border-red-700/80 hover:border-rose-500 text-xs font-bold transition flex items-center justify-between shadow-md active:scale-98 cursor-pointer group/colbtn">
+              <button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" class="w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-orange-950/80 via-slate-900 to-amber-950/80 hover:from-orange-900/90 hover:to-amber-900/90 text-orange-300 hover:text-white border border-orange-700/80 hover:border-orange-500 text-xs font-bold transition flex items-center justify-between shadow-md active:scale-98 cursor-pointer group/colbtn">
                 <span class="flex items-center gap-2">
-                  <span class="text-sm">🍿</span>
-                  <span>View All 11 Marathon Sub-Cards</span>
+                  <span class="text-sm">🎃</span>
+                  <span>View All 11 Shocktoberfest Films</span>
                 </span>
-                <span class="font-mono text-[11px] text-rose-400 group-hover/colbtn:translate-x-0.5 transition-transform">Explore Collection →</span>
+                <span class="font-mono text-[11px] text-orange-400 group-hover/colbtn:translate-x-0.5 transition-transform">Explore Collection →</span>
               </button>
             </div>
             ` : ''}
@@ -13407,8 +13424,7 @@
                 <select id="vaultHalloweenSelect" onchange="setHalloweenYearFilter(this.value)" class="px-3 py-1.5 rounded-xl bg-slate-950 text-orange-300 hover:text-white border border-orange-500/60 hover:border-orange-400 text-xs font-bold transition cursor-pointer outline-none shadow-md">
                   <option value="all" ${(!activeVaultCollectionFilter && activeVaultYearFilter === 'all') ? 'selected' : ''}>🎃 All Halloween Screenings</option>
                   <option value="2026" ${(activeVaultCollectionFilter === '2026 Shocktoberfest' || activeVaultYearFilter === '2026') ? 'selected' : ''}>🎃 2026 Shocktoberfest (22 Films)</option>
-                  <option value="2025" ${(activeVaultCollectionFilter === '2025 Mystery Scary Movie Marathon' || activeVaultYearFilter === '2025') ? 'selected' : ''}>🎟️ 2025 Scary Movie (11 Films)</option>
-                  <option value="older" ${(activeVaultYearFilter === 'older') ? 'selected' : ''}>👻 Vintage & Classic Horror</option>
+                  <option value="2025" ${(activeVaultCollectionFilter === '2025 Shocktoberfest' || activeVaultCollectionFilter === '2025 Mystery Scary Movie Marathon' || activeVaultYearFilter === '2025') ? 'selected' : ''}>🎃 2025 Shocktoberfest (11 Films)</option>
                 </select>
               </div>
               <button type="button" onclick="toggleVaultHolidayFilter('marathon')" class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">

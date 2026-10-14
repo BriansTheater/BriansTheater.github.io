@@ -1,12 +1,11 @@
 {
-  "version": "4.9.166",
+  "version": "4.9.167",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.166",
+  "title": "Brian's Theater v4.9.167",
   "notes": [
-    "Bypassed intermediate hub cards for direct holiday movie browsing.",
-    "Added interactive Shocktoberfest year dropdown inside festive Halloween banner.",
-    "Added interactive Christmas festival year dropdown inside seasonal banner.",
-    "Streamlined Marathon quick jump to focus strictly on sagas.",
-    "Removed redundant Annual wording across marathon and festival filters."
+    "Rebranded 2025 Scary Movie Marathon to 2025 Shocktoberfest.",
+    "Streamlined Halloween edition dropdown by removing vintage option.",
+    "Unified all seasonal movies directly under official Shocktoberfest brand.",
+    "Updated marathon badges and sub-cards to 2025 Shocktoberfest."
   ]
 }
