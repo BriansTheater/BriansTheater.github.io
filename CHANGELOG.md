@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.162] - 2026-10-13
+
+### What's New
+- 1-click schedule and database auto-import in marathon wizard.
+- Added collapsible seasonal item picker to browse screenings.
+- Instant local search for theater schedule and database.
+- Upgraded TMDb multi-search with full TV show support.
+- Added TV show and scheduled status badges to search.
+- Live detected titles counter for festival lineups.
+
 ## [4.9.161] - 2026-10-13
 
 ### What's New

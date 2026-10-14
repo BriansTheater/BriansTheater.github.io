@@ -1,13 +1,13 @@
 {
-  "version": "4.9.161",
+  "version": "4.9.162",
   "releaseDate": "2026-10-13",
-  "title": "Brian's Theater v4.9.161",
+  "title": "Brian's Theater v4.9.162",
   "notes": [
-    "Rebranded October 2026 screenings to month-long 2026 Shocktoberfest.",
-    "Added vibrant pumpkin orange festival badges for Shocktoberfest titles.",
-    "Added Annual Marathon sub-filter tabs for focused festival browsing.",
-    "Preserved crimson badges for historical single-day horror marathons.",
-    "Preserved emerald holiday badges for annual Christmas movie festivals.",
-    "Integrated interactive category filter tabs in Showcase Hub modal."
+    "Added 1-click schedule & database auto-import to Annual Marathon Wizard.",
+    "Added collapsible item picker to browse and select seasonal screenings.",
+    "Added instant local search for theater schedule and database titles.",
+    "Upgraded TMDb search to multi-search with full TV show support.",
+    "Added TV show and scheduled status badges to search results.",
+    "Integrated live detected titles counter for festival lineups."
   ]
 }
