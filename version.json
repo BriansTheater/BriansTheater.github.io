@@ -1,11 +1,11 @@
 {
-  "version": "4.9.170",
+  "version": "4.9.171",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.170",
+  "title": "Brian's Theater v4.9.171",
   "notes": [
-    "Renamed Marathons button to Franchise Sagas across all views.",
-    "Cleaned up Franchise Sagas banner layout for clean look.",
-    "Consolidated all saga selections into single header dropdown menu.",
-    "Removed redundant filter sub-tabs and quick jump chip rows."
+    "Excluded Christmas and Shocktoberfest from Franchise Sagas views.",
+    "Restricted Franchise Sagas dropdown to genuine movie franchises.",
+    "Moved movie genre tags from poster overlays into info boxes.",
+    "Added festival series year to annual film badge labels."
   ]
 }

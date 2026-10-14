@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.171] - 2026-10-14
+
+### What's New
+- Excluded Christmas and Shocktoberfest from Franchise Sagas views.
+- Restricted Franchise Sagas dropdown to genuine movie franchises.
+- Moved movie genre tags from poster overlays into info boxes.
+- Added festival series year to annual film badge labels.
+
 ## [4.9.170] - 2026-10-14
 
 ### What's New

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.170 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.171 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.170";
+    const APP_VERSION = "4.9.171";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.171": [
+        "Excluded Christmas and Shocktoberfest from Franchise Sagas views.",
+        "Restricted Franchise Sagas dropdown to genuine movie franchises.",
+        "Moved movie genre tags from poster overlays into info boxes.",
+        "Added festival series year to annual film badge labels."
+      ],
       "4.9.170": [
         "Renamed Marathons button to Franchise Sagas across all views.",
         "Cleaned up Franchise Sagas banner layout for clean look.",
@@ -12337,6 +12343,23 @@
       return false;
     }
 
+    function isFranchiseSagaItem(m) {
+      if (!m) return false;
+      const title = String(m.title || '').replace(/^🎬\s*/, '').trim();
+      const col = String(m.marathonCollection || '').trim();
+      // Exclude Halloween / Shocktoberfest / Christmas festivals
+      if (/shocktober|scary|horror|halloween|freddy|american horror story|ahs/i.test(col + ' ' + title) && !/ghostbusters/i.test(title)) {
+        return false;
+      }
+      if (/christmas|holiday|santa|grinch|polar express|elf|white christmas|miracle/i.test(col + ' ' + title)) {
+        return false;
+      }
+      return HARRY_POTTER_REGEX.test(title) || /harry\s*potter/i.test(col) ||
+             PIRATES_REGEX.test(title) || /pirates/i.test(col) ||
+             FAST_MARATHON_REGEX.test(title) || /fast/i.test(col) ||
+             GHOSTBUSTERS_REGEX.test(title) || /ghostbusters/i.test(col);
+    }
+
     function matchesVaultCollection(m, targetCollection) {
       if (!m || !targetCollection) return false;
       const normTarget = targetCollection.toLowerCase().replace(/mystery\s*/i, '').trim();
@@ -12900,20 +12923,7 @@
         // Holiday and Marathon filter check
         if (activeVaultHolidayFilter) {
           if (activeVaultHolidayFilter === 'marathon') {
-            if (!isMarathonItem(m)) return false;
-            if (activeMarathonSubFilter && activeMarathonSubFilter !== 'all') {
-              const g = getMarathonGroupingInfo(m);
-              const col = String(m.marathonCollection || '').toLowerCase();
-              if (activeMarathonSubFilter === 'halloween') {
-                if (!(/shocktober|scary|halloween/i.test(col) || (g && g.category === 'halloween'))) return false;
-              } else if (activeMarathonSubFilter === 'christmas') {
-                if (!(/christmas|holiday/i.test(col) || (g && g.category === 'christmas'))) return false;
-              } else if (activeMarathonSubFilter === 'annual') {
-                if (!(/shocktober|scary|halloween|christmas|holiday/i.test(col) || (g && (g.category === 'halloween' || g.category === 'christmas')))) return false;
-              } else if (activeMarathonSubFilter === 'franchise') {
-                if (!(/harry|potter|pirates|fast|ghostbusters/i.test(col) || (g && g.category === 'franchise'))) return false;
-              }
-            }
+            if (!isFranchiseSagaItem(m)) return false;
           } else {
             const mHol = getMovieHolidayCategory(m);
             if (mHol !== activeVaultHolidayFilter) return false;
@@ -12981,7 +12991,7 @@
           countEl.textContent = `Showing all ${currentFilteredVault.length} films in ${activeVaultCollectionFilter}`;
         } else if (activeVaultHolidayFilter) {
           if (activeVaultHolidayFilter === 'marathon') {
-            countEl.textContent = `Showing all ${currentFilteredVault.length} franchise saga & movie marathon films`;
+            countEl.textContent = `Showing all ${currentFilteredVault.length} franchise saga films`;
           } else {
             const holName = activeVaultHolidayFilter === 'halloween' ? 'Halloween' : 'Christmas';
             const yrText = activeVaultYearFilter !== 'all' ? ` (${activeVaultYearFilter})` : '';
@@ -13064,7 +13074,20 @@
         const isXmasCol = Boolean(m.marathonCollection && /christmas|holiday/i.test(m.marathonCollection));
         const isHorrorCol = Boolean(m.marathonCollection && /scary|horror|halloween|freddy/i.test(m.marathonCollection));
         const colIcon = isShocktoberCol ? '🎃' : (isXmasCol ? '🎄' : '🎟️');
-        const colPrefix = isShocktoberCol ? 'Shocktober' : (isXmasCol ? 'Holiday' : (isHorrorCol ? 'Marathon' : 'Collection'));
+        
+        const colYearMatch = String(m.marathonCollection || (marathonGroup && marathonGroup.collectionName) || m.watchDate || m.date || '').match(/\b(20\d\d)\b/);
+        const colYear = colYearMatch ? colYearMatch[1] : (isShocktoberCol ? '2026' : '');
+        let colPrefix = 'Collection';
+        if (isShocktoberCol) {
+          colPrefix = colYear ? `${colYear} Shocktober` : 'Shocktober';
+        } else if (isXmasCol) {
+          colPrefix = colYear ? `${colYear} Christmas` : 'Christmas';
+        } else if (isHorrorCol) {
+          colPrefix = colYear ? `${colYear} Marathon` : 'Marathon';
+        } else if (colYear) {
+          colPrefix = `${colYear} Collection`;
+        }
+
         const colBtnClass = isShocktoberCol
           ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400 shadow-md'
           : (isXmasCol 
@@ -13085,17 +13108,8 @@
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
-              <!-- Bottom Overlay on Banner: Genre and Start Time (No duplicate date) -->
-              <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
-                ${d.genres ? `
-                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px] sm:max-w-[200px]" title="${escapeHtml(d.genres)}">
-                  <span>🎭</span> <span class="truncate">${escapeHtml(d.genres)}</span>
-                </span>
-                ` : `
-                <span class="font-mono text-slate-300 font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px]">
-                  <span>🎬</span> <span class="truncate">${isTv ? 'TV Series' : 'Cinema'}</span>
-                </span>
-                `}
+              <!-- Bottom Overlay on Banner: Start Time Only (Genre moved into Info Box) -->
+              <div class="absolute bottom-2 right-2.5 flex items-center justify-end text-xs">
                 <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 shrink-0">
                   🕒 ${escapeHtml(d.startTime)}
                 </span>
@@ -13106,6 +13120,19 @@
             <h4 class="text-base sm:text-lg font-bold text-slate-100 mt-1 group-hover:text-amber-300 transition flex items-center gap-1.5">
               <span>🎬</span> <span>${escapeHtml(cleanTitle)}</span>
             </h4>
+
+            <!-- Genre Tag in Info Box -->
+            <div class="mt-1.5 flex items-center gap-1.5 flex-wrap">
+              ${d.genres ? `
+              <span class="font-mono text-sky-300 font-semibold bg-slate-900/90 border border-slate-800 px-2 py-0.5 rounded text-[11px] flex items-center gap-1 shadow-sm truncate max-w-full" title="${escapeHtml(d.genres)}">
+                <span>🎭</span> <span class="truncate">${escapeHtml(d.genres)}</span>
+              </span>
+              ` : `
+              <span class="font-mono text-slate-400 font-semibold bg-slate-900/90 border border-slate-800 px-2 py-0.5 rounded text-[11px] flex items-center gap-1 shadow-sm">
+                <span>${isTv ? '📺' : '🎬'}</span> <span>${isTv ? 'TV Series' : 'Cinema'}</span>
+              </span>
+              `}
+            </div>
 
             <!-- Google Sheets Formatted Details Table (2x2 Grid Identical to Schedule Tab) -->
             <div class="grid grid-cols-2 gap-2 mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
@@ -13336,27 +13363,23 @@
               </div>
               <div>
                 <div class="text-amber-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                  <span>${activeVaultCollectionFilter || (yrLabel + 'Franchise Sagas & Movie Marathons')}</span>
+                  <span>${activeVaultCollectionFilter || (yrLabel + 'Franchise Movie Sagas')}</span>
                 </div>
                 <div class="text-slate-400 text-xs mt-0.5">
-                  Showing all ${currentFilteredVault.length} films across legendary franchise sagas, Halloween marathons, and holiday festivals
+                  Showing all ${currentFilteredVault.length} films across legendary movie franchise sagas
                 </div>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0 flex-wrap">
               <!-- Franchise Saga Dropdown -->
               <div class="flex items-center gap-1.5 shrink-0">
-                <label for="vaultMarathonSelect" class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0">Saga / Marathon:</label>
+                <label for="vaultMarathonSelect" class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0">Franchise Saga:</label>
                 <select id="vaultMarathonSelect" onchange="setMarathonSagaFilter(this.value)" class="px-3 py-1.5 rounded-xl bg-slate-950 text-amber-300 hover:text-white border border-amber-500/60 hover:border-amber-400 text-xs font-bold transition cursor-pointer outline-none shadow-md">
                   <option value="all" ${!activeVaultCollectionFilter ? 'selected' : ''}>🍿 All Franchise Sagas (${currentFilteredVault.length} Films)</option>
                   <option value="Harry Potter Wizarding Marathon" ${activeVaultCollectionFilter === 'Harry Potter Wizarding Marathon' ? 'selected' : ''}>⚡ Harry Potter (8 Films)</option>
                   <option value="Pirates of the Caribbean Marathon" ${activeVaultCollectionFilter === 'Pirates of the Caribbean Marathon' ? 'selected' : ''}>🏴‍☠️ Pirates of the Caribbean (5 Films)</option>
                   <option value="Fast & Furious Saga Marathon" ${activeVaultCollectionFilter === 'Fast & Furious Saga Marathon' ? 'selected' : ''}>🏎️ Fast & Furious (10 Films)</option>
                   <option value="Ghostbusters Franchise Marathon" ${activeVaultCollectionFilter === 'Ghostbusters Franchise Marathon' ? 'selected' : ''}>👻 Ghostbusters (5 Films)</option>
-                  <option value="2026 Shocktoberfest" ${activeVaultCollectionFilter === '2026 Shocktoberfest' ? 'selected' : ''}>🎃 2026 Shocktoberfest (22 Films)</option>
-                  <option value="2025 Shocktoberfest" ${activeVaultCollectionFilter === '2025 Shocktoberfest' ? 'selected' : ''}>💀 2025 Shocktoberfest (11 Films)</option>
-                  <option value="2025 Christmas Movie Festival" ${activeVaultCollectionFilter === '2025 Christmas Movie Festival' ? 'selected' : ''}>🎄 2025 Christmas Festival (26 Films)</option>
-                  <option value="2024 Christmas Movie Festival" ${activeVaultCollectionFilter === '2024 Christmas Movie Festival' ? 'selected' : ''}>🎁 2024 Christmas Festival (25 Films)</option>
                 </select>
               </div>
               <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
