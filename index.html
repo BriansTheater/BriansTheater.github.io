@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.169 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.170 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -503,8 +503,8 @@
             <button type="button" onclick="toggleVaultHolidayFilter('christmas')" id="vHol-christmas" title="Filter to Christmas & Holiday Screening Festival" class="px-2.5 py-1.5 rounded-xl text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-800/60 hover:border-emerald-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
               <span>🎄</span> <span>Christmas</span>
             </button>
-            <button type="button" onclick="toggleVaultHolidayFilter('marathon')" id="vHol-marathon" title="Show All Movie Marathons We Screened" class="px-2.5 py-1.5 rounded-xl text-xs font-bold text-amber-400 hover:text-amber-300 bg-amber-950/40 hover:bg-amber-950/70 border border-amber-800/60 hover:border-amber-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
-              <span>🍿</span> <span>Marathons</span>
+            <button type="button" onclick="toggleVaultHolidayFilter('marathon')" id="vHol-marathon" title="Show All Franchise Sagas & Movie Marathons" class="px-2.5 py-1.5 rounded-xl text-xs font-bold text-amber-400 hover:text-amber-300 bg-amber-950/40 hover:bg-amber-950/70 border border-amber-800/60 hover:border-amber-500 transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
+              <span>⚡</span> <span>Franchise Sagas</span>
             </button>
           </div>
         </div>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.169";
+    const APP_VERSION = "4.9.170";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.170": [
+        "Renamed Marathons button to Franchise Sagas across all views.",
+        "Cleaned up Franchise Sagas banner layout for clean look.",
+        "Consolidated all saga selections into single header dropdown menu.",
+        "Removed redundant filter sub-tabs and quick jump chip rows."
+      ],
       "4.9.169": [
         "Removed vintage holiday classics option from Christmas dropdown menu.",
         "Deleted showcase hub cards and button from marathons flow.",
@@ -12975,7 +12981,7 @@
           countEl.textContent = `Showing all ${currentFilteredVault.length} films in ${activeVaultCollectionFilter}`;
         } else if (activeVaultHolidayFilter) {
           if (activeVaultHolidayFilter === 'marathon') {
-            countEl.textContent = `Showing all ${currentFilteredVault.length} movie marathon & franchise films`;
+            countEl.textContent = `Showing all ${currentFilteredVault.length} franchise saga & movie marathon films`;
           } else {
             const holName = activeVaultHolidayFilter === 'halloween' ? 'Halloween' : 'Christmas';
             const yrText = activeVaultYearFilter !== 'all' ? ` (${activeVaultYearFilter})` : '';
@@ -12991,10 +12997,10 @@
       const statusEl = document.getElementById('vaultFilterStatus');
       if (statusEl) {
         if (activeVaultCollectionFilter) {
-          statusEl.textContent = `Marathon Collection • ${currentFilteredVault.length} Films`;
+          statusEl.textContent = `Franchise Saga • ${currentFilteredVault.length} Films`;
         } else if (activeVaultHolidayFilter) {
           if (activeVaultHolidayFilter === 'marathon') {
-            statusEl.textContent = `🍿 All Marathons • ${currentFilteredVault.length} Films`;
+            statusEl.textContent = `⚡ Franchise Sagas • ${currentFilteredVault.length} Films`;
           } else {
             const holName = activeVaultHolidayFilter === 'halloween' ? '🎃 Halloween Season' : '🎄 Christmas Festival';
             const yrText = activeVaultYearFilter !== 'all' ? ` • ${activeVaultYearFilter}` : '';
@@ -13265,7 +13271,7 @@
                 </select>
               </div>
               <button type="button" onclick="toggleVaultHolidayFilter('marathon')" class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                <span>🍿</span> <span>Marathons</span>
+                <span>⚡</span> <span>Franchise Sagas</span>
               </button>
               <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 hover:text-white border border-orange-800/60 hover:border-orange-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
                 <span>✕</span> <span>Show All Vault Titles</span>
@@ -13308,7 +13314,7 @@
                 </select>
               </div>
               <button type="button" onclick="toggleVaultHolidayFilter('marathon')" class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                <span>🍿</span> <span>Marathons</span>
+                <span>⚡</span> <span>Franchise Sagas</span>
               </button>
               <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 hover:text-white border border-emerald-800/60 hover:border-emerald-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
                 <span>✕</span> <span>Show All Vault Titles</span>
@@ -13326,23 +13332,23 @@
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative z-10">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-amber-900/50 border border-amber-500/60 flex items-center justify-center text-xl shrink-0 shadow-md">
-                🍿
+                ⚡
               </div>
               <div>
                 <div class="text-amber-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                  <span>${activeVaultCollectionFilter || (yrLabel + 'Brian\'s Theater Marathons')}</span>
+                  <span>${activeVaultCollectionFilter || (yrLabel + 'Franchise Sagas & Movie Marathons')}</span>
                 </div>
                 <div class="text-slate-400 text-xs mt-0.5">
-                  Showing all ${currentFilteredVault.length} films across Halloween marathons, franchise sagas, and holiday festivals
+                  Showing all ${currentFilteredVault.length} films across legendary franchise sagas, Halloween marathons, and holiday festivals
                 </div>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0 flex-wrap">
-              <!-- Marathon Saga Dropdown -->
+              <!-- Franchise Saga Dropdown -->
               <div class="flex items-center gap-1.5 shrink-0">
                 <label for="vaultMarathonSelect" class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0">Saga / Marathon:</label>
                 <select id="vaultMarathonSelect" onchange="setMarathonSagaFilter(this.value)" class="px-3 py-1.5 rounded-xl bg-slate-950 text-amber-300 hover:text-white border border-amber-500/60 hover:border-amber-400 text-xs font-bold transition cursor-pointer outline-none shadow-md">
-                  <option value="all" ${!activeVaultCollectionFilter ? 'selected' : ''}>🍿 All Marathon Sagas (${currentFilteredVault.length} Films)</option>
+                  <option value="all" ${!activeVaultCollectionFilter ? 'selected' : ''}>🍿 All Franchise Sagas (${currentFilteredVault.length} Films)</option>
                   <option value="Harry Potter Wizarding Marathon" ${activeVaultCollectionFilter === 'Harry Potter Wizarding Marathon' ? 'selected' : ''}>⚡ Harry Potter (8 Films)</option>
                   <option value="Pirates of the Caribbean Marathon" ${activeVaultCollectionFilter === 'Pirates of the Caribbean Marathon' ? 'selected' : ''}>🏴‍☠️ Pirates of the Caribbean (5 Films)</option>
                   <option value="Fast & Furious Saga Marathon" ${activeVaultCollectionFilter === 'Fast & Furious Saga Marathon' ? 'selected' : ''}>🏎️ Fast & Furious (10 Films)</option>
@@ -13357,23 +13363,6 @@
                 <span>✕</span> <span>Show All Vault Titles</span>
               </button>
             </div>
-          </div>
-          <!-- Festival & Category Filter Segment -->
-          <div class="w-full flex items-center gap-1.5 pt-2.5 border-t border-amber-800/40 overflow-x-auto custom-scrollbar">
-            <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 mr-1">Filter:</span>
-            <button type="button" onclick="setMarathonSubFilter('all')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'all' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-900/80 text-amber-300 hover:text-white border border-amber-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🍿 All (${MASTER_MARATHON_HUBS.length})</button>
-            <button type="button" onclick="setMarathonSubFilter('annual')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'annual' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-900/80 text-amber-300 hover:text-white border border-amber-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🏛️ Festivals</button>
-            <button type="button" onclick="setMarathonSubFilter('halloween')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'halloween' ? 'bg-orange-400 text-slate-950 font-black shadow-md' : 'bg-orange-950/60 text-orange-300 hover:text-white border border-orange-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🎃 Halloween & Shocktober</button>
-            <button type="button" onclick="setMarathonSubFilter('christmas')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'christmas' ? 'bg-emerald-400 text-slate-950 font-black shadow-md' : 'bg-emerald-950/60 text-emerald-300 hover:text-white border border-emerald-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🎄 Christmas Festivals</button>
-            <button type="button" onclick="setMarathonSubFilter('franchise')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'franchise' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-amber-950/60 text-amber-300 hover:text-white border border-amber-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">⚡ Franchise Sagas</button>
-          </div>
-          <!-- Quick Jump Marathon Chips -->
-          <div class="w-full flex items-center gap-2 pt-2 border-t border-amber-800/20 overflow-x-auto custom-scrollbar">
-            <span class="text-[11px] font-bold text-amber-400/80 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
-            <button type="button" onclick="filterVaultToCollection('Harry Potter Wizarding Marathon')" class="px-2.5 py-1 rounded-lg bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 hover:text-white border border-amber-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">⚡ Harry Potter (8)</button>
-            <button type="button" onclick="filterVaultToCollection('Pirates of the Caribbean Marathon')" class="px-2.5 py-1 rounded-lg bg-sky-950/70 hover:bg-sky-900/80 text-sky-300 hover:text-white border border-sky-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏴‍☠️ Pirates (5)</button>
-            <button type="button" onclick="filterVaultToCollection('Fast & Furious Saga Marathon')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏎️ Fast & Furious (10)</button>
-            <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
           </div>
         </div>`;
       } else if (activeVaultCollectionFilter) {

@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.170] - 2026-10-14
+
+### What's New
+- Renamed Marathons button to Franchise Sagas across all views.
+- Cleaned up Franchise Sagas banner layout for clean look.
+- Consolidated all saga selections into single header dropdown menu.
+- Removed redundant filter sub-tabs and quick jump chip rows.
+
 ## [4.9.169] - 2026-10-14
 
 ### What's New

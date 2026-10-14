@@ -1,11 +1,11 @@
 {
-  "version": "4.9.169",
+  "version": "4.9.170",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.169",
+  "title": "Brian's Theater v4.9.170",
   "notes": [
-    "Removed vintage holiday classics option from Christmas dropdown menu.",
-    "Deleted showcase hub cards and button from marathons flow.",
-    "Routed marathons button directly to all marathon movies.",
-    "Added interactive marathon saga dropdown inside festive marathon banner."
+    "Renamed Marathons button to Franchise Sagas across all views.",
+    "Cleaned up Franchise Sagas banner layout for clean look.",
+    "Consolidated all saga selections into single header dropdown menu.",
+    "Removed redundant filter sub-tabs and quick jump chip rows."
   ]
 }
