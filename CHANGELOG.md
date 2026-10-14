@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.172] - 2026-10-14
+
+### What's New
+- Rebranded 2025 marathon records and sub-cards to 2025 Shocktoberfest.
+- Updated 2025 showcase section card to 2025 Shocktoberfest.
+- Synchronized all 2025 horror marathon links to Shocktoberfest.
+
 ## [4.9.171] - 2026-10-14
 
 ### What's New

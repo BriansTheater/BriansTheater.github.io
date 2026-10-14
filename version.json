@@ -1,11 +1,10 @@
 {
-  "version": "4.9.171",
+  "version": "4.9.172",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.171",
+  "title": "Brian's Theater v4.9.172",
   "notes": [
-    "Excluded Christmas and Shocktoberfest from Franchise Sagas views.",
-    "Restricted Franchise Sagas dropdown to genuine movie franchises.",
-    "Moved movie genre tags from poster overlays into info boxes.",
-    "Added festival series year to annual film badge labels."
+    "Rebranded 2025 marathon records and sub-cards to 2025 Shocktoberfest.",
+    "Updated 2025 showcase section card to 2025 Shocktoberfest.",
+    "Synchronized all 2025 horror marathon links to Shocktoberfest."
   ]
 }

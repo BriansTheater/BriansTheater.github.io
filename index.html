@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.171 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.172 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2473,11 +2473,11 @@
               <div class="relative z-10">
                 <div class="flex items-center mb-2">
                   <span class="inline-flex items-center gap-1.5 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-orange-500/20 text-orange-300 border border-orange-400/40 backdrop-blur-md shadow-sm">
-                    <span>🎃</span> HALLOWEEN MARATHON
+                    <span>🎃</span> 2025 SHOCKTOBERFEST
                   </span>
                 </div>
                 <h4 class="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-200 via-amber-100 to-purple-200 group-hover:from-orange-100 group-hover:to-amber-100 transition tracking-wide">
-                  2025 Mystery Scary Movie Marathon
+                  2025 Shocktoberfest
                 </h4>
                 <p class="text-xs text-slate-200/90 mt-1.5 leading-relaxed drop-shadow-sm font-normal">
                   11 iconic horror films screened in back-to-back sequence featuring the complete Freddy Krueger saga, Clown in a Cornfield, and IT Chapter Two with official in-app trailers.
@@ -2491,7 +2491,7 @@
               </div>
 
               <div class="relative z-10 flex items-center gap-2 pt-3 border-t border-white/10">
-                <button type="button" onclick="filterVaultToAnnualEvent('2025', null, '2025 Mystery Scary Movie Marathon')" class="flex-1 py-2 px-3 rounded-xl text-slate-950 font-black text-xs transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer hover:brightness-110"
+                <button type="button" onclick="filterVaultToAnnualEvent('2025', null, '2025 Shocktoberfest')" class="flex-1 py-2 px-3 rounded-xl text-slate-950 font-black text-xs transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer hover:brightness-110"
                         style="background: linear-gradient(135deg, #fb923c 0%, #f97316 45%, #ea580c 100%); box-shadow: 0 4px 14px 0 rgba(249, 115, 22, 0.45), inset 0 1px 1px 0 rgba(255,255,255,0.4);">
                   <span>Explore 11 Films</span> <span>🔥</span>
                 </button>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.171";
+    const APP_VERSION = "4.9.172";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.172": [
+        "Rebranded 2025 marathon records and sub-cards to 2025 Shocktoberfest.",
+        "Updated 2025 showcase section card to 2025 Shocktoberfest.",
+        "Synchronized all 2025 horror marathon links to Shocktoberfest."
+      ],
       "4.9.171": [
         "Excluded Christmas and Shocktoberfest from Franchise Sagas views.",
         "Restricted Franchise Sagas dropdown to genuine movie franchises.",
