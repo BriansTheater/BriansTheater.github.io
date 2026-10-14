@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.173 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.174 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3010,7 +3010,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.173";
+    const APP_VERSION = "4.9.174";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3844,6 +3844,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.174": [
+        "Fully rebranded 2025 marathon across all catalogs and databases.",
+        "Standardized 2025 Shocktoberfest pumpkin orange badges on all cards.",
+        "Added cache buster preventing stale catalog script loading."
+      ],
       "4.9.173": [
         "Added Nightmare on Elm Street to Franchise Sagas dropdown.",
         "Fixed 2025 Shocktoberfest card badges to display orange pumpkin.",
@@ -5498,7 +5503,19 @@
     let customMovieTitles = {};
     try {
       const storedTitles = localStorage.getItem('brian_movie_titles_map');
-      if (storedTitles) customMovieTitles = JSON.parse(storedTitles);
+      if (storedTitles) {
+        customMovieTitles = JSON.parse(storedTitles);
+        let cleanedTitles = false;
+        for (const k of Object.keys(customMovieTitles)) {
+          if (/2025\s*(mystery\s*)?scary\s*movie\s*marathon/i.test(k) || /2025\s*(mystery\s*)?scary\s*movie\s*marathon/i.test(customMovieTitles[k])) {
+            delete customMovieTitles[k];
+            cleanedTitles = true;
+          }
+        }
+        if (cleanedTitles) {
+          try { localStorage.setItem('brian_movie_titles_map', JSON.stringify(customMovieTitles)); } catch(e) {}
+        }
+      }
     } catch(e) {}
 
     const DEFAULT_RESCHEDULED_MOVIES = {};
@@ -13000,6 +13017,25 @@
       const grid = document.getElementById('vaultGrid');
       if (!grid) return;
 
+      // Auto-sanitize and normalize any legacy 2025 marathon titles or collections
+      if (Array.isArray(vaultMovies)) {
+        vaultMovies.forEach(v => {
+          if (!v) return;
+          if (v.title && /^2025\s*(mystery\s*)?scary\s*movie\s*marathon$/i.test(v.title)) {
+            v.title = "2025 Shocktoberfest";
+          }
+          if (v.marathonCollection && /^2025\s*(mystery\s*)?scary\s*movie\s*marathon$/i.test(v.marathonCollection)) {
+            v.marathonCollection = "2025 Shocktoberfest";
+          }
+          if (v.summary && v.summary.includes("2025 Scary Movie Marathon")) {
+            v.summary = v.summary.replace(/2025 Scary Movie Marathon/g, "2025 Shocktoberfest");
+          }
+          if (v.overview && v.overview.includes("2025 Scary Movie Marathon")) {
+            v.overview = v.overview.replace(/2025 Scary Movie Marathon/g, "2025 Shocktoberfest");
+          }
+        });
+      }
+
       // Reset active vault trailer when filtering or searching
       activeVaultTrailerIdx = null;
 
@@ -13170,14 +13206,15 @@
         );
         const isShocktoberCol = !isElmStreetSaga && Boolean(
           (m.marathonCollection && /shocktober|halloween|scary\s*movie\s*marathon/i.test(m.marathonCollection)) ||
-          (marathonGroup && (marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' || (marathonGroup.key && marathonGroup.key.includes('shocktober'))))
+          (marathonGroup && (marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' || (marathonGroup.key && marathonGroup.key.includes('shocktober')))) ||
+          (activeVaultCollectionFilter && /shocktober/i.test(activeVaultCollectionFilter))
         );
         const colBadgeInfo = (m.marathonCollection || isShocktoberCol || isElmStreetSaga) ? getCollectionFilmOrderAndTotal(m) : null;
         const isXmasCol = !isElmStreetSaga && !isShocktoberCol && Boolean(m.marathonCollection && /christmas|holiday/i.test(m.marathonCollection));
         const isHorrorCol = !isElmStreetSaga && !isShocktoberCol && Boolean(m.marathonCollection && /scary|horror|halloween|freddy/i.test(m.marathonCollection));
         
         const colYearMatch = String(m.marathonCollection || (marathonGroup && marathonGroup.collectionName) || m.watchDate || m.date || '').match(/\b(20\d\d)\b/);
-        const colYear = colYearMatch ? colYearMatch[1] : (isShocktoberCol ? '2026' : '');
+        const colYear = (activeVaultCollectionFilter && activeVaultCollectionFilter.includes('2025')) ? '2025' : (colYearMatch ? colYearMatch[1] : (isShocktoberCol ? '2025' : ''));
         let colPrefix = 'Collection';
         let colIcon = '🎟️';
         let colBtnClass = 'bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400';
@@ -13212,7 +13249,7 @@
               
               <!-- Top-Left Tag Badge: Marathon Sub-Card, Parent Hub, or TV Indicator -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                ${(m.marathonCollection || isShocktoberCol || isElmStreetSaga) ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml((isElmStreetSaga ? 'A Nightmare on Elm Street Saga' : m.marathonCollection) || (marathonGroup && marathonGroup.collectionName) || '2026 Shocktoberfest')}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-orange-950 to-amber-950 text-orange-300 hover:text-white border border-orange-700/80 hover:border-orange-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎃 Shocktoberfest Hub • ${marathonInfo.count} Films ↗</button>` : (marathonGroup && marathonGroup.priority <= 5 ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(marathonGroup.collectionName)}')" title="Filter to ${escapeHtml(marathonGroup.name)}" class="px-2 py-0.5 rounded-lg ${marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400' : 'bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 hover:text-white border border-amber-700/80 hover:border-amber-400'} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${marathonGroup.icon} ${escapeHtml(marathonGroup.badgeText)} ↗</button>` : ''))}
+                ${(m.marathonCollection || isShocktoberCol || isElmStreetSaga) ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml((isElmStreetSaga ? 'A Nightmare on Elm Street Saga' : (isShocktoberCol ? (colYear === '2025' ? '2025 Shocktoberfest' : '2026 Shocktoberfest') : m.marathonCollection)) || (marathonGroup && marathonGroup.collectionName) || '2026 Shocktoberfest')}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-orange-950 to-amber-950 text-orange-300 hover:text-white border border-orange-700/80 hover:border-orange-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎃 Shocktoberfest Hub • ${marathonInfo.count} Films ↗</button>` : (marathonGroup && marathonGroup.priority <= 5 ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(marathonGroup.collectionName)}')" title="Filter to ${escapeHtml(marathonGroup.name)}" class="px-2 py-0.5 rounded-lg ${marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400' : 'bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 hover:text-white border border-amber-700/80 hover:border-amber-400'} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${marathonGroup.icon} ${escapeHtml(marathonGroup.badgeText)} ↗</button>` : ''))}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
@@ -13910,7 +13947,14 @@
       let added = 0;
       pastList.forEach(m => {
         if (!m || !m.title) return;
-        const cleanTitle = m.title.replace(/^🎬\s*/, '').replace(/^Movie:\s*/i, '').replace(/\s+at\s+.*$/i, '').trim();
+        let cleanTitle = m.title.replace(/^🎬\s*/, '').replace(/^Movie:\s*/i, '').replace(/\s+at\s+.*$/i, '').trim();
+        if (/^2025\s*(mystery\s*)?scary\s*movie\s*marathon$/i.test(cleanTitle)) {
+          cleanTitle = "2025 Shocktoberfest";
+        }
+        let itemCol = m.marathonCollection || "";
+        if (/^2025\s*(mystery\s*)?scary\s*movie\s*marathon$/i.test(itemCol)) {
+          itemCol = "2025 Shocktoberfest";
+        }
         const rawWatchDate = m.watchDate || m.date || m.dateText || "";
         const isValidWatchDate = Boolean(rawWatchDate && !rawWatchDate.includes('@') && !/under review|not scheduled|pending|unavailable/i.test(rawWatchDate) && /\d/.test(rawWatchDate));
         const watchDate = isValidWatchDate ? rawWatchDate : "";
@@ -13955,7 +13999,7 @@
             trailerId: m.trailerId || "",
             summary: m.summary || m.overview || "",
             overview: m.overview || m.summary || "",
-            marathonCollection: m.marathonCollection || "",
+            marathonCollection: itemCol,
             marathonOrder: m.marathonOrder || null,
             marathonTotal: m.marathonTotal || null,
             screeningYear: m.screeningYear || null,
@@ -13964,7 +14008,8 @@
           added++;
         } else {
           // 100% preservation of Column N data, watch date, times, trailer, and artwork
-          if (m.marathonCollection) existing.marathonCollection = m.marathonCollection;
+          if (cleanTitle === "2025 Shocktoberfest") existing.title = "2025 Shocktoberfest";
+          if (itemCol) existing.marathonCollection = itemCol;
           if (m.marathonOrder) existing.marathonOrder = m.marathonOrder;
           if (m.marathonTotal) existing.marathonTotal = m.marathonTotal;
           if (m.screeningYear) existing.screeningYear = m.screeningYear;
@@ -14014,6 +14059,15 @@
     function ingestPastMoviesCatalog() {
       const localPastList = (typeof window !== 'undefined') ? (window.INITIAL_PAST_MOVIES || window.PAST_MOVIES_DATA) : null;
       if (Array.isArray(localPastList) && localPastList.length > 0) {
+        localPastList.forEach(m => {
+          if (!m) return;
+          if (m.title && /^2025\s*(mystery\s*)?(scary\s*movie\s*marathon|shocktoberfest)$/i.test(m.title)) {
+            m.title = "2025 Shocktoberfest";
+          }
+          if (m.marathonCollection && /^2025\s*(mystery\s*)?(scary\s*movie\s*marathon|shocktoberfest)$/i.test(m.marathonCollection)) {
+            m.marathonCollection = "2025 Shocktoberfest";
+          }
+        });
         mergePastMoviesIntoVault(localPastList);
         updateTheaterStats();
       }
@@ -14029,7 +14083,7 @@
       _pastCatalogLoading = true;
       return new Promise((resolve) => {
         const s = document.createElement('script');
-        s.src = 'past_movies_data.js';
+        s.src = 'past_movies_data.js?v=' + encodeURIComponent(APP_VERSION);
         s.async = true;
         s.onload = () => {
           ingestPastMoviesCatalog();
@@ -14037,7 +14091,7 @@
         };
         s.onerror = () => {
           const fallback = document.createElement('script');
-          fallback.src = 'https://brianstheater.github.io/past_movies_data.js';
+          fallback.src = 'https://brianstheater.github.io/past_movies_data.js?v=' + encodeURIComponent(APP_VERSION);
           fallback.async = true;
           fallback.onload = () => {
             ingestPastMoviesCatalog();

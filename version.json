@@ -1,10 +1,10 @@
 {
-  "version": "4.9.173",
+  "version": "4.9.174",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.173",
+  "title": "Brian's Theater v4.9.174",
   "notes": [
-    "Added Nightmare on Elm Street to Franchise Sagas dropdown.",
-    "Fixed 2025 Shocktoberfest card badges to display orange pumpkin.",
-    "Added Elm Street Freddy saga showcase card to Theater."
+    "Fully rebranded 2025 marathon across all catalogs and databases.",
+    "Standardized 2025 Shocktoberfest pumpkin orange badges on all cards.",
+    "Added cache buster preventing stale catalog script loading."
   ]
 }

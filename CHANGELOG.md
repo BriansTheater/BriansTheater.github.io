@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.174] - 2026-10-14
+
+### What's New
+- Fully rebranded 2025 marathon across all catalogs and databases.
+- Standardized 2025 Shocktoberfest pumpkin orange badges on all cards.
+- Added cache buster preventing stale catalog script loading.
+- Normalized legacy marathon titles in local storage and memory.
+
 ## [4.9.173] - 2026-10-14
 
 ### What's New
