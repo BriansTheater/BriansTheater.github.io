@@ -1,11 +1,11 @@
 {
-  "version": "4.9.168",
+  "version": "4.9.169",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.168",
+  "title": "Brian's Theater v4.9.169",
   "notes": [
-    "Added living motion animated features to holiday banner top right.",
-    "Decorated Halloween banner with fluttering bat, ghost, and cobweb.",
-    "Decorated Christmas banner with drifting snow and twinkling star.",
-    "Ensured decorative animations never obstruct user interactions or dropdowns."
+    "Removed vintage holiday classics option from Christmas dropdown menu.",
+    "Deleted showcase hub cards and button from marathons flow.",
+    "Routed marathons button directly to all marathon movies.",
+    "Added interactive marathon saga dropdown inside festive marathon banner."
   ]
 }

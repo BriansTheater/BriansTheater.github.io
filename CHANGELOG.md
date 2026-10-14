@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.169] - 2026-10-14
+
+### What's New
+- Removed vintage holiday classics option from Christmas dropdown menu.
+- Deleted showcase hub cards and button from marathons flow.
+- Routed marathons button directly to all marathon movies.
+- Added interactive marathon saga dropdown inside festive marathon banner.
+
 ## [4.9.168] - 2026-10-14
 
 ### What's New

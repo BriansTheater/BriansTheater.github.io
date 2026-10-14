@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.168 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.169 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.168";
+    const APP_VERSION = "4.9.169";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.169": [
+        "Removed vintage holiday classics option from Christmas dropdown menu.",
+        "Deleted showcase hub cards and button from marathons flow.",
+        "Routed marathons button directly to all marathon movies.",
+        "Added interactive marathon saga dropdown inside festive marathon banner."
+      ],
       "4.9.168": [
         "Added living motion animated features to holiday banner top right.",
         "Decorated Halloween banner with fluttering bat, ghost, and cobweb.",
@@ -10660,9 +10666,6 @@
       } else if (val === '2024') {
         activeVaultYearFilter = '2024';
         activeVaultCollectionFilter = '2024 Christmas Movie Festival';
-      } else if (val === 'older') {
-        activeVaultYearFilter = 'older';
-        activeVaultCollectionFilter = null;
       } else {
         activeVaultYearFilter = 'all';
         activeVaultCollectionFilter = null;
@@ -10673,6 +10676,21 @@
       renderVault();
     }
     window.setChristmasYearFilter = setChristmasYearFilter;
+
+    function setMarathonSagaFilter(val) {
+      activeVaultHolidayFilter = 'marathon';
+      if (val && val !== 'all') {
+        activeVaultCollectionFilter = val;
+      } else {
+        activeVaultCollectionFilter = null;
+      }
+      activeVaultYearFilter = 'all';
+      syncYearPillButtons('all');
+      updateHolidayButtonsState();
+      vaultPageSize = 100;
+      renderVault();
+    }
+    window.setMarathonSagaFilter = setMarathonSagaFilter;
 
     function updateHolidayButtonsState() {
       const hBtn = document.getElementById('vHol-halloween');
@@ -12856,212 +12874,6 @@
       // Reset active vault trailer when filtering or searching
       activeVaultTrailerIdx = null;
 
-      // Master Marathon Hub Cards (Strictly for the Marathons Hub view)
-      if (activeVaultHolidayFilter === 'marathon' && !activeVaultCollectionFilter) {
-        let relevantHubs = MASTER_MARATHON_HUBS;
-        if (activeVaultHolidayFilter === 'halloween') {
-          relevantHubs = MASTER_MARATHON_HUBS.filter(hub => {
-            return hub.category === 'halloween' || /scary|halloween|ghostbusters|shocktober/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.tag + ' ' + hub.id);
-          });
-        } else if (activeVaultHolidayFilter === 'christmas') {
-          relevantHubs = MASTER_MARATHON_HUBS.filter(hub => {
-            return hub.category === 'christmas' || /christmas|holiday/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.tag + ' ' + hub.id);
-          });
-        } else if (activeVaultHolidayFilter === 'marathon') {
-          if (activeMarathonSubFilter === 'halloween') {
-            relevantHubs = MASTER_MARATHON_HUBS.filter(hub => hub.category === 'halloween' || /scary|halloween|shocktober/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.id));
-          } else if (activeMarathonSubFilter === 'christmas') {
-            relevantHubs = MASTER_MARATHON_HUBS.filter(hub => hub.category === 'christmas' || /christmas|holiday/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.id));
-          } else if (activeMarathonSubFilter === 'annual') {
-            relevantHubs = MASTER_MARATHON_HUBS.filter(hub => hub.type === 'annual' || hub.category === 'halloween' || hub.category === 'christmas' || /shocktober|scary|halloween|christmas|holiday/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.id));
-          } else if (activeMarathonSubFilter === 'franchise') {
-            relevantHubs = MASTER_MARATHON_HUBS.filter(hub => hub.type === 'franchise' || hub.category === 'franchise' || /harry\s*potter|pirates|fast|ghostbusters/i.test(hub.collectionName + ' ' + hub.title + ' ' + hub.id));
-          }
-        }
-
-        if (activeVaultYearFilter && activeVaultYearFilter !== 'all') {
-          relevantHubs = relevantHubs.filter(hub => {
-            const yr = String(hub.year || hub.dates || hub.era || '');
-            if (activeVaultYearFilter === 'older') return /vintage|older|2023|2022/i.test(yr);
-            return yr.includes(activeVaultYearFilter);
-          });
-        }
-
-        const normQ = q ? q.replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim() : '';
-        const visibleHubs = relevantHubs.filter(hub => {
-          if (!q) return true;
-          const matchTitle = hub.title.toLowerCase().includes(q);
-          const matchTag = hub.tag.toLowerCase().includes(q);
-          const matchSummary = hub.summary.toLowerCase().includes(q);
-          const hubFilms = getMarathonHubFilms(hub);
-          const matchFilms = hubFilms.some(f => {
-            const fLow = f.toLowerCase();
-            return fLow.includes(q) || (Boolean(normQ) && fLow.replace(/[^\w\s]/g, ' ').includes(normQ));
-          });
-          return matchTitle || matchTag || matchSummary || matchFilms;
-        });
-
-        const totalMarathonFilms = relevantHubs.reduce((acc, h) => acc + getMarathonHubFilmCount(h), 0);
-
-        const countEl = document.getElementById('vaultCount');
-        if (countEl) {
-          if (activeVaultHolidayFilter === 'halloween' || (activeVaultHolidayFilter === 'marathon' && activeMarathonSubFilter === 'halloween')) {
-            countEl.textContent = `Showing ${visibleHubs.length} Annual Halloween Hubs (${totalMarathonFilms} Spooky Screenings Total)`;
-          } else if (activeVaultHolidayFilter === 'christmas' || (activeVaultHolidayFilter === 'marathon' && activeMarathonSubFilter === 'christmas')) {
-            countEl.textContent = `Showing ${visibleHubs.length} Annual Christmas Festival Hubs (${totalMarathonFilms} Holiday Classics Total)`;
-          } else if (activeVaultHolidayFilter === 'marathon' && activeMarathonSubFilter === 'annual') {
-            countEl.textContent = `Showing ${visibleHubs.length} Annual Holiday Festival Hubs (${totalMarathonFilms} Screenings Total)`;
-          } else if (activeVaultHolidayFilter === 'marathon' && activeMarathonSubFilter === 'franchise') {
-            countEl.textContent = `Showing ${visibleHubs.length} Franchise Marathon Sagas (${totalMarathonFilms} Films Total)`;
-          } else {
-            countEl.textContent = `Showing ${visibleHubs.length} Master Marathon Hubs (${totalMarathonFilms} Films Total)`;
-          }
-        }
-        const statusEl = document.getElementById('vaultFilterStatus');
-        if (statusEl) {
-          if (activeVaultHolidayFilter === 'halloween') {
-            statusEl.textContent = `🎃 Halloween Marathons • ${visibleHubs.length} Annual Hubs`;
-          } else if (activeVaultHolidayFilter === 'christmas') {
-            statusEl.textContent = `🎄 Christmas Festivals • ${visibleHubs.length} Annual Hubs`;
-          } else {
-            statusEl.textContent = `🍿 All Marathons • ${visibleHubs.length} Master Hubs`;
-          }
-        }
-
-        if (visibleHubs.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full py-12 text-center flex flex-col items-center justify-center gap-3 bg-slate-950/60 rounded-2xl border border-slate-800 p-8">
-              <span class="text-4xl">🔍</span>
-              <div class="text-slate-200 font-bold text-base">No marathon sagas found matching "${escapeHtml(q)}"</div>
-              <p class="text-xs text-slate-400 max-w-sm">Try searching for a saga like Harry Potter, Fast & Furious, Pirates, Ghostbusters, or clear search.</p>
-              <button onclick="clearVaultSearch()" class="mt-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition cursor-pointer">
-                Clear Search Filter
-              </button>
-            </div>
-          `;
-          return;
-        }
-
-        const cardsHtml = visibleHubs.map((hub, idx) => renderMarathonPlaceholderCard(hub, idx, q)).join('');
-
-        let collectionBannerHtml = '';
-        if (activeVaultHolidayFilter === 'halloween') {
-          collectionBannerHtml = `
-          <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-orange-950/90 via-slate-950 to-red-950/90 border border-orange-700/80 flex flex-col gap-3 shadow-xl">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-orange-900/50 border border-orange-600/60 flex items-center justify-center text-xl shrink-0 shadow-md">
-                  🎃
-                </div>
-                <div>
-                  <div class="text-orange-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                    <span>Annual Halloween & Horror Marathon Hubs</span>
-                  </div>
-                  <div class="text-slate-400 text-xs mt-0.5">
-                    Showing ${visibleHubs.length} Master Halloween Sagas & Festivals (${totalMarathonFilms} Films Total) • Select any marathon below to view individual movie cards
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 shrink-0 flex-wrap">
-                <button type="button" onclick="toggleShowAllIndividualHolidayFilms(true)" class="shrink-0 px-3 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                  <span>📜</span> <span>Show All Spooky Films</span>
-                </button>
-                <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-orange-300 hover:text-white border border-orange-800/60 hover:border-orange-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                  <span>✕</span> <span>Show All Vault Titles</span>
-                </button>
-              </div>
-            </div>
-            <!-- Quick Jump Chips -->
-            <div class="w-full flex items-center gap-2 pt-2.5 border-t border-orange-800/40 overflow-x-auto custom-scrollbar">
-              <span class="text-[11px] font-bold text-orange-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
-              <button type="button" onclick="filterVaultToCollection('2026 Shocktoberfest')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 2026 Shocktoberfest</button>
-              <button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎃 2025 Shocktoberfest (11)</button>
-              <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
-            </div>
-          </div>`;
-        } else if (activeVaultHolidayFilter === 'christmas') {
-          collectionBannerHtml = `
-          <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-950 to-red-950/90 border border-emerald-700/80 flex flex-col gap-3 shadow-xl">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-900/50 border border-emerald-600/60 flex items-center justify-center text-xl shrink-0 shadow-md">
-                  🎄
-                </div>
-                <div>
-                  <div class="text-emerald-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                    <span>Annual Christmas & Holiday Festival Hubs</span>
-                  </div>
-                  <div class="text-slate-400 text-xs mt-0.5">
-                    Showing ${visibleHubs.length} Master Holiday Festivals (${totalMarathonFilms} Films Total) • Select any festival below to view individual movie cards
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 shrink-0 flex-wrap">
-                <button type="button" onclick="toggleShowAllIndividualHolidayFilms(true)" class="shrink-0 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                  <span>📜</span> <span>Show All Holiday Films</span>
-                </button>
-                <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 hover:text-white border border-emerald-800/60 hover:border-emerald-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                  <span>✕</span> <span>Show All Vault Titles</span>
-                </button>
-              </div>
-            </div>
-            <!-- Quick Jump Chips -->
-            <div class="w-full flex items-center gap-2 pt-2.5 border-t border-emerald-800/40 overflow-x-auto custom-scrollbar">
-              <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
-              <button type="button" onclick="filterVaultToCollection('2025 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2025 Christmas (26)</button>
-              <button type="button" onclick="filterVaultToCollection('2024 Christmas Movie Festival')" class="px-2.5 py-1 rounded-lg bg-teal-950/70 hover:bg-teal-900/80 text-teal-300 hover:text-white border border-teal-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🎄 2024 Christmas (25)</button>
-            </div>
-          </div>`;
-        } else {
-          collectionBannerHtml = `
-          <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-950 to-orange-950/90 border border-amber-600/80 flex flex-col gap-3 shadow-xl">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-900/50 border border-amber-500/60 flex items-center justify-center text-xl shrink-0 shadow-md">
-                  🍿
-                </div>
-                <div>
-                  <div class="text-amber-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                    <span>Brian's Theater Marathons</span>
-                  </div>
-                  <div class="text-slate-400 text-xs mt-0.5">
-                    Showing ${visibleHubs.length} Master Marathon Hubs (${totalMarathonFilms} Films Total) • Select any marathon below to view individual movie cards
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 shrink-0 flex-wrap">
-                <button type="button" onclick="openAnnualCollectionsModal()" class="shrink-0 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                  <span>🏛️</span> <span>Showcase Hub</span>
-                </button>
-                <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                  <span>✕</span> <span>Show All Vault Titles</span>
-                </button>
-              </div>
-            </div>
-            <!-- Festival & Category Filter Segment -->
-            <div class="w-full flex items-center gap-1.5 pt-2.5 border-t border-amber-800/40 overflow-x-auto custom-scrollbar">
-              <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 mr-1">Filter:</span>
-              <button type="button" onclick="setMarathonSubFilter('all')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'all' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-900/80 text-amber-300 hover:text-white border border-amber-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🍿 All (${MASTER_MARATHON_HUBS.length})</button>
-              <button type="button" onclick="setMarathonSubFilter('annual')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'annual' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-900/80 text-amber-300 hover:text-white border border-amber-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🏛️ Festivals</button>
-              <button type="button" onclick="setMarathonSubFilter('halloween')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'halloween' ? 'bg-orange-400 text-slate-950 font-black shadow-md' : 'bg-orange-950/60 text-orange-300 hover:text-white border border-orange-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🎃 Halloween & Shocktober</button>
-              <button type="button" onclick="setMarathonSubFilter('christmas')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'christmas' ? 'bg-emerald-400 text-slate-950 font-black shadow-md' : 'bg-emerald-950/60 text-emerald-300 hover:text-white border border-emerald-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">🎄 Christmas Festivals</button>
-              <button type="button" onclick="setMarathonSubFilter('franchise')" class="px-2.5 py-1 rounded-lg ${activeMarathonSubFilter === 'franchise' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-amber-950/60 text-amber-300 hover:text-white border border-amber-800/60'} text-xs font-bold shrink-0 transition active:scale-95 cursor-pointer">⚡ Franchise Sagas</button>
-            </div>
-            <!-- Quick Jump Marathon Chips -->
-            <div class="w-full flex items-center gap-2 pt-2 border-t border-amber-800/20 overflow-x-auto custom-scrollbar">
-              <span class="text-[11px] font-bold text-amber-400/80 uppercase tracking-wider shrink-0 mr-1">Quick Jump:</span>
-              <button type="button" onclick="filterVaultToCollection('Harry Potter Wizarding Marathon')" class="px-2.5 py-1 rounded-lg bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 hover:text-white border border-amber-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">⚡ Harry Potter (8)</button>
-              <button type="button" onclick="filterVaultToCollection('Pirates of the Caribbean Marathon')" class="px-2.5 py-1 rounded-lg bg-sky-950/70 hover:bg-sky-900/80 text-sky-300 hover:text-white border border-sky-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏴‍☠️ Pirates (5)</button>
-              <button type="button" onclick="filterVaultToCollection('Fast & Furious Saga Marathon')" class="px-2.5 py-1 rounded-lg bg-orange-950/70 hover:bg-orange-900/80 text-orange-300 hover:text-white border border-orange-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">🏎️ Fast & Furious (10)</button>
-              <button type="button" onclick="filterVaultToCollection('Ghostbusters Franchise Marathon')" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/60 text-xs font-bold shrink-0 transition cursor-pointer active:scale-95">👻 Ghostbusters (5)</button>
-            </div>
-          </div>`;
-        }
-
-        grid.innerHTML = collectionBannerHtml + cardsHtml;
-        return;
-      }
-
       currentFilteredVault = vaultMovies.filter(m => {
         if (!m) return false;
         if (activeVaultCollectionFilter) {
@@ -13083,6 +12895,19 @@
         if (activeVaultHolidayFilter) {
           if (activeVaultHolidayFilter === 'marathon') {
             if (!isMarathonItem(m)) return false;
+            if (activeMarathonSubFilter && activeMarathonSubFilter !== 'all') {
+              const g = getMarathonGroupingInfo(m);
+              const col = String(m.marathonCollection || '').toLowerCase();
+              if (activeMarathonSubFilter === 'halloween') {
+                if (!(/shocktober|scary|halloween/i.test(col) || (g && g.category === 'halloween'))) return false;
+              } else if (activeMarathonSubFilter === 'christmas') {
+                if (!(/christmas|holiday/i.test(col) || (g && g.category === 'christmas'))) return false;
+              } else if (activeMarathonSubFilter === 'annual') {
+                if (!(/shocktober|scary|halloween|christmas|holiday/i.test(col) || (g && (g.category === 'halloween' || g.category === 'christmas')))) return false;
+              } else if (activeMarathonSubFilter === 'franchise') {
+                if (!(/harry|potter|pirates|fast|ghostbusters/i.test(col) || (g && g.category === 'franchise'))) return false;
+              }
+            }
           } else {
             const mHol = getMovieHolidayCategory(m);
             if (mHol !== activeVaultHolidayFilter) return false;
@@ -13480,7 +13305,6 @@
                   <option value="all" ${(!activeVaultCollectionFilter && activeVaultYearFilter === 'all') ? 'selected' : ''}>🎄 All Christmas Classics</option>
                   <option value="2025" ${(activeVaultCollectionFilter === '2025 Christmas Movie Festival' || activeVaultYearFilter === '2025') ? 'selected' : ''}>🎄 2025 Christmas Festival (26 Films)</option>
                   <option value="2024" ${(activeVaultCollectionFilter === '2024 Christmas Movie Festival' || activeVaultYearFilter === '2024') ? 'selected' : ''}>🎄 2024 Christmas Festival (25 Films)</option>
-                  <option value="older" ${(activeVaultYearFilter === 'older') ? 'selected' : ''}>❄️ Vintage Holiday Classics</option>
                 </select>
               </div>
               <button type="button" onclick="toggleVaultHolidayFilter('marathon')" class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
@@ -13495,26 +13319,41 @@
       } else if (activeVaultHolidayFilter === 'marathon') {
         const yrLabel = activeVaultYearFilter !== 'all' ? (activeVaultYearFilter === 'older' ? 'Vintage ' : activeVaultYearFilter + ' ') : '';
         collectionBannerHtml = `
-        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-950 to-orange-950/90 border border-amber-600/80 flex flex-col gap-3 shadow-xl">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-950 to-orange-950/90 border border-amber-600/80 flex flex-col gap-3 shadow-xl relative overflow-hidden">
+          <div class="pointer-events-none select-none absolute top-2 right-3 sm:top-2.5 sm:right-4 flex items-center gap-1.5 z-10 opacity-80 sm:opacity-90">
+            <span class="anim-sparkle inline-block text-sm sm:text-base text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" title="Marathon Energy">✨</span>
+          </div>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative z-10">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-amber-900/50 border border-amber-500/60 flex items-center justify-center text-xl shrink-0 shadow-md">
                 🍿
               </div>
               <div>
                 <div class="text-amber-200 font-extrabold text-sm sm:text-base flex items-center gap-2">
-                  <span>${yrLabel}Brian's Theater Marathons</span>
+                  <span>${activeVaultCollectionFilter || (yrLabel + 'Brian\'s Theater Marathons')}</span>
                 </div>
                 <div class="text-slate-400 text-xs mt-0.5">
                   Showing all ${currentFilteredVault.length} films across Halloween marathons, franchise sagas, and holiday festivals
                 </div>
               </div>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <button type="button" onclick="openAnnualCollectionsModal()" class="shrink-0 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                <span>🏛️</span> <span>Showcase Hub</span>
-              </button>
-              <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+            <div class="flex items-center gap-2 shrink-0 flex-wrap">
+              <!-- Marathon Saga Dropdown -->
+              <div class="flex items-center gap-1.5 shrink-0">
+                <label for="vaultMarathonSelect" class="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0">Saga / Marathon:</label>
+                <select id="vaultMarathonSelect" onchange="setMarathonSagaFilter(this.value)" class="px-3 py-1.5 rounded-xl bg-slate-950 text-amber-300 hover:text-white border border-amber-500/60 hover:border-amber-400 text-xs font-bold transition cursor-pointer outline-none shadow-md">
+                  <option value="all" ${!activeVaultCollectionFilter ? 'selected' : ''}>🍿 All Marathon Sagas (${currentFilteredVault.length} Films)</option>
+                  <option value="Harry Potter Wizarding Marathon" ${activeVaultCollectionFilter === 'Harry Potter Wizarding Marathon' ? 'selected' : ''}>⚡ Harry Potter (8 Films)</option>
+                  <option value="Pirates of the Caribbean Marathon" ${activeVaultCollectionFilter === 'Pirates of the Caribbean Marathon' ? 'selected' : ''}>🏴‍☠️ Pirates of the Caribbean (5 Films)</option>
+                  <option value="Fast & Furious Saga Marathon" ${activeVaultCollectionFilter === 'Fast & Furious Saga Marathon' ? 'selected' : ''}>🏎️ Fast & Furious (10 Films)</option>
+                  <option value="Ghostbusters Franchise Marathon" ${activeVaultCollectionFilter === 'Ghostbusters Franchise Marathon' ? 'selected' : ''}>👻 Ghostbusters (5 Films)</option>
+                  <option value="2026 Shocktoberfest" ${activeVaultCollectionFilter === '2026 Shocktoberfest' ? 'selected' : ''}>🎃 2026 Shocktoberfest (22 Films)</option>
+                  <option value="2025 Shocktoberfest" ${activeVaultCollectionFilter === '2025 Shocktoberfest' ? 'selected' : ''}>💀 2025 Shocktoberfest (11 Films)</option>
+                  <option value="2025 Christmas Movie Festival" ${activeVaultCollectionFilter === '2025 Christmas Movie Festival' ? 'selected' : ''}>🎄 2025 Christmas Festival (26 Films)</option>
+                  <option value="2024 Christmas Movie Festival" ${activeVaultCollectionFilter === '2024 Christmas Movie Festival' ? 'selected' : ''}>🎁 2024 Christmas Festival (25 Films)</option>
+                </select>
+              </div>
+              <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
                 <span>✕</span> <span>Show All Vault Titles</span>
               </button>
             </div>
