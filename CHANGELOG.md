@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.166] - 2026-10-14
+
+### What's New
+- Bypassed intermediate hub cards for direct holiday movie browsing.
+- Added interactive Shocktoberfest year dropdown inside festive Halloween banner.
+- Added interactive Christmas festival year dropdown inside seasonal banner.
+- Streamlined Marathon quick jump to focus strictly on sagas.
+- Removed redundant Annual wording across marathon and festival filters.
+
 ## [4.9.165] - 2026-10-14
 
 ### What's New
