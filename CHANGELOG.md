@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.160] - 2026-10-13
+
+### What's New
+- Added live TMDb search autocomplete to Annual Marathon Wizard.
+- Interactive 1-click film chips for rapid festival lineup management.
+- Thematic franchise packs for instant 1-click batch movie additions.
+- Two-way synchronization between visual lineup chips and raw titles.
+
 ## [4.9.159] - 2026-10-13
 
 ### What's New

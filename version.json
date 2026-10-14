@@ -1,10 +1,11 @@
 {
-  "version": "4.9.159",
+  "version": "4.9.160",
   "releaseDate": "2026-10-13",
-  "title": "Brian's Theater v4.9.159",
+  "title": "Brian's Theater v4.9.160",
   "notes": [
-    "Hidden reminder buttons when auditorium doors are open.",
-    "Streamlined stage entrance UI during live and seating events.",
-    "Display reminder and calendar buttons exclusively during countdowns."
+    "Added live TMDb search autocomplete to Annual Marathon Wizard.",
+    "Interactive 1-click film chips for rapid festival lineup management.",
+    "Thematic franchise packs for instant 1-click batch movie additions.",
+    "Two-way synchronization between visual lineup chips and raw titles."
   ]
 }

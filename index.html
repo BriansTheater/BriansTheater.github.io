@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.159 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.160 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2766,18 +2766,73 @@
           </div>
         </div>
 
-        <!-- Lineup Checklist / Text Area -->
-        <div class="flex flex-col gap-1.5">
+        <!-- Search & Add Film with Live TMDb Autocomplete Suggestions -->
+        <div class="flex flex-col gap-1.5 relative">
           <div class="flex items-center justify-between">
-            <label class="font-bold text-slate-300">Film Lineup (One per line)</label>
-            <span id="annualSetupFilmCountBadge" class="text-[10px] font-mono font-bold text-amber-300">0 Films</span>
+            <label class="font-bold text-amber-300 flex items-center gap-1.5">
+              <span>🔍</span> <span>Search & Add Movie Suggestions</span>
+            </label>
+            <span class="text-[10px] text-sky-400 font-mono font-bold">TMDb Live Suggestions</span>
           </div>
-          <textarea id="annualSetupFilmsText" rows="6" oninput="updateAnnualSetupFilmCount()" placeholder="Enter movies, one title per line..." class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 font-mono text-xs outline-none focus:border-amber-400 custom-scrollbar leading-relaxed"></textarea>
-          <div class="flex items-center justify-between text-[10px] text-slate-400">
-            <span>💡 Curated favorites pre-loaded automatically.</span>
-            <button type="button" onclick="loadDefaultAnnualFestivalTitles()" class="text-amber-400 hover:underline cursor-pointer">Reset to Default Curated Lineup</button>
+          <div class="relative w-full">
+            <input type="text" id="annualSetupSearchInput" oninput="onAnnualSetupSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomAnnualFilmTitle();}" placeholder="Type movie title (e.g. Scream, Saw, Elf, Home Alone)..." class="w-full pl-9 pr-24 py-2.5 rounded-xl bg-slate-950 border border-amber-500/50 hover:border-amber-400 text-slate-100 placeholder-slate-500 font-medium text-xs outline-none focus:ring-2 focus:ring-amber-400/30 transition shadow-inner">
+            <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🎬</span>
+            <button type="button" onclick="addCustomAnnualFilmTitle()" class="absolute right-1.5 top-1.5 px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/50 font-bold text-[10px] transition cursor-pointer active:scale-95">
+              + Add Title
+            </button>
+          </div>
+          
+          <!-- Autocomplete Suggestions Dropdown -->
+          <div id="annualSetupSuggestions" class="hidden absolute top-full left-0 right-0 z-50 mt-1 max-h-56 overflow-y-auto custom-scrollbar bg-slate-950/98 border border-amber-500/50 rounded-2xl shadow-2xl backdrop-blur-md divide-y divide-slate-800">
+            <!-- Live TMDb results rendered here -->
           </div>
         </div>
+
+        <!-- Thematic Franchise Suggestions / Quick Packs -->
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-300 flex items-center gap-1">
+              <span>✨</span> <span>Popular Marathon Sagas (1-Click Batch Add):</span>
+            </span>
+          </div>
+          <div id="annualSetupFranchisePills" class="flex flex-wrap gap-1.5">
+            <!-- Dynamically populated based on halloween vs christmas -->
+          </div>
+        </div>
+
+        <!-- Interactive Film Lineup Chips -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-slate-300 flex items-center gap-1.5">
+              <span>🎞️</span> <span>Festival Film Lineup</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <span id="annualSetupFilmCountBadge" class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">0 Films</span>
+              <button type="button" onclick="clearAnnualSetupLineup()" class="text-[10px] text-rose-400 hover:text-rose-300 hover:underline cursor-pointer">Clear Lineup</button>
+            </div>
+          </div>
+          <!-- Interactive Chips Container -->
+          <div id="annualSetupChipsContainer" class="flex flex-wrap gap-1.5 p-2.5 rounded-xl bg-slate-950/90 border border-slate-800 max-h-36 overflow-y-auto custom-scrollbar min-h-[48px]">
+            <!-- Chips rendered here -->
+          </div>
+        </div>
+
+        <!-- Collapsible Raw Text Area (For bulk copy/paste) -->
+        <details class="group bg-slate-950/60 rounded-xl border border-slate-800/80 p-2.5">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-400 hover:text-slate-200 select-none text-[11px]">
+            <span class="flex items-center gap-1.5">
+              <span>📝</span> <span>Advanced: View & Edit Raw Titles (One per line)</span>
+            </span>
+            <span class="text-xs transition-transform group-open:rotate-180">▾</span>
+          </summary>
+          <div class="pt-2 flex flex-col gap-1.5">
+            <textarea id="annualSetupFilmsText" rows="4" oninput="onAnnualSetupFilmsTextareaInput()" placeholder="Enter movies, one title per line..." class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 font-mono text-xs outline-none focus:border-amber-400 custom-scrollbar leading-relaxed"></textarea>
+            <div class="flex items-center justify-between text-[10px] text-slate-400">
+              <span>💡 Kept in two-way sync with chips above.</span>
+              <button type="button" onclick="loadDefaultAnnualFestivalTitles()" class="text-amber-400 hover:underline cursor-pointer">Reset to Curated Defaults</button>
+            </div>
+          </div>
+        </details>
 
       </div>
 
@@ -2847,7 +2902,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.159";
+    const APP_VERSION = "4.9.160";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3373,6 +3428,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.160": [
+        "Added live TMDb search autocomplete to Annual Marathon Wizard.",
+        "Interactive 1-click film chips for rapid festival lineup management.",
+        "Thematic franchise packs for instant 1-click batch movie additions.",
+        "Two-way synchronization between visual lineup chips and raw titles."
+      ],
       "4.9.159": [
         "Hidden reminder buttons when auditorium doors are open.",
         "Streamlined stage entrance UI during live and seating events.",
@@ -10484,6 +10545,364 @@
       ]
     };
 
+    let annualSetupLineupFilms = [];
+    window.annualSetupLineupFilms = annualSetupLineupFilms;
+    let annualSearchDebounceTimer = null;
+
+    const ANNUAL_THEMATIC_PACKS = {
+      halloween: [
+        {
+          id: 'scream',
+          label: '🔪 Scream Sagas',
+          icon: '🔪',
+          films: [
+            { title: 'Scream (1996)', year: '1996' },
+            { title: 'Scream 2 (1997)', year: '1997' },
+            { title: 'Scream 3 (2000)', year: '2000' },
+            { title: 'Scream 4 (2011)', year: '2011' },
+            { title: 'Scream (2022)', year: '2022' },
+            { title: 'Scream VI (2023)', year: '2023' }
+          ]
+        },
+        {
+          id: 'elm_street',
+          label: '🧤 Elm Street Sagas',
+          icon: '🧤',
+          films: [
+            { title: 'A Nightmare on Elm Street (1984)', year: '1984' },
+            { title: "A Nightmare on Elm Street 2: Freddy's Revenge (1985)", year: '1985' },
+            { title: 'A Nightmare on Elm Street 3: Dream Warriors (1987)', year: '1987' },
+            { title: 'A Nightmare on Elm Street 4: The Dream Master (1988)', year: '1988' },
+            { title: "Freddy's Dead: The Final Nightmare (1991)", year: '1991' },
+            { title: "Wes Craven's New Nightmare (1994)", year: '1994' },
+            { title: 'Freddy vs. Jason (2003)', year: '2003' }
+          ]
+        },
+        {
+          id: 'halloween_myers',
+          label: '🎃 Michael Myers Sagas',
+          icon: '🎃',
+          films: [
+            { title: 'Halloween (1978)', year: '1978' },
+            { title: 'Halloween II (1981)', year: '1981' },
+            { title: 'Halloween H20: 20 Years Later (1998)', year: '1998' },
+            { title: 'Halloween (2018)', year: '2018' },
+            { title: 'Halloween Kills (2021)', year: '2021' }
+          ]
+        },
+        {
+          id: 'conjuring',
+          label: '🏚️ Conjuring Universe',
+          icon: '🏚️',
+          films: [
+            { title: 'The Conjuring (2013)', year: '2013' },
+            { title: 'The Conjuring 2 (2016)', year: '2016' },
+            { title: 'The Conjuring: The Devil Made Me Do It (2021)', year: '2021' },
+            { title: 'Annabelle: Creation (2017)', year: '2017' },
+            { title: 'The Nun (2018)', year: '2018' }
+          ]
+        },
+        {
+          id: 'saw',
+          label: '🪚 Saw Collection',
+          icon: '🪚',
+          films: [
+            { title: 'Saw (2004)', year: '2004' },
+            { title: 'Saw II (2005)', year: '2005' },
+            { title: 'Saw III (2006)', year: '2006' },
+            { title: 'Saw X (2023)', year: '2023' }
+          ]
+        },
+        {
+          id: 'stephen_king',
+          label: '🎈 Stephen King Classics',
+          icon: '🎈',
+          films: [
+            { title: 'IT (2017)', year: '2017' },
+            { title: 'IT Chapter Two (2019)', year: '2019' },
+            { title: 'The Shining (1980)', year: '1980' },
+            { title: 'Pet Sematary (1989)', year: '1989' }
+          ]
+        }
+      ],
+      christmas: [
+        {
+          id: 'home_alone',
+          label: '🏠 Home Alone Collection',
+          icon: '🏠',
+          films: [
+            { title: 'Home Alone (1990)', year: '1990' },
+            { title: 'Home Alone 2: Lost in New York (1992)', year: '1992' },
+            { title: 'Home Alone 3 (1997)', year: '1997' }
+          ]
+        },
+        {
+          id: 'santa_clause',
+          label: '🎅 Santa Clause Trilogy',
+          icon: '🎅',
+          films: [
+            { title: 'The Santa Clause (1994)', year: '1994' },
+            { title: 'The Santa Clause 2 (2002)', year: '2002' },
+            { title: 'The Santa Clause 3: The Escape Clause (2006)', year: '2006' }
+          ]
+        },
+        {
+          id: 'holiday_classics',
+          label: '🎄 All-Time Holiday Classics',
+          icon: '🎄',
+          films: [
+            { title: "National Lampoon's Christmas Vacation (1989)", year: '1989' },
+            { title: 'Elf (2003)', year: '2003' },
+            { title: 'The Polar Express (2004)', year: '2004' },
+            { title: 'A Christmas Story (1983)', year: '1983' },
+            { title: 'How the Grinch Stole Christmas (2000)', year: '2000' },
+            { title: "It's a Wonderful Life (1946)", year: '1946' }
+          ]
+        },
+        {
+          id: 'holiday_action',
+          label: '💥 Die Hard Holiday Action',
+          icon: '💥',
+          films: [
+            { title: 'Die Hard (1988)', year: '1988' },
+            { title: 'Die Hard 2 (1990)', year: '1990' },
+            { title: 'Violent Night (2022)', year: '2022' }
+          ]
+        },
+        {
+          id: 'animated_holiday',
+          label: '❄️ Animated Holiday Family',
+          icon: '❄️',
+          films: [
+            { title: 'The Nightmare Before Christmas (1993)', year: '1993' },
+            { title: 'Klaus (2019)', year: '2019' },
+            { title: 'Arthur Christmas (2011)', year: '2011' },
+            { title: 'The Grinch (2018)', year: '2018' }
+          ]
+        }
+      ]
+    };
+
+    function renderAnnualSetupFranchisePills(type = 'halloween') {
+      const container = document.getElementById('annualSetupFranchisePills');
+      if (!container) return;
+      const packs = ANNUAL_THEMATIC_PACKS[type] || [];
+      container.innerHTML = packs.map(p => `
+        <button type="button" onclick="addThematicAnnualPack('${p.id}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 hover:border-amber-400/60 text-[11px] font-semibold transition flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
+          <span>${p.icon}</span> <span>${escapeHtml(p.label)} (+${p.films.length})</span>
+        </button>
+      `).join('');
+    }
+
+    function addThematicAnnualPack(packId) {
+      const type = document.getElementById('annualSetupType')?.value || 'halloween';
+      const packs = ANNUAL_THEMATIC_PACKS[type] || [];
+      const pack = packs.find(p => p.id === packId);
+      if (!pack) return;
+
+      let added = 0;
+      pack.films.forEach(f => {
+        const normTitle = f.title.toLowerCase().trim();
+        const exists = annualSetupLineupFilms.some(x => x.title.toLowerCase().trim() === normTitle);
+        if (!exists) {
+          annualSetupLineupFilms.push({ title: f.title, year: f.year || '', poster: '' });
+          added++;
+        }
+      });
+
+      renderAnnualSetupChips();
+      syncAnnualSetupTextareaFromChips();
+      showTheaterToast(`✨ Added ${pack.label} (${added} films added)!`);
+    }
+
+    function renderAnnualSetupChips() {
+      window.annualSetupLineupFilms = annualSetupLineupFilms;
+      const container = document.getElementById('annualSetupChipsContainer');
+      const badge = document.getElementById('annualSetupFilmCountBadge');
+      if (badge) badge.textContent = `${annualSetupLineupFilms.length} Films`;
+      if (!container) return;
+
+      if (annualSetupLineupFilms.length === 0) {
+        container.innerHTML = `<span class="text-slate-500 text-xs italic p-1">No films in lineup yet. Search TMDb above or click a marathon saga to add titles!</span>`;
+        return;
+      }
+
+      container.innerHTML = annualSetupLineupFilms.map((f, idx) => `
+        <div class="px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 hover:border-amber-400 text-slate-100 flex items-center gap-1.5 text-xs transition shadow-sm group">
+          <span class="text-amber-400 text-[10px]">🎬</span>
+          <span class="font-medium text-slate-200">${escapeHtml(f.title)}</span>
+          <button type="button" onclick="removeAnnualSetupFilmChip(${idx})" class="w-4 h-4 rounded-full bg-slate-800 hover:bg-rose-950 hover:text-rose-400 text-slate-400 flex items-center justify-center text-[11px] leading-none transition ml-0.5 cursor-pointer" title="Remove">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    function removeAnnualSetupFilmChip(idx) {
+      if (idx >= 0 && idx < annualSetupLineupFilms.length) {
+        const removed = annualSetupLineupFilms.splice(idx, 1)[0];
+        renderAnnualSetupChips();
+        syncAnnualSetupTextareaFromChips();
+        if (removed) showTheaterToast(`🗑️ Removed "${removed.title}".`);
+      }
+    }
+
+    function clearAnnualSetupLineup() {
+      annualSetupLineupFilms = [];
+      renderAnnualSetupChips();
+      syncAnnualSetupTextareaFromChips();
+      showTheaterToast("🗑️ Lineup cleared.");
+    }
+
+    function syncAnnualSetupTextareaFromChips() {
+      const textarea = document.getElementById('annualSetupFilmsText');
+      if (textarea) {
+        textarea.value = annualSetupLineupFilms.map(f => f.title).join('\n');
+      }
+      const badge = document.getElementById('annualSetupFilmCountBadge');
+      if (badge) badge.textContent = `${annualSetupLineupFilms.length} Films`;
+    }
+
+    function onAnnualSetupFilmsTextareaInput() {
+      const textarea = document.getElementById('annualSetupFilmsText');
+      if (!textarea) return;
+      const lines = textarea.value.split('\n').map(l => l.trim()).filter(Boolean);
+      annualSetupLineupFilms = lines.map(line => {
+        const match = annualSetupLineupFilms.find(x => x.title.toLowerCase() === line.toLowerCase());
+        return match || { title: line, year: '', poster: '' };
+      });
+      renderAnnualSetupChips();
+    }
+
+    function onAnnualSetupSearchInput(val) {
+      if (annualSearchDebounceTimer) clearTimeout(annualSearchDebounceTimer);
+      const trimmed = (val || '').trim();
+      const drop = document.getElementById('annualSetupSuggestions');
+      if (trimmed.length < 2) {
+        if (drop) drop.classList.add('hidden');
+        return;
+      }
+      annualSearchDebounceTimer = setTimeout(() => {
+        fetchTmdbSuggestionsForAnnualSetup(trimmed);
+      }, 250);
+    }
+
+    async function fetchTmdbSuggestionsForAnnualSetup(query) {
+      const suggBox = document.getElementById('annualSetupSuggestions');
+      if (!suggBox) return;
+
+      suggBox.classList.remove('hidden');
+      suggBox.innerHTML = `
+        <div class="p-3 text-center text-xs text-amber-300 font-mono flex items-center justify-center gap-2">
+          <span class="animate-spin text-sm">🔄</span>
+          <span>Searching TMDb database...</span>
+        </div>
+      `;
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        let searchTitle = query;
+        let searchYear = '';
+        const yearMatch = query.match(/\b(19\d\d|20\d\d)\b/);
+        if (yearMatch) {
+          searchYear = yearMatch[1];
+          searchTitle = query.replace(/\b(19\d\d|20\d\d)\b/, '').replace(/[()]/g, '').trim();
+        }
+
+        let url = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}&include_adult=false`;
+        if (searchYear) url += `&primary_release_year=${searchYear}`;
+
+        let res = await fetch(url);
+        let results = [];
+        if (res.ok) {
+          const data = await res.json();
+          results = data.results || [];
+        }
+
+        if (results.length === 0) {
+          suggBox.innerHTML = `
+            <div class="p-3.5 text-center text-xs text-slate-400 flex flex-col gap-1.5 items-center">
+              <span>No TMDb matches found for "${escapeHtml(query)}".</span>
+              <button type="button" onclick="addCustomAnnualFilmTitle()" class="text-amber-400 hover:underline font-bold text-[11px] cursor-pointer">
+                + Add "${escapeHtml(query)}" as custom title
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        const topMatches = results.slice(0, 6);
+        suggBox.innerHTML = topMatches.map(m => {
+          const title = m.title || 'Untitled';
+          const year = (m.release_date || '').split('-')[0] || '';
+          const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
+          const rating = m.vote_average ? m.vote_average.toFixed(1) : null;
+          const displayTitle = year ? `${title} (${year})` : title;
+
+          return `
+            <div onclick="selectAnnualSetupSuggestion('${escapeHtml(displayTitle).replace(/'/g, "\\'")}', '${year}', '${poster}')" 
+                 class="p-2 sm:p-2.5 hover:bg-amber-500/15 cursor-pointer transition flex items-center gap-3 group text-left">
+              <img src="${poster || getCinemaPlaceholder(title)}" alt="${escapeHtml(title)}" class="w-9 h-12 object-cover rounded border border-slate-700 bg-slate-900 shrink-0 group-hover:border-amber-400 transition" onerror="this.src=getCinemaPlaceholder(this.alt);">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <h5 class="text-xs sm:text-sm font-bold text-slate-100 group-hover:text-amber-300 transition truncate">${escapeHtml(title)}</h5>
+                  ${year ? `<span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700 shrink-0">${escapeHtml(year)}</span>` : ''}
+                </div>
+                <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5 leading-snug">${m.overview ? escapeHtml(m.overview) : 'No overview available'}</p>
+                ${rating ? `<span class="text-[10px] font-mono font-bold text-amber-400 mt-0.5 inline-block">★ ${rating} TMDb</span>` : ''}
+              </div>
+              <button type="button" class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold group-hover:bg-amber-500 group-hover:text-slate-950 transition shrink-0">
+                + Add
+              </button>
+            </div>
+          `;
+        }).join('');
+
+      } catch(err) {
+        console.error("fetchTmdbSuggestionsForAnnualSetup error:", err);
+        suggBox.innerHTML = `
+          <div class="p-3 text-center text-xs text-rose-400">
+            Search error. Type title and click "+ Add Title".
+          </div>
+        `;
+      }
+    }
+
+    function selectAnnualSetupSuggestion(displayTitle, year = '', poster = '') {
+      const cleanTitle = (displayTitle || '').trim();
+      if (!cleanTitle) return;
+
+      const normTitle = cleanTitle.toLowerCase();
+      const exists = annualSetupLineupFilms.some(x => x.title.toLowerCase() === normTitle);
+      if (exists) {
+        showTheaterToast(`⚠️ "${cleanTitle}" is already in the lineup.`);
+      } else {
+        annualSetupLineupFilms.push({ title: cleanTitle, year: year, poster: poster });
+        renderAnnualSetupChips();
+        syncAnnualSetupTextareaFromChips();
+        showTheaterToast(`✨ Added "${cleanTitle}" to lineup!`);
+      }
+
+      const input = document.getElementById('annualSetupSearchInput');
+      if (input) input.value = '';
+      const suggBox = document.getElementById('annualSetupSuggestions');
+      if (suggBox) suggBox.classList.add('hidden');
+    }
+
+    function addCustomAnnualFilmTitle() {
+      const input = document.getElementById('annualSetupSearchInput');
+      const val = (input?.value || '').trim();
+      if (!val) return;
+      selectAnnualSetupSuggestion(val);
+    }
+
+    // Dismiss annual setup suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+      const drop = document.getElementById('annualSetupSuggestions');
+      const input = document.getElementById('annualSetupSearchInput');
+      if (drop && !drop.contains(e.target) && e.target !== input) {
+        drop.classList.add('hidden');
+      }
+    });
+
     function openAnnualMarathonSetupModal(type = 'halloween') {
       if (!isAdmin) {
         openAdminAuthModal();
@@ -10494,6 +10913,10 @@
       const typeSelect = document.getElementById('annualSetupType');
       if (typeSelect) typeSelect.value = type;
       updateAnnualSetupPreset();
+      const searchInput = document.getElementById('annualSetupSearchInput');
+      if (searchInput) searchInput.value = '';
+      const suggBox = document.getElementById('annualSetupSuggestions');
+      if (suggBox) suggBox.classList.add('hidden');
       if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -10506,6 +10929,8 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
+      const suggBox = document.getElementById('annualSetupSuggestions');
+      if (suggBox) suggBox.classList.add('hidden');
     }
 
     function updateAnnualSetupPreset() {
@@ -10528,25 +10953,21 @@
         if (titleEl) titleEl.textContent = `${year} Christmas Festival Setup Wizard`;
       }
 
+      renderAnnualSetupFranchisePills(type);
       loadDefaultAnnualFestivalTitles();
     }
 
     function loadDefaultAnnualFestivalTitles() {
       const type = document.getElementById('annualSetupType')?.value || 'halloween';
-      const textarea = document.getElementById('annualSetupFilmsText');
       const defaults = ANNUAL_DEFAULT_FILMS[type] || [];
-      if (textarea) {
-        textarea.value = defaults.join('\n');
-      }
-      updateAnnualSetupFilmCount();
+      annualSetupLineupFilms = defaults.map(t => ({ title: t, year: '', poster: '' }));
+      renderAnnualSetupChips();
+      syncAnnualSetupTextareaFromChips();
     }
 
     function updateAnnualSetupFilmCount() {
-      const textarea = document.getElementById('annualSetupFilmsText');
       const badge = document.getElementById('annualSetupFilmCountBadge');
-      if (!textarea || !badge) return;
-      const lines = textarea.value.split('\n').map(l => l.trim()).filter(Boolean);
-      badge.textContent = `${lines.length} Films`;
+      if (badge) badge.textContent = `${annualSetupLineupFilms.length} Films`;
     }
 
     function executeAnnualMarathonSetup() {
@@ -10560,7 +10981,9 @@
       const collectionName = document.getElementById('annualSetupCollectionName')?.value.trim() || `${year} Annual Festival`;
       const dates = document.getElementById('annualSetupDateRange')?.value.trim() || `${year} Season`;
       const textarea = document.getElementById('annualSetupFilmsText');
-      const films = (textarea?.value || '').split('\n').map(l => l.trim()).filter(Boolean);
+      const films = (annualSetupLineupFilms.length > 0)
+        ? annualSetupLineupFilms.map(f => f.title)
+        : (textarea?.value || '').split('\n').map(l => l.trim()).filter(Boolean);
 
       if (films.length === 0) {
         showTheaterToast("⚠️ Please specify at least one film for the festival lineup.");
