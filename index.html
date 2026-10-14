@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.172 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.173 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2301,11 +2301,11 @@
           </div>
         </div>
 
-        <!-- SECTION: LEGENDARY FRANCHISE MARATHONS -->
+        <!-- SECTION: LEGENDARY FRANCHISE SAGAS -->
         <div id="showcaseSection-franchise" class="flex flex-col gap-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-extrabold text-amber-400 font-mono">⚡ Franchise Marathons</span>
+              <span class="text-sm font-extrabold text-amber-400 font-mono">⚡ Franchise Sagas</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">Epic Runs</span>
             </div>
             <span class="text-xs text-slate-400">Consecutive Franchise Screenings</span>
@@ -2436,6 +2436,38 @@
                         style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%);">
                   <span>Explore Ghostbusters Marathon (5 Films)</span>
                   <span>👻</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- A Nightmare on Elm Street Saga Card -->
+            <div class="relative rounded-2xl overflow-hidden p-4 sm:p-5 flex flex-col justify-between gap-3 border border-rose-500/40 hover:border-rose-400 transition-all duration-300 shadow-xl group hover:shadow-2xl hover:shadow-rose-950/50 md:col-span-2"
+                 style="background: linear-gradient(135deg, rgba(136, 19, 55, 0.45) 0%, rgba(15, 23, 42, 0.90) 50%, rgba(120, 53, 15, 0.35) 100%), rgba(2, 6, 23, 0.95);
+                        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                        box-shadow: 0 12px 32px -8px rgba(0,0,0,0.85), inset 0 1px 1px 0 rgba(255,255,255,0.25), 0 0 20px -5px rgba(244, 63, 94, 0.3);">
+              <div class="relative z-10">
+                <div class="flex items-center mb-2">
+                  <span class="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/30 backdrop-blur-md shadow-sm">
+                    <span>🔪</span> FREDDY KRUEGER SAGA
+                  </span>
+                </div>
+                <h4 class="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-red-100 to-amber-300 group-hover:from-white group-hover:to-rose-200 transition tracking-wide">
+                  A Nightmare on Elm Street Saga
+                </h4>
+                <p class="text-xs text-slate-200/90 mt-1.5 leading-relaxed font-normal">
+                  The complete 9-film Freddy Krueger collection spanning Wes Craven's 1984 classic, Dream Warriors, New Nightmare, Freddy vs. Jason, and the 2010 remake.
+                </p>
+                <div class="flex items-center gap-1.5 mt-3 flex-wrap text-[10px] font-semibold">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-rose-950/70 text-rose-200 border border-rose-800/60 shadow-sm">📅 Oct 31, 2025</span>
+                  <span class="px-2.5 py-0.5 rounded-lg bg-rose-950/70 text-rose-200 border border-rose-800/60 shadow-sm">🔪 9 Freddy Films</span>
+                  <span class="px-2.5 py-0.5 rounded-lg bg-red-950/60 text-red-200 border border-red-800/60 shadow-sm">🩸 Classic Slasher Run</span>
+                </div>
+              </div>
+              <div class="relative z-10 pt-3 border-t border-white/10">
+                <button type="button" onclick="filterVaultToFranchiseMarathon('Elm Street', 'A Nightmare on Elm Street Saga')" class="w-full py-2 px-3.5 rounded-xl text-white font-black text-xs transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer hover:brightness-110"
+                        style="background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #f97316 100%);">
+                  <span>Explore Elm Street Saga (9 Films)</span>
+                  <span>🔪</span>
                 </button>
               </div>
             </div>
@@ -2978,7 +3010,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.172";
+    const APP_VERSION = "4.9.173";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3844,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.173": [
+        "Added Nightmare on Elm Street to Franchise Sagas dropdown.",
+        "Fixed 2025 Shocktoberfest card badges to display orange pumpkin.",
+        "Added Elm Street Freddy saga showcase card to Theater."
+      ],
       "4.9.172": [
         "Rebranded 2025 marathon records and sub-cards to 2025 Shocktoberfest.",
         "Updated 2025 showcase section card to 2025 Shocktoberfest.",
@@ -10741,6 +10778,7 @@
     const HARRY_POTTER_REGEX = /harry\s*potter/i;
     const PIRATES_REGEX = /pirates\s*of\s*the\s*caribbean/i;
     const GHOSTBUSTERS_REGEX = /ghostbusters/i;
+    const ELM_STREET_REGEX = /nightmare\s*on\s*elm\s*street|freddy's\s*revenge|dream\s*warriors|dream\s*master|dream\s*child|freddy's\s*dead|new\s*nightmare|freddy\s*vs\.?\s*jason/i;
 
     const MASTER_MARATHON_HUBS = [
       {
@@ -10952,6 +10990,40 @@
           "Ghostbusters: Answer the Call (2016)",
           "Ghostbusters: Afterlife (2021)",
           "Ghostbusters: Frozen Empire (2024)"
+        ]
+      },
+      {
+        id: 'nightmare-elm-street',
+        key: 'elm_street',
+        category: 'franchise',
+        type: 'franchise',
+        year: '2025',
+        collectionName: 'A Nightmare on Elm Street Saga',
+        title: 'A Nightmare on Elm Street Saga',
+        tag: '🔪 FREDDY KRUEGER SAGA',
+        badgeClass: 'bg-rose-500/20 text-rose-300 border border-rose-400/40',
+        cardBorder: 'border-rose-500/40 hover:border-rose-400',
+        glowColor: 'rgba(244, 63, 94, 0.25)',
+        btnGradient: 'bg-gradient-to-r from-red-600 via-rose-500 to-amber-600 hover:brightness-110 text-white font-black',
+        icon: '🔪',
+        dates: 'Oct 31, 2025',
+        defaultCount: 9,
+        format: 'Complete Freddy Saga',
+        runtimeTotal: '15h Total Run',
+        era: 'Classic Horror Sagas',
+        posterUrl: 'https://image.tmdb.org/t/p/w780/wET2440U0tQn1jL4XvjAup0zI9X.jpg',
+        trailerId: 'dCVh4lBfW-c',
+        summary: "The definitive Freddy Krueger collection featuring all 9 films from Wes Craven's 1984 classic through Dream Warriors, New Nightmare, Freddy vs. Jason, and the 2010 remake.",
+        films: [
+          "A Nightmare on Elm Street (1984)",
+          "A Nightmare on Elm Street 2: Freddy's Revenge",
+          "A Nightmare on Elm Street 3: Dream Warriors",
+          "A Nightmare on Elm Street 4: The Dream Master",
+          "A Nightmare on Elm Street 5: The Dream Child",
+          "Freddy's Dead: The Final Nightmare",
+          "Wes Craven's New Nightmare",
+          "Freddy vs. Jason",
+          "A Nightmare on Elm Street (2010)"
         ]
       },
       {
@@ -12290,6 +12362,17 @@
           icon: '👻'
         };
       }
+      // 5b. A Nightmare on Elm Street Saga (when in marathon mode or specifically selected)
+      if ((activeVaultHolidayFilter === 'marathon' || (activeVaultCollectionFilter && /elm\s*street|nightmare/i.test(activeVaultCollectionFilter))) && (ELM_STREET_REGEX.test(title) || /elm\s*street/i.test(col))) {
+        return {
+          key: 'elm_street',
+          name: '🔪 A Nightmare on Elm Street Saga',
+          collectionName: 'A Nightmare on Elm Street Saga',
+          badgeText: '🔪 Elm Street Saga',
+          priority: 5.5,
+          icon: '🔪'
+        };
+      }
       // 6. 2025 Christmas Movie Festival
       const isWatchYr2025 = (m.watchDate || m.date || '').includes('2025');
       if ((col && /2025.*(christmas|holiday)|(christmas|holiday).*2025/i.test(col)) || (isWatchYr2025 && /christmas|holiday|santa|grinch|polar express|elf|home alone/i.test(title))) {
@@ -12352,6 +12435,10 @@
       if (!m) return false;
       const title = String(m.title || '').replace(/^🎬\s*/, '').trim();
       const col = String(m.marathonCollection || '').trim();
+      // Allow Nightmare on Elm Street saga
+      if (ELM_STREET_REGEX.test(title) || /elm\s*street/i.test(col)) {
+        return true;
+      }
       // Exclude Halloween / Shocktoberfest / Christmas festivals
       if (/shocktober|scary|horror|halloween|freddy|american horror story|ahs/i.test(col + ' ' + title) && !/ghostbusters/i.test(title)) {
         return false;
@@ -12383,6 +12470,9 @@
       }
       if (/ghostbusters/i.test(normTarget)) {
         return GHOSTBUSTERS_REGEX.test(mTitle) || /ghostbusters/i.test(mCol);
+      }
+      if (/nightmare\s*on\s*elm\s*street|elm\s*street/i.test(normTarget)) {
+        return ELM_STREET_REGEX.test(mTitle) || /elm\s*street/i.test(mCol);
       }
 
       // 2026 Shocktoberfest (matches Shocktoberfest, AHS Season 13, and all October 2026 scheduled screenings)
@@ -12514,6 +12604,7 @@
 
     function filterVaultToAnnualEvent(year, holiday, collectionName) {
       closeAnnualCollectionsModal();
+      switchTab('vault');
       activeVaultYearFilter = year || 'all';
       activeVaultHolidayFilter = holiday || null;
       activeVaultCollectionFilter = collectionName || null;
@@ -12546,6 +12637,7 @@
 
     function filterVaultToCollection(collectionName) {
       closeAnnualCollectionsModal();
+      switchTab('vault');
       activeVaultCollectionFilter = collectionName;
       activeVaultHolidayFilter = null;
       vFilter = 'all';
@@ -12565,6 +12657,7 @@
 
     function filterVaultToFranchiseMarathon(searchTerm, marathonTitle) {
       closeAnnualCollectionsModal();
+      switchTab('vault');
       activeVaultYearFilter = 'all';
       activeVaultHolidayFilter = null;
       activeVaultCollectionFilter = marathonTitle || searchTerm;
@@ -12660,9 +12753,11 @@
 
     function getCollectionFilmOrderAndTotal(m) {
       if (!m) return { order: 1, total: 1 };
-      const colName = m.marathonCollection || (getMarathonGroupingInfo(m)?.collectionName) || '';
+      const colName = (activeVaultCollectionFilter && matchesVaultCollection(m, activeVaultCollectionFilter))
+        ? activeVaultCollectionFilter
+        : (m.marathonCollection || (getMarathonGroupingInfo(m)?.collectionName) || '');
       if (!colName) return { order: 1, total: 1 };
-      if (typeof m.marathonOrder === 'number' && m.marathonOrder > 0 && typeof m.marathonTotal === 'number' && m.marathonTotal > 0) {
+      if ((!activeVaultCollectionFilter || activeVaultCollectionFilter === m.marathonCollection) && typeof m.marathonOrder === 'number' && m.marathonOrder > 0 && typeof m.marathonTotal === 'number' && m.marathonTotal > 0) {
         return { order: m.marathonOrder, total: m.marathonTotal };
       }
       const siblings = (Array.isArray(vaultMovies) ? vaultMovies : []).filter(v => v && (v.marathonCollection === colName || matchesVaultCollection(v, colName)));
@@ -13070,34 +13165,42 @@
         );
 
         const marathonGroup = getMarathonGroupingInfo(m);
-        const isShocktoberCol = Boolean(
-          (m.marathonCollection && /shocktober/i.test(m.marathonCollection)) ||
-          (m.marathonCollection && /2026.*(scary|horror|halloween)|(scary|horror|halloween).*2026/i.test(m.marathonCollection)) ||
-          (marathonGroup && marathonGroup.key === 'shocktober_2026')
+        const isElmStreetSaga = Boolean(
+          (activeVaultCollectionFilter && /elm\s*street|nightmare/i.test(activeVaultCollectionFilter) && (ELM_STREET_REGEX.test(cleanTitle) || /elm\s*street/i.test(m.marathonCollection)))
         );
-        const colBadgeInfo = (m.marathonCollection || isShocktoberCol) ? getCollectionFilmOrderAndTotal(m) : null;
-        const isXmasCol = Boolean(m.marathonCollection && /christmas|holiday/i.test(m.marathonCollection));
-        const isHorrorCol = Boolean(m.marathonCollection && /scary|horror|halloween|freddy/i.test(m.marathonCollection));
-        const colIcon = isShocktoberCol ? '🎃' : (isXmasCol ? '🎄' : '🎟️');
+        const isShocktoberCol = !isElmStreetSaga && Boolean(
+          (m.marathonCollection && /shocktober|halloween|scary\s*movie\s*marathon/i.test(m.marathonCollection)) ||
+          (marathonGroup && (marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' || (marathonGroup.key && marathonGroup.key.includes('shocktober'))))
+        );
+        const colBadgeInfo = (m.marathonCollection || isShocktoberCol || isElmStreetSaga) ? getCollectionFilmOrderAndTotal(m) : null;
+        const isXmasCol = !isElmStreetSaga && !isShocktoberCol && Boolean(m.marathonCollection && /christmas|holiday/i.test(m.marathonCollection));
+        const isHorrorCol = !isElmStreetSaga && !isShocktoberCol && Boolean(m.marathonCollection && /scary|horror|halloween|freddy/i.test(m.marathonCollection));
         
         const colYearMatch = String(m.marathonCollection || (marathonGroup && marathonGroup.collectionName) || m.watchDate || m.date || '').match(/\b(20\d\d)\b/);
         const colYear = colYearMatch ? colYearMatch[1] : (isShocktoberCol ? '2026' : '');
         let colPrefix = 'Collection';
-        if (isShocktoberCol) {
+        let colIcon = '🎟️';
+        let colBtnClass = 'bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400';
+
+        if (isElmStreetSaga) {
+          colIcon = '🔪';
+          colPrefix = 'Elm Street Saga';
+          colBtnClass = 'bg-gradient-to-r from-rose-950 via-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-600/80 hover:border-rose-400 shadow-md';
+        } else if (isShocktoberCol) {
+          colIcon = '🎃';
           colPrefix = colYear ? `${colYear} Shocktober` : 'Shocktober';
+          colBtnClass = 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400 shadow-md';
         } else if (isXmasCol) {
+          colIcon = '🎄';
           colPrefix = colYear ? `${colYear} Christmas` : 'Christmas';
+          colBtnClass = 'bg-gradient-to-r from-emerald-950 to-teal-950 text-emerald-300 hover:text-white border border-emerald-700/80 hover:border-emerald-400';
         } else if (isHorrorCol) {
+          colIcon = '🎟️';
           colPrefix = colYear ? `${colYear} Marathon` : 'Marathon';
+          colBtnClass = 'bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400';
         } else if (colYear) {
           colPrefix = `${colYear} Collection`;
         }
-
-        const colBtnClass = isShocktoberCol
-          ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400 shadow-md'
-          : (isXmasCol 
-             ? 'bg-gradient-to-r from-emerald-950 to-teal-950 text-emerald-300 hover:text-white border border-emerald-700/80 hover:border-emerald-400' 
-             : 'bg-gradient-to-r from-red-950 to-rose-950 text-rose-300 hover:text-white border border-rose-700/80 hover:border-rose-400');
 
         return `
         <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-xl hover:border-slate-700 transition group">
@@ -13109,7 +13212,7 @@
               
               <!-- Top-Left Tag Badge: Marathon Sub-Card, Parent Hub, or TV Indicator -->
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                ${(m.marathonCollection || isShocktoberCol) ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(m.marathonCollection || (marathonGroup && marathonGroup.collectionName) || '2026 Shocktoberfest')}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-orange-950 to-amber-950 text-orange-300 hover:text-white border border-orange-700/80 hover:border-orange-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎃 Shocktoberfest Hub • ${marathonInfo.count} Films ↗</button>` : (marathonGroup && marathonGroup.priority <= 5 ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(marathonGroup.collectionName)}')" title="Filter to ${escapeHtml(marathonGroup.name)}" class="px-2 py-0.5 rounded-lg ${marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400' : 'bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 hover:text-white border border-amber-700/80 hover:border-amber-400'} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${marathonGroup.icon} ${escapeHtml(marathonGroup.badgeText)} ↗</button>` : ''))}
+                ${(m.marathonCollection || isShocktoberCol || isElmStreetSaga) ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml((isElmStreetSaga ? 'A Nightmare on Elm Street Saga' : m.marathonCollection) || (marathonGroup && marathonGroup.collectionName) || '2026 Shocktoberfest')}')" title="Filter to this Collection" class="px-2 py-0.5 rounded-lg ${colBtnClass} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${colIcon} ${colPrefix} • Film ${colBadgeInfo.order} of ${colBadgeInfo.total} ↗</button>` : (isMarathon ? `<button type="button" onclick="filterVaultToCollection('2025 Shocktoberfest')" title="Explore Marathon Sub-Cards" class="px-2 py-0.5 rounded-lg bg-gradient-to-r from-orange-950 to-amber-950 text-orange-300 hover:text-white border border-orange-700/80 hover:border-orange-400 font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">🎃 Shocktoberfest Hub • ${marathonInfo.count} Films ↗</button>` : (marathonGroup && marathonGroup.priority <= 5 ? `<button type="button" onclick="filterVaultToCollection('${escapeHtml(marathonGroup.collectionName)}')" title="Filter to ${escapeHtml(marathonGroup.name)}" class="px-2 py-0.5 rounded-lg ${marathonGroup.key === 'shocktober_2026' || marathonGroup.key === 'shocktober_2025' ? 'bg-gradient-to-r from-orange-950 via-amber-950 to-orange-950 text-orange-300 hover:text-white border border-orange-600/80 hover:border-orange-400' : 'bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 hover:text-white border border-amber-700/80 hover:border-amber-400'} font-extrabold text-[10px] flex items-center gap-1 shadow-md transition cursor-pointer active:scale-95">${marathonGroup.icon} ${escapeHtml(marathonGroup.badgeText)} ↗</button>` : ''))}
                 ${isTv ? `<span class="px-2 py-0.5 rounded-lg bg-purple-950/90 text-purple-300 border border-purple-700 font-bold text-[10px]">📺 TV</span>` : ''}
               </div>
 
@@ -13385,6 +13488,7 @@
                   <option value="Pirates of the Caribbean Marathon" ${activeVaultCollectionFilter === 'Pirates of the Caribbean Marathon' ? 'selected' : ''}>🏴‍☠️ Pirates of the Caribbean (5 Films)</option>
                   <option value="Fast & Furious Saga Marathon" ${activeVaultCollectionFilter === 'Fast & Furious Saga Marathon' ? 'selected' : ''}>🏎️ Fast & Furious (10 Films)</option>
                   <option value="Ghostbusters Franchise Marathon" ${activeVaultCollectionFilter === 'Ghostbusters Franchise Marathon' ? 'selected' : ''}>👻 Ghostbusters (5 Films)</option>
+                  <option value="A Nightmare on Elm Street Saga" ${activeVaultCollectionFilter === 'A Nightmare on Elm Street Saga' ? 'selected' : ''}>🔪 A Nightmare on Elm Street (9 Films)</option>
                 </select>
               </div>
               <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-white border border-amber-800/60 hover:border-amber-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
@@ -13396,21 +13500,21 @@
       } else if (activeVaultCollectionFilter) {
         const isXmasCol = /christmas|holiday/i.test(activeVaultCollectionFilter);
         const isShocktoberCol = /shocktober/i.test(activeVaultCollectionFilter);
-        const isFranchiseCol = /harry potter|pirates|fast|ghostbusters/i.test(activeVaultCollectionFilter);
+        const isFranchiseCol = /harry potter|pirates|fast|ghostbusters|elm street|nightmare/i.test(activeVaultCollectionFilter);
         const colBg = isXmasCol 
           ? 'from-emerald-950/90 via-slate-950 to-teal-950/90 border-emerald-700/80' 
           : (isShocktoberCol
              ? 'from-orange-950/90 via-slate-950 to-amber-950/90 border-orange-600/80'
              : (isFranchiseCol 
-                ? 'from-amber-950/90 via-slate-950 to-orange-950/90 border-amber-600/80'
+                ? (/elm street|nightmare/i.test(activeVaultCollectionFilter) ? 'from-rose-950/90 via-slate-950 to-red-950/90 border-rose-600/80' : 'from-amber-950/90 via-slate-950 to-orange-950/90 border-amber-600/80')
                 : 'from-red-950/80 via-slate-950 to-red-950/80 border-red-800/80'));
         const colIconBox = isXmasCol 
           ? 'bg-emerald-900/50 border-emerald-700/60' 
           : (isShocktoberCol
              ? 'bg-orange-900/50 border-orange-600/60'
-             : (isFranchiseCol ? 'bg-amber-900/50 border-amber-600/60' : 'bg-red-900/50 border-red-700/60'));
-        const colIcon = isXmasCol ? '🎄' : (isShocktoberCol ? '🎃' : (isFranchiseCol ? '⚡' : '🍿'));
-        const colTitleColor = isXmasCol ? 'text-emerald-200' : (isShocktoberCol ? 'text-orange-200' : (isFranchiseCol ? 'text-amber-200' : 'text-rose-200'));
+             : (isFranchiseCol ? (/elm street|nightmare/i.test(activeVaultCollectionFilter) ? 'bg-rose-900/50 border-rose-600/60' : 'bg-amber-900/50 border-amber-600/60') : 'bg-red-900/50 border-red-700/60'));
+        const colIcon = isXmasCol ? '🎄' : (isShocktoberCol ? '🎃' : (isFranchiseCol ? (/elm street|nightmare/i.test(activeVaultCollectionFilter) ? '🔪' : '⚡') : '🍿'));
+        const colTitleColor = isXmasCol ? 'text-emerald-200' : (isShocktoberCol ? 'text-orange-200' : (isFranchiseCol ? (/elm street|nightmare/i.test(activeVaultCollectionFilter) ? 'text-rose-200' : 'text-amber-200') : 'text-rose-200'));
         const colBtnClass = isXmasCol 
           ? 'text-emerald-300 hover:text-white border-emerald-800/60 hover:border-emerald-600' 
           : (isShocktoberCol
@@ -13453,7 +13557,7 @@
           </div>
           <div class="flex items-center gap-2 shrink-0 flex-wrap">
             <button type="button" onclick="backToAllMarathons()" id="backToMarathonsBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-110 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-              <span>←</span> <span>${/scary|halloween|shocktober/i.test(activeVaultCollectionFilter) ? 'Back to Halloween Hubs' : (/christmas|holiday/i.test(activeVaultCollectionFilter) ? 'Back to Christmas Hubs' : 'Back to All Marathons')}</span>
+              <span>←</span> <span>${/scary|halloween|shocktober/i.test(activeVaultCollectionFilter) ? 'Back to Halloween Hubs' : (/christmas|holiday/i.test(activeVaultCollectionFilter) ? 'Back to Christmas Hubs' : 'Back to Franchise Sagas')}</span>
             </button>
             <button type="button" onclick="clearCollectionFilter()" id="clearCollectionBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 ${colBtnClass} text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
               <span>✕</span> <span>Show All Vault Titles</span>

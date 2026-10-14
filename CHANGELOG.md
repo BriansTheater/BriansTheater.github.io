@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.173] - 2026-10-14
+
+### What's New
+- Added Nightmare on Elm Street to Franchise Sagas dropdown.
+- Fixed 2025 Shocktoberfest card badges to display orange pumpkin.
+- Added Elm Street Freddy saga showcase card to Theater.
+- Dynamically styled Elm Street series badges when filtering saga.
+
 ## [4.9.172] - 2026-10-14
 
 ### What's New
