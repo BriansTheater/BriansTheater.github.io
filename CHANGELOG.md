@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.168] - 2026-10-14
+
+### What's New
+- Added living motion animated features to holiday banner top right.
+- Decorated Halloween banner with fluttering bat, ghost, and cobweb.
+- Decorated Christmas banner with drifting snow and twinkling star.
+- Ensured decorative animations never obstruct user interactions or dropdowns.
+
 ## [4.9.167] - 2026-10-14
 
 ### What's New

@@ -1,11 +1,11 @@
 {
-  "version": "4.9.167",
+  "version": "4.9.168",
   "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.167",
+  "title": "Brian's Theater v4.9.168",
   "notes": [
-    "Rebranded 2025 Scary Movie Marathon to 2025 Shocktoberfest.",
-    "Streamlined Halloween edition dropdown by removing vintage option.",
-    "Unified all seasonal movies directly under official Shocktoberfest brand.",
-    "Updated marathon badges and sub-cards to 2025 Shocktoberfest."
+    "Added living motion animated features to holiday banner top right.",
+    "Decorated Halloween banner with fluttering bat, ghost, and cobweb.",
+    "Decorated Christmas banner with drifting snow and twinkling star.",
+    "Ensured decorative animations never obstruct user interactions or dropdowns."
   ]
 }

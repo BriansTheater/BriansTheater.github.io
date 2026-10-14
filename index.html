@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.167 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.168 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.167";
+    const APP_VERSION = "4.9.168";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.168": [
+        "Added living motion animated features to holiday banner top right.",
+        "Decorated Halloween banner with fluttering bat, ghost, and cobweb.",
+        "Decorated Christmas banner with drifting snow and twinkling star.",
+        "Ensured decorative animations never obstruct user interactions or dropdowns."
+      ],
       "4.9.167": [
         "Rebranded 2025 Scary Movie Marathon to 2025 Shocktoberfest.",
         "Removed vintage horror option from Halloween edition dropdown.",
@@ -13402,8 +13408,14 @@
         const yrLabel = activeVaultYearFilter !== 'all' ? (activeVaultYearFilter === 'older' ? 'Vintage ' : activeVaultYearFilter + ' ') : '';
         const curCol = activeVaultCollectionFilter || '';
         collectionBannerHtml = `
-        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-orange-950/95 via-slate-950 to-red-950/95 border border-orange-500/70 flex flex-col gap-3 shadow-[0_0_25px_rgba(249,115,22,0.25)]">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-orange-950/95 via-slate-950 to-red-950/95 border border-orange-500/70 flex flex-col gap-3 shadow-[0_0_25px_rgba(249,115,22,0.25)] relative overflow-hidden">
+          <!-- Animated Living Motion: Fluttering Bat, Drifting Ghost & Spiderweb in Top-Right Corner -->
+          <div class="pointer-events-none select-none absolute top-2 right-3 sm:top-2.5 sm:right-4 flex items-center gap-1.5 z-10 opacity-80 sm:opacity-90">
+            <span class="anim-bat inline-block text-base sm:text-lg text-orange-200/90 drop-shadow-md" title="Fluttering Bat">🦇</span>
+            <span class="anim-ghost inline-block text-base sm:text-lg text-amber-200/90 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" title="Shocktoberfest Spirit">👻</span>
+            <span class="text-xs text-white/40">🕸️</span>
+          </div>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative z-10">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-orange-900/60 border border-orange-500/60 flex items-center justify-center text-xl shrink-0 shadow-lg animate-pulse">
                 🎃
@@ -13440,8 +13452,13 @@
         const yrLabel = activeVaultYearFilter !== 'all' ? (activeVaultYearFilter === 'older' ? 'Vintage ' : activeVaultYearFilter + ' ') : '';
         const curCol = activeVaultCollectionFilter || '';
         collectionBannerHtml = `
-        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/95 via-slate-950 to-teal-950/95 border border-emerald-600/70 flex flex-col gap-3 shadow-[0_0_25px_rgba(16,185,129,0.25)]">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/95 via-slate-950 to-teal-950/95 border border-emerald-600/70 flex flex-col gap-3 shadow-[0_0_25px_rgba(16,185,129,0.25)] relative overflow-hidden">
+          <!-- Animated Living Motion: Drifting Snowflake & Twinkling Sparkles in Top-Right Corner -->
+          <div class="pointer-events-none select-none absolute top-2 right-3 sm:top-2.5 sm:right-4 flex items-center gap-2 z-10 opacity-85 sm:opacity-95">
+            <span class="anim-snow inline-block text-base sm:text-lg text-white/90 drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]" title="Drifting Snow">❄️</span>
+            <span class="anim-sparkle inline-block text-sm sm:text-base text-amber-200 drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]" title="Holiday Sparkle">✨</span>
+          </div>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative z-10">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-emerald-900/60 border border-emerald-500/60 flex items-center justify-center text-xl shrink-0 shadow-lg animate-pulse">
                 🎄
@@ -13554,8 +13571,18 @@
                 : `Showing all ${currentFilteredVault.length} individual marathon sub-cards with artwork and embedded trailers`));
 
         collectionBannerHtml = `
-        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r ${colBg} border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
-          <div class="flex items-center gap-3">
+        <div id="vaultCollectionBanner" class="col-span-full mb-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r ${colBg} border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl relative overflow-hidden">
+          ${isShocktoberCol ? `
+          <div class="pointer-events-none select-none absolute top-2 right-3 sm:top-2.5 sm:right-4 flex items-center gap-1.5 z-10 opacity-80 sm:opacity-90">
+            <span class="anim-bat inline-block text-base sm:text-lg text-orange-200/90 drop-shadow-md" title="Fluttering Bat">🦇</span>
+            <span class="anim-ghost inline-block text-base sm:text-lg text-amber-200/90 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" title="Shocktoberfest Spirit">👻</span>
+            <span class="text-xs text-white/40">🕸️</span>
+          </div>` : (isXmasCol ? `
+          <div class="pointer-events-none select-none absolute top-2 right-3 sm:top-2.5 sm:right-4 flex items-center gap-2 z-10 opacity-85 sm:opacity-95">
+            <span class="anim-snow inline-block text-base sm:text-lg text-white/90 drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]" title="Drifting Snow">❄️</span>
+            <span class="anim-sparkle inline-block text-sm sm:text-base text-amber-200 drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]" title="Holiday Sparkle">✨</span>
+          </div>` : '')}
+          <div class="flex items-center gap-3 relative z-10">
             <div class="w-10 h-10 rounded-xl ${colIconBox} flex items-center justify-center text-xl shrink-0 shadow-md">
               ${colIcon}
             </div>
