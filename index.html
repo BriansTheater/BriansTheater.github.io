@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.163 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.164 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.163";
+    const APP_VERSION = "4.9.164";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.164": [
+        "Removed volatile streaming platform badges from Vault cards.",
+        "Eliminated generic Featured Film fallback tags across library.",
+        "Added evergreen genre sanitizer for timeless movie metadata.",
+        "Streamlined card banner overlay with clean cinematic format badges.",
+        "Updated sample community requests with genuine movie genres."
+      ],
       "4.9.163": [
         "Scoped auto-import strictly to scheduled festival month calendar screenings.",
         "Eliminated historical past database clutter from annual festival lineups.",
@@ -8885,7 +8892,8 @@
       if (!resolvedSummary) resolvedSummary = "Virtual cinema screening at Brian's Theater.";
       if (!resolvedYear) resolvedYear = "2026";
       if (!resolvedRuntime) resolvedRuntime = "1h 45m";
-      if (!resolvedGenres) resolvedGenres = "Feature Film";
+      if (resolvedGenres) resolvedGenres = sanitizeVaultGenre(resolvedGenres);
+      else resolvedGenres = "";
 
       if (summaryInput) summaryInput.value = resolvedSummary;
       if (yearInput) yearInput.value = resolvedYear;
@@ -8896,7 +8904,7 @@
       if (prevYear) prevYear.textContent = resolvedYear;
       if (prevText) prevText.textContent = resolvedSummary;
       if (prevRuntime) prevRuntime.textContent = `Runtime: ${resolvedRuntime}`;
-      if (prevGenres) prevGenres.textContent = `Genres: ${resolvedGenres}`;
+      if (prevGenres) prevGenres.textContent = resolvedGenres ? `Genres: ${resolvedGenres}` : 'Genres: Unspecified';
 
       // Wire real-time live preview event listeners
       if (summaryInput && !summaryInput.dataset.boundPreview) {
@@ -10255,15 +10263,15 @@
     vaultMovies = [
       { title: "The interview", year: "2014", source: "request", genre: "Comedy", runtime: "1h 52m" },
       { title: "Pineapple Express", year: "2008", source: "request", genre: "Comedy", runtime: "1h 52m" },
-      { title: "The Mandalorian and Grogu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "2h 12m" },
-      { title: "The President's Cake", year: "2026", source: "request", genre: "Netflix", runtime: "1h 46m" },
-      { title: "Fuze", year: "2026", source: "request", genre: "HBO Max", runtime: "1h 36m" },
-      { title: "Signal One", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "1h 27m" },
-      { title: "Rich Flu", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "1h 56m" },
-      { title: "In the Grey", year: "2026", source: "request", genre: "Starz", runtime: "1h 48m" },
+      { title: "The Mandalorian and Grogu", year: "2026", source: "request", genre: "Sci-Fi • Adventure", runtime: "2h 12m" },
+      { title: "The President's Cake", year: "2026", source: "request", genre: "Drama • Comedy", runtime: "1h 46m" },
+      { title: "Fuze", year: "2026", source: "request", genre: "Action • Thriller", runtime: "1h 36m" },
+      { title: "Signal One", year: "2026", source: "request", genre: "Sci-Fi • Thriller", runtime: "1h 27m" },
+      { title: "Rich Flu", year: "2026", source: "request", genre: "Sci-Fi • Thriller", runtime: "1h 56m" },
+      { title: "In the Grey", year: "2026", source: "request", genre: "Action • Thriller", runtime: "1h 48m" },
       { title: "Stop! That! Murder!", year: "2026", source: "request", genre: "Comedy", runtime: "1h 40m" },
-      { title: "Lifehack", year: "2026", source: "request", genre: "Netflix", runtime: "1h 38m" },
-      { title: "Toy Story 5", year: "2026", source: "request", genre: "Disney+ / Hulu", runtime: "1h 42m" },
+      { title: "Lifehack", year: "2026", source: "request", genre: "Documentary • Tech", runtime: "1h 38m" },
+      { title: "Toy Story 5", year: "2026", source: "request", genre: "Animation • Family", runtime: "1h 42m" },
       { title: "Backrooms", year: "2026", source: "request", genre: "Horror", runtime: "1h 45m" }
     ];
 
@@ -12567,13 +12575,29 @@
       }
     }
 
-    function clearVaultSearch() {
-      const input = document.getElementById('vaultSearch');
-      if (input) input.value = '';
-      const clearBtn = document.getElementById('vaultSearchClearBtn');
-      if (clearBtn) clearBtn.classList.add('hidden');
-      vaultPageSize = 24;
-      renderVault();
+    // Evergreen Genre Sanitizer: Filters out volatile streaming platforms and generic placeholders
+    function sanitizeVaultGenre(rawGenre) {
+      if (!rawGenre) return '';
+      let str = String(rawGenre).replace(/<[^>]+>/g, '').trim();
+      if (!str) return '';
+
+      // Generic placeholders to discard
+      const genericPattern = /^(featured\s*film|feature\s*film|movie|movies|standard|pending|tbd|unknown|film|null|undefined|not\s*available|unavailable|n\/?a)$/i;
+      if (genericPattern.test(str)) return '';
+
+      // Volatile streaming platforms and sources to discard from library badges
+      const platformPattern = /^(hbo\s*max|max|netflix|disney\+?\s*\/?\s*hulu|disney\+?|hulu|tubi|peacock|paramount\+?|parmount\+?|starz|prime\s*video|prime|theaters?|plex|i\s*don'?t\s*know|request|past)$/i;
+      if (platformPattern.test(str)) return '';
+
+      // If delimited by •, /, or ,, filter out any platform or generic tokens
+      const parts = str.split(/[•\/,]/).map(p => p.trim()).filter(p => {
+        if (!p) return false;
+        if (genericPattern.test(p)) return false;
+        if (platformPattern.test(p)) return false;
+        return true;
+      });
+
+      return parts.join(' • ');
     }
 
     function isScreeningConcluded(item, sched) {
@@ -12667,12 +12691,18 @@
           }
           if (s.trailerUrl) existing.trailerUrl = s.trailerUrl;
           if (s.trailerId) existing.trailerId = s.trailerId;
+          const schedGenre = sanitizeVaultGenre(s.genre || details.genre || "");
+          if (schedGenre) {
+            existing.genre = schedGenre;
+            existing.genres = schedGenre;
+          }
           if ((!existing.summary || existing.summary.length < 10) && (details.summary || s.desc)) {
             existing.summary = details.summary || s.desc;
             existing.overview = details.summary || s.desc;
           }
         } else {
           added++;
+          const schedGenre = sanitizeVaultGenre(s.genre || details.genre || "");
           vaultMovies.push({
             title: cleanTitle,
             year: details.year || s.year || "2026",
@@ -12685,8 +12715,8 @@
             startTime: schedStartTime,
             endTime: schedEndTime,
             source: isConcluded ? "past" : "schedule",
-            genre: s.genre || details.genre || "Featured Film",
-            genres: s.genre || details.genre || "Featured Film",
+            genre: schedGenre,
+            genres: schedGenre,
             runtime: schedRuntime || "Standard",
             posterUrl: artworkUrl,
             imageUrl: artworkUrl,
@@ -13118,9 +13148,15 @@
 
               <!-- Bottom Overlay on Banner: Genre and Start Time (No duplicate date) -->
               <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-xs">
-                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px] sm:max-w-[200px]">
-                  <span>🎭</span> <span class="truncate">${escapeHtml(m.genre || m.genres || d.genres || 'Feature Film')}</span>
+                ${d.genres ? `
+                <span class="font-mono text-sky-300 font-bold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px] sm:max-w-[200px]" title="${escapeHtml(d.genres)}">
+                  <span>🎭</span> <span class="truncate">${escapeHtml(d.genres)}</span>
                 </span>
+                ` : `
+                <span class="font-mono text-slate-300 font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1 text-[10px] truncate max-w-[180px]">
+                  <span>🎬</span> <span class="truncate">${isTv ? 'TV Series' : 'Cinema'}</span>
+                </span>
+                `}
                 <span class="font-mono text-amber-300 text-[10px] font-semibold bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded border border-slate-800 shrink-0">
                   🕒 ${escapeHtml(d.startTime)}
                 </span>
@@ -13680,6 +13716,7 @@
       } else if (m.genre && m.genre !== 'Past Screening') {
         genres = m.genre;
       }
+      genres = sanitizeVaultGenre(genres);
 
       // 6. Summary Teaser & Full Details
       let teaser = '';
@@ -13721,7 +13758,7 @@
       const finalSummary = customSummary ? cleanSummaryText(customSummary) : summary;
       const finalYearResult = (customMeta && customMeta.year) ? customMeta.year : finalYear;
       const finalRuntime = (customMeta && customMeta.runtime) ? customMeta.runtime : runtime;
-      const finalGenres = (customMeta && customMeta.genres) ? customMeta.genres : genres;
+      const finalGenres = sanitizeVaultGenre((customMeta && customMeta.genres) ? customMeta.genres : genres);
 
       return {
         releaseYear: finalYearResult,
@@ -14422,21 +14459,21 @@
     }
 
     communityRequests = [
-      { title: "The interview", requester: "Dwarf", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/tIDC4xT65l7a8qbgg8GvwD5g8c5.jpg" },
-      { title: "Pineapple Express", requester: "Dwarf", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/6E50WjeOYjDZg9HXgPjYdGtY2jG.jpg" },
-      { title: "The Mandalorian and Grogu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/cE9LAdexd9ju0yIkmCJBOKZg9JR.jpg" },
-      { title: "The President's Cake", requester: "Brian", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/uSrozVUxIUaer6FIUHHFtOdbqj8.jpg" },
-      { title: "Fuze", requester: "Brian", genre: "HBO Max", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/oMFdQE5hMJ9JjhNORegwTo0GKmh.jpg" },
-      { title: "Signal One", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/bi7Aeaozl51cd5K6vAn8tI1lOW0.jpg" },
-      { title: "Rich Flu", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/fKmn4SrS41loy8gMzyxups69Xof.jpg" },
-      { title: "In the Grey", requester: "Brian", genre: "Starz", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/dQgIcW6Th08kMRf2HBoYWoFE6OD.jpg" },
-      { title: "Stop! That! Train!", requester: "Brian", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/w90dGS6D2lVO4aO5rdQ8QECrUGY.jpg" },
-      { title: "Lifehack", requester: "Brian", genre: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/ab8uFG6L3gKnog7ntrUdgo28hzK.jpg" },
-      { title: "Toy Story 5", requester: "Brian", genre: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/sfQtVlIHljToOwYjhe21KPGzZWK.jpg" },
-      { title: "Backrooms", requester: "Brian", genre: "HBO Max", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg" },
-      { title: "Neighbors", requester: "Dwarf", genre: "Netflix", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/sN1RU08CMi8xkRIibremh3AOdgw.jpg" },
-      { title: "Neighbors 2: Sorority Rising", requester: "Dwarf", genre: "Netflix", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/eyjcLLwxuRXACbglIbwWwaXK9DN.jpg" },
-      { title: "Return to silent hill", requester: "Brian", genre: "plex", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/mdw7bSnE11WpwWf3ViXtnavuqiT.jpg" }
+      { title: "The interview", requester: "Dwarf", genre: "Comedy", platform: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/tIDC4xT65l7a8qbgg8GvwD5g8c5.jpg" },
+      { title: "Pineapple Express", requester: "Dwarf", genre: "Comedy", platform: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/6E50WjeOYjDZg9HXgPjYdGtY2jG.jpg" },
+      { title: "The Mandalorian and Grogu", requester: "Brian", genre: "Sci-Fi • Adventure", platform: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/cE9LAdexd9ju0yIkmCJBOKZg9JR.jpg" },
+      { title: "The President's Cake", requester: "Brian", genre: "Drama • Comedy", platform: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/uSrozVUxIUaer6FIUHHFtOdbqj8.jpg" },
+      { title: "Fuze", requester: "Brian", genre: "Action • Thriller", platform: "HBO Max", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/oMFdQE5hMJ9JjhNORegwTo0GKmh.jpg" },
+      { title: "Signal One", requester: "Brian", genre: "Sci-Fi • Thriller", platform: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/bi7Aeaozl51cd5K6vAn8tI1lOW0.jpg" },
+      { title: "Rich Flu", requester: "Brian", genre: "Sci-Fi • Thriller", platform: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/fKmn4SrS41loy8gMzyxups69Xof.jpg" },
+      { title: "In the Grey", requester: "Brian", genre: "Action • Thriller", platform: "Starz", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/dQgIcW6Th08kMRf2HBoYWoFE6OD.jpg" },
+      { title: "Stop! That! Train!", requester: "Brian", genre: "Action • Thriller", platform: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/w90dGS6D2lVO4aO5rdQ8QECrUGY.jpg" },
+      { title: "Lifehack", requester: "Brian", genre: "Documentary • Tech", platform: "Netflix", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/ab8uFG6L3gKnog7ntrUdgo28hzK.jpg" },
+      { title: "Toy Story 5", requester: "Brian", genre: "Animation • Family", platform: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/sfQtVlIHljToOwYjhe21KPGzZWK.jpg" },
+      { title: "Backrooms", requester: "Brian", genre: "Horror", platform: "HBO Max", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg" },
+      { title: "Neighbors", requester: "Dwarf", genre: "Comedy", platform: "Netflix", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/sN1RU08CMi8xkRIibremh3AOdgw.jpg" },
+      { title: "Neighbors 2: Sorority Rising", requester: "Dwarf", genre: "Comedy", platform: "Netflix", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/eyjcLLwxuRXACbglIbwWwaXK9DN.jpg" },
+      { title: "Return to silent hill", requester: "Brian", genre: "Horror", platform: "plex", status: "Scheduled", posterUrl: "https://image.tmdb.org/t/p/w780/mdw7bSnE11WpwWf3ViXtnavuqiT.jpg" }
     ];
 
     function loadRequests() {
@@ -14506,14 +14543,16 @@
           return;
         }
 
+        const reqGenre = sanitizeVaultGenre(r.genre || '');
         vaultMovies.push({
           title: r.title,
           year: r.year || (r.date ? r.date.split('/')[2] || '2026' : '2026'),
           source: 'request',
-          genre: r.genre || r.platform || 'Movie',
+          genre: reqGenre,
           runtime: r.runtime || 'Pending Review',
           requester: r.requester || 'Community',
-          overview: r.overview || `Requested by ${r.requester || 'Guest'} (${r.genre || r.platform || 'Movie'})`,
+          platform: r.platform || '',
+          overview: r.overview || `Requested by ${r.requester || 'Guest'}${reqGenre ? ` (${reqGenre})` : ''}`,
           posterUrl: r.posterUrl || '',
           status: r.status || 'Under Review'
         });

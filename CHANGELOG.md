@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.164] - 2026-10-14
+
+### What's New
+- Removed volatile streaming platform badges from Vault cards.
+- Eliminated generic Featured Film fallback tags across library.
+- Added evergreen genre sanitizer for timeless movie metadata.
+- Streamlined card banner overlay with clean cinematic format badges.
+- Updated sample community requests with genuine movie genres.
+
 ## [4.9.163] - 2026-10-13
 
 ### What's New

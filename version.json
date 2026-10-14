@@ -1,13 +1,12 @@
 {
-  "version": "4.9.163",
-  "releaseDate": "2026-10-13",
-  "title": "Brian's Theater v4.9.163",
+  "version": "4.9.164",
+  "releaseDate": "2026-10-14",
+  "title": "Brian's Theater v4.9.164",
   "notes": [
-    "Scoped auto-import strictly to scheduled festival month calendar screenings.",
-    "Eliminated historical past database clutter from annual festival lineups.",
-    "Added dedicated On Schedule tab inside festival picker drawer.",
-    "Added separate Vault Classics tab for optional past movies.",
-    "Updated detected count badge to show exact scheduled screenings.",
-    "Enriched sample schedule with complete October 2026 screenings."
+    "Removed volatile streaming platform badges from Vault cards.",
+    "Eliminated generic Featured Film fallback tags across library.",
+    "Added evergreen genre sanitizer for timeless movie metadata.",
+    "Streamlined card banner overlay with clean cinematic format badges.",
+    "Updated sample community requests with genuine movie genres."
   ]
 }
