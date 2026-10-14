@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.165] - 2026-10-14
+
+### What's New
+- Synced 2026 Shocktoberfest marathon hub with 22 scheduled titles.
+- Fixed lineup preview drawer showing incorrect prototype placeholder films.
+- Fixed collection filter returning zero results for Shocktoberfest titles.
+- Automated marathon collection tagging for all scheduled October screenings.
+- Pre-merged calendar screenings into Vault library on initial load.
+
 ## [4.9.164] - 2026-10-14
 
 ### What's New

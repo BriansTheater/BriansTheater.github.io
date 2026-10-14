@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.164 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.165 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -2978,7 +2978,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.164";
+    const APP_VERSION = "4.9.165";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3812,6 +3812,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.165": [
+        "Synced 2026 Shocktoberfest marathon hub with 22 scheduled titles.",
+        "Fixed lineup preview drawer showing incorrect prototype placeholder films.",
+        "Fixed collection filter returning zero results for Shocktoberfest titles.",
+        "Automated marathon collection tagging for all scheduled October screenings.",
+        "Pre-merged calendar screenings into Vault library on initial load."
+      ],
       "4.9.164": [
         "Removed volatile streaming platform badges from Vault cards.",
         "Eliminated generic Featured Film fallback tags across library.",
@@ -10659,7 +10666,7 @@
         btnGradient: 'bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-black',
         icon: '🎃',
         dates: 'Oct 1–31, 2026',
-        defaultCount: 13,
+        defaultCount: 22,
         format: 'Month-Long Horror Festival',
         runtimeTotal: 'Full Month Run',
         era: 'October 2026',
@@ -10667,19 +10674,28 @@
         trailerId: 'dCVh4lBfW-c',
         summary: "Brian's Theater month-long October horror festival featuring the full run of American Horror Story Season 13, seasonal frights, and Halloween cinematic spectacles.",
         films: [
-          "American Horror Story: Season 13",
+          "Backrooms",
+          "AHS: s13 e1: 13",
+          "AHS: s13 e2: 1:13am",
+          "AHS: s13 e3: Rauhnacht",
+          "AHS: s13 e4: Is that all there is?",
+          "AHS: s13 e5: Date Night",
+          "AHS: s13 e6: The return of devils night",
+          "NOSFERATU",
           "Evil Dead Rise",
-          "Clown in a Cornfield",
-          "IT Chapter Two",
-          "Saw X",
-          "The Exorcist: Believer",
-          "Smile",
-          "Talk to Me",
-          "Terrifier 2",
-          "Halloween Ends",
-          "A Nightmare on Elm Street",
-          "Five Nights at Freddy's",
-          "M3GAN"
+          "AHS: s13 e7: The Baddest Witch Of Them All",
+          "AHS: s13 e8: Hell No",
+          "Hokum",
+          "Abraham's Boys A Dracula Story",
+          "The Seeding",
+          "AHS: s13 e9: the devils is in the Details",
+          "AHS: s13 e10: The prodigal son",
+          "UnderTone",
+          "AHS: s13 e11: Madison Happy Ending",
+          "AHS: s13 e12: Sisters in Arms",
+          "they will kill you",
+          "AHS: s13 e13: Devils of a good time",
+          "Stephens King: It (1990)"
         ]
       },
       {
@@ -10922,6 +10938,10 @@
 
     function getMarathonHubFilmCount(hub) {
       if (!hub) return 0;
+      if (/shocktober/i.test(hub.collectionName) && typeof getFestivalScheduledScreenings === 'function') {
+        const sched = getFestivalScheduledScreenings('halloween', '2026');
+        if (sched && sched.length > 0) return sched.length;
+      }
       if (!Array.isArray(vaultMovies) || vaultMovies.length === 0) return hub.defaultCount || 0;
       const matches = vaultMovies.filter(m => matchesVaultCollection(m, hub.collectionName));
       if (matches.length > 0) {
@@ -10936,6 +10956,12 @@
 
     function getMarathonHubFilms(hub) {
       if (!hub) return [];
+      if (/shocktober/i.test(hub.collectionName) && typeof getFestivalScheduledScreenings === 'function') {
+        const sched = getFestivalScheduledScreenings('halloween', '2026');
+        if (sched && sched.length > 0) {
+          return sched.map(s => String(s.title || '').replace(/^🎬\s*/, '').trim());
+        }
+      }
       if (!Array.isArray(vaultMovies) || vaultMovies.length === 0) return hub.films || [];
       const matches = vaultMovies.filter(m => matchesVaultCollection(m, hub.collectionName));
       if (matches.length > 0) {
@@ -12089,18 +12115,24 @@
       `;
     }
 
+    function isOctober2026Date(str) {
+      if (!str) return false;
+      const s = String(str);
+      return /(?:^|\s|\b)10\/\d{1,2}\/2026\b/.test(s) || /oct(?:ober)?\s+\d{1,2},?\s+2026\b/i.test(s) || /2026-10-\d{2}/.test(s);
+    }
+
     function getMarathonGroupingInfo(m) {
       if (!m) return null;
       const title = String(m.title || '').replace(/^🎬\s*/, '').trim();
       const col = String(m.marathonCollection || '').trim();
-      const isWatchYr2026 = (m.watchDate || m.date || '').includes('2026') || (m.year === '2026');
-      const isOct2026 = (String(m.watchDate || m.date || '').includes('2026-10') || String(m.watchDate || m.date || '').includes('Oct 2026') || (isWatchYr2026 && /10\/\d{2}\/2026/.test(String(m.watchDate || m.date || ''))));
+      const mDate = String(m.watchDate || m.date || m.scheduledDate || m.dateText || '');
+      const isOct2026 = isOctober2026Date(mDate);
 
       // 0. 2026 Shocktoberfest (Month-Long October 2026 Festival)
       if (/shocktober/i.test(col) || (/2026/i.test(col) && /horror|scary|halloween/i.test(col)) ||
           /shocktober/i.test(title) ||
-          /american horror story/i.test(title) ||
-          (isOct2026 && (/evil dead|exorcist|halloween|saw|conjuring|smile|insidious|terrifier|scream/i.test(title) || /horror|scary/i.test(m.genre || '')))) {
+          /american horror story|\bahs\b/i.test(title) ||
+          isOct2026) {
         return {
           key: 'shocktober_2026',
           name: '🎃 2026 Shocktoberfest',
@@ -12244,13 +12276,12 @@
         return GHOSTBUSTERS_REGEX.test(mTitle) || /ghostbusters/i.test(mCol);
       }
 
-      // 2026 Shocktoberfest (matches Shocktoberfest, AHS Season 13, and October 2026 horror titles)
+      // 2026 Shocktoberfest (matches Shocktoberfest, AHS Season 13, and all October 2026 scheduled screenings)
       if (/shocktober/i.test(normTarget)) {
         if (mCol && /shocktober/i.test(mCol)) return true;
-        if (/american horror story/i.test(mTitle)) return true;
-        const watchYr = (m.watchDate || m.date || '').includes('2026') || (m.year === '2026');
-        const isOct2026 = (String(m.watchDate || m.date || '').includes('2026-10') || String(m.watchDate || m.date || '').includes('Oct 2026') || (watchYr && /10\/\d{2}\/2026/.test(String(m.watchDate || m.date || ''))));
-        if (isOct2026 && (/evil dead|exorcist|halloween|saw|conjuring|smile|insidious|terrifier|scream/i.test(mTitle) || /horror|scary/i.test(m.genre || ''))) return true;
+        if (/american horror story|\bahs\b/i.test(mTitle)) return true;
+        const mDate = String(m.watchDate || m.date || m.scheduledDate || m.dateText || '');
+        if (isOctober2026Date(mDate)) return true;
       }
 
       // Scary Movie Marathon (matches both 2025 Scary Movie Marathon and with "Mystery")
@@ -12696,6 +12727,13 @@
             existing.genre = schedGenre;
             existing.genres = schedGenre;
           }
+          const sDateStr = String(schedDate || '');
+          const isOct2026 = isOctober2026Date(sDateStr);
+          if (isOct2026) {
+            existing.marathonCollection = '2026 Shocktoberfest';
+          } else if (s.marathonCollection) {
+            existing.marathonCollection = s.marathonCollection;
+          }
           if ((!existing.summary || existing.summary.length < 10) && (details.summary || s.desc)) {
             existing.summary = details.summary || s.desc;
             existing.overview = details.summary || s.desc;
@@ -12703,6 +12741,8 @@
         } else {
           added++;
           const schedGenre = sanitizeVaultGenre(s.genre || details.genre || "");
+          const sDateStr = String(schedDate || '');
+          const isOct2026 = isOctober2026Date(sDateStr);
           vaultMovies.push({
             title: cleanTitle,
             year: details.year || s.year || "2026",
@@ -12715,6 +12755,7 @@
             startTime: schedStartTime,
             endTime: schedEndTime,
             source: isConcluded ? "past" : "schedule",
+            marathonCollection: isOct2026 ? '2026 Shocktoberfest' : (s.marathonCollection || ''),
             genre: schedGenre,
             genres: schedGenre,
             runtime: schedRuntime || "Standard",
@@ -15916,6 +15957,11 @@ Enjoy the show! 🎬✨`;
         customContainer.classList.remove('hidden');
         if (label) label.textContent = "Raw Google Form";
       }
+    }
+
+    // Pre-merge schedule into Vault on initial load so calendar screenings and Shocktoberfest titles are immediately available
+    if (typeof sampleSchedule !== 'undefined' && Array.isArray(sampleSchedule)) {
+      mergeScheduleIntoVault(sampleSchedule);
     }
 
     renderVault();
