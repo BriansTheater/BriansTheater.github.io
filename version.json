@@ -1,10 +1,10 @@
 {
-  "version": "4.9.179",
+  "version": "4.9.180",
   "releaseDate": "2026-10-15",
-  "title": "Brian's Theater v4.9.179",
+  "title": "Brian's Theater v4.9.180",
   "notes": [
-    "Added floating witch next to stage bat for visual balance.",
-    "Enhanced seasonal Halloween stage atmosphere with glowing purple spectral flair.",
-    "Preserved silky 60fps GPU-accelerated creature animations on desktop and mobile."
+    "Added creepy dangling spider to stage header for visual balance.",
+    "Enhanced corner cobwebs across both sides of stage card.",
+    "Maintained silky smooth GPU-accelerated festive animations across all viewports."
   ]
 }

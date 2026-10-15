@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.180] - 2026-10-15
+
+### What's New
+- Added creepy dangling spider to stage header for visual balance.
+- Enhanced corner cobwebs across both sides of stage card.
+- Maintained silky smooth GPU-accelerated festive animations across all viewports.
+
 ## [4.9.179] - 2026-10-15
 
 ### What's New
