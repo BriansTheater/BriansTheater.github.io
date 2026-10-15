@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.180 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.181 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -154,6 +154,11 @@
     body.theme-halloween #scheduleFilterPills button.bg-sky-500 {
       background: #f97316 !important;
       color: #020617 !important;
+    }
+    body.theme-halloween #stageCountdownBox {
+      background: rgba(0, 0, 0, 0.7) !important;
+      border-color: rgba(249, 115, 22, 0.4) !important;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 20px rgba(249, 115, 22, 0.15) !important;
     }
 
     /* 2. Christmas Winter Wonderland Site-Wide Styling */
@@ -488,25 +493,27 @@
           <!-- STATE A: COUNTDOWN BOX (Visible when theater is closed) -->
           <div id="stageCountdownBox" class="bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full shadow-xl flex flex-col gap-3">
             <div>
-              <div id="stageCountdownLabel" class="text-[11px] text-center uppercase tracking-widest text-sky-400 mb-2 font-mono font-bold flex items-center justify-center gap-1.5">
-                <span>⏱️</span> <span id="stageCountdownLabelText">Theater Opens In</span>
+              <div id="stageCountdownLabel" class="text-[11px] text-center uppercase tracking-widest text-sky-400 mb-2 font-mono font-bold flex items-center justify-center gap-1.5 theme-transition">
+                <span id="stageCountdownIconLeft">⏱️</span>
+                <span id="stageCountdownLabelText">Theater Opens In</span>
+                <span id="stageCountdownIconRight" class="hidden"></span>
               </div>
               <div id="stageCountdownGrid" class="grid grid-cols-4 gap-2 sm:gap-3 text-center font-mono">
-                <div id="stageColDays" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-                  <div id="stageCountDays" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
-                  <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Days</div>
+                <div id="stageColDays" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800 theme-transition">
+                  <div id="stageCountDays" class="text-xl sm:text-2xl font-black text-sky-400 theme-transition">00</div>
+                  <div id="stageUnitDays" class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition">Days</div>
                 </div>
-                <div id="stageColHours" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-                  <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400">22</div>
-                  <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Hours</div>
+                <div id="stageColHours" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800 theme-transition">
+                  <div id="stageCountHours" class="text-xl sm:text-2xl font-black text-sky-400 theme-transition">22</div>
+                  <div id="stageUnitHours" class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition">Hours</div>
                 </div>
-                <div id="stageColMins" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-                  <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400">05</div>
-                  <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Mins</div>
+                <div id="stageColMins" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800 theme-transition">
+                  <div id="stageCountMins" class="text-xl sm:text-2xl font-black text-sky-400 theme-transition">05</div>
+                  <div id="stageUnitMins" class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition">Mins</div>
                 </div>
-                <div id="stageColSecs" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800">
-                  <div id="stageCountSecs" class="text-xl sm:text-2xl font-black text-sky-400">00</div>
-                  <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Secs</div>
+                <div id="stageColSecs" class="bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800 theme-transition">
+                  <div id="stageCountSecs" class="text-xl sm:text-2xl font-black text-sky-400 theme-transition">00</div>
+                  <div id="stageUnitSecs" class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition">Secs</div>
                 </div>
               </div>
             </div>
@@ -3204,7 +3211,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.180";
+    const APP_VERSION = "4.9.181";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4038,6 +4045,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.181": [
+        "Unveiled Haunted Cinema Marquee countdown with glowing spooky frame.",
+        "Added warm pumpkin-orange glow to time digits and borders.",
+        "Added glowing spectral purple pulse to final seconds counter."
+      ],
       "4.9.180": [
         "Added creepy dangling spider to stage header for visual balance.",
         "Enhanced corner cobwebs across both sides of stage card.",
@@ -6346,7 +6358,7 @@
           drawerTitle.className = 'text-sm font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-amber-300';
         }
         if (drawerSub) drawerSub.textContent = 'Cinema Dashboard';
-        document.title = "Brian's Theater v4.9.180 — Virtual Cinema";
+        document.title = "Brian's Theater v4.9.181 — Virtual Cinema";
       }
 
       // 2c. Navigation Tab Buttons Icons & Clean Preserved Labels
@@ -6405,6 +6417,25 @@
         }
       }
 
+      // Countdown Box & Tile Elements
+      const cdBox = document.getElementById('stageCountdownBox');
+      const cdLabel = document.getElementById('stageCountdownLabel');
+      const cdLabelText = document.getElementById('stageCountdownLabelText');
+      const cdIconLeft = document.getElementById('stageCountdownIconLeft');
+      const cdIconRight = document.getElementById('stageCountdownIconRight');
+      const colDays = document.getElementById('stageColDays');
+      const colHours = document.getElementById('stageColHours');
+      const colMins = document.getElementById('stageColMins');
+      const colSecs = document.getElementById('stageColSecs');
+      const cntDays = document.getElementById('stageCountDays');
+      const cntHours = document.getElementById('stageCountHours');
+      const cntMins = document.getElementById('stageCountMins');
+      const cntSecs = document.getElementById('stageCountSecs');
+      const unitDays = document.getElementById('stageUnitDays');
+      const unitHours = document.getElementById('stageUnitHours');
+      const unitMins = document.getElementById('stageUnitMins');
+      const unitSecs = document.getElementById('stageUnitSecs');
+
       if (theme === 'halloween') {
         if (stageCard) {
           stageCard.className = 'theme-transition rounded-2xl border p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden bg-gradient-to-b from-orange-950/70 via-slate-900 to-purple-950/70 border-orange-500/50 shadow-orange-950/40';
@@ -6423,6 +6454,43 @@
         }
         if (categoryLabel) {
           categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-orange-400 theme-transition';
+        }
+
+        // Option C: Haunted Cinema Marquee Countdown Box & Digits
+        if (cdBox) {
+          cdBox.className = 'bg-black/70 rounded-2xl p-4 sm:p-5 border border-orange-500/40 shadow-[0_4px_24px_rgba(0,0,0,0.8)] w-full flex flex-col gap-3 theme-transition';
+        }
+        if (cdLabel) {
+          cdLabel.className = 'text-[11px] text-center uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-400 mb-2.5 font-mono font-bold flex items-center justify-center gap-2 theme-transition';
+        }
+        if (cdIconLeft) cdIconLeft.textContent = '🕷️';
+        if (cdIconRight) {
+          cdIconRight.textContent = '🦇';
+          cdIconRight.classList.remove('hidden');
+        }
+        if (cdLabelText) cdLabelText.textContent = 'Theater Doors Open In';
+
+        const orangeTiles = [colDays, colHours, colMins];
+        orangeTiles.forEach(el => {
+          if (el) el.className = 'bg-slate-950/90 rounded-xl p-2.5 sm:p-3 border border-orange-500/50 shadow-[0_0_12px_rgba(249,115,22,0.35)] theme-transition';
+        });
+        const orangeDigits = [cntDays, cntHours, cntMins];
+        orangeDigits.forEach(el => {
+          if (el) el.className = 'text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.7)] theme-transition';
+        });
+        const normalUnits = [unitDays, unitHours, unitMins];
+        normalUnits.forEach(el => {
+          if (el) el.className = 'text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition';
+        });
+
+        if (colSecs) {
+          colSecs.className = 'bg-slate-950/90 rounded-xl p-2.5 sm:p-3 border border-purple-500/50 shadow-[0_0_12px_rgba(168,85,247,0.35)] theme-transition';
+        }
+        if (cntSecs) {
+          cntSecs.className = 'text-xl sm:text-2xl font-black text-purple-300 drop-shadow-[0_0_8px_rgba(192,132,252,0.8)] theme-transition';
+        }
+        if (unitSecs) {
+          unitSecs.className = 'text-[9px] sm:text-[10px] text-purple-300/80 uppercase tracking-wider mt-0.5 theme-transition';
         }
       } else if (theme === 'christmas') {
         if (stageCard) {
@@ -6445,6 +6513,32 @@
         if (categoryLabel) {
           categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-emerald-400 theme-transition';
         }
+
+        if (cdBox) {
+          cdBox.className = 'bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-emerald-500/40 shadow-xl w-full flex flex-col gap-3 theme-transition';
+        }
+        if (cdLabel) {
+          cdLabel.className = 'text-[11px] text-center uppercase tracking-widest text-emerald-400 mb-2 font-mono font-bold flex items-center justify-center gap-1.5 theme-transition';
+        }
+        if (cdIconLeft) cdIconLeft.textContent = '❄️';
+        if (cdIconRight) {
+          cdIconRight.textContent = '🎄';
+          cdIconRight.classList.remove('hidden');
+        }
+        if (cdLabelText) cdLabelText.textContent = 'Holiday Screening In';
+
+        const allTiles = [colDays, colHours, colMins, colSecs];
+        allTiles.forEach(el => {
+          if (el) el.className = 'bg-slate-950/90 rounded-xl p-2.5 sm:p-3 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.25)] theme-transition';
+        });
+        const allDigits = [cntDays, cntHours, cntMins, cntSecs];
+        allDigits.forEach(el => {
+          if (el) el.className = 'text-xl sm:text-2xl font-black text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.7)] theme-transition';
+        });
+        const allUnits = [unitDays, unitHours, unitMins, unitSecs];
+        allUnits.forEach(el => {
+          if (el) el.className = 'text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition';
+        });
       } else {
         // Default Midnight Cinema theme
         if (stageCard) {
@@ -6465,6 +6559,32 @@
         if (categoryLabel) {
           categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-sky-400 theme-transition';
         }
+
+        if (cdBox) {
+          cdBox.className = 'bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-slate-800 w-full shadow-xl flex flex-col gap-3 theme-transition';
+        }
+        if (cdLabel) {
+          cdLabel.className = 'text-[11px] text-center uppercase tracking-widest text-sky-400 mb-2 font-mono font-bold flex items-center justify-center gap-1.5 theme-transition';
+        }
+        if (cdIconLeft) cdIconLeft.textContent = '⏱️';
+        if (cdIconRight) {
+          cdIconRight.textContent = '';
+          cdIconRight.classList.add('hidden');
+        }
+        if (cdLabelText) cdLabelText.textContent = 'Theater Opens In';
+
+        const allTiles = [colDays, colHours, colMins, colSecs];
+        allTiles.forEach(el => {
+          if (el) el.className = 'bg-slate-900/90 rounded-xl p-2.5 sm:p-3 border border-slate-800 theme-transition';
+        });
+        const allDigits = [cntDays, cntHours, cntMins, cntSecs];
+        allDigits.forEach(el => {
+          if (el) el.className = 'text-xl sm:text-2xl font-black text-sky-400 theme-transition';
+        });
+        const allUnits = [unitDays, unitHours, unitMins, unitSecs];
+        allUnits.forEach(el => {
+          if (el) el.className = 'text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition';
+        });
       }
     }
 
@@ -7067,10 +7187,25 @@
         setEntranceState(false);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
-        if (stageCountdownLabelText) stageCountdownLabelText.textContent = "Theater Opens In";
+        const curTheme = (typeof getActiveSeasonalTheme === 'function') ? getActiveSeasonalTheme().theme : 'default';
+        if (stageCountdownLabelText) {
+          if (curTheme === 'halloween') {
+            stageCountdownLabelText.textContent = "Theater Doors Open In";
+          } else if (curTheme === 'christmas') {
+            stageCountdownLabelText.textContent = "Holiday Screening In";
+          } else {
+            stageCountdownLabelText.textContent = "Theater Opens In";
+          }
+        }
 
         if (stageCategoryLabel) {
-          stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-sky-400";
+          if (curTheme === 'halloween') {
+            stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-orange-400 theme-transition";
+          } else if (curTheme === 'christmas') {
+            stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-emerald-400 theme-transition";
+          } else {
+            stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-sky-400 theme-transition";
+          }
           stageCategoryLabel.textContent = "Next Scheduled Screening";
         }
         if (headingEl) {

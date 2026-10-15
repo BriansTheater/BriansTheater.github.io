@@ -1,10 +1,10 @@
 {
-  "version": "4.9.180",
+  "version": "4.9.181",
   "releaseDate": "2026-10-15",
-  "title": "Brian's Theater v4.9.180",
+  "title": "Brian's Theater v4.9.181",
   "notes": [
-    "Added creepy dangling spider to stage header for visual balance.",
-    "Enhanced corner cobwebs across both sides of stage card.",
-    "Maintained silky smooth GPU-accelerated festive animations across all viewports."
+    "Added Option C Haunted Cinema Marquee countdown with glowing digits.",
+    "Styled countdown tiles with pumpkin orange and spectral purple glow.",
+    "Preserved full countdown accuracy across all screen viewports."
   ]
 }

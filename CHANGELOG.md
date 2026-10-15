@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.181] - 2026-10-15
+
+### What's New
+- Added Haunted Cinema Marquee countdown with spooky glowing frame.
+- Styled countdown digits with warm pumpkin-orange and amber glow.
+- Added glowing purple spectral pulse to seconds countdown tile.
+- Preserved countdown theme styles across live real-time clock ticks.
+- Ensured seamless transitions across Halloween, Christmas, and Default themes.
+
 ## [4.9.180] - 2026-10-15
 
 ### What's New
