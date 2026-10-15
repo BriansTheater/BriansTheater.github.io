@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.179] - 2026-10-15
+
+### What's New
+- Added floating witch next to stage bat for visual balance.
+- Enhanced seasonal Halloween stage atmosphere with glowing purple spectral flair.
+- Preserved silky 60fps GPU-accelerated creature animations on desktop and mobile.
+
 ## [4.9.178] - 2026-10-15
 
 ### What's New

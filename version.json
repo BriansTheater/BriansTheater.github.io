@@ -1,12 +1,10 @@
 {
-  "version": "4.9.178",
+  "version": "4.9.179",
   "releaseDate": "2026-10-15",
-  "title": "Brian's Theater v4.9.178",
+  "title": "Brian's Theater v4.9.179",
   "notes": [
-    "Unveiled Brian's Haunted Theater branding with spectral candle flicker.",
-    "Preserved clean navigation button labels with festive spooky icons.",
-    "Removed redundant premiere badges for a cleaner cinema stage.",
-    "Added eerie blinking creature eyes in dark stage margins.",
-    "Synchronized seasonal header and window title with live themes."
+    "Added floating witch next to stage bat for visual balance.",
+    "Enhanced seasonal Halloween stage atmosphere with glowing purple spectral flair.",
+    "Preserved silky 60fps GPU-accelerated creature animations on desktop and mobile."
   ]
 }

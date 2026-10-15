@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.178 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.179 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -424,6 +424,7 @@
           <span class="absolute top-7 right-5 text-xl anim-ghost inline-block drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]" aria-hidden="true">👻</span>
           <span class="absolute top-3 right-5 text-sm text-white/30" aria-hidden="true">🕸️</span>
           <span class="absolute top-4 left-5 text-xl anim-bat inline-block drop-shadow-lg" style="transform: scaleX(-1);" aria-hidden="true">🦇</span>
+          <span class="absolute top-7 left-14 text-xl anim-ghost inline-block drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]" aria-hidden="true" title="Flying Witch">🧙‍♀️</span>
           <span class="absolute bottom-5 left-6 text-sm anim-creature-eyes inline-block" aria-hidden="true">👀</span>
           <span class="absolute bottom-6 right-6 text-sm anim-creature-eyes inline-block" style="animation-delay: 2.8s;" aria-hidden="true">👀</span>
         </div>
@@ -3202,7 +3203,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.178";
+    const APP_VERSION = "4.9.179";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4036,6 +4037,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.179": [
+        "Added floating witch next to stage bat for visual balance.",
+        "Enhanced seasonal Halloween stage atmosphere with glowing purple spectral flair.",
+        "Preserved silky 60fps GPU-accelerated creature animations on desktop and mobile."
+      ],
       "4.9.178": [
         "Unveiled Brian's Haunted Theater branding with spectral candle flicker.",
         "Preserved clean navigation button labels with festive spooky icons.",
@@ -6334,7 +6340,7 @@
           drawerTitle.className = 'text-sm font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-amber-300';
         }
         if (drawerSub) drawerSub.textContent = 'Cinema Dashboard';
-        document.title = "Brian's Theater v4.9.178 — Virtual Cinema";
+        document.title = "Brian's Theater v4.9.179 — Virtual Cinema";
       }
 
       // 2c. Navigation Tab Buttons Icons & Clean Preserved Labels
