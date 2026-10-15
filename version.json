@@ -1,12 +1,12 @@
 {
-  "version": "4.9.177",
+  "version": "4.9.178",
   "releaseDate": "2026-10-15",
-  "title": "Brian's Theater v4.9.177",
+  "title": "Brian's Theater v4.9.178",
   "notes": [
-    "Broadened festive seasonal themes across the entire website interface.",
-    "Implemented real-time Firebase cloud theme sync between devices.",
-    "Added full-screen GPU snowfall particles for holiday winter theme.",
-    "Themed navigation header, tab bar, and mobile drawer styles.",
-    "Synchronized live theme state seamlessly without requiring browser refreshes."
+    "Unveiled Brian's Haunted Theater branding with spectral candle flicker.",
+    "Preserved clean navigation button labels with festive spooky icons.",
+    "Removed redundant premiere badges for a cleaner cinema stage.",
+    "Added eerie blinking creature eyes in dark stage margins.",
+    "Synchronized seasonal header and window title with live themes."
   ]
 }

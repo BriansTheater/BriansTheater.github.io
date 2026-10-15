@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.178] - 2026-10-15
+
+### What's New
+- Unveiled Brian's Haunted Theater branding with spectral candle flicker.
+- Preserved clean navigation button labels with festive spooky icons.
+- Removed redundant premiere badges for a cleaner cinema stage.
+- Added eerie blinking creature eyes in dark stage margins.
+- Synchronized seasonal header and window title with live themes.
+
 ## [4.9.177] - 2026-10-15
 
 ### What's New
