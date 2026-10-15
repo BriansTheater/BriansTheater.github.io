@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.177] - 2026-10-15
+
+### What's New
+- Broadened festive seasonal themes across the entire website interface.
+- Implemented real-time Firebase cloud theme sync between devices.
+- Added full-screen GPU snowfall particles for holiday winter theme.
+- Themed navigation header, tab bar, and mobile drawer styles.
+- Synchronized live theme state seamlessly without requiring browser refreshes.
+
 ## [4.9.176] - 2026-10-15
 
 ### What's New

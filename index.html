@@ -102,6 +102,101 @@
     .theme-transition {
       transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
     }
+    /* ========================================================
+       SITE-WIDE SEASONAL FESTIVE THEMES & AMBIENCE
+       ======================================================== */
+    /* 1. Halloween Shocktoberfest Site-Wide Styling */
+    body.theme-halloween {
+      background-color: #08090e !important;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 115, 22, 0.14), transparent),
+        radial-gradient(ellipse 50% 50% at 100% 50%, rgba(147, 51, 234, 0.08), transparent),
+        radial-gradient(ellipse 50% 50% at 0% 80%, rgba(249, 115, 22, 0.06), transparent) !important;
+      background-attachment: fixed;
+    }
+    body.theme-halloween header {
+      border-bottom-color: rgba(249, 115, 22, 0.35) !important;
+      box-shadow: 0 4px 30px rgba(249, 115, 22, 0.1) !important;
+    }
+    body.theme-halloween .tab-btn.bg-sky-500 {
+      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%) !important;
+      color: #020617 !important;
+      box-shadow: 0 0 16px rgba(249, 115, 22, 0.45) !important;
+    }
+    body.theme-halloween .gold-marquee {
+      text-shadow: 0 0 12px #f97316, 0 0 24px rgba(249, 115, 22, 0.6) !important;
+    }
+    body.theme-halloween #vaultSearch:focus {
+      border-color: #f97316 !important;
+      box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25) !important;
+    }
+    body.theme-halloween .vault-pill-btn.bg-sky-500 {
+      background: #f97316 !important;
+      color: #020617 !important;
+    }
+    body.theme-halloween #sidebarDrawer {
+      border-left-color: rgba(249, 115, 22, 0.35) !important;
+      background: linear-gradient(180deg, #110d1c 0%, #08090e 100%) !important;
+    }
+    body.theme-halloween #scheduleFilterPills button.bg-sky-500 {
+      background: #f97316 !important;
+      color: #020617 !important;
+    }
+
+    /* 2. Christmas Winter Wonderland Site-Wide Styling */
+    body.theme-christmas {
+      background-color: #040a0e !important;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.14), transparent),
+        radial-gradient(ellipse 50% 50% at 100% 50%, rgba(239, 68, 68, 0.06), transparent),
+        radial-gradient(ellipse 50% 50% at 0% 80%, rgba(20, 184, 166, 0.08), transparent) !important;
+      background-attachment: fixed;
+    }
+    body.theme-christmas header {
+      border-bottom-color: rgba(16, 185, 129, 0.35) !important;
+      box-shadow: 0 4px 30px rgba(16, 185, 129, 0.1) !important;
+    }
+    body.theme-christmas .tab-btn.bg-sky-500 {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important;
+      color: #020617 !important;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.45) !important;
+    }
+    body.theme-christmas .gold-marquee {
+      text-shadow: 0 0 12px #34d399, 0 0 24px rgba(16, 185, 129, 0.6) !important;
+    }
+    body.theme-christmas #vaultSearch:focus {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
+    }
+    body.theme-christmas .vault-pill-btn.bg-sky-500 {
+      background: #10b981 !important;
+      color: #020617 !important;
+    }
+    body.theme-christmas #sidebarDrawer {
+      border-left-color: rgba(16, 185, 129, 0.35) !important;
+      background: linear-gradient(180deg, #071714 0%, #040a0e 100%) !important;
+    }
+    body.theme-christmas #scheduleFilterPills button.bg-sky-500 {
+      background: #10b981 !important;
+      color: #020617 !important;
+    }
+
+    /* 3. Site-Wide Falling Snow Particle System */
+    .site-snowflake {
+      position: fixed;
+      top: -25px;
+      color: rgba(255, 255, 255, 0.9);
+      pointer-events: none;
+      user-select: none;
+      z-index: 35;
+      animation: siteSnowfall linear infinite;
+    }
+    @keyframes siteSnowfall {
+      0% { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.9; }
+      85% { opacity: 0.85; }
+      100% { transform: translateY(105vh) translateX(35px) rotate(360deg); opacity: 0; }
+    }
     .tab-view {
       transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
@@ -198,22 +293,28 @@
     })();
   </script>
 </head>
-<body class="bg-[#0b1120] text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-500 selection:text-white overflow-x-hidden">
+<body class="bg-[#0b1120] text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-500 selection:text-white overflow-x-hidden theme-transition">
+
+  <!-- SITE-WIDE FALLING SNOW PARTICLES (Active during Christmas theme) -->
+  <div id="siteSnowContainer" class="fixed inset-0 pointer-events-none overflow-hidden hidden z-30" aria-hidden="true"></div>
 
   <!-- TOP HEADER & AMBIENT BANNER -->
-  <header class="border-b border-slate-800/80 bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-40">
+  <header class="border-b border-slate-800/80 bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-40 theme-transition">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
       
       <!-- Brand Title & Home Click -->
       <div class="flex items-center gap-3 cursor-pointer select-none" onclick="switchTab('screening')">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-lg sm:text-xl shrink-0">
-          🎬
+        <div id="headerBrandLogo" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-lg sm:text-xl shrink-0 theme-transition">
+          <span id="headerBrandIcon">🎬</span>
         </div>
         <div class="flex flex-col">
-          <h1 class="text-base sm:text-lg font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-amber-300 leading-tight">
-            Brian's Theater
-          </h1>
-          <span class="text-[10px] text-slate-400 font-mono leading-none">Virtual Cinema</span>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-base sm:text-lg font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-amber-300 leading-tight">
+              Brian's Theater
+            </h1>
+            <span id="headerSeasonalFlair" class="hidden text-sm select-none" aria-hidden="true"></span>
+          </div>
+          <span id="headerBrandSubtitle" class="text-[10px] text-slate-400 font-mono leading-none theme-transition">Virtual Cinema</span>
         </div>
       </div>
 
@@ -1643,14 +1744,14 @@
       <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-4 border-b border-slate-800/80">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow">
-            🎬
+          <div id="drawerBrandLogo" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow theme-transition">
+            <span id="drawerBrandIcon">🎬</span>
           </div>
           <div>
             <h2 class="text-sm font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-amber-300">
               Brian's Theater
             </h2>
-            <p class="text-[10px] text-slate-400 font-mono">Cinema Dashboard</p>
+            <p id="drawerBrandSubtitle" class="text-[10px] text-slate-400 font-mono theme-transition">Cinema Dashboard</p>
           </div>
         </div>
         <button onclick="toggleSidebar(false)" aria-label="Close Sidebar" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 flex items-center justify-center text-sm font-bold transition active:scale-95">
@@ -3091,7 +3192,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.176";
+    const APP_VERSION = "4.9.177";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3925,6 +4026,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.177": [
+        "Broadened festive seasonal themes across the entire website interface.",
+        "Implemented real-time Firebase cloud theme sync between devices.",
+        "Added full-screen GPU snowfall particles for holiday winter theme.",
+        "Themed navigation header, tab bar, and mobile drawer styles.",
+        "Synchronized live theme state seamlessly without requiring browser refreshes."
+      ],
       "4.9.176": [
         "Introduced festive Shocktoberfest Halloween theme with spooky ambient glow.",
         "Introduced festive Holiday Winter Wonderland theme with gentle snowfall.",
@@ -6094,6 +6202,37 @@
       }
     }
 
+    function createSiteSnowflakes() {
+      const container = document.getElementById('siteSnowContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const flakeIcons = ['❄', '❅', '•', '✦', '❆', '❄️'];
+      const count = 18;
+      for (let i = 0; i < count; i++) {
+        const flake = document.createElement('span');
+        flake.className = 'site-snowflake';
+        flake.textContent = flakeIcons[i % flakeIcons.length];
+        const leftPercent = Math.floor((i * (100 / count)) + (Math.random() * 4));
+        const duration = (5.0 + Math.random() * 4.5).toFixed(1);
+        const delay = (Math.random() * 6).toFixed(1);
+        const size = Math.floor(11 + Math.random() * 10);
+        const opacity = (0.4 + Math.random() * 0.55).toFixed(2);
+        flake.style.left = `${leftPercent}%`;
+        flake.style.animationDuration = `${duration}s`;
+        flake.style.animationDelay = `${delay}s`;
+        flake.style.fontSize = `${size}px`;
+        flake.style.opacity = opacity;
+        container.appendChild(flake);
+      }
+    }
+
+    function clearSiteSnowflakes() {
+      const container = document.getElementById('siteSnowContainer');
+      if (container) {
+        container.innerHTML = '';
+      }
+    }
+
     function applySeasonalTheme(themeOverride) {
       const activeState = (themeOverride && themeOverride !== 'auto') 
         ? { theme: themeOverride, mode: 'override' } 
@@ -6102,6 +6241,79 @@
       const theme = activeState.theme;
       const mode = activeState.mode;
 
+      // 1. Site-Wide Body Theme Class
+      document.body.classList.remove('theme-halloween', 'theme-christmas', 'theme-default');
+      document.body.classList.add('theme-' + theme);
+
+      // 2. Header Seasonal Branding Elements
+      const brandLogo = document.getElementById('headerBrandLogo');
+      const brandIcon = document.getElementById('headerBrandIcon');
+      const seasonalFlair = document.getElementById('headerSeasonalFlair');
+      const brandSub = document.getElementById('headerBrandSubtitle');
+
+      if (brandLogo && brandIcon && brandSub) {
+        if (theme === 'halloween') {
+          brandIcon.textContent = '🎃';
+          brandLogo.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 shadow-lg shadow-orange-950/40 flex items-center justify-center text-slate-950 font-black text-lg sm:text-xl shrink-0 theme-transition';
+          brandSub.textContent = 'Shocktoberfest Cinema';
+          if (seasonalFlair) {
+            seasonalFlair.classList.remove('hidden');
+            seasonalFlair.innerHTML = '<span class="anim-bat inline-block" title="Shocktoberfest">🦇</span>';
+          }
+        } else if (theme === 'christmas') {
+          brandIcon.textContent = '🎄';
+          brandLogo.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-300 to-amber-300 p-0.5 shadow-lg shadow-emerald-950/40 flex items-center justify-center text-slate-950 font-black text-lg sm:text-xl shrink-0 theme-transition';
+          brandSub.textContent = 'Holiday Winter Wonderland';
+          if (seasonalFlair) {
+            seasonalFlair.classList.remove('hidden');
+            seasonalFlair.innerHTML = '<span class="anim-sparkle inline-block" title="Winter Wonderland">✨</span>';
+          }
+        } else {
+          brandIcon.textContent = '🎬';
+          brandLogo.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-lg sm:text-xl shrink-0 theme-transition';
+          brandSub.textContent = 'Virtual Cinema';
+          if (seasonalFlair) {
+            seasonalFlair.classList.add('hidden');
+            seasonalFlair.innerHTML = '';
+          }
+        }
+      }
+
+      // 2b. Sidebar Drawer Seasonal Branding
+      const drawerLogo = document.getElementById('drawerBrandLogo');
+      const drawerIcon = document.getElementById('drawerBrandIcon');
+      const drawerSub = document.getElementById('drawerBrandSubtitle');
+      if (drawerLogo && drawerIcon && drawerSub) {
+        if (theme === 'halloween') {
+          drawerIcon.textContent = '🎃';
+          drawerLogo.className = 'w-8 h-8 rounded-lg bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow theme-transition';
+          drawerSub.textContent = 'Shocktoberfest Cinema';
+        } else if (theme === 'christmas') {
+          drawerIcon.textContent = '🎄';
+          drawerLogo.className = 'w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 via-teal-300 to-amber-300 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow theme-transition';
+          drawerSub.textContent = 'Winter Wonderland';
+        } else {
+          drawerIcon.textContent = '🎬';
+          drawerLogo.className = 'w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow theme-transition';
+          drawerSub.textContent = 'Cinema Dashboard';
+        }
+      }
+
+      // 3. Full-Screen Snow Particles
+      const siteSnow = document.getElementById('siteSnowContainer');
+      if (theme === 'christmas') {
+        if (siteSnow) {
+          siteSnow.classList.remove('hidden');
+          if (siteSnow.children.length === 0) createSiteSnowflakes();
+        }
+      } else {
+        if (siteSnow) {
+          siteSnow.classList.add('hidden');
+          clearSiteSnowflakes();
+        }
+      }
+
+      // 4. Theater Stage Card Controls
       const stageCard = document.getElementById('stageMainCard');
       const glowLeft = document.getElementById('stageAmbientGlowLeft');
       const glowRight = document.getElementById('stageAmbientGlowRight');
@@ -6204,22 +6416,58 @@
       }
     }
 
-    function setSeasonalThemeOverride(themeVal) {
+    // Real-Time Firebase Sync: Handles incoming cloud updates from other devices (app -> PC)
+    function applyIncomingSeasonalTheme(incoming) {
+      if (!incoming) return;
+      const themeVal = (typeof incoming === 'object' && incoming.theme) ? incoming.theme : incoming;
+      const themeTs = (typeof incoming === 'object' && incoming.updatedAt) ? Number(incoming.updatedAt) : 0;
+      const localTs = parseInt(localStorage.getItem('brian_theater_seasonal_theme_ts') || '0', 10);
+      const curSaved = localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
+
+      if (!localTs || !themeTs || themeTs >= localTs || themeVal !== curSaved) {
+        try {
+          localStorage.setItem('brian_theater_seasonal_theme', themeVal);
+          if (themeTs) localStorage.setItem('brian_theater_seasonal_theme_ts', String(themeTs));
+        } catch(e) {}
+        applySeasonalTheme(themeVal);
+      }
+    }
+
+    async function setSeasonalThemeOverride(themeVal) {
       if (!isAdmin) {
         openAdminAuthModal();
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
+      const ts = Date.now();
       try {
         localStorage.setItem('brian_theater_seasonal_theme', themeVal);
+        localStorage.setItem('brian_theater_seasonal_theme_ts', String(ts));
       } catch(e) {}
       applySeasonalTheme(themeVal);
 
+      // Instant global sync via Firebase RTDB PUT so PC and all devices update in real time!
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonalTheme.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            theme: themeVal,
+            updatedAt: ts
+          })
+        });
+      } catch(err) {
+        console.warn("Error syncing seasonal theme to Firebase:", err);
+      }
+
+      // Notify Google Apps Script backend as backup
+      fetch(`${API_BASE_URL}?action=admin_set_seasonal_theme&theme=${encodeURIComponent(themeVal)}`, { mode: 'no-cors' }).catch(() => {});
+
       const msgs = {
         'auto': '✨ Smart Auto-Switch enabled (Seasonal calendar).',
-        'halloween': '🎃 Shocktoberfest Halloween theme activated.',
-        'christmas': '🎄 Holiday Winter Wonderland theme activated.',
-        'default': '🎬 Midnight Cinema default theme activated.'
+        'halloween': '🎃 Shocktoberfest Halloween theme activated site-wide.',
+        'christmas': '🎄 Holiday Winter Wonderland theme activated site-wide.',
+        'default': '🎬 Midnight Cinema default theme activated site-wide.'
       };
       if (typeof showTheaterToast === 'function') {
         showTheaterToast(msgs[themeVal] || `Seasonal theme set to ${themeVal}`);
@@ -10451,6 +10699,11 @@
         }
       }
 
+      // Sync global seasonal festive theme from Firebase in real time across all devices (PC, app, etc.)
+      if (data.seasonalTheme && typeof applyIncomingSeasonalTheme === 'function') {
+        applyIncomingSeasonalTheme(data.seasonalTheme);
+      }
+
       // Check if Firebase broadcasts a newer app version
       if (data.appVersion && isNewerVersion(data.appVersion, APP_VERSION)) {
         const isSessionDismissed = sessionStorage.getItem('brian_theater_session_dismissed_' + data.appVersion);
@@ -10587,6 +10840,8 @@
                   updatePlexMetrics();
                   renderPlexUsersList();
                 }
+              } else if (payload.path === '/seasonalTheme' && payload.data) {
+                if (typeof applyIncomingSeasonalTheme === 'function') applyIncomingSeasonalTheme(payload.data);
               } else if (payload.path) {
                 syncFromFirebase();
               }
@@ -10605,6 +10860,8 @@
                   if (typeof v === 'string') applySinglePosterUpdate(k, v, false);
                 }
                 renderSchedule(window.theaterScheduleCache);
+              } else if (payload.path === '/seasonalTheme' && payload.data) {
+                if (typeof applyIncomingSeasonalTheme === 'function') applyIncomingSeasonalTheme(payload.data);
               } else if (payload.path && payload.data) {
                 syncFromFirebase();
               }
