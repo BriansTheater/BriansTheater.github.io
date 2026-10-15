@@ -1,12 +1,12 @@
 {
-  "version": "4.9.175",
-  "releaseDate": "2026-10-14",
-  "title": "Brian's Theater v4.9.175",
+  "version": "4.9.176",
+  "releaseDate": "2026-10-15",
+  "title": "Brian's Theater v4.9.176",
   "notes": [
-    "Accelerated movie card rendering with off-screen content deferral.",
-    "Debounced search input eliminating keystroke lag in Vault.",
-    "Lazy-mounted Movie Vault for lightning-fast initial page load.",
-    "Fixed broken poster URLs and eliminated phantom network calls.",
-    "Optimized memory footprint and smoothed animation frame rates."
+    "Introduced festive Shocktoberfest Halloween theme with spooky ambient glow.",
+    "Introduced festive Holiday Winter Wonderland theme with gentle snowfall.",
+    "Added Smart Auto-Switch to detect holiday seasons automatically.",
+    "Added instant theme override selector inside Admin Studio.",
+    "Engineered lightweight GPU-accelerated seasonal animations for silky performance."
   ]
 }

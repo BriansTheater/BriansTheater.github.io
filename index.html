@@ -77,6 +77,31 @@
     .anim-pulse { animation: candlePulse 3.8s ease-in-out infinite; }
     .anim-snow { animation: snowSway 3.2s ease-in-out infinite; }
     .anim-sparkle { animation: sparkleTwinkle 2.5s ease-in-out infinite; }
+    @keyframes snowfall {
+      0% { transform: translateY(-20px) translateX(0); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 0.9; }
+      100% { transform: translateY(620px) translateX(25px); opacity: 0; }
+    }
+    @keyframes twinkleLight {
+      0%, 100% { opacity: 0.3; filter: drop-shadow(0 0 2px currentColor); }
+      50% { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+    }
+    .twinkle-1 { animation: twinkleLight 1.8s ease-in-out infinite; }
+    .twinkle-2 { animation: twinkleLight 2.4s ease-in-out infinite 0.6s; }
+    .twinkle-3 { animation: twinkleLight 1.5s ease-in-out infinite 1.1s; }
+    .theater-snowflake {
+      position: absolute;
+      top: -20px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+      pointer-events: none;
+      user-select: none;
+      animation: snowfall 6s linear infinite;
+    }
+    .theme-transition {
+      transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
+    }
     .tab-view {
       transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
@@ -274,12 +299,44 @@
     <!-- TAB 1: 🎬 SCREENING ROOM -->
     <div id="view-screening" class="tab-view flex flex-col gap-6">
 
-      <div class="rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4">
-        <div class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
+      <div id="stageMainCard" class="theme-transition rounded-2xl bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden">
+        <div id="stageAmbientGlow" class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
+        <div id="stageAmbientGlowLeft" class="absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-40 bg-sky-500/20 theme-transition"></div>
+        <div id="stageAmbientGlowRight" class="absolute -bottom-16 -right-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-40 bg-purple-500/20 theme-transition"></div>
+
+        <!-- Seasonal Living Flairs: Halloween Spooky Creatures -->
+        <div id="theaterSpookyFlair" class="hidden pointer-events-none select-none">
+          <span class="absolute top-4 right-14 text-xl anim-bat inline-block drop-shadow-lg" aria-hidden="true">🦇</span>
+          <span class="absolute top-7 right-5 text-xl anim-ghost inline-block drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]" aria-hidden="true">👻</span>
+          <span class="absolute top-3 right-5 text-sm text-white/30" aria-hidden="true">🕸️</span>
+          <span class="absolute top-4 left-5 text-xl anim-bat inline-block drop-shadow-lg" style="transform: scaleX(-1);" aria-hidden="true">🦇</span>
+        </div>
+
+        <!-- Seasonal Living Flairs: Christmas String Lights -->
+        <div id="theaterHolidayLights" class="hidden absolute top-0 left-0 right-0 flex justify-around px-3 py-1 pointer-events-none z-20">
+          <span class="text-xs text-amber-300 twinkle-1">●</span>
+          <span class="text-xs text-red-500 twinkle-2">●</span>
+          <span class="text-xs text-emerald-400 twinkle-3">●</span>
+          <span class="text-xs text-amber-200 twinkle-1">●</span>
+          <span class="text-xs text-blue-400 twinkle-2">●</span>
+          <span class="text-xs text-red-500 twinkle-3">●</span>
+          <span class="text-xs text-emerald-300 twinkle-1">●</span>
+          <span class="text-xs text-amber-300 twinkle-2">●</span>
+          <span class="text-xs text-rose-400 twinkle-3">●</span>
+          <span class="text-xs text-emerald-400 twinkle-1">●</span>
+        </div>
+
+        <!-- Falling Snowflakes Container (Scoped to stage card) -->
+        <div id="theaterSnowContainer" class="absolute inset-0 pointer-events-none overflow-hidden hidden z-10" aria-hidden="true"></div>
+
+        <!-- 0. SEASONAL THEME BADGE -->
+        <div id="theaterSeasonalBadgeContainer" class="relative z-10 hidden">
+          <span id="theaterSeasonalBadge" class="text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md border theme-transition shadow-md"></span>
+        </div>
 
         <!-- 1. SAYS NEXT MOVIE (Category Label) -->
         <div class="relative z-10 flex flex-col items-center gap-1">
-          <span id="stageCategoryLabel" class="text-xs font-bold uppercase tracking-widest text-sky-400">
+          <span id="stageCategoryLabel" class="text-xs font-bold uppercase tracking-widest text-sky-400 theme-transition">
             Next Scheduled Screening
           </span>
 
@@ -858,6 +915,25 @@
               </div>
               <p class="text-[10px] text-slate-400 leading-normal">
                 Auto opens doors 10 min before show. Ending a movie early locks doors now, while keeping Auto mode active so doors reopen on schedule for the next show.
+              </p>
+            </div>
+
+            <!-- Theater Seasonal Festive Theme Mode -->
+            <div class="pt-3 border-t border-slate-800 flex flex-col gap-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                  <span>🎨</span> <span>Theater Seasonal Theme</span>
+                </label>
+                <span id="adminSeasonalThemeBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">AUTO</span>
+              </div>
+              <select id="adminSeasonalThemeSelect" onchange="setSeasonalThemeOverride(this.value)" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400 cursor-pointer">
+                <option value="auto">✨ Smart Auto-Switch (Seasonal Calendar)</option>
+                <option value="halloween">🎃 Shocktoberfest Cinema (Halloween)</option>
+                <option value="christmas">🎄 Holiday Winter Wonderland (Christmas)</option>
+                <option value="default">🎬 Midnight Cinema (Default Classic)</option>
+              </select>
+              <p class="text-[10px] text-slate-400 leading-normal">
+                Smart Auto detects month: Oct is Shocktoberfest (Halloween), Dec is Winter Wonderland (Christmas), otherwise Default. Select an option above to override.
               </p>
             </div>
           </div>
@@ -3015,7 +3091,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.175";
+    const APP_VERSION = "4.9.176";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3849,6 +3925,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.176": [
+        "Introduced festive Shocktoberfest Halloween theme with spooky ambient glow.",
+        "Introduced festive Holiday Winter Wonderland theme with gentle snowfall.",
+        "Added Smart Auto-Switch to detect holiday seasons automatically.",
+        "Added instant theme override selector inside Admin Studio.",
+        "Engineered lightweight GPU-accelerated seasonal animations for silky performance."
+      ],
       "4.9.175": [
         "Accelerated movie card rendering with off-screen content deferral.",
         "Debounced search input eliminating keystroke lag in Vault.",
@@ -5318,6 +5401,9 @@
           if (btn) {
             btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
           }
+          if (tab === 'screening') {
+            if (typeof applySeasonalTheme === 'function') applySeasonalTheme();
+          }
           if (tab === 'schedule') {
             renderSchedule();
           }
@@ -5327,6 +5413,7 @@
             renderVault();
           }
           if (tab === 'admin') {
+            if (typeof applySeasonalTheme === 'function') applySeasonalTheme();
             populateAdminArtworkSelector();
             populateAdminTrailerSelector();
           }
@@ -5945,6 +6032,204 @@
       } catch(e) {}
 
       showTheaterToast("⏹️ Movie ended early! Doors closed; Auto mode will reopen for the next show.");
+    }
+
+    // ========================================================
+    // SEASONAL FESTIVE THEMES & SMART AUTO-SWITCH CONTROLLER
+    // ========================================================
+    function getActiveSeasonalTheme() {
+      let override = 'auto';
+      try {
+        override = localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
+      } catch(e) {}
+
+      if (override !== 'auto') {
+        return { theme: override, mode: 'override' };
+      }
+
+      // Smart Auto Calendar Detection
+      const now = new Date();
+      const month = now.getMonth(); // 0 = Jan ... 9 = Oct, 10 = Nov, 11 = Dec
+      const day = now.getDate();
+
+      // October 1 through November 2: Shocktoberfest Halloween
+      if (month === 9 || (month === 10 && day <= 2)) {
+        return { theme: 'halloween', mode: 'auto' };
+      }
+      // December 1 through January 5: Holiday Winter Wonderland
+      if (month === 11 || (month === 0 && day <= 5)) {
+        return { theme: 'christmas', mode: 'auto' };
+      }
+      return { theme: 'default', mode: 'auto' };
+    }
+
+    function createTheaterSnowflakes() {
+      const container = document.getElementById('theaterSnowContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const flakeIcons = ['❄', '❅', '•', '✦', '❆'];
+      const count = 16;
+      for (let i = 0; i < count; i++) {
+        const flake = document.createElement('span');
+        flake.className = 'theater-snowflake';
+        flake.textContent = flakeIcons[i % flakeIcons.length];
+        const leftPercent = Math.floor((i * (100 / count)) + (Math.random() * 5));
+        const duration = (4.5 + Math.random() * 4).toFixed(1);
+        const delay = (Math.random() * 5).toFixed(1);
+        const size = Math.floor(10 + Math.random() * 9);
+        const opacity = (0.45 + Math.random() * 0.5).toFixed(2);
+        flake.style.left = `${leftPercent}%`;
+        flake.style.animationDuration = `${duration}s`;
+        flake.style.animationDelay = `${delay}s`;
+        flake.style.fontSize = `${size}px`;
+        flake.style.opacity = opacity;
+        container.appendChild(flake);
+      }
+    }
+
+    function clearTheaterSnowflakes() {
+      const container = document.getElementById('theaterSnowContainer');
+      if (container) {
+        container.innerHTML = '';
+      }
+    }
+
+    function applySeasonalTheme(themeOverride) {
+      const activeState = (themeOverride && themeOverride !== 'auto') 
+        ? { theme: themeOverride, mode: 'override' } 
+        : getActiveSeasonalTheme();
+
+      const theme = activeState.theme;
+      const mode = activeState.mode;
+
+      const stageCard = document.getElementById('stageMainCard');
+      const glowLeft = document.getElementById('stageAmbientGlowLeft');
+      const glowRight = document.getElementById('stageAmbientGlowRight');
+      const spookyFlair = document.getElementById('theaterSpookyFlair');
+      const holidayLights = document.getElementById('theaterHolidayLights');
+      const snowContainer = document.getElementById('theaterSnowContainer');
+      const badgeContainer = document.getElementById('theaterSeasonalBadgeContainer');
+      const badge = document.getElementById('theaterSeasonalBadge');
+      const categoryLabel = document.getElementById('stageCategoryLabel');
+      const adminSelect = document.getElementById('adminSeasonalThemeSelect');
+      const adminBadge = document.getElementById('adminSeasonalThemeBadge');
+
+      // Sync Admin Studio Dropdown & Badge if present
+      let savedOverride = 'auto';
+      try { savedOverride = localStorage.getItem('brian_theater_seasonal_theme') || 'auto'; } catch(e) {}
+      if (adminSelect) {
+        adminSelect.value = savedOverride;
+      }
+      if (adminBadge) {
+        if (savedOverride === 'auto') {
+          adminBadge.textContent = `AUTO [${theme.toUpperCase()}]`;
+          adminBadge.className = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800';
+        } else {
+          adminBadge.textContent = `OVERRIDE [${savedOverride.toUpperCase()}]`;
+          adminBadge.className = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800';
+        }
+      }
+
+      if (theme === 'halloween') {
+        if (stageCard) {
+          stageCard.className = 'theme-transition rounded-2xl border p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden bg-gradient-to-b from-orange-950/70 via-slate-900 to-purple-950/70 border-orange-500/50 shadow-orange-950/40';
+        }
+        if (glowLeft) {
+          glowLeft.className = 'absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-50 bg-orange-500/30 theme-transition';
+        }
+        if (glowRight) {
+          glowRight.className = 'absolute -bottom-16 -right-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-50 bg-purple-600/30 theme-transition';
+        }
+        if (spookyFlair) spookyFlair.classList.remove('hidden');
+        if (holidayLights) holidayLights.classList.add('hidden');
+        if (snowContainer) {
+          snowContainer.classList.add('hidden');
+          clearTheaterSnowflakes();
+        }
+        if (badgeContainer && badge) {
+          badgeContainer.classList.remove('hidden');
+          badge.className = 'text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md border theme-transition shadow-md bg-orange-500/20 text-orange-300 border-orange-400/50';
+          badge.innerHTML = '🎃 SHOCKTOBERFEST CINEMA';
+        }
+        if (categoryLabel) {
+          categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-orange-400 theme-transition';
+        }
+      } else if (theme === 'christmas') {
+        if (stageCard) {
+          stageCard.className = 'theme-transition rounded-2xl border p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden bg-gradient-to-b from-emerald-950/70 via-slate-900 to-teal-950/70 border-emerald-500/50 shadow-emerald-950/40';
+        }
+        if (glowLeft) {
+          glowLeft.className = 'absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-50 bg-emerald-500/30 theme-transition';
+        }
+        if (glowRight) {
+          glowRight.className = 'absolute -bottom-16 -right-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-50 bg-red-600/25 theme-transition';
+        }
+        if (spookyFlair) spookyFlair.classList.add('hidden');
+        if (holidayLights) holidayLights.classList.remove('hidden');
+        if (snowContainer) {
+          snowContainer.classList.remove('hidden');
+          if (snowContainer.children.length === 0) {
+            createTheaterSnowflakes();
+          }
+        }
+        if (badgeContainer && badge) {
+          badgeContainer.classList.remove('hidden');
+          badge.className = 'text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md border theme-transition shadow-md bg-emerald-500/20 text-emerald-300 border-emerald-400/50';
+          badge.innerHTML = '🎄 HOLIDAY WINTER WONDERLAND';
+        }
+        if (categoryLabel) {
+          categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-emerald-400 theme-transition';
+        }
+      } else {
+        // Default Midnight Cinema theme
+        if (stageCard) {
+          stageCard.className = 'theme-transition rounded-2xl border p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden bg-gradient-to-b from-slate-900 to-[#0c1322] border border-slate-800 shadow-2xl';
+        }
+        if (glowLeft) {
+          glowLeft.className = 'absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-40 bg-sky-500/20 theme-transition';
+        }
+        if (glowRight) {
+          glowRight.className = 'absolute -bottom-16 -right-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-40 bg-purple-500/20 theme-transition';
+        }
+        if (spookyFlair) spookyFlair.classList.add('hidden');
+        if (holidayLights) holidayLights.classList.add('hidden');
+        if (snowContainer) {
+          snowContainer.classList.add('hidden');
+          clearTheaterSnowflakes();
+        }
+        if (badgeContainer) badgeContainer.classList.add('hidden');
+        if (categoryLabel) {
+          categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-sky-400 theme-transition';
+        }
+      }
+    }
+
+    function setSeasonalThemeOverride(themeVal) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      try {
+        localStorage.setItem('brian_theater_seasonal_theme', themeVal);
+      } catch(e) {}
+      applySeasonalTheme(themeVal);
+
+      const msgs = {
+        'auto': '✨ Smart Auto-Switch enabled (Seasonal calendar).',
+        'halloween': '🎃 Shocktoberfest Halloween theme activated.',
+        'christmas': '🎄 Holiday Winter Wonderland theme activated.',
+        'default': '🎬 Midnight Cinema default theme activated.'
+      };
+      if (typeof showTheaterToast === 'function') {
+        showTheaterToast(msgs[themeVal] || `Seasonal theme set to ${themeVal}`);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => applySeasonalTheme());
+    } else {
+      applySeasonalTheme();
     }
 
     function setEntranceState(isOpen) {

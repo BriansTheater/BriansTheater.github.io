@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.176] - 2026-10-15
+
+### What's New
+- Introduced festive Shocktoberfest Halloween theme with spooky ambient glow.
+- Introduced festive Holiday Winter Wonderland theme with gentle snowfall.
+- Added Smart Auto-Switch to detect holiday seasons automatically.
+- Added instant theme override selector inside Admin Studio.
+- Engineered lightweight GPU-accelerated seasonal animations for silky performance.
+
 ## [4.9.175] - 2026-10-14
 
 ### What's New
