@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.190] - 2026-10-16
+
+### What's New
+- Replaced navbar bat with animated Haunted Candle icon.
+- Added dual-tone flame flicker with subtle scale pulse.
+- Maintained silky smooth 60fps animations across all viewports.
+
 ## [4.9.189] - 2026-10-16
 
 ### What's New

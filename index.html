@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.189 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.190 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -73,10 +73,10 @@
       50% { opacity: 1; transform: scale(1.25); filter: drop-shadow(0 0 4px rgba(255,255,255,0.8)); }
     }
     @keyframes eerieCandleFlicker {
-      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); }
-      30% { filter: drop-shadow(0 0 16px rgba(249, 115, 22, 0.7)) drop-shadow(0 0 30px rgba(168, 85, 247, 0.5)); }
-      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); }
-      85% { filter: drop-shadow(0 0 14px rgba(249, 115, 22, 0.6)) drop-shadow(0 0 24px rgba(168, 85, 247, 0.35)); }
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); transform: scale(1); }
+      30% { filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.8)) drop-shadow(0 0 35px rgba(168, 85, 247, 0.6)); transform: scale(1.06); }
+      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); transform: scale(0.97); }
+      85% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.65)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.4)); transform: scale(1.03); }
     }
     @keyframes creatureEyeBlink {
       0%, 42%, 58%, 100% { opacity: 0; transform: scaleY(0.1); }
@@ -85,6 +85,7 @@
     }
     .anim-bat { animation: flutterBat 3.5s ease-in-out infinite; }
     .anim-ghost { animation: spectralFloat 4s ease-in-out infinite; }
+    .anim-candle { animation: eerieCandleFlicker 3s ease-in-out infinite; }
     .anim-pulse { animation: candlePulse 3.8s ease-in-out infinite; }
     .anim-snow { animation: snowSway 3.2s ease-in-out infinite; }
     .anim-sparkle { animation: sparkleTwinkle 2.5s ease-in-out infinite; }
@@ -3211,7 +3212,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.189";
+    const APP_VERSION = "4.9.190";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4045,6 +4046,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.190": [
+        "Replaced navbar bat with animated Haunted Candle icon.",
+        "Added dual-tone flame flicker with subtle scale pulse.",
+        "Maintained silky smooth 60fps animations across all viewports."
+      ],
       "4.9.189": [
         "Consolidated site to primary Main and Twitch stream pages.",
         "Retired standalone live.html billboard to streamline codebase.",
@@ -6347,7 +6353,7 @@
         if (brandSub) brandSub.textContent = 'Shocktoberfest Edition';
         if (seasonalFlair) {
           seasonalFlair.classList.remove('hidden');
-          seasonalFlair.innerHTML = '<span class="anim-bat inline-block" title="Shocktoberfest">🦇</span>';
+          seasonalFlair.innerHTML = '<span class="anim-candle inline-block text-base sm:text-lg select-none" title="Shocktoberfest Haunted Candle">🕯️</span>';
         }
         if (drawerIcon) drawerIcon.textContent = '🎃';
         if (drawerLogo) drawerLogo.className = 'w-8 h-8 rounded-lg bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 flex items-center justify-center text-slate-950 font-black text-base shadow theme-transition';

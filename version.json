@@ -1,10 +1,10 @@
 {
-  "version": "4.9.189",
+  "version": "4.9.190",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.189",
+  "title": "Brian's Theater v4.9.190",
   "notes": [
-    "Consolidated site to primary Main and Twitch stream pages.",
-    "Retired standalone live.html billboard to streamline codebase.",
-    "Maintained clean house and strict two-backup retention."
+    "Replaced navbar bat with animated Haunted Candle icon.",
+    "Added dual-tone flame flicker with subtle scale pulse.",
+    "Maintained silky smooth 60fps animations across all viewports."
   ]
 }
