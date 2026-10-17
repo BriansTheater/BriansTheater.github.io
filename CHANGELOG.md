@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.191] - 2026-10-16
+
+### What's New
+- Synchronized Twitch stream overlay with main theater stage in real-time.
+- Eliminated concluded movie freeze on stream overlay display.
+- Added instant cross-tab sync and high-res poster artwork mapping.
+
 ## [4.9.190] - 2026-10-16
 
 ### What's New

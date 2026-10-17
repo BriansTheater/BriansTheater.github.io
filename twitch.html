@@ -178,11 +178,11 @@
       </span>
 
       <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-300 to-purple-400 filter drop-shadow-[0_0_20px_rgba(249,115,22,0.6)]">
-        <span id="movieTitleText">Hokum</span>
+        <span id="movieTitleText">Abraham's Boys A Dracula Story</span>
       </h2>
 
       <p id="movieShowtime" class="text-xs sm:text-sm md:text-base text-slate-300 font-medium tracking-wide">
-        Friday, Oct 16, 2026 • 7:00 PM PST
+        Saturday, Oct 17, 2026 • 7:00 PM PST
       </p>
     </section>
 
@@ -195,7 +195,7 @@
       <div id="posterFrame" class="relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(245,158,11,0.35)] aspect-[16/9] max-h-[42vh] flex items-center justify-center">
         <img
           id="heroPosterImg"
-          src="https://image.tmdb.org/t/p/w1280/qY7zVZ7liULhfRoXg4c9Xl83LcR.jpg"
+          src="https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg"
           alt="Featured Movie Screening"
           class="w-full h-full object-cover object-center transition-opacity duration-700"
           onerror="handlePosterError(this)"
@@ -277,14 +277,68 @@
   <script>
     const FIREBASE_RTDB_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     let eventSource = null;
+    let lastKnownPayload = {};
 
-    // Active state model
+    // Curated High-Res Movie Artwork Map (Matches main theater stage)
+    const verifiedMovieArtworks = {
+      "Evil Dead Burn": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
+      "Evil Dead": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
+      "Abraham's Boys A Dracula Story": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "Abraham's Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "Abrahams Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "The Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
+      "Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
+      "UnderTone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "Undertone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
+      "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
+      "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephens King: It (1980)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephens King: It": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephen King's It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephen King's It": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "AHS": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "AHS: s13e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "AHS: s13e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg"
+    };
+
+    function getMovieArtworkUrl(title, customMap) {
+      if (!title) return '';
+      const clean = title.replace(/^🎬\s*/, '').trim();
+      if (customMap && customMap[clean]) {
+        const v = customMap[clean];
+        return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+      }
+      if (verifiedMovieArtworks[clean]) return verifiedMovieArtworks[clean];
+      const lower = clean.toLowerCase();
+      for (const [k, v] of Object.entries(verifiedMovieArtworks)) {
+        if (k.toLowerCase() === lower) return v;
+      }
+      return '';
+    }
+
+    function isMovieConcluded(item, now = Date.now()) {
+      if (!item) return true;
+      if (item.status === 'CONCLUDED') return true;
+      const end = Number(item.endMs) || 0;
+      const start = Number(item.startMs) || 0;
+      if (end > 0 && now >= end) return true;
+      if (start > 0 && now >= start + (4 * 3600000)) return true;
+      return false;
+    }
+
+    // Active state model (Initial seed synchronized with main stage)
     let activeMovie = {
-      title: "Hokum",
-      startMs: Date.now() + (2 * 3600 * 1000) + (45 * 60 * 1000), // Default 2h 45m from now
-      endMs: Date.now() + (4 * 3600 * 1000),
-      posterUrl: "https://image.tmdb.org/t/p/w1280/qY7zVZ7liULhfRoXg4c9Xl83LcR.jpg",
-      showtimeText: "Tonight • 7:00 PM PST",
+      title: "Abraham's Boys A Dracula Story",
+      startMs: 1792288800000,
+      endMs: 1792294140000,
+      posterUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      showtimeText: "Saturday, Oct 17, 2026 • 7:00 PM PST",
       isNowPlaying: false,
       doorMode: "auto"
     };
@@ -300,7 +354,10 @@
       const countdownGrid = document.getElementById('countdownGrid');
       const screeningSubtitle = document.getElementById('screeningStatusBadge');
 
-      if (activeMovie.doorMode === 'open' || diffMs <= 0) {
+      const isForcedOpen = (activeMovie.doorMode === 'force_open' || activeMovie.doorMode === 'open');
+      const isAutoOpen = (activeMovie.doorMode !== 'force_closed' && diffMs <= 0 && (!activeMovie.endMs || now < activeMovie.endMs));
+
+      if (isForcedOpen || isAutoOpen) {
         // Doors Open / Live Screen state
         if (countdownHeader) countdownHeader.textContent = "THEATER DOORS ARE OPEN!";
         if (doorsOpenBadge) doorsOpenBadge.classList.remove('hidden');
@@ -349,7 +406,7 @@
       if (countSecs) countSecs.textContent = String(secs).padStart(2, '0');
     }
 
-    // 2. Format localized screening time string
+    // 2. Format localized screening time string (Matches main stage exactly)
     function formatShowtime(startMs, dateStr, timeStr) {
       if (startMs) {
         try {
@@ -370,7 +427,7 @@
         } catch(e) {}
       }
       if (dateStr && timeStr) return `${dateStr} • ${timeStr} PST`;
-      return 'Tonight • 7:00 PM PST';
+      return dateStr || 'Saturday, Oct 17, 2026 • 7:00 PM PST';
     }
 
     // 3. Fallback poster image handler
@@ -404,52 +461,64 @@
     // 5. Parse and apply incoming Firebase Data
     function applySyncPayload(data) {
       if (!data) return;
+      Object.assign(lastKnownPayload, data);
+      const merged = lastKnownPayload;
 
-      let foundNext = null;
+      const now = Date.now();
+      if (merged.doorMode) activeMovie.doorMode = merged.doorMode;
+
       let foundNow = null;
+      let foundNext = null;
 
-      if (data.doorMode) activeMovie.doorMode = data.doorMode;
+      // 1. Check if cinema.nowPlaying is actively screening right now
+      if (merged.cinema && merged.cinema.nowPlaying && merged.cinema.nowPlaying !== 'No Movie Playing') {
+        const endMs = Number(merged.cinema.endMs) || 0;
+        const startMs = Number(merged.cinema.startMs) || (endMs ? endMs - (105 * 60 * 1000) : 0);
+        const isNotConcluded = !isMovieConcluded({ endMs, startMs }, now);
+        const isTimeMatch = (endMs > 0 && now < endMs) || (startMs > 0 && now >= startMs && now < startMs + (4 * 3600000));
+        const isForcedLive = (merged.doorMode === 'force_open' || merged.doorMode === 'open');
 
-      if (data.cinema) {
-        if (data.cinema.nowPlaying && data.cinema.nowPlaying !== 'No Movie Playing') {
+        if (isNotConcluded && (isTimeMatch || isForcedLive)) {
           foundNow = {
-            title: data.cinema.nowPlaying,
-            posterUrl: data.cinema.nowPlayingPoster,
-            endMs: data.cinema.endMs
+            title: merged.cinema.nowPlaying,
+            startMs: startMs || (now - 600000),
+            endMs: endMs || (now + 3600000),
+            posterUrl: merged.cinema.nowPlayingPoster || getMovieArtworkUrl(merged.cinema.nowPlaying, merged.moviePosters)
           };
-        }
-        if (data.cinema.nextTitle && data.cinema.nextTitle !== 'No Movie Scheduled') {
-          foundNext = {
-            title: data.cinema.nextTitle,
-            startMs: data.cinema.nextStartMs,
-            posterUrl: data.cinema.nextPoster
-          };
-        }
-        if (Array.isArray(data.cinema.schedule) && data.cinema.schedule.length > 0) {
-          const nextSched = data.cinema.schedule.find(s => s.status === 'NEXT UP' || s.startMs > Date.now());
-          if (nextSched) {
-            foundNext = {
-              title: nextSched.title,
-              startMs: nextSched.startMs,
-              endMs: nextSched.endMs,
-              date: nextSched.date,
-              time: nextSched.startTime || nextSched.time,
-              posterUrl: nextSched.posterUrl || nextSched.imageUrl
-            };
-          }
         }
       }
 
-      if (!foundNext && Array.isArray(data.officialSchedule)) {
-        const nextSched = data.officialSchedule.find(s => s && (s.startMs > Date.now() || s.status === 'NEXT UP'));
-        if (nextSched) {
+      // 2. If not actively live, search upcoming schedules sorted by startMs
+      const allSchedules = [];
+      if (Array.isArray(merged.schedule)) allSchedules.push(...merged.schedule);
+      if (Array.isArray(merged.officialSchedule)) allSchedules.push(...merged.officialSchedule);
+      if (Array.isArray(merged.cinema && merged.cinema.schedule)) allSchedules.push(...merged.cinema.schedule);
+
+      const upcoming = allSchedules.filter(s => {
+        if (!s || !s.title) return false;
+        if (isMovieConcluded(s, now)) return false;
+        const sEnd = Number(s.endMs) || 0;
+        const sStart = Number(s.startMs) || 0;
+        return (sEnd > now || sStart > now);
+      }).sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+
+      if (upcoming.length > 0) {
+        const next = upcoming[0];
+        foundNext = {
+          title: next.title,
+          startMs: Number(next.startMs),
+          endMs: Number(next.endMs),
+          date: next.date,
+          time: next.startTime || next.time,
+          posterUrl: next.posterUrl || next.imageUrl || getMovieArtworkUrl(next.title, merged.moviePosters)
+        };
+      } else if (merged.cinema && merged.cinema.nextTitle && merged.cinema.nextTitle !== 'No Movie Scheduled') {
+        const nextStart = Number(merged.cinema.nextStartMs) || 0;
+        if (nextStart > now) {
           foundNext = {
-            title: nextSched.title,
-            startMs: nextSched.startMs,
-            endMs: nextSched.endMs,
-            date: nextSched.date,
-            time: nextSched.startTime || nextSched.time,
-            posterUrl: nextSched.posterUrl || nextSched.imageUrl
+            title: merged.cinema.nextTitle,
+            startMs: nextStart,
+            posterUrl: merged.cinema.nextPoster || getMovieArtworkUrl(merged.cinema.nextTitle, merged.moviePosters)
           };
         }
       }
@@ -462,21 +531,45 @@
         activeMovie.isNowPlaying = Boolean(foundNow);
         activeMovie.showtimeText = formatShowtime(target.startMs, target.date, target.time);
 
-        let resolvedPoster = target.posterUrl;
-        if (!resolvedPoster && data.moviePosters && data.moviePosters[activeMovie.title]) {
-          const p = data.moviePosters[activeMovie.title];
-          resolvedPoster = (typeof p === 'object') ? (p.backdropUrl || p.posterUrl) : p;
-        }
+        let resolvedPoster = target.posterUrl || getMovieArtworkUrl(activeMovie.title, merged.moviePosters);
         if (resolvedPoster) activeMovie.posterUrl = resolvedPoster;
 
         renderMovieState();
       }
     }
 
-    // 6. Connect to Realtime Firebase SSE Feed
+    // Apply instantaneous state broadcast from main theater page
+    function applyStageBroadcast(payload) {
+      if (!payload) return;
+      if (payload.title) activeMovie.title = payload.title.replace(/^🎬\s*/, '').trim();
+      if (payload.date) activeMovie.showtimeText = payload.date;
+      if (payload.poster) activeMovie.posterUrl = payload.poster;
+      if (payload.startMs || payload.targetMs) activeMovie.startMs = payload.startMs || payload.targetMs;
+      if (payload.doorMode) activeMovie.doorMode = payload.doorMode;
+      renderMovieState();
+    }
+
+    // 6. Connect to Realtime Firebase SSE Feed & Broadcast Channel
     function initRealtimeSync() {
       const syncStatus = document.getElementById('syncStatus');
 
+      // Shared Broadcast Channel for instant zero-latency cross-tab sync
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const syncChannel = new BroadcastChannel('brian_theater_sync');
+          syncChannel.onmessage = (event) => {
+            if (event.data) {
+              if (event.data.type === 'stage_update' && event.data.payload) {
+                applyStageBroadcast(event.data.payload);
+              } else if (event.data.firebasePayload) {
+                applySyncPayload(event.data.firebasePayload);
+              }
+            }
+          };
+        }
+      } catch(e) {}
+
+      // Initial HTTP Snapshot from Firebase RTDB
       fetch(FIREBASE_RTDB_URL)
         .then(res => res.json())
         .then(data => {
@@ -489,6 +582,7 @@
           console.warn('Initial Firebase fetch error:', err);
         });
 
+      // Persistent Real-Time SSE Stream
       try {
         if (eventSource) eventSource.close();
         eventSource = new EventSource(FIREBASE_RTDB_URL);
@@ -496,7 +590,23 @@
         eventSource.addEventListener('put', (event) => {
           try {
             const payload = JSON.parse(event.data);
-            if (payload && payload.data) applySyncPayload(payload.data);
+            if (payload) {
+              if (payload.path === '/' && payload.data) {
+                applySyncPayload(payload.data);
+              } else if (payload.path === '/cinema' && payload.data) {
+                applySyncPayload({ cinema: payload.data });
+              } else if (payload.path === '/doorMode' && payload.data) {
+                applySyncPayload({ doorMode: payload.data });
+              } else if (payload.path === '/schedule' && payload.data) {
+                applySyncPayload({ schedule: payload.data });
+              } else if (payload.path === '/officialSchedule' && payload.data) {
+                applySyncPayload({ officialSchedule: payload.data });
+              } else if (payload.path === '/moviePosters' && payload.data) {
+                applySyncPayload({ moviePosters: payload.data });
+              } else if (payload.data && typeof payload.data === 'object') {
+                applySyncPayload(payload.data);
+              }
+            }
           } catch(e) {}
         });
 
@@ -525,6 +635,22 @@
 
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', () => {
+      // 1. Instant hydration from shared stage cache if present
+      try {
+        const cached = localStorage.getItem('brian_theater_last_stage');
+        if (cached) {
+          const stageData = JSON.parse(cached);
+          if (stageData && stageData.title) {
+            applyStageBroadcast({
+              title: stageData.title,
+              date: stageData.date,
+              poster: stageData.poster,
+              targetMs: stageData.targetMs
+            });
+          }
+        }
+      } catch(e) {}
+
       renderMovieState();
       setInterval(updateCountdown, 1000);
       initRealtimeSync();

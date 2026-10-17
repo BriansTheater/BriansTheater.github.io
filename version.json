@@ -1,10 +1,10 @@
 {
-  "version": "4.9.190",
+  "version": "4.9.191",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.190",
+  "title": "Brian's Theater v4.9.191",
   "notes": [
-    "Replaced navbar bat with animated Haunted Candle icon.",
-    "Added dual-tone flame flicker with subtle scale pulse.",
-    "Maintained silky smooth 60fps animations across all viewports."
+    "Synchronized Twitch stream overlay with main theater stage in real-time.",
+    "Eliminated concluded movie freeze on stream overlay display.",
+    "Added instant cross-tab sync and high-res poster artwork mapping."
   ]
 }

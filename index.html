@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.190 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.191 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3212,7 +3212,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.190";
+    const APP_VERSION = "4.9.191";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4046,6 +4046,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.191": [
+        "Synchronized Twitch stream overlay with main theater stage in real-time.",
+        "Eliminated concluded movie freeze on stream overlay display.",
+        "Added instant cross-tab sync and high-res poster artwork mapping."
+      ],
       "4.9.190": [
         "Replaced navbar bat with animated Haunted Candle icon.",
         "Added dual-tone flame flicker with subtle scale pulse.",
@@ -7281,6 +7286,23 @@
             nextPoster: sPoster ? sPoster.src : "",
             targetMs: targetNextMs || 0
           }));
+          try {
+            if (!window._syncBroadcastChannel && typeof BroadcastChannel !== 'undefined') {
+              window._syncBroadcastChannel = new BroadcastChannel('brian_theater_sync');
+            }
+            if (window._syncBroadcastChannel) {
+              window._syncBroadcastChannel.postMessage({
+                type: 'stage_update',
+                payload: {
+                  title: headingEl.textContent,
+                  date: nowPlayingDate.textContent,
+                  poster: posterEl ? posterEl.src : "",
+                  targetMs: targetNextMs || 0,
+                  doorMode: (typeof doorOverrideMode !== 'undefined') ? doorOverrideMode : 'auto'
+                }
+              });
+            }
+          } catch(bcErr) {}
         }
       } catch(e) {}
     }
