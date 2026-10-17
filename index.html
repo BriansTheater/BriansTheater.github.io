@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.188 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.189 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3211,7 +3211,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.188";
+    const APP_VERSION = "4.9.189";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4045,6 +4045,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.189": [
+        "Consolidated site to primary Main and Twitch stream pages.",
+        "Retired standalone live.html billboard to streamline codebase.",
+        "Maintained clean house and strict two-backup retention."
+      ],
       "4.9.188": [
         "Removed doors open badge and live screening text.",
         "Restyled movie title with vivid spooky Halloween gradient.",

@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.189] - 2026-10-16
+
+### What's New
+- Consolidated site to primary Main and Twitch stream pages.
+- Retired standalone live.html billboard to streamline codebase.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.188] - 2026-10-16
 
 ### What's New

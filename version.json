@@ -1,10 +1,10 @@
 {
-  "version": "4.9.188",
+  "version": "4.9.189",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.188",
+  "title": "Brian's Theater v4.9.189",
   "notes": [
-    "Removed doors open badge and live screening text.",
-    "Restyled movie title with vivid spooky Halloween gradient.",
+    "Consolidated site to primary Main and Twitch stream pages.",
+    "Retired standalone live.html billboard to streamline codebase.",
     "Maintained clean house and strict two-backup retention."
   ]
 }
