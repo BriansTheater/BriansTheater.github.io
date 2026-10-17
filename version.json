@@ -1,10 +1,10 @@
 {
-  "version": "4.9.193",
+  "version": "4.9.194",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.193",
+  "title": "Brian's Theater v4.9.194",
   "notes": [
-    "Synchronized main site movie title with green-to-purple Halloween styling.",
-    "Deepened purple gradient fade across Twitch overlay and main theater.",
-    "Removed yellow clutter from main stage category status badge."
+    "Reduced movie title font size on Twitch stream overlay.",
+    "Ensured featured screening title fits neatly on one line.",
+    "Expanded overlay stage container width for balanced title layout."
   ]
 }

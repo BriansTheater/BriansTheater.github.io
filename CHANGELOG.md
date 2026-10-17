@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.194] - 2026-10-16
+
+### What's New
+- Reduced movie title font size on Twitch stream overlay.
+- Ensured featured screening title fits neatly on one line.
+- Expanded overlay stage container width for balanced title layout.
+
 ## [4.9.193] - 2026-10-16
 
 ### What's New

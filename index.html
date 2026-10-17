@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.193 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.194 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3212,7 +3212,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.193";
+    const APP_VERSION = "4.9.194";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4046,6 +4046,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.194": [
+        "Reduced movie title font size on Twitch stream overlay.",
+        "Ensured featured screening title fits neatly on one line.",
+        "Expanded overlay stage container width for balanced title layout."
+      ],
       "4.9.193": [
         "Synchronized main site movie title with green-to-purple Halloween styling.",
         "Deepened purple gradient fade across Twitch overlay and main theater.",
