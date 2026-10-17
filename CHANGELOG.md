@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.185] - 2026-10-16
+
+### What's New
+- Removed background and flank emoji icons from Twitch overlay.
+- Added gothic proscenium arches and theatrical spotlight framing.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.184] - 2026-10-16
 
 ### What's New

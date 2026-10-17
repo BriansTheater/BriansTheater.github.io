@@ -1,12 +1,10 @@
 {
-  "version": "4.9.184",
+  "version": "4.9.185",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.184",
+  "title": "Brian's Theater v4.9.185",
   "notes": [
-    "Unveiled Brian's Haunted Theater branding with Shocktoberfest styling.",
-    "Created interactive Halloween motion icons showcase gallery with animations.",
-    "Built spooky 1080p Twitch stream overlay with creepy atmospheric borders.",
-    "Synced real-time movie countdown on Twitch overlay with Firebase.",
+    "Removed background and flank emoji icons from Twitch overlay.",
+    "Added gothic proscenium arches and theatrical spotlight framing.",
     "Maintained clean house and strict two-backup retention."
   ]
 }
