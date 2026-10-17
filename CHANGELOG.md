@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.182] - 2026-10-16
+
+### What's New
+- Launched stripped-down live cinema billboard view at live.html.
+- Added glowing countdown clock with hours, mins, and secs.
+- Integrated real-time Firebase SSE sync with zero page reloads.
+- Added automatic transition for live screenings and doors open.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.181] - 2026-10-15
 
 ### What's New
