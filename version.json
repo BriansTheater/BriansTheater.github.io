@@ -1,10 +1,10 @@
 {
-  "version": "4.9.187",
+  "version": "4.9.188",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.187",
+  "title": "Brian's Theater v4.9.188",
   "notes": [
-    "Synchronized core app version across all cinema application files.",
-    "Resolved version mismatch update prompt loop across all devices.",
-    "Ensured seamless service worker cache alignment."
+    "Removed doors open badge and live screening text.",
+    "Restyled movie title with vivid spooky Halloween gradient.",
+    "Maintained clean house and strict two-backup retention."
   ]
 }

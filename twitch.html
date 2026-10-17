@@ -177,7 +177,7 @@
         NEXT SCHEDULED SCREENING
       </span>
 
-      <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black text-amber-300 tracking-tight flex items-center justify-center gap-2 drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]">
+      <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-300 to-purple-400 filter drop-shadow-[0_0_20px_rgba(249,115,22,0.6)]">
         <span id="movieTitleText">Hokum</span>
       </h2>
 
@@ -200,12 +200,6 @@
           class="w-full h-full object-cover object-center transition-opacity duration-700"
           onerror="handlePosterError(this)"
         />
-
-        <!-- Live Overlay Badge when Doors are Open -->
-        <div id="doorsOpenBadge" class="hidden absolute top-4 right-4 sm:top-5 sm:right-5 bg-emerald-500 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-2 animate-bounce">
-          <span class="w-2.5 h-2.5 rounded-full bg-slate-950 animate-ping"></span>
-          <span>Doors Open</span>
-        </div>
       </div>
     </section>
 

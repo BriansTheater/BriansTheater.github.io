@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.188] - 2026-10-16
+
+### What's New
+- Removed doors open badge and live screening text.
+- Restyled movie title with vivid spooky Halloween gradient.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.187] - 2026-10-16
 
 ### What's New
