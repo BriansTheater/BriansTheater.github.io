@@ -1,10 +1,10 @@
 {
-  "version": "4.9.185",
+  "version": "4.9.186",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.185",
+  "title": "Brian's Theater v4.9.186",
   "notes": [
-    "Removed background and flank emoji icons from Twitch overlay.",
-    "Added gothic proscenium arches and theatrical spotlight framing.",
+    "Removed Twitch live stream badge from overlay header.",
+    "Streamlined header branding to clean Shocktoberfest subtitle.",
     "Maintained clean house and strict two-backup retention."
   ]
 }

@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.186] - 2026-10-16
+
+### What's New
+- Removed Twitch live stream badge from overlay header.
+- Streamlined header branding to clean Shocktoberfest subtitle.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.185] - 2026-10-16
 
 ### What's New
