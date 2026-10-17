@@ -1,11 +1,10 @@
 {
-  "version": "4.9.192",
+  "version": "4.9.193",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.192",
+  "title": "Brian's Theater v4.9.193",
   "notes": [
-    "Synchronized Twitch overlay header with main navigation bar.",
-    "Added animated Haunted Candle icon to stream header.",
-    "Restyled movie title with green and purple spectral gradient.",
-    "Eliminated excess yellow clutter on screening status badge."
+    "Synchronized main site movie title with green-to-purple Halloween styling.",
+    "Deepened purple gradient fade across Twitch overlay and main theater.",
+    "Removed yellow clutter from main stage category status badge."
   ]
 }

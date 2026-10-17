@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.193] - 2026-10-16
+
+### What's New
+- Synchronized main site movie title with green-to-purple Halloween styling.
+- Deepened purple gradient fade across Twitch overlay and main theater.
+- Removed yellow clutter from main stage category status badge.
+
 ## [4.9.192] - 2026-10-16
 
 ### What's New

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.192 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.193 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -460,7 +460,7 @@
           </span>
 
           <!-- 2. TITLE -->
-          <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-amber-300 gold-marquee">
+          <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]">
             🎬 Borderlands
           </h2>
 
@@ -3212,7 +3212,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.192";
+    const APP_VERSION = "4.9.193";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4046,6 +4046,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.193": [
+        "Synchronized main site movie title with green-to-purple Halloween styling.",
+        "Deepened purple gradient fade across Twitch overlay and main theater.",
+        "Removed yellow clutter from main stage category status badge."
+      ],
       "4.9.192": [
         "Added animated Haunted Candle to Twitch overlay header.",
         "Restyled movie title with spectral green to purple gradient.",
@@ -6507,7 +6512,11 @@
           clearTheaterSnowflakes();
         }
         if (categoryLabel) {
-          categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-orange-400 theme-transition';
+          categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-purple-300/90 theme-transition';
+        }
+        const stageHeading = document.getElementById('nowPlayingHeading');
+        if (stageHeading) {
+          stageHeading.className = "text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]";
         }
 
         // Option C: Haunted Cinema Marquee Countdown Box & Digits
@@ -7153,7 +7162,11 @@
         }
         if (headingEl) {
           headingEl.textContent = `🎬 ${currentMovieTitle}`;
-          headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
+          if (curTheme === 'halloween') {
+            headingEl.className = "text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]";
+          } else {
+            headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
+          }
         }
         if (nowPlayingDate) {
           nowPlayingDate.textContent = isForced ? `Seating Now • Premiere: ${currentDateStr}` : currentDateStr;
@@ -7182,7 +7195,11 @@
         }
         if (headingEl) {
           headingEl.textContent = `🍿 ${nextObj.title || 'Next Lineup In Preparation'}`;
-          headingEl.className = "text-xl sm:text-2xl lg:text-3xl font-black text-amber-300 gold-marquee";
+          if (curTheme === 'halloween') {
+            headingEl.className = "text-xl sm:text-2xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]";
+          } else {
+            headingEl.className = "text-xl sm:text-2xl lg:text-3xl font-black text-amber-300 gold-marquee";
+          }
         }
         if (nowPlayingDate) {
           nowPlayingDate.textContent = nextObj.date;
@@ -7254,7 +7271,7 @@
 
         if (stageCategoryLabel) {
           if (curTheme === 'halloween') {
-            stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-orange-400 theme-transition";
+            stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-purple-300/90 theme-transition";
           } else if (curTheme === 'christmas') {
             stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-emerald-400 theme-transition";
           } else {
@@ -7264,7 +7281,11 @@
         }
         if (headingEl) {
           headingEl.textContent = `🎬 ${currentMovieTitle}`;
-          headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
+          if (curTheme === 'halloween') {
+            headingEl.className = "text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]";
+          } else {
+            headingEl.className = "text-2xl sm:text-3xl font-black text-amber-300 gold-marquee";
+          }
         }
         if (nowPlayingDate) nowPlayingDate.textContent = currentDateStr;
 
