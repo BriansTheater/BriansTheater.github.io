@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎃 Brian's Haunted Theater • Halloween Motion Icons Showcase</title>
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@700;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinzel: ['Cinzel', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    html, body {
+      background: radial-gradient(circle at 50% 15%, #1e1b4b 0%, #0f172a 40%, #05070f 100%);
+      min-height: 100vh;
+      color: #e2e8f0;
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
+    /* 1. BAT FLUTTER */
+    @keyframes flutterBat {
+      0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+      25% { transform: translateY(-8px) translateX(-6px) rotate(-12deg) scale(1.1); }
+      50% { transform: translateY(-3px) translateX(5px) rotate(8deg) scale(0.95); }
+      75% { transform: translateY(-12px) translateX(-2px) rotate(-6deg) scale(1.05); }
+    }
+    .anim-bat { animation: flutterBat 3.2s ease-in-out infinite; }
+
+    /* 2. SPECTRAL GHOST FLOAT */
+    @keyframes spectralFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.4)); }
+      50% { transform: translateY(-14px) rotate(6deg); opacity: 1; filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.85)); }
+    }
+    .anim-ghost { animation: spectralFloat 3.8s ease-in-out infinite; }
+
+    /* 3. DANGLING SPIDER ON SILK */
+    @keyframes spiderDangle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      20% { transform: translateY(22px) rotate(8deg); }
+      50% { transform: translateY(10px) rotate(-6deg); }
+      75% { transform: translateY(28px) rotate(4deg); }
+    }
+    @keyframes silkStretch {
+      0%, 100% { height: 28px; }
+      20% { height: 50px; }
+      50% { height: 38px; }
+      75% { height: 56px; }
+    }
+    .anim-spider { animation: spiderDangle 4s ease-in-out infinite; }
+    .anim-silk { animation: silkStretch 4s ease-in-out infinite; }
+
+    /* 4. FLICKERING JACK-O'-LANTERN */
+    @keyframes pumpkinWobble {
+      0%, 100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 12px rgba(249, 115, 22, 0.5)); }
+      25% { transform: rotate(-4deg) scale(1.04); filter: drop-shadow(0 0 22px rgba(249, 115, 22, 0.85)); }
+      50% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.4)); }
+      75% { transform: rotate(4deg) scale(1.06); filter: drop-shadow(0 0 26px rgba(249, 115, 22, 0.95)); }
+    }
+    .anim-pumpkin { animation: pumpkinWobble 3.5s ease-in-out infinite; }
+
+    /* 5. FLYING WITCH */
+    @keyframes witchFly {
+      0% { transform: translateX(-40px) translateY(10px) rotate(-5deg); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateX(40px) translateY(-10px) rotate(5deg); opacity: 0; }
+    }
+    .anim-witch { animation: witchFly 4.5s ease-in-out infinite; }
+
+    /* 6. GLOWING CREATURE EYES */
+    @keyframes creatureEyeBlink {
+      0%, 35%, 65%, 100% { opacity: 0; transform: scaleY(0.1); filter: drop-shadow(0 0 0px #f97316); }
+      40%, 60% { opacity: 0.95; transform: scaleY(1); filter: drop-shadow(0 0 10px #f97316); }
+      45%, 55% { opacity: 1; transform: scaleY(1) scaleX(1.08); filter: drop-shadow(0 0 18px #f59e0b); }
+    }
+    .anim-eyes { animation: creatureEyeBlink 5s ease-in-out infinite; }
+
+    /* 7. CHATTERING SKULL */
+    @keyframes skullBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.3)); }
+      25% { transform: translateY(-6px) rotate(-6deg); filter: drop-shadow(0 0 16px rgba(34, 197, 94, 0.7)); }
+      50% { transform: translateY(-2px) rotate(4deg); }
+      75% { transform: translateY(-10px) rotate(-2deg); filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.8)); }
+    }
+    @keyframes jawChatter {
+      0%, 100%, 40%, 60% { transform: translateY(0px); }
+      45%, 55% { transform: translateY(3px); }
+      50% { transform: translateY(1px); }
+    }
+    .anim-skull { animation: skullBob 3.6s ease-in-out infinite; }
+    .anim-jaw { animation: jawChatter 1.2s ease-in-out infinite; }
+
+    /* 8. BLACK CAT PROWLER & TAIL SWISH */
+    @keyframes catBreathe {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes tailSwish {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(18deg); }
+      75% { transform: rotate(-18deg); }
+    }
+    .anim-cat { animation: catBreathe 3s ease-in-out infinite; }
+    .anim-tail { transform-origin: bottom left; animation: tailSwish 2.2s ease-in-out infinite; }
+
+    /* 9. ZOMBIE HAND RISER */
+    @keyframes zombieRise {
+      0%, 100% { transform: translateY(24px) rotate(0deg); opacity: 0.3; }
+      30%, 70% { transform: translateY(0px) rotate(6deg); opacity: 1; filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.5)); }
+      50% { transform: translateY(-4px) rotate(-4deg); opacity: 1; filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.8)); }
+    }
+    .anim-zombie { animation: zombieRise 4s ease-in-out infinite; }
+
+    /* 10. HAUNTED FLICKERING CANDLE */
+    @keyframes eerieCandleFlicker {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); transform: scale(1); }
+      30% { filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.8)) drop-shadow(0 0 35px rgba(168, 85, 247, 0.6)); transform: scale(1.06); }
+      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); transform: scale(0.97); }
+      85% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.65)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.4)); transform: scale(1.03); }
+    }
+    .anim-candle { animation: eerieCandleFlicker 3s ease-in-out infinite; }
+
+    /* 11. LUMINOUS BLOOD MOON & MIST */
+    @keyframes moonGlow {
+      0%, 100% { filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.4)); }
+      50% { filter: drop-shadow(0 0 32px rgba(239, 68, 68, 0.7)); }
+    }
+    @keyframes mistDrift {
+      0% { transform: translateX(-30px); opacity: 0.2; }
+      50% { transform: translateX(10px); opacity: 0.6; }
+      100% { transform: translateX(50px); opacity: 0.1; }
+    }
+    .anim-moon { animation: moonGlow 5s ease-in-out infinite; }
+    .anim-mist { animation: mistDrift 7s ease-in-out infinite alternate; }
+
+    /* 12. CREAKING COFFIN */
+    @keyframes coffinCreak {
+      0%, 100% { transform: rotate(0deg); }
+      40%, 60% { transform: rotate(-8deg); filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.7)); }
+    }
+    .anim-coffin { transform-origin: bottom left; animation: coffinCreak 4.5s ease-in-out infinite; }
+
+    /* 13. SWAYING COBWEBS */
+    @keyframes webBreeze {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+      50% { transform: scale(1.08) rotate(3deg); opacity: 0.95; }
+    }
+    .anim-web { animation: webBreeze 4s ease-in-out infinite; }
+
+    /* 14. CANDY CORN FLOAT */
+    @keyframes candyFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-10px) rotate(15deg) scale(1.1); filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.6)); }
+    }
+    .anim-candy { animation: candyFloat 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="p-4 sm:p-8 max-w-7xl mx-auto flex flex-col gap-6 selection:bg-orange-500 selection:text-white">
+
+  <!-- HEADER -->
+  <header class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-orange-500/20 pb-5">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 shadow-lg shadow-orange-950/50 flex items-center justify-center text-2xl shrink-0">
+        <span>🎃</span>
+      </div>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-400 leading-tight">
+          Halloween Motion Showcase
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 font-mono">
+          Brian's Haunted Theater • Live Animated Emojis & Icons Lab
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Links -->
+    <div class="flex items-center gap-2">
+      <a href="live.html" class="px-3.5 py-1.5 rounded-xl bg-orange-950/60 hover:bg-orange-900/60 border border-orange-500/40 text-orange-300 text-xs font-bold transition flex items-center gap-1.5 shadow">
+        <span>🎬</span> <span>View Live Billboard</span>
+      </a>
+      <a href="index.html" class="px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shadow">
+        <span>🍿</span> <span>Main Theater</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- BANNER EXPLANATION -->
+  <div class="bg-gradient-to-r from-orange-950/40 via-purple-950/30 to-slate-950/60 border border-orange-500/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+    <div class="space-y-1 text-center md:text-left">
+      <h2 class="text-sm sm:text-base font-bold text-amber-300 flex items-center justify-center md:justify-start gap-2">
+        <span>👻</span> <span>All 14 Halloween Animated Motion Icons in Action</span>
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-300">
+        Every icon below runs continuous GPU-accelerated CSS animations. Pick the ones you love most to feature on the live billboard or the Twitch stream background!
+      </p>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button onclick="setSpeed('slow')" class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-orange-400 text-xs font-semibold text-slate-300 transition active:scale-95">
+        ⏳ Spooky Slow
+      </button>
+      <button onclick="setSpeed('normal')" class="px-3 py-1 rounded-lg bg-orange-500 text-slate-950 font-bold text-xs shadow-md transition active:scale-95">
+        ⚡ Normal
+      </button>
+      <button onclick="setSpeed('fast')" class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-orange-400 text-xs font-semibold text-slate-300 transition active:scale-95">
+        🔥 Fast Frenzy
+      </button>
+    </div>
+  </div>
+
+  <!-- ICONS GRID -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="iconsGrid">
+    
+    <!-- 1. FLUTTERING BAT -->
+    <div class="bg-slate-950/80 border border-orange-500/25 hover:border-orange-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(249,115,22,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-bat inline-block select-none" id="iconBat">🦇</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Fluttering Bat</h3>
+        <p class="text-[11px] text-orange-400/90 font-mono">Flutter & Swoop (3.2s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Rhythmic wing flapping with tilt angles and depth scaling.</p>
+    </div>
+
+    <!-- 2. SPECTRAL GHOST -->
+    <div class="bg-slate-950/80 border border-purple-500/25 hover:border-purple-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-ghost inline-block select-none" id="iconGhost">👻</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Spectral Ghost</h3>
+        <p class="text-[11px] text-purple-400 font-mono">Levitation & Glow (3.8s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Smooth levitation with pulsing violet ethereal glow.</p>
+    </div>
+
+    <!-- 3. DANGLING SPIDER -->
+    <div class="bg-slate-950/80 border border-orange-500/25 hover:border-orange-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(249,115,22,0.2)]">
+      <div class="h-28 w-full flex flex-col items-center justify-start relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800 pt-1">
+        <!-- Silk Thread -->
+        <div class="w-[1.5px] bg-slate-400/60 anim-silk" style="height: 28px;"></div>
+        <span class="text-4xl anim-spider inline-block select-none" id="iconSpider">🕷️</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Dangling Spider on Silk</h3>
+        <p class="text-[11px] text-orange-400/90 font-mono">Silk Drop & Swing (4.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Drops down on a glistening thread, sways, and scuttles up.</p>
+    </div>
+
+    <!-- 4. JACK-O'-LANTERN -->
+    <div class="bg-slate-950/80 border border-amber-500/25 hover:border-amber-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-pumpkin inline-block select-none" id="iconPumpkin">🎃</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Flickering Jack-o'-Lantern</h3>
+        <p class="text-[11px] text-amber-400 font-mono">Candle Flame Pulse (3.5s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Warm wobble with glowing inner candle flame pulsation.</p>
+    </div>
+
+    <!-- 5. FLYING WITCH -->
+    <div class="bg-slate-950/80 border border-purple-500/25 hover:border-purple-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-witch inline-block select-none" id="iconWitch">🧙‍♀️</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Flying Witch</h3>
+        <p class="text-[11px] text-purple-400 font-mono">Broomstick Flight (4.5s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Soars across the moonlit sky with banking flight angles.</p>
+    </div>
+
+    <!-- 6. GLOWING CREATURE EYES -->
+    <div class="bg-slate-950/80 border border-orange-500/25 hover:border-orange-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(249,115,22,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-950 border border-slate-800">
+        <span class="text-5xl anim-eyes inline-block select-none" id="iconEyes">👀</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Creature Eyes in Dark</h3>
+        <p class="text-[11px] text-orange-400/90 font-mono">Stealth Blink (5.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Fades out of pitch black shadows, blinks, and vanishes.</p>
+    </div>
+
+    <!-- 7. CHATTERING SKULL -->
+    <div class="bg-slate-950/80 border border-emerald-500/25 hover:border-emerald-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(34,197,94,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-skull inline-block select-none" id="iconSkull">💀</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Chattering Skull</h3>
+        <p class="text-[11px] text-emerald-400 font-mono">Spectral Bob (3.6s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Levitates in eerie green mist with subtle jaw rattling.</p>
+    </div>
+
+    <!-- 8. BLACK CAT -->
+    <div class="bg-slate-950/80 border border-slate-600/40 hover:border-orange-400/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(249,115,22,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <div class="flex items-center anim-cat">
+          <span class="text-5xl select-none" id="iconCat">🐈‍⬛</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Black Cat</h3>
+        <p class="text-[11px] text-slate-300 font-mono">Prowl & Tail Swish (3.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Stealthy breathing cycle with curling tail movements.</p>
+    </div>
+
+    <!-- 9. ZOMBIE HAND -->
+    <div class="bg-slate-950/80 border border-green-500/25 hover:border-green-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(74,222,128,0.2)]">
+      <div class="h-28 w-full flex items-end justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800 pb-1">
+        <span class="text-5xl anim-zombie inline-block select-none" id="iconZombie">🧟‍♂️</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Zombie Hand</h3>
+        <p class="text-[11px] text-green-400 font-mono">Grave Rise & Grasp (4.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Claws up through the cemetery earth and sinks back down.</p>
+    </div>
+
+    <!-- 10. HAUNTED CANDLE -->
+    <div class="bg-slate-950/80 border border-amber-500/25 hover:border-amber-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-candle inline-block select-none" id="iconCandle">🕯️</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Haunted Candle</h3>
+        <p class="text-[11px] text-amber-400 font-mono">Dual-Tone Flame Flicker (3.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Flickering flame casting dancing amber and violet shadows.</p>
+    </div>
+
+    <!-- 11. FULL BLOOD MOON -->
+    <div class="bg-slate-950/80 border border-red-500/25 hover:border-red-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(239,68,68,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-950 border border-slate-800">
+        <span class="text-5xl anim-moon inline-block select-none" id="iconMoon">🌕</span>
+        <div class="absolute inset-0 anim-mist pointer-events-none flex items-center justify-center text-slate-400/40 text-xs font-mono">
+          ☁️ ☁️
+        </div>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Blood Moon & Mist</h3>
+        <p class="text-[11px] text-red-400 font-mono">Luminous Pulse (5.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Pulsing golden/crimson orb with misty fog passing over.</p>
+    </div>
+
+    <!-- 12. CREAKING COFFIN -->
+    <div class="bg-slate-950/80 border border-purple-500/25 hover:border-purple-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-coffin inline-block select-none" id="iconCoffin">⚰️</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Creaking Coffin</h3>
+        <p class="text-[11px] text-purple-400 font-mono">Lid Creak & Glow (4.5s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Lid slowly creaks open revealing eerie purple glow.</p>
+    </div>
+
+    <!-- 13. SWAYING COBWEBS -->
+    <div class="bg-slate-950/80 border border-slate-600/30 hover:border-slate-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(148,163,184,0.15)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-web inline-block select-none" id="iconWeb">🕸️</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Swaying Cobwebs</h3>
+        <p class="text-[11px] text-slate-300 font-mono">Breeze Billow (4.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Gently billows and flexes as if stirred by autumn drafts.</p>
+    </div>
+
+    <!-- 14. CANDY CORN -->
+    <div class="bg-slate-950/80 border border-amber-500/25 hover:border-amber-500/50 rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-3 transition-all duration-300 hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]">
+      <div class="h-28 w-full flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-900/60 border border-slate-800">
+        <span class="text-5xl anim-candy inline-block select-none" id="iconCandy">🍬</span>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-100 text-sm">Trick-or-Treat Candy</h3>
+        <p class="text-[11px] text-amber-400 font-mono">Float & Spin (3.0s)</p>
+      </div>
+      <p class="text-xs text-slate-400 leading-snug">Playful float and sparkle for theater snack celebration.</p>
+    </div>
+
+  </div>
+
+  <!-- INTERACTIVE LIVE STAGE MOCKUP -->
+  <section class="mt-6 bg-slate-950/90 border border-orange-500/40 rounded-3xl p-6 sm:p-8 shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div>
+        <h2 class="text-lg font-black text-amber-300 uppercase tracking-wide flex items-center gap-2">
+          <span>🎬</span> <span>Interactive Billboard Multi-Icon Preview</span>
+        </h2>
+        <p class="text-xs text-slate-400">
+          Toggle icons on/off to test how they look together around the live billboard!
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAllPreview(true)" class="px-3 py-1 rounded-lg bg-orange-500/20 hover:bg-orange-500/30 border border-orange-500/40 text-orange-300 text-xs font-bold transition">
+          Enable All
+        </button>
+        <button onclick="toggleAllPreview(false)" class="px-3 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 text-xs font-bold transition">
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- Toggle Chip Bar -->
+    <div class="flex flex-wrap items-center gap-2" id="chipToggles">
+      <!-- Injected dynamically -->
+    </div>
+
+    <!-- Mock Billboard Stage -->
+    <div class="relative w-full h-80 rounded-2xl bg-gradient-to-b from-[#1e1b4b] via-[#0f172a] to-[#05070f] border border-amber-500/30 overflow-hidden flex flex-col items-center justify-center p-4 shadow-inner" id="stageContainer">
+      
+      <!-- Top corners -->
+      <div id="stageBat" class="absolute top-4 left-6 text-3xl anim-bat select-none">🦇</div>
+      <div id="stageSpider" class="absolute top-0 right-10 flex flex-col items-center">
+        <div class="w-[1.5px] bg-slate-400/60 anim-silk" style="height: 30px;"></div>
+        <div class="text-3xl anim-spider select-none">🕷️</div>
+      </div>
+      <div id="stageGhost" class="absolute bottom-6 left-8 text-3xl anim-ghost select-none">👻</div>
+      <div id="stageEyes" class="absolute top-8 right-1/4 text-2xl anim-eyes select-none">👀</div>
+      <div id="stageWitch" class="absolute top-3 left-1/4 text-3xl anim-witch select-none">🧙‍♀️</div>
+      <div id="stageMoon" class="absolute top-3 right-6 text-3xl anim-moon select-none opacity-70">🌕</div>
+      <div id="stageCat" class="absolute bottom-4 right-8 text-3xl anim-cat select-none">🐈‍⬛</div>
+      <div id="stageZombie" class="absolute bottom-0 left-1/3 text-3xl anim-zombie select-none">🧟‍♂️</div>
+
+      <!-- Center Card Mock -->
+      <div class="relative z-10 px-6 py-4 rounded-2xl bg-slate-950/85 border border-amber-500/40 shadow-2xl flex flex-col items-center text-center gap-2 max-w-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎃</span>
+          <span class="text-sm font-black text-amber-300 uppercase tracking-wider">Brian's Haunted Theater</span>
+        </div>
+        <span class="text-xs text-slate-300 font-mono">DOORS OPEN IN 02:45:12</span>
+        <div class="flex items-center gap-3 text-lg pt-1">
+          <span class="anim-candle">🕯️</span>
+          <span class="anim-pumpkin">🎃</span>
+          <span class="anim-skull">💀</span>
+          <span class="anim-candle">🕯️</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Animation Speed Controls
+    function setSpeed(mode) {
+      const root = document.documentElement;
+      let multiplier = 1;
+      if (mode === 'slow') multiplier = 1.8;
+      if (mode === 'fast') multiplier = 0.5;
+
+      const animatedElements = document.querySelectorAll('[class*="anim-"]');
+      animatedElements.forEach(el => {
+        el.style.animationDuration = '';
+      });
+
+      if (mode !== 'normal') {
+        const durations = {
+          'anim-bat': 3.2 * multiplier + 's',
+          'anim-ghost': 3.8 * multiplier + 's',
+          'anim-spider': 4.0 * multiplier + 's',
+          'anim-silk': 4.0 * multiplier + 's',
+          'anim-pumpkin': 3.5 * multiplier + 's',
+          'anim-witch': 4.5 * multiplier + 's',
+          'anim-eyes': 5.0 * multiplier + 's',
+          'anim-skull': 3.6 * multiplier + 's',
+          'anim-cat': 3.0 * multiplier + 's',
+          'anim-zombie': 4.0 * multiplier + 's',
+          'anim-candle': 3.0 * multiplier + 's',
+          'anim-moon': 5.0 * multiplier + 's',
+          'anim-coffin': 4.5 * multiplier + 's',
+          'anim-web': 4.0 * multiplier + 's',
+          'anim-candy': 3.0 * multiplier + 's'
+        };
+        Object.entries(durations).forEach(([cls, dur]) => {
+          document.querySelectorAll('.' + cls).forEach(item => {
+            item.style.animationDuration = dur;
+          });
+        });
+      }
+    }
+
+    // Interactive Stage Toggles
+    const stageItems = [
+      { id: 'stageBat', name: 'Bat 🦇', default: true },
+      { id: 'stageSpider', name: 'Spider 🕷️', default: true },
+      { id: 'stageGhost', name: 'Ghost 👻', default: true },
+      { id: 'stageEyes', name: 'Eyes 👀', default: true },
+      { id: 'stageWitch', name: 'Witch 🧙‍♀️', default: true },
+      { id: 'stageMoon', name: 'Moon 🌕', default: true },
+      { id: 'stageCat', name: 'Cat 🐈‍⬛', default: true },
+      { id: 'stageZombie', name: 'Zombie 🧟‍♂️', default: true }
+    ];
+
+    const chipContainer = document.getElementById('chipToggles');
+    stageItems.forEach(item => {
+      const btn = document.createElement('button');
+      btn.id = 'chip-' + item.id;
+      btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ' + 
+        (item.default ? 'bg-orange-500/20 border border-orange-500/50 text-orange-300' : 'bg-slate-900 border border-slate-700 text-slate-500 opacity-60');
+      btn.textContent = item.name;
+      btn.onclick = () => {
+        const el = document.getElementById(item.id);
+        if (el.classList.contains('hidden')) {
+          el.classList.remove('hidden');
+          btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-orange-500/20 border border-orange-500/50 text-orange-300';
+        } else {
+          el.classList.add('hidden');
+          btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-slate-900 border border-slate-700 text-slate-500 opacity-60';
+        }
+      };
+      chipContainer.appendChild(btn);
+    });
+
+    function toggleAllPreview(show) {
+      stageItems.forEach(item => {
+        const el = document.getElementById(item.id);
+        const btn = document.getElementById('chip-' + item.id);
+        if (show) {
+          el.classList.remove('hidden');
+          btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-orange-500/20 border border-orange-500/50 text-orange-300';
+        } else {
+          el.classList.add('hidden');
+          btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-slate-900 border border-slate-700 text-slate-500 opacity-60';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

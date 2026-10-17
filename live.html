@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater • Live Cinema Billboard</title>
+  <title>🎃 Brian's Haunted Theater • Live Cinema Billboard</title>
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   
   <link rel="preconnect" href="https://brianstheater-default-rtdb.firebaseio.com" crossorigin>
@@ -57,6 +57,18 @@
       0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.25), inset 0 0 10px rgba(245, 158, 11, 0.15); }
       50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.55), inset 0 0 15px rgba(245, 158, 11, 0.3); }
     }
+    @keyframes eerieCandleFlicker {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); }
+      30% { filter: drop-shadow(0 0 16px rgba(249, 115, 22, 0.7)) drop-shadow(0 0 30px rgba(168, 85, 247, 0.5)); }
+      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); }
+      85% { filter: drop-shadow(0 0 14px rgba(249, 115, 22, 0.6)) drop-shadow(0 0 24px rgba(168, 85, 247, 0.35)); }
+    }
+    @keyframes flutterBat {
+      0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+      25% { transform: translateY(-4px) translateX(-3px) rotate(-8deg) scale(1.05); }
+      50% { transform: translateY(-2px) translateX(2px) rotate(4deg) scale(0.98); }
+      75% { transform: translateY(-6px) translateX(-1px) rotate(-4deg) scale(1.03); }
+    }
 
     html, body {
       background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f172a 45%, #05070f 100%);
@@ -82,6 +94,12 @@
     }
     .purple-box-glow {
       animation: purplePulse 3s ease-in-out infinite;
+    }
+    .anim-flicker {
+      animation: eerieCandleFlicker 4s ease-in-out infinite;
+    }
+    .anim-bat {
+      animation: flutterBat 3.5s ease-in-out infinite;
     }
 
     /* Ambient backdrop aura behind poster */
@@ -110,20 +128,21 @@
   <!-- MAIN WRAPPER -->
   <main class="w-full max-w-5xl mx-auto flex flex-col items-center text-center my-auto py-2 sm:py-4">
     
-    <!-- 1. THEATER BRANDING TITLE (Matches Main Page Signature Brand Cluster) -->
+    <!-- 1. THEATER BRANDING TITLE (Matches Main Page Halloween / Shocktoberfest Signature Brand Cluster) -->
     <header class="mb-3 sm:mb-5">
-      <a href="index.html" class="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 rounded-2xl bg-slate-900/80 border border-slate-800/80 hover:border-amber-500/40 shadow-xl transition-all duration-300 group cursor-pointer select-none backdrop-blur-md">
-        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-base sm:text-xl shrink-0 group-hover:scale-105 transition-transform">
-          <span>🎬</span>
+      <a href="index.html" class="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 rounded-2xl bg-slate-900/80 border border-orange-500/30 hover:border-orange-500/60 shadow-xl shadow-orange-950/30 transition-all duration-300 group cursor-pointer select-none backdrop-blur-md">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 shadow-lg shadow-orange-950/40 flex items-center justify-center text-slate-950 font-black text-base sm:text-xl shrink-0 group-hover:scale-105 transition-transform">
+          <span>🎃</span>
         </div>
         <div class="flex flex-col text-left">
           <div class="flex items-center gap-1.5">
-            <h1 class="text-sm sm:text-lg font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-amber-300 leading-tight">
-              Brian's Theater
+            <h1 class="text-sm sm:text-lg font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-400 leading-tight anim-flicker">
+              Brian's Haunted Theater
             </h1>
+            <span class="anim-bat inline-block text-sm" title="Shocktoberfest">🦇</span>
           </div>
-          <span class="text-[9px] sm:text-[10px] text-slate-400 font-mono leading-none tracking-wider uppercase">
-            Virtual Cinema
+          <span class="text-[9px] sm:text-[10px] text-orange-300/80 font-mono leading-none tracking-wider uppercase">
+            Shocktoberfest Edition
           </span>
         </div>
       </a>

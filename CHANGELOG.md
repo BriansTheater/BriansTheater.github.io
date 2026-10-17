@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.184] - 2026-10-16
+
+### What's New
+- Unveiled Brian's Haunted Theater branding with Shocktoberfest styling.
+- Created interactive Halloween motion icons showcase gallery with animations.
+- Built spooky 1080p Twitch stream overlay with creepy atmospheric borders.
+- Synced real-time movie countdown on Twitch overlay with Firebase.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.183] - 2026-10-16
 
 ### What's New

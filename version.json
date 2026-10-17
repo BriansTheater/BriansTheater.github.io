@@ -1,10 +1,12 @@
 {
-  "version": "4.9.183",
+  "version": "4.9.184",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.183",
+  "title": "Brian's Theater v4.9.184",
   "notes": [
-    "Synced Brian's Theater signature branding on live cinema billboard.",
-    "Integrated gradient cinema emblem and typography matching main page.",
-    "Maintained seamless real-time Firebase sync across all viewports."
+    "Unveiled Brian's Haunted Theater branding with Shocktoberfest styling.",
+    "Created interactive Halloween motion icons showcase gallery with animations.",
+    "Built spooky 1080p Twitch stream overlay with creepy atmospheric borders.",
+    "Synced real-time movie countdown on Twitch overlay with Firebase.",
+    "Maintained clean house and strict two-backup retention."
   ]
 }
