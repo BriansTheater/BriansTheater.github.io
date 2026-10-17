@@ -55,13 +55,14 @@
       animation: fogRoll 20s ease-in-out infinite;
     }
 
-    /* Subtle eerie candle flicker for the title */
+    /* Subtle eerie candle flicker for title and header candle */
     @keyframes eerieCandleFlicker {
-      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); }
-      30% { filter: drop-shadow(0 0 16px rgba(249, 115, 22, 0.75)) drop-shadow(0 0 32px rgba(168, 85, 247, 0.55)); }
-      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); }
-      85% { filter: drop-shadow(0 0 14px rgba(249, 115, 22, 0.65)) drop-shadow(0 0 25px rgba(168, 85, 247, 0.35)); }
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); transform: scale(1); }
+      30% { filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.8)) drop-shadow(0 0 35px rgba(168, 85, 247, 0.6)); transform: scale(1.06); }
+      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); transform: scale(0.97); }
+      85% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.65)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.4)); transform: scale(1.03); }
     }
+    .anim-candle { animation: eerieCandleFlicker 3s ease-in-out infinite; }
     .anim-flicker { animation: eerieCandleFlicker 4s ease-in-out infinite; }
 
     /* Center Ambient Backlight Aura */
@@ -163,8 +164,9 @@
             <h1 class="text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-400 leading-tight anim-flicker">
               Brian's Haunted Theater
             </h1>
+            <span class="anim-candle inline-block text-base sm:text-lg select-none" title="Shocktoberfest Haunted Candle">🕯️</span>
           </div>
-          <span class="text-[9px] sm:text-[10px] text-orange-300/90 font-mono tracking-wider uppercase font-semibold">
+          <span class="text-[9px] sm:text-[10px] text-slate-400 font-mono tracking-wider uppercase font-semibold">
             Shocktoberfest Edition
           </span>
         </div>
@@ -173,11 +175,11 @@
 
     <!-- B. SCREENING STATUS & MOVIE TITLE -->
     <section class="flex flex-col items-center gap-1 mb-2.5 sm:mb-3">
-      <span id="screeningStatusBadge" class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-amber-400 uppercase">
+      <span id="screeningStatusBadge" class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-purple-300/90 uppercase">
         NEXT SCHEDULED SCREENING
       </span>
 
-      <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-300 to-purple-400 filter drop-shadow-[0_0_20px_rgba(249,115,22,0.6)]">
+      <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-purple-400 filter drop-shadow-[0_0_25px_rgba(52,211,153,0.5)] drop-shadow-[0_0_40px_rgba(168,85,247,0.45)]">
         <span id="movieTitleText">Abraham's Boys A Dracula Story</span>
       </h2>
 
@@ -376,7 +378,7 @@
       if (countdownGrid) countdownGrid.classList.remove('hidden');
       if (screeningSubtitle) {
         screeningSubtitle.textContent = "NEXT SCHEDULED SCREENING";
-        screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-amber-400 uppercase";
+        screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-purple-300/90 uppercase";
       }
       if (countdownHeader) countdownHeader.textContent = "THEATER DOORS OPEN IN";
 

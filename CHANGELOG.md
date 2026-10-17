@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.192] - 2026-10-16
+
+### What's New
+- Synchronized Twitch stream overlay header with main navigation bar.
+- Added glowing Haunted Candle icon to Twitch stream header.
+- Restyled movie title with green and purple spectral gradient.
+- Eliminated excess yellow clutter on screening status badge.
+
 ## [4.9.191] - 2026-10-16
 
 ### What's New
