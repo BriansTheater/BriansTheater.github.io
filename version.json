@@ -1,10 +1,10 @@
 {
-  "version": "4.9.182",
+  "version": "4.9.183",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.182",
+  "title": "Brian's Theater v4.9.183",
   "notes": [
-    "Launched live.html stripped-down real-time cinema billboard.",
-    "Added live digital countdown with glowing amber and purple tiles.",
-    "Integrated real-time Firebase SSE sync with auto-switching doors open state."
+    "Synced Brian's Theater signature branding on live cinema billboard.",
+    "Integrated gradient cinema emblem and typography matching main page.",
+    "Maintained seamless real-time Firebase sync across all viewports."
   ]
 }

@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.183] - 2026-10-16
+
+### What's New
+- Synced Brian's Theater signature branding on live billboard header.
+- Added gradient cinema logo icon and glowing text cluster.
+- Linked billboard header directly back to main theater portal.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.182] - 2026-10-16
 
 ### What's New
