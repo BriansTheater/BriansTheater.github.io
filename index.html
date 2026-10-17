@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.194 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.195 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -1045,7 +1045,12 @@
                 <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
                   <span>🎨</span> <span>Theater Seasonal Theme</span>
                 </label>
-                <span id="adminSeasonalThemeBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">AUTO</span>
+                <div class="flex items-center gap-2">
+                  <a href="halloween-icons.html" target="_blank" rel="noopener noreferrer" id="adminIconsShowcaseBtn" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-orange-950/80 text-orange-300 border border-orange-700/60 hover:bg-orange-900 transition flex items-center gap-1" title="Open Seasonal Icons Showcase gallery">
+                    <span>🎃</span> <span>Icons Showcase ↗</span>
+                  </a>
+                  <span id="adminSeasonalThemeBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">AUTO</span>
+                </div>
               </div>
               <select id="adminSeasonalThemeSelect" onchange="setSeasonalThemeOverride(this.value)" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400 cursor-pointer">
                 <option value="auto">✨ Smart Auto-Switch (Seasonal Calendar)</option>
@@ -1053,9 +1058,10 @@
                 <option value="christmas">🎄 Holiday Winter Wonderland (Christmas)</option>
                 <option value="default">🎬 Midnight Cinema (Default Classic)</option>
               </select>
-              <p class="text-[10px] text-slate-400 leading-normal">
-                Smart Auto detects month: Oct is Shocktoberfest (Halloween), Dec is Winter Wonderland (Christmas), otherwise Default. Select an option above to override.
-              </p>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 leading-normal">
+                <span>Smart Auto detects month: Oct is Shocktoberfest, Dec is Christmas, otherwise Default.</span>
+                <a href="halloween-icons.html" target="_blank" rel="noopener noreferrer" class="text-orange-400 hover:text-orange-300 underline font-semibold shrink-0 ml-2">Browse All Icons & Badges ↗</a>
+              </div>
             </div>
           </div>
 
@@ -3212,7 +3218,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.194";
+    const APP_VERSION = "4.9.195";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4046,6 +4052,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.195": [
+        "Removed technical status bar and footer from Twitch overlay.",
+        "Relocated Icons Showcase gallery link to Admin theme controls.",
+        "Streamlined Twitch stream display for ultra clean-cut aesthetic."
+      ],
       "4.9.194": [
         "Reduced movie title font size on Twitch stream overlay.",
         "Ensured featured screening title fits neatly on one line.",

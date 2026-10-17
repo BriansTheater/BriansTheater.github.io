@@ -1,10 +1,10 @@
 {
-  "version": "4.9.194",
+  "version": "4.9.195",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.194",
+  "title": "Brian's Theater v4.9.195",
   "notes": [
-    "Reduced movie title font size on Twitch stream overlay.",
-    "Ensured featured screening title fits neatly on one line.",
-    "Expanded overlay stage container width for balanced title layout."
+    "Removed technical status bar and footer from Twitch overlay.",
+    "Relocated Icons Showcase gallery link to Admin theme controls.",
+    "Streamlined Twitch stream display for ultra clean-cut aesthetic."
   ]
 }

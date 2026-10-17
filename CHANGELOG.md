@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.195] - 2026-10-16
+
+### What's New
+- Removed technical status bar and footer from Twitch overlay.
+- Relocated Icons Showcase gallery link to Admin theme controls.
+- Streamlined Twitch stream display for ultra clean-cut aesthetic.
+
 ## [4.9.194] - 2026-10-16
 
 ### What's New
