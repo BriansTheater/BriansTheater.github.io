@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.187] - 2026-10-16
+
+### What's New
+- Synchronized core application version across all theater files.
+- Resolved version mismatch update prompt loop across devices.
+- Maintained clean house and strict two-backup retention.
+
 ## [4.9.186] - 2026-10-16
 
 ### What's New

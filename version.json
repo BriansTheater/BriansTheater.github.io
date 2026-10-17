@@ -1,10 +1,10 @@
 {
-  "version": "4.9.186",
+  "version": "4.9.187",
   "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.186",
+  "title": "Brian's Theater v4.9.187",
   "notes": [
-    "Removed Twitch live stream badge from overlay header.",
-    "Streamlined header branding to clean Shocktoberfest subtitle.",
-    "Maintained clean house and strict two-backup retention."
+    "Synchronized core app version across all cinema application files.",
+    "Resolved version mismatch update prompt loop across all devices.",
+    "Ensured seamless service worker cache alignment."
   ]
 }
