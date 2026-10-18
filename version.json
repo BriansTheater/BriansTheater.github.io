@@ -1,10 +1,10 @@
 {
-  "version": "4.9.195",
-  "releaseDate": "2026-10-16",
-  "title": "Brian's Theater v4.9.195",
+  "version": "4.9.196",
+  "releaseDate": "2026-10-17",
+  "title": "Brian's Theater v4.9.196",
   "notes": [
-    "Removed technical status bar and footer from Twitch overlay.",
-    "Relocated Icons Showcase gallery link to Admin theme controls.",
-    "Streamlined Twitch stream display for ultra clean-cut aesthetic."
+    "Added Spotify corner pill player with animated equalizer drawer.",
+    "Integrated live movie trailer replay upon theater door opening.",
+    "Added Spotify stream music broadcast card to Admin Studio."
   ]
 }

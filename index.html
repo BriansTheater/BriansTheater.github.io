@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.195 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.196 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -1086,6 +1086,51 @@
               <button onclick="triggerForceSync()" id="btnForceSync" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
                 ⚡ Force Sync
               </button>
+            </div>
+          </div>
+
+          <!-- 3. Spotify Stream Music Controller (Twitch Overlay & Pre-Show) -->
+          <div class="p-5 rounded-xl bg-slate-950 border border-emerald-900/40 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                <span>🎵</span> Spotify Stream Music (Twitch Overlay)
+              </h3>
+              <span id="adminSpotifyStatusBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">SYNCED</span>
+            </div>
+            <p class="text-xs text-slate-400">Control the corner music player on the Twitch overlay stream. Paste any playlist, album, or track from your Spotify account.</p>
+
+            <div>
+              <label class="text-xs font-semibold text-slate-300">Spotify Link or URI</label>
+              <input type="text" id="adminSpotifyUrl" placeholder="https://open.spotify.com/playlist/... or spotify:playlist:..." class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400 font-mono">
+            </div>
+
+            <div>
+              <label class="text-xs font-semibold text-slate-300">Display Name / Label</label>
+              <input type="text" id="adminSpotifyLabel" placeholder="e.g. 🎃 Horror Ambience or 🍿 Cinema Lofi" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400">
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <span class="text-[11px] font-semibold text-slate-400">Quick Curated Presets:</span>
+              <div class="grid grid-cols-3 gap-2">
+                <button type="button" onclick="setAdminSpotifyPreset('playlist/37i9dQZF1DXarRysEmu9Fy', '🎃 Dark Horror Ambience')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
+                  🎃 Horror Ambience
+                </button>
+                <button type="button" onclick="setAdminSpotifyPreset('playlist/37i9dQZF1DX1tx29ENirbe', '🍿 Iconic Film Scores')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
+                  🍿 Cinema Scores
+                </button>
+                <button type="button" onclick="setAdminSpotifyPreset('playlist/37i9dQZF1DX8Uebhn9wzrS', '☕ Cozy Cinema Lofi')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
+                  ☕ Chill Lofi Beats
+                </button>
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <button type="button" onclick="dispatchAdminSpotify()" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-lg flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>📡</span> Broadcast Spotify Live to Twitch
+              </button>
+              <a href="twitch.html" target="_blank" class="px-3 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0" title="Preview live Twitch stream overlay">
+                <span>📺</span> Preview ↗
+              </a>
             </div>
           </div>
         </div>
@@ -3218,7 +3263,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.195";
+    const APP_VERSION = "4.9.196";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4052,6 +4097,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.196": [
+        "Added Spotify corner pill player with animated equalizer drawer.",
+        "Integrated live movie trailer replay upon theater door opening.",
+        "Added Spotify stream music broadcast card to Admin Studio."
+      ],
       "4.9.195": [
         "Removed technical status bar and footer from Twitch overlay.",
         "Relocated Icons Showcase gallery link to Admin theme controls.",
@@ -7658,6 +7708,75 @@
       fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' }).catch(() => {});
       showTheaterToast(`🎬 Trailer broadcasted live to stage!`);
       switchTab('screening');
+    }
+
+    function setAdminSpotifyPreset(resource, label) {
+      const urlInput = document.getElementById('adminSpotifyUrl');
+      const labelInput = document.getElementById('adminSpotifyLabel');
+      if (urlInput) urlInput.value = resource.startsWith('http') ? resource : `https://open.spotify.com/${resource}`;
+      if (labelInput) labelInput.value = label;
+    }
+
+    async function dispatchAdminSpotify() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const rawUrl = (document.getElementById('adminSpotifyUrl')?.value || '').trim();
+      const label = (document.getElementById('adminSpotifyLabel')?.value || '').trim() || '🎵 Stream Music';
+
+      if (!rawUrl) {
+        showTheaterToast("⚠️ Please enter a Spotify link or select a preset.");
+        return;
+      }
+
+      // Update badge to syncing
+      const badge = document.getElementById('adminSpotifyStatusBadge');
+      if (badge) {
+        badge.textContent = "SYNCING...";
+        badge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 animate-pulse";
+      }
+
+      // 1. BroadcastChannel for instant local cross-tab sync
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const syncChan = new BroadcastChannel('brian_theater_sync');
+          syncChan.postMessage({
+            type: 'spotify_update',
+            payload: { resource: rawUrl, name: label }
+          });
+        }
+      } catch(e) {}
+
+      // 2. Persist to Firebase RTDB for remote Twitch OBS sync
+      try {
+        const payload = {
+          resource: rawUrl,
+          name: label,
+          updatedAt: new Date().toISOString()
+        };
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/spotifyPlaylist.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) {
+        console.warn('Spotify Firebase sync error:', e);
+      }
+
+      // Save locally
+      try {
+        localStorage.setItem('brian_twitch_spotify_custom_url', rawUrl);
+        localStorage.setItem('brian_twitch_spotify_custom_name', label);
+      } catch(e) {}
+
+      if (badge) {
+        badge.textContent = "LIVE";
+        badge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800";
+      }
+
+      showTheaterToast(`🎵 Spotify stream music updated to "${label}"!`);
     }
 
     function triggerForceSync() {

@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.196] - 2026-10-17
+
+### What's New
+- Added Spotify corner pill player with animated equalizer drawer.
+- Integrated live movie trailer replay upon theater door opening.
+- Added Spotify stream music broadcast card to Admin Studio.
+
 ## [4.9.195] - 2026-10-16
 
 ### What's New

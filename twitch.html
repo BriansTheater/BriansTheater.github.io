@@ -126,6 +126,16 @@
       pointer-events: none;
       z-index: 1;
     }
+
+    /* Mini Spotify Corner Pill & Equalizer Bars */
+    @keyframes eqBarPulse {
+      0%, 100% { height: 4px; opacity: 0.6; }
+      50% { height: 16px; opacity: 1; }
+    }
+    .eq-bar-1 { animation: eqBarPulse 0.85s ease-in-out infinite; }
+    .eq-bar-2 { animation: eqBarPulse 0.65s ease-in-out infinite 0.2s; }
+    .eq-bar-3 { animation: eqBarPulse 0.95s ease-in-out infinite 0.4s; }
+    .eq-bar-4 { animation: eqBarPulse 0.75s ease-in-out infinite 0.1s; }
   </style>
 </head>
 <body class="w-full h-full relative flex items-center justify-center">
@@ -193,8 +203,9 @@
       <!-- Glow Aura -->
       <div class="hero-glow-aura"></div>
 
-      <!-- Poster Frame -->
+      <!-- Poster & Live Trailer Frame -->
       <div id="posterFrame" class="relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(245,158,11,0.35)] aspect-[16/9] max-h-[42vh] flex items-center justify-center">
+        <!-- Static/Closed Poster Image -->
         <img
           id="heroPosterImg"
           src="https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg"
@@ -202,6 +213,22 @@
           class="w-full h-full object-cover object-center transition-opacity duration-700"
           onerror="handlePosterError(this)"
         />
+
+        <!-- Live Doors Open Trailer Replay Player (Replaces poster when doors open) -->
+        <div id="heroTrailerContainer" class="hidden absolute inset-0 w-full h-full bg-black z-10 flex items-center justify-center">
+          <iframe
+            id="heroTrailerFrame"
+            class="w-full h-full border-0 pointer-events-auto"
+            src=""
+            title="Movie Cinema Trailer"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+          <div class="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-full bg-red-600/90 text-white font-mono text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 shadow-lg shadow-red-950/50">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+            <span>CINEMA TRAILER LIVE</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -259,6 +286,78 @@
     </section>
 
   </main>
+
+  <!-- ========================================== -->
+  <!-- 2B. SPOTIFY "NOW PLAYING" CORNER PILL      -->
+  <!-- ========================================== -->
+  <aside id="spotifyCornerWidget" class="fixed bottom-4 left-4 z-40 select-none font-sans">
+    
+    <!-- Expanded Floating Spotify Player Drawer -->
+    <div id="spotifyDrawer" class="hidden mb-2.5 p-3 rounded-2xl bg-slate-950/95 border border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-xl w-80 max-w-[90vw] flex-col gap-2.5 transition-all">
+      <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
+          </svg>
+          <span class="text-xs font-bold text-slate-200">Theater Soundtrack</span>
+        </div>
+        <button type="button" onclick="toggleSpotifyDrawer()" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Spotify Embed Container -->
+      <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 aspect-[16/9] min-h-[152px]">
+        <iframe
+          id="spotifyIframe"
+          class="w-full h-full border-0 rounded-xl"
+          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX07k7i011A8q?utm_source=generator&theme=0"
+          title="Spotify Music Stream"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+      </div>
+
+      <!-- Playlist Selection / Quick Presets -->
+      <div class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
+        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DX07k7i011A8q', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
+        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DX4sWSpwq3LiO', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
+        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DXdLEN7aqioXM', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
+        <button type="button" onclick="promptCustomSpotify()" class="px-2 py-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition shrink-0 cursor-pointer font-bold">+ Custom</button>
+      </div>
+    </div>
+
+    <!-- The Docked Mini Pill -->
+    <div
+      id="spotifyPill"
+      onclick="toggleSpotifyDrawer()"
+      class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-emerald-500/40 hover:border-emerald-400 text-slate-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.45)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group"
+      title="Click to expand Spotify Player / select playlist"
+    >
+      <!-- Spotify Brand Icon -->
+      <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 shadow-sm group-hover:rotate-12 transition-transform">
+        <svg class="w-3.5 h-3.5 text-slate-950" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
+        </svg>
+      </div>
+
+      <!-- Live Animated Equalizer Bars -->
+      <div class="flex items-end gap-0.5 h-3.5 px-0.5" aria-hidden="true">
+        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
+        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
+        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
+        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-4"></span>
+      </div>
+
+      <!-- Current Track / Playlist Name -->
+      <div class="flex flex-col text-left leading-none max-w-[150px] sm:max-w-[200px] overflow-hidden">
+        <span class="text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase">NOW PLAYING</span>
+        <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
+      </div>
+
+      <!-- Expand Arrow -->
+      <span class="text-[10px] text-slate-400 group-hover:text-emerald-300 transition-colors ml-0.5">▲</span>
+    </div>
+
+  </aside>
 
 
   <!-- ========================================== -->
@@ -322,16 +421,77 @@
       return false;
     }
 
+    // Curated Trailer Mappings for Cinema Screenings
+    const SCHEDULE_TRAILERS = {
+      "Abraham's Boys A Dracula Story": "cGgWAHXuTKc",
+      "Abraham's Boys": "cGgWAHXuTKc",
+      "Neighbors": "kL5c2Szf3E4",
+      "Neighbors 2": "X2i9Zz_AqTg",
+      "Machine Gun Preacher": "q5D4v8a7o4M",
+      "manchine gun pearcher": "q5D4v8a7o4M",
+      "The Whisper Man": "rT22nYLaeWc",
+      "Blade Runner 2049": "gCcx85zbxz4",
+      "Dune: Part Two": "Way9Dexny3w",
+      "Deadpool & Wolverine": "73_1biulkYk",
+      "Spider-Man: Across the Spider-Verse": "cqGjhVJWtEg",
+      "Oppenheimer": "uYPbbksJxIg",
+      "Interstellar": "zSWdZVtXT7E",
+      "The Dark Knight": "EXeTwQWrcwY",
+      "The interview": "KpyVENBPj5M",
+      "Pineapple Express": "BWZt4v6b1hI",
+      "beast": "oQMc7Sq366I",
+      "mother mary": "3VbW9A6gGgQ",
+      "Normal": "dQw4w9WgXcQ",
+      "Dog Man": "Wa0B2s7E2b8",
+      "Borderlands": "l3XzepN03KQ",
+      "Scary Movie": "cGgWAHXuTKc",
+      "Scary Movie 2026": "cGgWAHXuTKc",
+      "A Nightmare on Elm Street": "dCVh4lBfW-c",
+      "A Nightmare on Elm Street 2: Freddy's Revenge": "b-dZa6xt6hQ",
+      "A Nightmare on Elm Street 3: Dream Warriors": "oy-hgBu1h0w",
+      "A Nightmare on Elm Street 4: The Dream Master": "2m1a2Pt8Vjw",
+      "A Nightmare on Elm Street 5: The Dream Child": "qa4lBfEWBBs",
+      "Freddy's Dead: The Final Nightmare": "PhcKV5e4RoU",
+      "Wes Craven's New Nightmare": "9dLQYxBYGTQ",
+      "Freddy vs. Jason": "ipbCUW3umJU",
+      "Freddy vs Jason": "ipbCUW3umJU",
+      "A Nightmare on Elm Street (2010)": "ZuYoEtEI_go",
+      "Clown in a Cornfield": "lWUKnQVCAhk",
+      "IT Chapter Two": "Pr85vto4dbo",
+      "The Seeding": "VyHV0BRZxoQ",
+      "UnderTone": "-9HT0l9HV4c",
+      "they will kill you": "fDooSsgINLQ",
+      "Stephen King's It": "4ybQ6gopB3H3cu0seVZLznDnIKo.jpg"
+    };
+
+    function getTrailerIdForTitle(title, customTrailers) {
+      if (!title) return '';
+      const clean = title.replace(/^🎬\s*/, '').trim();
+      if (customTrailers && customTrailers[clean]) {
+        const val = customTrailers[clean];
+        const m = val.match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
+        return m ? m[1] : val;
+      }
+      if (SCHEDULE_TRAILERS[clean]) return SCHEDULE_TRAILERS[clean];
+      const lower = clean.toLowerCase();
+      for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
+        if (k.toLowerCase() === lower) return v;
+      }
+      return '';
+    }
+
     // Active state model (Initial seed synchronized with main stage)
     let activeMovie = {
       title: "Abraham's Boys A Dracula Story",
       startMs: 1792288800000,
       endMs: 1792294140000,
       posterUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      trailerId: "cGgWAHXuTKc",
       showtimeText: "Saturday, Oct 17, 2026 • 7:00 PM PST",
       isNowPlaying: false,
       doorMode: "auto"
     };
+    window.activeMovie = activeMovie;
 
     // 1. Digital Countdown Clock Loop
     function updateCountdown() {
@@ -346,8 +506,13 @@
 
       const isForcedOpen = (activeMovie.doorMode === 'force_open' || activeMovie.doorMode === 'open');
       const isAutoOpen = (activeMovie.doorMode !== 'force_closed' && diffMs <= 0 && (!activeMovie.endMs || now < activeMovie.endMs));
+      const areDoorsOpen = (isForcedOpen || isAutoOpen);
 
-      if (isForcedOpen || isAutoOpen) {
+      const heroPoster = document.getElementById('heroPosterImg');
+      const heroTrailer = document.getElementById('heroTrailerContainer');
+      const heroTrailerFrame = document.getElementById('heroTrailerFrame');
+
+      if (areDoorsOpen) {
         // Doors Open / Live Screen state
         if (countdownHeader) countdownHeader.textContent = "THEATER DOORS ARE OPEN!";
         if (doorsOpenBadge) doorsOpenBadge.classList.remove('hidden');
@@ -357,7 +522,27 @@
           screeningSubtitle.textContent = "NOW SCREENING IN THEATER";
           screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-400 uppercase";
         }
+
+        // Live Cinema Trailer Replay in place of Poster
+        const trailerId = activeMovie.trailerId || getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers);
+        if (trailerId && heroTrailer && heroTrailerFrame) {
+          heroTrailer.classList.remove('hidden');
+          if (heroPoster) heroPoster.classList.add('hidden');
+          const desiredSrc = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailerId)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(trailerId)}&rel=0&modestbranding=1&controls=1`;
+          if (heroTrailerFrame.src !== desiredSrc) {
+            heroTrailerFrame.src = desiredSrc;
+          }
+        }
         return;
+      }
+
+      // Revert trailer back to poster when doors closed
+      if (heroTrailer && !heroTrailer.classList.contains('hidden')) {
+        heroTrailer.classList.add('hidden');
+        if (heroTrailerFrame) heroTrailerFrame.src = "";
+      }
+      if (heroPoster && heroPoster.classList.contains('hidden')) {
+        heroPoster.classList.remove('hidden');
       }
 
       // Doors Closed Countdown State
@@ -549,6 +734,8 @@
             if (event.data) {
               if (event.data.type === 'stage_update' && event.data.payload) {
                 applyStageBroadcast(event.data.payload);
+              } else if (event.data.type === 'spotify_update' && event.data.payload) {
+                setSpotifyPlaylist(event.data.payload.resource, event.data.payload.name);
               } else if (event.data.firebasePayload) {
                 applySyncPayload(event.data.firebasePayload);
               }
@@ -562,6 +749,9 @@
         .then(res => res.json())
         .then(data => {
           applySyncPayload(data);
+          if (data && data.spotifyPlaylist) {
+            setSpotifyPlaylist(data.spotifyPlaylist.resource, data.spotifyPlaylist.name);
+          }
         })
         .catch(err => {
           console.warn('Initial Firebase fetch error:', err);
@@ -578,6 +768,9 @@
             if (payload) {
               if (payload.path === '/' && payload.data) {
                 applySyncPayload(payload.data);
+                if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
+              } else if (payload.path === '/spotifyPlaylist' && payload.data) {
+                setSpotifyPlaylist(payload.data.resource, payload.data.name);
               } else if (payload.path === '/cinema' && payload.data) {
                 applySyncPayload({ cinema: payload.data });
               } else if (payload.path === '/doorMode' && payload.data) {
@@ -609,6 +802,78 @@
       }
     }
 
+    // 7. Mini Spotify Player Widget Logic
+    let currentSpotifyUri = "37i9dQZF1DX07k7i011A8q"; // Default: Halloween Ambience
+    let currentSpotifyType = "playlist";
+
+    function parseSpotifyResource(input) {
+      if (!input || typeof input !== 'string') return null;
+      const clean = input.trim();
+      // Match URI: spotify:playlist:xxx or spotify:track:xxx or spotify:album:xxx
+      const uriMatch = clean.match(/^spotify:(playlist|track|album):([a-zA-Z0-9]+)/i);
+      if (uriMatch) return { type: uriMatch[1].toLowerCase(), id: uriMatch[2] };
+      // Match URL: open.spotify.com/(playlist|track|album)/xxx
+      const urlMatch = clean.match(/open\.spotify\.com\/(playlist|track|album)\/([a-zA-Z0-9]+)/i);
+      if (urlMatch) return { type: urlMatch[1].toLowerCase(), id: urlMatch[2] };
+      // Fallback ID if alphanumeric
+      if (/^[a-zA-Z0-9]{22}$/.test(clean)) return { type: 'playlist', id: clean };
+      return null;
+    }
+
+    function setSpotifyPlaylist(resourceInput, displayName) {
+      const parsed = parseSpotifyResource(resourceInput);
+      if (!parsed) return;
+      currentSpotifyType = parsed.type;
+      currentSpotifyUri = parsed.id;
+
+      const iframe = document.getElementById('spotifyIframe');
+      const trackLabel = document.getElementById('spotifyTrackName');
+
+      if (iframe) {
+        iframe.src = `https://open.spotify.com/embed/${parsed.type}/${parsed.id}?utm_source=generator&theme=0`;
+      }
+      if (trackLabel) {
+        trackLabel.textContent = displayName || `Spotify ${parsed.type.toUpperCase()}`;
+      }
+
+      try {
+        localStorage.setItem('brian_twitch_spotify_id', parsed.id);
+        localStorage.setItem('brian_twitch_spotify_type', parsed.type);
+        localStorage.setItem('brian_twitch_spotify_name', displayName || `Spotify ${parsed.type}`);
+      } catch(e) {}
+    }
+
+    function toggleSpotifyDrawer() {
+      const drawer = document.getElementById('spotifyDrawer');
+      if (drawer) {
+        drawer.classList.toggle('hidden');
+        drawer.classList.toggle('flex');
+      }
+    }
+
+    function promptCustomSpotify() {
+      const res = prompt("Paste your Spotify Playlist, Album, or Track link (e.g. https://open.spotify.com/playlist/...):", "");
+      if (res) {
+        const parsed = parseSpotifyResource(res);
+        if (parsed) {
+          const name = prompt("Enter a display name for this playlist/song (optional):", "🎵 My Playlist") || "🎵 My Playlist";
+          setSpotifyPlaylist(res, name);
+          // Broadcast to shared channel
+          try {
+            if (typeof BroadcastChannel !== 'undefined') {
+              const syncChannel = new BroadcastChannel('brian_theater_sync');
+              syncChannel.postMessage({
+                type: 'spotify_update',
+                payload: { resource: res, name: name }
+              });
+            }
+          } catch(e) {}
+        } else {
+          alert("Invalid Spotify URL or URI format. Please copy a link directly from Spotify.");
+        }
+      }
+    }
+
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', () => {
       // 1. Instant hydration from shared stage cache if present
@@ -624,6 +889,16 @@
               targetMs: stageData.targetMs
             });
           }
+        }
+      } catch(e) {}
+
+      // 2. Hydrate Spotify preference if saved
+      try {
+        const savedId = localStorage.getItem('brian_twitch_spotify_id');
+        const savedType = localStorage.getItem('brian_twitch_spotify_type') || 'playlist';
+        const savedName = localStorage.getItem('brian_twitch_spotify_name');
+        if (savedId) {
+          setSpotifyPlaylist(`${savedType}:${savedId}`, savedName || "🎵 Stream Music");
         }
       } catch(e) {}
 
