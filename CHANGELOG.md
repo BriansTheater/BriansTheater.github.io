@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.198] - 2026-10-17
+
+### What's New
+- Synced glowing theme title and badge during live screening.
+- Resolved active movie trailers accurately in theater stage spotlight.
+- Added verified trailer video feeds for upcoming horror lineup.
+
 ## [4.9.197] - 2026-10-17
 
 ### What's New

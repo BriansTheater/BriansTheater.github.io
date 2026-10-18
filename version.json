@@ -1,10 +1,10 @@
 {
-  "version": "4.9.197",
+  "version": "4.9.198",
   "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.197",
+  "title": "Brian's Theater v4.9.198",
   "notes": [
-    "Dynamically omitted zero-value countdown boxes on Twitch stream overlay.",
-    "Synchronized doors-open countdown timing directly with main theater stage.",
-    "Smoothed responsive grid transitions for minutes and seconds countdowns."
+    "Synced glowing theme title and badge during live screening.",
+    "Resolved active movie trailers accurately in theater stage spotlight.",
+    "Added verified trailer video feeds for upcoming horror lineup."
   ]
 }

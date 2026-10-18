@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.197 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.198 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3263,7 +3263,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.197";
+    const APP_VERSION = "4.9.198";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3701,7 +3701,8 @@
         summary: "Set years after the events of Dracula, Abraham Van Helsing raises his sons in rural America with paranoid rules that unravel into mystery.",
         status: "SATURDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg",
+        trailerId: "vWs79_NK2h0"
       },
       {
         title: "The Seeding",
@@ -3715,7 +3716,8 @@
         summary: "A hiker lost in the desert takes shelter in an isolated canyon, only to be trapped by a feral, sadistic pack.",
         status: "SUNDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
+        trailerId: "BunlosQQw-I"
       },
       {
         title: "AHS: s13 e9: the devils is in the Details",
@@ -3757,7 +3759,8 @@
         summary: "The host of a paranormal podcast moves home and encounters chilling supernatural audio recordings.",
         status: "THURSDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/mVeoqL37gzhMXQVpONi9DGOQ3tZ.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/mVeoqL37gzhMXQVpONi9DGOQ3tZ.jpg",
+        trailerId: "wafETiDQYu8"
       },
       {
         title: "AHS: s13 e11: Madison Happy Ending",
@@ -3953,7 +3956,7 @@
           date: liveItem.date,
           startTime: liveItem.startTime,
           runtime: liveItem.runtime,
-          trailerId: liveItem.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(liveItem) : "X2i9Zz_AqTg"),
+          trailerId: liveItem.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(liveItem) : "") || "",
           posterUrl: liveItem.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(liveItem.title) : "")
         };
       }
@@ -3977,7 +3980,7 @@
           date: nextItem.date,
           startTime: nextItem.startTime,
           runtime: nextItem.runtime,
-          trailerId: nextItem.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextItem) : "X2i9Zz_AqTg"),
+          trailerId: nextItem.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextItem) : "") || "",
           posterUrl: nextItem.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(nextItem.title) : "")
         };
       }
@@ -4097,6 +4100,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.198": [
+        "Synced glowing theme title and badge during live screening.",
+        "Resolved active movie trailers accurately in theater stage spotlight.",
+        "Added verified trailer video feeds for upcoming horror lineup."
+      ],
       "4.9.197": [
         "Dynamically omitted zero-value countdown boxes on Twitch stream overlay.",
         "Synchronized doors-open countdown timing directly with main theater stage.",
@@ -6932,6 +6940,32 @@
     }
 
     let isStageTrailerOpen = false;
+    function resolveCurrentStageTrailerId() {
+      const nextObj = getActiveOrNextMovie(Date.now());
+      if (nextObj && nextObj.trailerId && nextObj.trailerId.trim()) {
+        return nextObj.trailerId.trim();
+      }
+      if (nextObj && nextObj.movie) {
+        const fromMovie = (typeof getTrailerIdForMovie === 'function') ? getTrailerIdForMovie(nextObj.movie) : null;
+        if (fromMovie && fromMovie.trim()) return fromMovie.trim();
+      }
+      const rawTitle = (nextObj?.movie?.title || document.getElementById('schedNextTitle')?.textContent || document.getElementById('stageHeading')?.textContent || "").replace(/^🎬\s*/, '').trim();
+      if (rawTitle) {
+        if (typeof customMovieTrailers !== 'undefined' && customMovieTrailers && customMovieTrailers[rawTitle]) {
+          const id = (typeof extractYouTubeId === 'function') ? extractYouTubeId(customMovieTrailers[rawTitle]) : customMovieTrailers[rawTitle];
+          if (id) return id;
+        }
+        if (typeof SCHEDULE_TRAILERS !== 'undefined' && SCHEDULE_TRAILERS) {
+          if (SCHEDULE_TRAILERS[rawTitle]) return SCHEDULE_TRAILERS[rawTitle];
+          const lower = rawTitle.toLowerCase();
+          for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
+            if (k.toLowerCase() === lower && v) return v;
+          }
+        }
+      }
+      return "vWs79_NK2h0"; // Sensible seasonal premiere trailer fallback
+    }
+
     function toggleStageTrailer() {
       const container = document.getElementById('stageTrailerPlayerContainer');
       const frame = document.getElementById('stageTrailerFrame');
@@ -6947,8 +6981,7 @@
         if (btn) btn.className = "py-2.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 hover:border-amber-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95";
         isStageTrailerOpen = false;
       } else {
-        const nextObj = getActiveOrNextMovie(Date.now());
-        const trailerId = nextObj.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextObj.movie) : null) || "X2i9Zz_AqTg";
+        const trailerId = resolveCurrentStageTrailerId();
         frame.src = `https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&rel=0`;
         container.classList.remove('hidden');
         if (label) label.textContent = "Close ✕";
@@ -6958,8 +6991,7 @@
     }
 
     function openStageTrailerYouTube() {
-      const nextObj = getActiveOrNextMovie(Date.now());
-      const trailerId = nextObj.trailerId || (typeof getTrailerIdForMovie === 'function' ? getTrailerIdForMovie(nextObj.movie) : null) || "X2i9Zz_AqTg";
+      const trailerId = resolveCurrentStageTrailerId();
       window.open(`https://www.youtube.com/watch?v=${trailerId}`, '_blank');
     }
 
@@ -7194,15 +7226,31 @@
         const minsLeft = Math.max(1, Math.ceil((activeEnd - now) / 60000));
         const formattedTime = minsLeft >= 60 ? `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m` : `${minsLeft}m`;
 
+        const curTheme = (typeof getActiveSeasonalTheme === 'function') ? getActiveSeasonalTheme().theme : 'default';
+
         if (stageCategoryLabel) {
-          stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-red-400 flex items-center gap-1.5";
-          stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live Screening In Progress';
+          if (curTheme === 'halloween') {
+            stageCategoryLabel.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-400 uppercase flex items-center gap-1.5";
+            stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Now Screening In Theater';
+          } else {
+            stageCategoryLabel.className = "text-xs font-bold uppercase tracking-widest text-red-400 flex items-center gap-1.5";
+            stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live Screening In Progress';
+          }
         }
         if (headingEl) {
           headingEl.textContent = `🎬 ${currentMovieTitle}`;
-          headingEl.className = "text-2xl sm:text-3xl font-black text-red-400";
+          if (curTheme === 'halloween') {
+            headingEl.className = "text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]";
+          } else {
+            headingEl.className = "text-2xl sm:text-3xl font-black text-red-400";
+          }
         }
-        if (nowPlayingDate) nowPlayingDate.textContent = `Screening Live On Stage • Runtime Left: ${formattedTime}`;
+        if (nowPlayingDate) {
+          if (curTheme === 'halloween') {
+            nowPlayingDate.className = "text-sm text-slate-300 font-medium tracking-wide flex items-center justify-center gap-1.5";
+          }
+          nowPlayingDate.textContent = `Screening Live On Stage • Runtime Left: ${formattedTime}`;
+        }
 
         const screenTimeLabel = document.getElementById('screenTimeLabel');
         const screenTimeEl = document.getElementById('screenTimeLeft');
@@ -11534,7 +11582,14 @@
       "Freddy vs Jason": "ipbCUW3umJU",
       "A Nightmare on Elm Street (2010)": "ZuYoEtEI_go",
       "Clown in a Cornfield": "lWUKnQVCAhk",
-      "IT Chapter Two": "Pr85vto4dbo"
+      "IT Chapter Two": "Pr85vto4dbo",
+      "Abraham's Boys A Dracula Story": "vWs79_NK2h0",
+      "Abraham's Boys": "vWs79_NK2h0",
+      "Abrahams Boys": "vWs79_NK2h0",
+      "The Seeding": "BunlosQQw-I",
+      "Seeding": "BunlosQQw-I",
+      "UnderTone": "wafETiDQYu8",
+      "Undertone": "wafETiDQYu8"
     };
 
     function getTrailerIdForMovie(movie) {
