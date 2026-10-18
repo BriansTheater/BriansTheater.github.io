@@ -1,10 +1,10 @@
 {
-  "version": "4.9.199",
+  "version": "4.9.200",
   "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.199",
+  "title": "Brian's Theater v4.9.200",
   "notes": [
-    "Added silent automatic update detector to Twitch stream overlay.",
-    "Integrated PartyWatch URL on entrance buttons across all views.",
-    "Added live stream watch link badge to countdown displays."
+    "Updated main auditorium entrance button to display tiny.cc/BriansTheater.",
+    "Synced primary stage action link to direct theater shortlink.",
+    "Maintained countdown watch link pill for live party URL."
   ]
 }

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.199 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.200 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -545,9 +545,9 @@
 
           <!-- STATE B: ENTER THEATER BUTTON (Visible ONLY when doors are open) -->
           <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
-            <a id="btnEnterAuditorium" href="http://tiny.cc/partywatch" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+            <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
               <span>⭐</span>
-              <span id="btnEnterAuditoriumText">tiny.cc/partywatch</span>
+              <span id="btnEnterAuditoriumText">tiny.cc/BriansTheater</span>
               <span>⭐</span>
             </a>
             <div id="btnEnterAuditoriumSubtext" class="hidden"></div>
@@ -3275,7 +3275,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.199";
+    const APP_VERSION = "4.9.200";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3323,8 +3323,8 @@
       const display = raw.replace(/^https?:\/\//i, '');
       const btnLink = document.getElementById('btnEnterAuditorium');
       const btnText = document.getElementById('btnEnterAuditoriumText');
-      if (btnLink) btnLink.href = raw;
-      if (btnText) btnText.textContent = display;
+      if (btnLink) btnLink.href = "http://tiny.cc/BriansTheater";
+      if (btnText) btnText.textContent = "tiny.cc/BriansTheater";
 
       const stageCountLink = document.getElementById('stageCountdownUrlLink');
       const stageCountText = document.getElementById('stageCountdownUrlText');
@@ -4138,6 +4138,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.200": [
+        "Updated main auditorium entrance button to display tiny.cc/BriansTheater.",
+        "Synced primary stage action link to direct theater shortlink.",
+        "Maintained countdown watch link pill for live party URL."
+      ],
       "4.9.199": [
         "Added silent automatic update detector to Twitch stream overlay.",
         "Integrated PartyWatch URL on entrance buttons across all views.",
@@ -6864,7 +6869,7 @@
         }
         if (lockIcon) lockIcon.textContent = '🟢';
         if (lockTitle) lockTitle.textContent = 'AUDITORIUM OPEN NOW';
-        if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">ENTER</b> above to join the lobby & chat.';
+        if (lockSub) lockSub.innerHTML = 'Virtual auditorium is unlocked! Click <b class="text-amber-300">tiny.cc/BriansTheater</b> above to join the lobby & chat.';
       } else {
         // When waiting for next show or forced closed: Hide Enter button, show countdown box, show reminder button
         if (openCta) {
@@ -7342,8 +7347,9 @@
 
         // Enter button is active and visible during live screening!
         setEntranceState(true);
-        const curPartyDisplay = ((typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch").replace(/^https?:\/\//i, '');
-        if (btnEnterText) btnEnterText.textContent = curPartyDisplay;
+        if (btnEnterText) btnEnterText.textContent = "tiny.cc/BriansTheater";
+        const btnAudLinkLive = document.getElementById('btnEnterAuditorium');
+        if (btnAudLinkLive) btnAudLinkLive.href = "http://tiny.cc/BriansTheater";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (stateMode === 2) {
@@ -7375,8 +7381,9 @@
 
         // Enter button is active and visible during pre-show seating!
         setEntranceState(true);
-        const curPartyDisplayOpen = ((typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch").replace(/^https?:\/\//i, '');
-        if (btnEnterText) btnEnterText.textContent = curPartyDisplayOpen;
+        if (btnEnterText) btnEnterText.textContent = "tiny.cc/BriansTheater";
+        const btnAudLinkOpen = document.getElementById('btnEnterAuditorium');
+        if (btnAudLinkOpen) btnAudLinkOpen.href = "http://tiny.cc/BriansTheater";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (nextObj.isIntermission) {

@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.200] - 2026-10-17
+
+### What's New
+- Updated main auditorium entrance button to display tiny.cc/BriansTheater.
+- Synced primary stage action link to direct theater shortlink.
+- Maintained countdown watch link pill for live party URL.
+
 ## [4.9.199] - 2026-10-17
 
 ### What's New
