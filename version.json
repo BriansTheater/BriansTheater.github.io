@@ -1,10 +1,9 @@
 {
-  "version": "4.9.200",
+  "version": "4.9.201",
   "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.200",
+  "title": "Brian's Theater v4.9.201",
   "notes": [
-    "Updated main auditorium entrance button to display tiny.cc/BriansTheater.",
-    "Synced primary stage action link to direct theater shortlink.",
-    "Maintained countdown watch link pill for live party URL."
+    "Restored Enter auditorium button text with Halloween theme styling.",
+    "Maintained stream watch tiny URL on Twitch broadcast overlay."
   ]
 }

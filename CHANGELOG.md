@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.201] - 2026-10-17
+
+### What's New
+- Restored Enter auditorium button text with Halloween theme styling.
+- Maintained stream watch tiny URL on Twitch broadcast overlay.
+
 ## [4.9.200] - 2026-10-17
 
 ### What's New

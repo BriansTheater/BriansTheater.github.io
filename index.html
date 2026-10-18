@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.200 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.201 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -545,10 +545,10 @@
 
           <!-- STATE B: ENTER THEATER BUTTON (Visible ONLY when doors are open) -->
           <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
-            <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
-              <span>⭐</span>
-              <span id="btnEnterAuditoriumText">tiny.cc/BriansTheater</span>
-              <span>⭐</span>
+            <a id="btnEnterAuditorium" href="http://tiny.cc/partywatch" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black text-base sm:text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(249,115,22,0.45)] hover:shadow-[0_0_45px_rgba(168,85,247,0.65)] border border-orange-500/40 transition transform active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer">
+              <span id="btnEnterIconLeft">🎃</span>
+              <span id="btnEnterAuditoriumText">Enter</span>
+              <span id="btnEnterIconRight">🦇</span>
             </a>
             <div id="btnEnterAuditoriumSubtext" class="hidden"></div>
           </div>
@@ -3275,7 +3275,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.200";
+    const APP_VERSION = "4.9.201";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3323,8 +3323,8 @@
       const display = raw.replace(/^https?:\/\//i, '');
       const btnLink = document.getElementById('btnEnterAuditorium');
       const btnText = document.getElementById('btnEnterAuditoriumText');
-      if (btnLink) btnLink.href = "http://tiny.cc/BriansTheater";
-      if (btnText) btnText.textContent = "tiny.cc/BriansTheater";
+      if (btnLink) btnLink.href = raw;
+      if (btnText) btnText.textContent = "Enter";
 
       const stageCountLink = document.getElementById('stageCountdownUrlLink');
       const stageCountText = document.getElementById('stageCountdownUrlText');
@@ -4138,6 +4138,10 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.201": [
+        "Restored Enter auditorium button text with Halloween theme styling.",
+        "Maintained stream watch tiny URL on Twitch broadcast overlay."
+      ],
       "4.9.200": [
         "Updated main auditorium entrance button to display tiny.cc/BriansTheater.",
         "Synced primary stage action link to direct theater shortlink.",
@@ -6682,6 +6686,15 @@
         if (unitSecs) {
           unitSecs.className = 'text-[9px] sm:text-[10px] text-purple-300/80 uppercase tracking-wider mt-0.5 theme-transition';
         }
+
+        const enterBtn = document.getElementById('btnEnterAuditorium');
+        const enterIconLeft = document.getElementById('btnEnterIconLeft');
+        const enterIconRight = document.getElementById('btnEnterIconRight');
+        if (enterBtn) {
+          enterBtn.className = 'theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black text-base sm:text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(249,115,22,0.45)] hover:shadow-[0_0_45px_rgba(168,85,247,0.65)] border border-orange-500/40 transition transform active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer';
+        }
+        if (enterIconLeft) enterIconLeft.textContent = '🎃';
+        if (enterIconRight) enterIconRight.textContent = '🦇';
       } else if (theme === 'christmas') {
         if (stageCard) {
           stageCard.className = 'theme-transition rounded-2xl border p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden bg-gradient-to-b from-emerald-950/70 via-slate-900 to-teal-950/70 border-emerald-500/50 shadow-emerald-950/40';
@@ -6729,6 +6742,15 @@
         allUnits.forEach(el => {
           if (el) el.className = 'text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition';
         });
+
+        const enterBtnXmas = document.getElementById('btnEnterAuditorium');
+        const enterIconLeftXmas = document.getElementById('btnEnterIconLeft');
+        const enterIconRightXmas = document.getElementById('btnEnterIconRight');
+        if (enterBtnXmas) {
+          enterBtnXmas.className = 'theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-400 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-base sm:text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(16,185,129,0.45)] border border-emerald-500/40 transition transform active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer';
+        }
+        if (enterIconLeftXmas) enterIconLeftXmas.textContent = '🎄';
+        if (enterIconRightXmas) enterIconRightXmas.textContent = '❄️';
       } else {
         // Default Midnight Cinema theme
         if (stageCard) {
@@ -6775,6 +6797,15 @@
         allUnits.forEach(el => {
           if (el) el.className = 'text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition';
         });
+
+        const enterBtnDef = document.getElementById('btnEnterAuditorium');
+        const enterIconLeftDef = document.getElementById('btnEnterIconLeft');
+        const enterIconRightDef = document.getElementById('btnEnterIconRight');
+        if (enterBtnDef) {
+          enterBtnDef.className = 'theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer';
+        }
+        if (enterIconLeftDef) enterIconLeftDef.textContent = '⭐';
+        if (enterIconRightDef) enterIconRightDef.textContent = '⭐';
       }
     }
 
@@ -7347,9 +7378,9 @@
 
         // Enter button is active and visible during live screening!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "tiny.cc/BriansTheater";
+        if (btnEnterText) btnEnterText.textContent = "Enter";
         const btnAudLinkLive = document.getElementById('btnEnterAuditorium');
-        if (btnAudLinkLive) btnAudLinkLive.href = "http://tiny.cc/BriansTheater";
+        if (btnAudLinkLive) btnAudLinkLive.href = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (stateMode === 2) {
@@ -7381,9 +7412,9 @@
 
         // Enter button is active and visible during pre-show seating!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "tiny.cc/BriansTheater";
+        if (btnEnterText) btnEnterText.textContent = "Enter";
         const btnAudLinkOpen = document.getElementById('btnEnterAuditorium');
-        if (btnAudLinkOpen) btnAudLinkOpen.href = "http://tiny.cc/BriansTheater";
+        if (btnAudLinkOpen) btnAudLinkOpen.href = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (nextObj.isIntermission) {
