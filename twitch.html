@@ -305,11 +305,11 @@
       </div>
 
       <!-- Spotify Embed Container -->
-      <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 aspect-[16/9] min-h-[152px]">
+      <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
         <iframe
           id="spotifyIframe"
           class="w-full h-full border-0 rounded-xl"
-          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX07k7i011A8q?utm_source=generator&theme=0"
+          src="https://open.spotify.com/embed/playlist/5fnANvKo5Ep7TLEPPjfAzJ?utm_source=generator&theme=0"
           title="Spotify Music Stream"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
@@ -318,9 +318,9 @@
 
       <!-- Playlist Selection / Quick Presets -->
       <div class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
-        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DX07k7i011A8q', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
-        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DX4sWSpwq3LiO', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
-        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DXdLEN7aqioXM', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
+        <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
+        <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
+        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
         <button type="button" onclick="promptCustomSpotify()" class="px-2 py-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition shrink-0 cursor-pointer font-bold">+ Custom</button>
       </div>
     </div>
@@ -803,7 +803,7 @@
     }
 
     // 7. Mini Spotify Player Widget Logic
-    let currentSpotifyUri = "37i9dQZF1DX07k7i011A8q"; // Default: Halloween Ambience
+    let currentSpotifyUri = "5fnANvKo5Ep7TLEPPjfAzJ"; // Default: Spooky Downtempo Ambience
     let currentSpotifyType = "playlist";
 
     function parseSpotifyResource(input) {
