@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.199] - 2026-10-17
+
+### What's New
+- Added silent automatic update detector to Twitch stream overlay.
+- Integrated PartyWatch URL on entrance buttons across all views.
+- Added live stream watch link badge to countdown displays.
+
 ## [4.9.198] - 2026-10-17
 
 ### What's New

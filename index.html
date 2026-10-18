@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.198 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.199 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -483,11 +483,12 @@
               <span>👑</span> <span>Admin Doors:</span>
               <span id="stageAdminDoorBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">AUTO</span>
             </div>
-            <div class="grid grid-cols-4 gap-1.5 w-full sm:w-auto">
+            <div class="grid grid-cols-5 gap-1.5 w-full sm:w-auto">
               <button type="button" onclick="setDoorOverrideMode('auto')" id="stageBtnDoorAuto" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-sky-500 text-slate-950 transition active:scale-95 shadow-sm cursor-pointer">Auto</button>
               <button type="button" onclick="setDoorOverrideMode('force_open')" id="stageBtnDoorOpen" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 hover:border-amber-400 transition active:scale-95 shadow-sm cursor-pointer">Open</button>
               <button type="button" onclick="setDoorOverrideMode('force_closed')" id="stageBtnDoorClose" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 hover:border-red-400 transition active:scale-95 shadow-sm cursor-pointer">Close</button>
-              <button type="button" onclick="concludeCurrentShowEarly()" id="stageBtnEndEarly" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-rose-950 text-rose-300 border border-rose-700/60 hover:border-rose-400 transition active:scale-95 shadow-sm cursor-pointer" title="Conclude current show early and close doors now">End Early</button>
+              <button type="button" onclick="concludeCurrentShowEarly()" id="stageBtnEndEarly" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-rose-950 text-rose-300 border border-rose-700/60 hover:border-rose-400 transition active:scale-95 shadow-sm cursor-pointer" title="Conclude current show early and close doors now">End</button>
+              <button type="button" onclick="promptPartyWatchUrl()" id="stageBtnSetPartyUrl" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition active:scale-95 shadow-sm cursor-pointer" title="Configure Watch / Party Link">URL 🔗</button>
             </div>
           </div>
           
@@ -519,6 +520,17 @@
               </div>
             </div>
 
+            <!-- Stage Stream Watch URL Badge (Visible during countdown when closed) -->
+            <div id="stageCountdownUrlRow" class="pt-2 border-t border-slate-850 flex items-center justify-center">
+              <a id="stageCountdownUrlLink" href="http://tiny.cc/partywatch" target="_blank" class="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-400/60 transition flex items-center gap-2 group cursor-pointer shadow-inner">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                <span class="text-[11px] font-mono font-bold tracking-wider text-amber-300 group-hover:text-amber-200">
+                  Watch Link: <span id="stageCountdownUrlText" class="text-white underline underline-offset-2 font-black">tiny.cc/partywatch</span>
+                </span>
+                <span class="text-xs text-amber-400 group-hover:translate-x-0.5 transition-transform">↗</span>
+              </a>
+            </div>
+
             <!-- Visible Door Lock Status Bar (Visible only when admin locks or screening concludes early) -->
             <div id="stageDoorLockedStatusRow" class="hidden pt-2.5 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-1 text-xs">
               <div class="flex items-center gap-1.5 font-bold text-amber-300">
@@ -533,9 +545,9 @@
 
           <!-- STATE B: ENTER THEATER BUTTON (Visible ONLY when doors are open) -->
           <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
-            <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+            <a id="btnEnterAuditorium" href="http://tiny.cc/partywatch" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
               <span>⭐</span>
-              <span id="btnEnterAuditoriumText">Enter</span>
+              <span id="btnEnterAuditoriumText">tiny.cc/partywatch</span>
               <span>⭐</span>
             </a>
             <div id="btnEnterAuditoriumSubtext" class="hidden"></div>
@@ -3263,7 +3275,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.198";
+    const APP_VERSION = "4.9.199";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3293,6 +3305,32 @@
       if (savedEarly) movieEarlyConclusionUntilMs = parseInt(savedEarly, 10) || 0;
     } catch(e) {}
     window.movieEarlyConclusionUntilMs = movieEarlyConclusionUntilMs;
+
+    let partyWatchUrl = "http://tiny.cc/partywatch";
+    try {
+      const savedPartyUrl = localStorage.getItem('brian_theater_party_url');
+      if (savedPartyUrl) partyWatchUrl = savedPartyUrl;
+    } catch(e) {}
+    window.partyWatchUrl = partyWatchUrl;
+
+    function syncPartyWatchUrls(url) {
+      if (url) {
+        partyWatchUrl = url;
+        window.partyWatchUrl = url;
+        try { localStorage.setItem('brian_theater_party_url', url); } catch(e) {}
+      }
+      const raw = (partyWatchUrl || "http://tiny.cc/partywatch").trim();
+      const display = raw.replace(/^https?:\/\//i, '');
+      const btnLink = document.getElementById('btnEnterAuditorium');
+      const btnText = document.getElementById('btnEnterAuditoriumText');
+      if (btnLink) btnLink.href = raw;
+      if (btnText) btnText.textContent = display;
+
+      const stageCountLink = document.getElementById('stageCountdownUrlLink');
+      const stageCountText = document.getElementById('stageCountdownUrlText');
+      if (stageCountLink) stageCountLink.href = raw;
+      if (stageCountText) stageCountText.textContent = display;
+    }
 
     function syncAppVersionBadges() {
       try {
@@ -4100,6 +4138,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.199": [
+        "Added silent automatic update detector to Twitch stream overlay.",
+        "Integrated PartyWatch URL on entrance buttons across all views.",
+        "Added live stream watch link badge to countdown displays."
+      ],
       "4.9.198": [
         "Synced glowing theme title and badge during live screening.",
         "Resolved active movie trailers accurately in theater stage spotlight.",
@@ -6939,6 +6982,38 @@
       }
     }
 
+    async function promptPartyWatchUrl() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const cur = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
+      const res = prompt("Enter stream / party watch URL (e.g. http://tiny.cc/partywatch):", cur);
+      if (res && res.trim()) {
+        const cleaned = res.trim();
+        syncPartyWatchUrls(cleaned);
+        showTheaterToast(`🔗 Updated party watch URL to ${cleaned}!`);
+
+        // Sync to Firebase for instant realtime stream overlay update
+        try {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/partyUrl.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(cleaned)
+          });
+        } catch(e) {}
+
+        // Broadcast to local tabs
+        try {
+          if (typeof BroadcastChannel !== 'undefined') {
+            const bc = new BroadcastChannel('brian_theater_sync');
+            bc.postMessage({ type: 'party_url_update', partyUrl: cleaned });
+          }
+        } catch(e) {}
+      }
+    }
+
     let isStageTrailerOpen = false;
     function resolveCurrentStageTrailerId() {
       const nextObj = getActiveOrNextMovie(Date.now());
@@ -7267,7 +7342,8 @@
 
         // Enter button is active and visible during live screening!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "Enter";
+        const curPartyDisplay = ((typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch").replace(/^https?:\/\//i, '');
+        if (btnEnterText) btnEnterText.textContent = curPartyDisplay;
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (stateMode === 2) {
@@ -7299,7 +7375,8 @@
 
         // Enter button is active and visible during pre-show seating!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "Enter";
+        const curPartyDisplayOpen = ((typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch").replace(/^https?:\/\//i, '');
+        if (btnEnterText) btnEnterText.textContent = curPartyDisplayOpen;
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (nextObj.isIntermission) {
@@ -11169,6 +11246,11 @@
       // Sync global seasonal festive theme from Firebase in real time across all devices (PC, app, etc.)
       if (data.seasonalTheme && typeof applyIncomingSeasonalTheme === 'function') {
         applyIncomingSeasonalTheme(data.seasonalTheme);
+      }
+
+      // Sync party watch URL from Firebase in real time
+      if (data.partyUrl && typeof syncPartyWatchUrls === 'function') {
+        syncPartyWatchUrls(data.partyUrl);
       }
 
       // Check if Firebase broadcasts a newer app version

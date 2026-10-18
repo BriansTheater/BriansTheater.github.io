@@ -1,10 +1,10 @@
 {
-  "version": "4.9.198",
+  "version": "4.9.199",
   "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.198",
+  "title": "Brian's Theater v4.9.199",
   "notes": [
-    "Synced glowing theme title and badge during live screening.",
-    "Resolved active movie trailers accurately in theater stage spotlight.",
-    "Added verified trailer video feeds for upcoming horror lineup."
+    "Added silent automatic update detector to Twitch stream overlay.",
+    "Integrated PartyWatch URL on entrance buttons across all views.",
+    "Added live stream watch link badge to countdown displays."
   ]
 }
