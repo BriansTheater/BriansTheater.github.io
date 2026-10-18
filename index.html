@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.201 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.202 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -520,16 +520,6 @@
               </div>
             </div>
 
-            <!-- Stage Stream Watch URL Badge (Visible during countdown when closed) -->
-            <div id="stageCountdownUrlRow" class="pt-2 border-t border-slate-850 flex items-center justify-center">
-              <a id="stageCountdownUrlLink" href="http://tiny.cc/partywatch" target="_blank" class="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-400/60 transition flex items-center gap-2 group cursor-pointer shadow-inner">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                <span class="text-[11px] font-mono font-bold tracking-wider text-amber-300 group-hover:text-amber-200">
-                  Watch Link: <span id="stageCountdownUrlText" class="text-white underline underline-offset-2 font-black">tiny.cc/partywatch</span>
-                </span>
-                <span class="text-xs text-amber-400 group-hover:translate-x-0.5 transition-transform">↗</span>
-              </a>
-            </div>
 
             <!-- Visible Door Lock Status Bar (Visible only when admin locks or screening concludes early) -->
             <div id="stageDoorLockedStatusRow" class="hidden pt-2.5 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-1 text-xs">
@@ -3275,7 +3265,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.201";
+    const APP_VERSION = "4.9.202";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3320,16 +3310,10 @@
         try { localStorage.setItem('brian_theater_party_url', url); } catch(e) {}
       }
       const raw = (partyWatchUrl || "http://tiny.cc/partywatch").trim();
-      const display = raw.replace(/^https?:\/\//i, '');
       const btnLink = document.getElementById('btnEnterAuditorium');
       const btnText = document.getElementById('btnEnterAuditoriumText');
       if (btnLink) btnLink.href = raw;
       if (btnText) btnText.textContent = "Enter";
-
-      const stageCountLink = document.getElementById('stageCountdownUrlLink');
-      const stageCountText = document.getElementById('stageCountdownUrlText');
-      if (stageCountLink) stageCountLink.href = raw;
-      if (stageCountText) stageCountText.textContent = display;
     }
 
     function syncAppVersionBadges() {
@@ -4138,6 +4122,10 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.202": [
+        "Removed watch URL badge completely from main theater page.",
+        "Auditorium Enter button displays only when theater is open."
+      ],
       "4.9.201": [
         "Restored Enter auditorium button text with Halloween theme styling.",
         "Maintained stream watch tiny URL on Twitch broadcast overlay."
@@ -7319,6 +7307,7 @@
       const btnEnterText = document.getElementById('btnEnterAuditoriumText');
       const btnEnterSubtext = document.getElementById('btnEnterAuditoriumSubtext');
       const doorsOpenAtTime = document.getElementById('doorsOpenAtTime');
+      const curTheme = (typeof getActiveSeasonalTheme === 'function') ? getActiveSeasonalTheme().theme : 'default';
 
       const currentMovieTitle = nextObj.movie?.title || (document.getElementById('schedNextTitle')?.textContent || "Borderlands").replace(/^🎬\s*/, '').trim();
       const currentDateStr = (nextObj.movie?.date && nextObj.movie?.startTime) ? `${nextObj.movie.date} • ${nextObj.movie.startTime} PST` : (document.getElementById('schedNextDate')?.textContent || "Saturday, Sept 19 • 7:00 PM PST");
@@ -7336,8 +7325,6 @@
         // STATE 3: LIVE SCREENING IN PROGRESS (Counter reached 0 & Movie is playing)
         const minsLeft = Math.max(1, Math.ceil((activeEnd - now) / 60000));
         const formattedTime = minsLeft >= 60 ? `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m` : `${minsLeft}m`;
-
-        const curTheme = (typeof getActiveSeasonalTheme === 'function') ? getActiveSeasonalTheme().theme : 'default';
 
         if (stageCategoryLabel) {
           if (curTheme === 'halloween') {
@@ -7492,7 +7479,6 @@
         setEntranceState(false);
         if (btnEnterText) btnEnterText.textContent = "Enter";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
-        const curTheme = (typeof getActiveSeasonalTheme === 'function') ? getActiveSeasonalTheme().theme : 'default';
         if (stageCountdownLabelText) {
           if (curTheme === 'halloween') {
             stageCountdownLabelText.textContent = "Theater Doors Open In";

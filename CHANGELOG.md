@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.202] - 2026-10-17
+
+### What's New
+- Removed watch URL badge completely from main theater page.
+- Auditorium Enter button displays only when theater is open.
+
 ## [4.9.201] - 2026-10-17
 
 ### What's New
