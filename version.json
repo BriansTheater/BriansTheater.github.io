@@ -1,9 +1,10 @@
 {
-  "version": "4.9.202",
+  "version": "4.9.203",
   "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.202",
+  "title": "Brian's Theater v4.9.203",
   "notes": [
-    "Removed watch URL badge completely from main theater page.",
-    "Auditorium Enter button displays only when theater is open."
+    "Aligned Twitch stream watch link to tiny.cc/BriansTheater.",
+    "Kept main theater page clean with zero watch URL.",
+    "Enter auditorium button shows Halloween styling when open."
   ]
 }

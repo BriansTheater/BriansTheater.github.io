@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.203] - 2026-10-17
+
+### What's New
+- Aligned Twitch stream watch link to tiny.cc/BriansTheater.
+- Kept main theater page clean with zero watch URL.
+- Enter auditorium button shows Halloween styling when open.
+
 ## [4.9.202] - 2026-10-17
 
 ### What's New
