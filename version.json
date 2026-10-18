@@ -1,10 +1,10 @@
 {
-  "version": "4.9.196",
+  "version": "4.9.197",
   "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.196",
+  "title": "Brian's Theater v4.9.197",
   "notes": [
-    "Added Spotify corner pill player with animated equalizer drawer.",
-    "Integrated live movie trailer replay upon theater door opening.",
-    "Added Spotify stream music broadcast card to Admin Studio."
+    "Dynamically omitted zero-value countdown boxes on Twitch stream overlay.",
+    "Synchronized doors-open countdown timing directly with main theater stage.",
+    "Smoothed responsive grid transitions for minutes and seconds countdowns."
   ]
 }

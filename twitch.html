@@ -251,19 +251,19 @@
           </div>
 
           <!-- Hours Column -->
-          <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+          <div id="colHours" class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
             <span id="countHours" class="text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none">00</span>
             <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">HOURS</span>
           </div>
 
           <!-- Minutes Column -->
-          <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+          <div id="colMins" class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
             <span id="countMins" class="text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none">00</span>
             <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">MINS</span>
           </div>
 
           <!-- Seconds Column -->
-          <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+          <div id="colSecs" class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
             <span id="countSecs" class="text-2xl sm:text-4xl font-black text-amber-300 tracking-tight leading-none">00</span>
             <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SECS</span>
           </div>
@@ -493,10 +493,17 @@
     };
     window.activeMovie = activeMovie;
 
-    // 1. Digital Countdown Clock Loop
+    // 1. Digital Countdown Clock Loop (Synchronized with main theater doors opening)
     function updateCountdown() {
       const now = Date.now();
-      const diffMs = activeMovie.startMs - now;
+      const startMs = Number(activeMovie.startMs) || 0;
+      const endMs = Number(activeMovie.endMs) || (startMs ? startMs + (105 * 60 * 1000) : 0);
+
+      // Doors open 10 minutes (600,000ms) prior to screening time
+      const doorsOpenMs = startMs - 600000;
+      const diffDoors = Math.max(0, doorsOpenMs - now);
+      const isWithin10Mins = (diffDoors <= 0 && now < startMs);
+      const isLiveScreening = (startMs > 0 && now >= startMs && (!endMs || now < endMs));
 
       const countdownHeader = document.getElementById('countdownHeaderText');
       const doorsOpenBadge = document.getElementById('doorsOpenBadge');
@@ -505,8 +512,8 @@
       const screeningSubtitle = document.getElementById('screeningStatusBadge');
 
       const isForcedOpen = (activeMovie.doorMode === 'force_open' || activeMovie.doorMode === 'open');
-      const isAutoOpen = (activeMovie.doorMode !== 'force_closed' && diffMs <= 0 && (!activeMovie.endMs || now < activeMovie.endMs));
-      const areDoorsOpen = (isForcedOpen || isAutoOpen);
+      const isForcedClosed = (activeMovie.doorMode === 'force_closed');
+      const areDoorsOpen = isForcedOpen || (!isForcedClosed && (isWithin10Mins || isLiveScreening));
 
       const heroPoster = document.getElementById('heroPosterImg');
       const heroTrailer = document.getElementById('heroTrailerContainer');
@@ -514,12 +521,14 @@
 
       if (areDoorsOpen) {
         // Doors Open / Live Screen state
-        if (countdownHeader) countdownHeader.textContent = "THEATER DOORS ARE OPEN!";
+        if (countdownHeader) {
+          countdownHeader.textContent = isLiveScreening ? "LIVE SCREENING IN PROGRESS!" : "THEATER DOORS ARE OPEN!";
+        }
         if (doorsOpenBadge) doorsOpenBadge.classList.remove('hidden');
         if (doorsOpenActions) doorsOpenActions.classList.remove('hidden');
         if (countdownGrid) countdownGrid.classList.add('hidden');
         if (screeningSubtitle) {
-          screeningSubtitle.textContent = "NOW SCREENING IN THEATER";
+          screeningSubtitle.textContent = isLiveScreening ? "NOW SCREENING IN THEATER" : "DOORS OPEN • SEATING NOW";
           screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-400 uppercase";
         }
 
@@ -555,30 +564,55 @@
       }
       if (countdownHeader) countdownHeader.textContent = "THEATER DOORS OPEN IN";
 
-      const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
+      // Target countdown to doors opening (10 min before show)
+      const totalSeconds = Math.max(0, Math.floor(diffDoors / 1000));
       const days = Math.floor(totalSeconds / 86400);
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const mins = Math.floor((totalSeconds % 3600) / 60);
       const secs = totalSeconds % 60;
 
       const colDays = document.getElementById('colDays');
+      const colHours = document.getElementById('colHours');
+      const colMins = document.getElementById('colMins');
+      const colSecs = document.getElementById('colSecs');
+
       const countDays = document.getElementById('countDays');
       const countHours = document.getElementById('countHours');
       const countMins = document.getElementById('countMins');
       const countSecs = document.getElementById('countSecs');
 
-      if (days > 0) {
-        if (colDays) colDays.classList.remove('hidden');
-        if (countDays) countDays.textContent = String(days).padStart(2, '0');
-        if (countdownGrid) countdownGrid.className = 'grid grid-cols-4 gap-2.5 sm:gap-3.5 w-full font-mono';
-      } else {
-        if (colDays) colDays.classList.add('hidden');
-        if (countdownGrid) countdownGrid.className = 'grid grid-cols-3 gap-2.5 sm:gap-3.5 w-full font-mono';
-      }
-
+      if (countDays) countDays.textContent = String(days).padStart(2, '0');
       if (countHours) countHours.textContent = String(hours).padStart(2, '0');
       if (countMins) countMins.textContent = String(mins).padStart(2, '0');
       if (countSecs) countSecs.textContent = String(secs).padStart(2, '0');
+
+      // Dynamic unit box hiding: omit 0 Days, 0 Hours, and 0 Mins
+      if (days > 0) {
+        if (colDays) colDays.classList.remove('hidden');
+        if (colHours) colHours.classList.remove('hidden');
+        if (colMins) colMins.classList.remove('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-4 gap-2.5 sm:gap-3.5 w-full font-mono';
+      } else if (hours > 0) {
+        if (colDays) colDays.classList.add('hidden');
+        if (colHours) colHours.classList.remove('hidden');
+        if (colMins) colMins.classList.remove('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-3 max-w-md mx-auto gap-2.5 sm:gap-3.5 w-full font-mono';
+      } else if (mins > 0) {
+        if (colDays) colDays.classList.add('hidden');
+        if (colHours) colHours.classList.add('hidden');
+        if (colMins) colMins.classList.remove('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-2 max-w-xs mx-auto gap-2.5 sm:gap-3.5 w-full font-mono';
+      } else {
+        // Only seconds remaining (<60s)
+        if (colDays) colDays.classList.add('hidden');
+        if (colHours) colHours.classList.add('hidden');
+        if (colMins) colMins.classList.add('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-1 max-w-[140px] mx-auto gap-2.5 sm:gap-3.5 w-full font-mono';
+      }
     }
 
     // 2. Format localized screening time string (Matches main stage exactly)
@@ -663,11 +697,34 @@
         }
       }
 
-      // 2. If not actively live, search upcoming schedules sorted by startMs
+      // 2. Gather all schedule entries
       const allSchedules = [];
       if (Array.isArray(merged.schedule)) allSchedules.push(...merged.schedule);
       if (Array.isArray(merged.officialSchedule)) allSchedules.push(...merged.officialSchedule);
       if (Array.isArray(merged.cinema && merged.cinema.schedule)) allSchedules.push(...merged.cinema.schedule);
+
+      // Check if any schedule entry is actively screening right now
+      if (!foundNow) {
+        const liveEntry = allSchedules.find(s => {
+          if (!s || !s.title) return false;
+          if (isMovieConcluded(s, now)) return false;
+          const sStart = Number(s.startMs) || 0;
+          const sEnd = Number(s.endMs) || (sStart ? sStart + (105 * 60 * 1000) : 0);
+          return (sStart > 0 && sEnd > 0 && now >= sStart && now < sEnd);
+        });
+        if (liveEntry) {
+          foundNow = {
+            title: liveEntry.title,
+            startMs: Number(liveEntry.startMs),
+            endMs: Number(liveEntry.endMs),
+            date: liveEntry.date,
+            time: liveEntry.startTime || liveEntry.time,
+            posterUrl: liveEntry.posterUrl || liveEntry.imageUrl || getMovieArtworkUrl(liveEntry.title, merged.moviePosters)
+          };
+        }
+      }
+
+      // 3. If not actively live, search upcoming schedules sorted by startMs
 
       const upcoming = allSchedules.filter(s => {
         if (!s || !s.title) return false;

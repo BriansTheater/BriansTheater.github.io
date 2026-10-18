@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.197] - 2026-10-17
+
+### What's New
+- Dynamically omitted zero-value countdown boxes on Twitch stream overlay.
+- Synchronized doors-open countdown timing directly with main theater stage.
+- Smoothed responsive grid transitions for minutes and seconds countdowns.
+
 ## [4.9.196] - 2026-10-17
 
 ### What's New

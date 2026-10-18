@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.196 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.197 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3263,7 +3263,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.196";
+    const APP_VERSION = "4.9.197";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4097,6 +4097,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.197": [
+        "Dynamically omitted zero-value countdown boxes on Twitch stream overlay.",
+        "Synchronized doors-open countdown timing directly with main theater stage.",
+        "Smoothed responsive grid transitions for minutes and seconds countdowns."
+      ],
       "4.9.196": [
         "Added Spotify corner pill player with animated equalizer drawer.",
         "Integrated live movie trailer replay upon theater door opening.",
