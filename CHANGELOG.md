@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.206] - 2026-10-18
+
+### What's New
+- Enlarged Twitch stream countdown watch banner for crystal-clear readability.
+- Enlarged Twitch doors-open action button with larger icons.
+- Enhanced broadcast glow effects and responsive stream overlay typography.
+
 ## [4.9.205] - 2026-10-18
 
 ### What's New
