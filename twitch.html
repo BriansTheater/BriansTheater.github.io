@@ -341,103 +341,101 @@
       </div>
     </section>
 
-  </main>
+    <!-- E. CENTERED SOUNDTRACK / SPOTIFY PILL -->
+    <div id="spotifyCornerWidget" class="relative z-30 mt-3 sm:mt-4 flex flex-col items-center justify-center select-none font-sans w-full max-w-xl">
+      
+      <!-- Expanded Floating Spotify Player Drawer -->
+      <div id="spotifyDrawer" class="hidden mb-2.5 p-3 rounded-2xl bg-slate-950/95 border border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-xl w-80 max-w-[90vw] flex-col gap-2.5 transition-all text-left">
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
+            </svg>
+            <span class="text-xs font-bold text-slate-200">Theater Soundtrack</span>
+          </div>
+          <button type="button" onclick="toggleSpotifyDrawer()" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
+        </div>
 
-  <!-- ========================================== -->
-  <!-- 2B. SPOTIFY "NOW PLAYING" CORNER PILL      -->
-  <!-- ========================================== -->
-  <aside id="spotifyCornerWidget" class="fixed bottom-4 left-4 z-40 select-none font-sans">
-    
-    <!-- Expanded Floating Spotify Player Drawer -->
-    <div id="spotifyDrawer" class="hidden mb-2.5 p-3 rounded-2xl bg-slate-950/95 border border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-xl w-80 max-w-[90vw] flex-col gap-2.5 transition-all">
-      <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+        <!-- Live Track Card (Shown when live sync is active) -->
+        <div id="spotifyLiveDrawerCard" class="hidden p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex-col gap-2.5">
+          <div class="flex items-center gap-3">
+            <img id="spotifyDrawerLiveArt" src="" alt="Album Art" class="w-16 h-16 rounded-lg object-cover shadow-md border border-emerald-500/30 shrink-0">
+            <div class="flex flex-col min-w-0 flex-1 leading-snug">
+              <h4 id="spotifyDrawerLiveTitle" class="text-xs font-black text-white truncate">Track Title</h4>
+              <p id="spotifyDrawerLiveArtist" class="text-[11px] font-semibold text-slate-300 truncate mt-0.5">Artist Name</p>
+              <p id="spotifyDrawerLiveAlbum" class="text-[10px] text-slate-400 truncate mt-0.5">Album Name</p>
+              <span id="spotifyDrawerLiveDevice" class="text-[9px] font-mono text-emerald-400 mt-1">🎧 Active Stream</span>
+            </div>
+          </div>
+          <!-- Progress Bar -->
+          <div class="flex flex-col gap-1">
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+              <div id="spotifyDrawerLiveProgress" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[0%] transition-all duration-300"></div>
+            </div>
+            <div class="flex items-center justify-between text-[9px] font-mono text-slate-400">
+              <span id="spotifyDrawerLiveTime">0:00 / 0:00</span>
+              <span class="text-emerald-400 font-bold uppercase tracking-wider">LIVE ON STREAM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spotify Embed Container -->
+        <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
+          <iframe
+            id="spotifyIframe"
+            class="w-full h-full border-0 rounded-xl"
+            src="https://open.spotify.com/embed/playlist/5fnANvKo5Ep7TLEPPjfAzJ?utm_source=generator&theme=0"
+            title="Spotify Music Stream"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
+        </div>
+
+        <!-- Playlist Selection / Quick Presets -->
+        <div id="spotifyPresetButtons" class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
+          <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
+          <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
+          <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
+          <button type="button" onclick="promptCustomSpotify()" class="px-2 py-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition shrink-0 cursor-pointer font-bold">+ Custom</button>
+        </div>
+      </div>
+
+      <!-- The Centered Pill -->
+      <div
+        id="spotifyPill"
+        onclick="toggleSpotifyDrawer()"
+        class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-950/90 border border-slate-700/60 hover:border-slate-500 text-slate-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group"
+        title="Click to expand Spotify Player / select playlist"
+      >
+        <!-- Spotify Brand Icon / Live Album Art -->
+        <div id="spotifyBrandIcon" class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 shadow-sm group-hover:rotate-12 transition-transform overflow-hidden">
+          <svg id="spotifyDefaultBrandSvg" class="w-3.5 h-3.5 text-slate-950" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
           </svg>
-          <span class="text-xs font-bold text-slate-200">Theater Soundtrack</span>
+          <img id="spotifyLivePillArt" src="" alt="Album Art" class="w-full h-full object-cover hidden">
         </div>
-        <button type="button" onclick="toggleSpotifyDrawer()" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
+
+        <!-- Live Animated Equalizer Bars -->
+        <div id="spotifyEqBars" class="flex items-end gap-0.5 h-3.5 px-0.5 eq-paused" aria-hidden="true">
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-4"></span>
+        </div>
+
+        <!-- Current Track / Playlist Name -->
+        <div class="flex flex-col text-left leading-none max-w-[180px] sm:max-w-[240px] overflow-hidden">
+          <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">PAUSED</span>
+          <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
+        </div>
+
+        <!-- Expand Arrow -->
+        <span class="text-[10px] text-slate-400 group-hover:text-emerald-300 transition-colors ml-0.5">▲</span>
       </div>
 
-      <!-- Live Track Card (Shown when live sync is active) -->
-      <div id="spotifyLiveDrawerCard" class="hidden p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex-col gap-2.5">
-        <div class="flex items-center gap-3">
-          <img id="spotifyDrawerLiveArt" src="" alt="Album Art" class="w-16 h-16 rounded-lg object-cover shadow-md border border-emerald-500/30 shrink-0">
-          <div class="flex flex-col min-w-0 flex-1 leading-snug">
-            <h4 id="spotifyDrawerLiveTitle" class="text-xs font-black text-white truncate">Track Title</h4>
-            <p id="spotifyDrawerLiveArtist" class="text-[11px] font-semibold text-slate-300 truncate mt-0.5">Artist Name</p>
-            <p id="spotifyDrawerLiveAlbum" class="text-[10px] text-slate-400 truncate mt-0.5">Album Name</p>
-            <span id="spotifyDrawerLiveDevice" class="text-[9px] font-mono text-emerald-400 mt-1">🎧 Active Stream</span>
-          </div>
-        </div>
-        <!-- Progress Bar -->
-        <div class="flex flex-col gap-1">
-          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-            <div id="spotifyDrawerLiveProgress" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[0%] transition-all duration-300"></div>
-          </div>
-          <div class="flex items-center justify-between text-[9px] font-mono text-slate-400">
-            <span id="spotifyDrawerLiveTime">0:00 / 0:00</span>
-            <span class="text-emerald-400 font-bold uppercase tracking-wider">LIVE ON STREAM</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Spotify Embed Container -->
-      <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
-        <iframe
-          id="spotifyIframe"
-          class="w-full h-full border-0 rounded-xl"
-          src="https://open.spotify.com/embed/playlist/5fnANvKo5Ep7TLEPPjfAzJ?utm_source=generator&theme=0"
-          title="Spotify Music Stream"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-        ></iframe>
-      </div>
-
-      <!-- Playlist Selection / Quick Presets -->
-      <div id="spotifyPresetButtons" class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
-        <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
-        <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
-        <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
-        <button type="button" onclick="promptCustomSpotify()" class="px-2 py-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition shrink-0 cursor-pointer font-bold">+ Custom</button>
-      </div>
     </div>
 
-    <!-- The Docked Mini Pill -->
-    <div
-      id="spotifyPill"
-      onclick="toggleSpotifyDrawer()"
-      class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-emerald-500/40 hover:border-emerald-400 text-slate-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.45)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group"
-      title="Click to expand Spotify Player / select playlist"
-    >
-      <!-- Spotify Brand Icon / Live Album Art -->
-      <div id="spotifyBrandIcon" class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 shadow-sm group-hover:rotate-12 transition-transform overflow-hidden">
-        <svg id="spotifyDefaultBrandSvg" class="w-3.5 h-3.5 text-slate-950" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
-        </svg>
-        <img id="spotifyLivePillArt" src="" alt="Album Art" class="w-full h-full object-cover hidden">
-      </div>
-
-      <!-- Live Animated Equalizer Bars -->
-      <div id="spotifyEqBars" class="flex items-end gap-0.5 h-3.5 px-0.5 eq-paused" aria-hidden="true">
-        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
-        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
-        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
-        <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-4"></span>
-      </div>
-
-      <!-- Current Track / Playlist Name -->
-      <div class="flex flex-col text-left leading-none max-w-[150px] sm:max-w-[200px] overflow-hidden">
-        <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">PAUSED</span>
-        <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
-      </div>
-
-      <!-- Expand Arrow -->
-      <span class="text-[10px] text-slate-400 group-hover:text-emerald-300 transition-colors ml-0.5">▲</span>
-    </div>
-
-  </aside>
+  </main>
 
 
   <!-- ========================================== -->
@@ -1387,7 +1385,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.212";
+    const TWITCH_OVERLAY_VERSION = "4.9.213";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

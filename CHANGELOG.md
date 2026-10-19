@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.213] - 2026-10-18
+
+### What's New
+- Centered Spotify soundtrack pill inside main Twitch overlay layout.
+- Spotify player now flows naturally directly below countdown card.
+- Expanded soundtrack drawer pops up centered above Spotify pill.
+
 ## [4.9.212] - 2026-10-18
 
 ### What's New

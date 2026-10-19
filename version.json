@@ -1,10 +1,10 @@
 {
-  "version": "4.9.212",
+  "version": "4.9.213",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.212",
+  "title": "Brian's Theater v4.9.213",
   "notes": [
-    "Spotify stream pill now accurately displays live playback status.",
-    "Equalizer animation pauses automatically when music is not playing.",
-    "Prevents Twitch overlay from displaying playing when audio paused."
+    "Centered Spotify soundtrack pill inside main Twitch overlay layout.",
+    "Spotify player now flows naturally directly below countdown card.",
+    "Expanded soundtrack drawer pops up centered above Spotify pill."
   ]
 }
