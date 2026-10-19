@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.217] - 2026-10-18
+
+### What's New
+- Added inline Add Playlist form directly in Spotify drawer.
+- Allows adding Spotify playlists without needing any admin access.
+- Added quick clipboard paste button for fast link entry.
+- Eliminated browser popups for 100% compatibility in OBS.
+
 ## [4.9.216] - 2026-10-18
 
 ### What's New

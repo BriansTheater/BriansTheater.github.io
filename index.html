@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.216 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.217 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3579,7 +3579,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.216";
+    const APP_VERSION = "4.9.217";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4690,6 +4690,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.217": [
+        "Added inline Add Playlist form directly in Spotify drawer.",
+        "Allows adding Spotify playlists without needing any admin access.",
+        "Added quick clipboard paste button for fast link entry.",
+        "Eliminated browser popups for 100% compatibility in OBS."
+      ],
       "4.9.216": [
         "Added permanent 1-click saved playlists shelf in Spotify drawer.",
         "Added dual-mode switcher tabs for live stream and playlists.",

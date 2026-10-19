@@ -1,11 +1,11 @@
 {
-  "version": "4.9.216",
+  "version": "4.9.217",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.216",
+  "title": "Brian's Theater v4.9.217",
   "notes": [
-    "Added permanent 1-click saved playlists shelf in Spotify drawer.",
-    "Added dual-mode switcher tabs for live stream and playlists.",
-    "Saved custom Spotify playlists now persist and sync seamlessly.",
-    "Added 1-click deletion to easily manage saved playlist buttons."
+    "Added inline Add Playlist form directly in Spotify drawer.",
+    "Allows adding Spotify playlists without needing any admin access.",
+    "Added quick clipboard paste button for fast link entry.",
+    "Eliminated browser popups for 100% compatibility in OBS."
   ]
 }

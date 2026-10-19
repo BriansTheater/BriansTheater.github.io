@@ -437,11 +437,77 @@
             </span>
             <button
               type="button"
-              onclick="promptSaveNewPlaylist()"
-              class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer"
+              id="btnToggleAddPlaylistForm"
+              onclick="toggleAddPlaylistForm()"
+              class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-500/50 transition"
             >
-              + Add Playlist
+              <span>+</span> Add Playlist
             </button>
+          </div>
+
+          <!-- Inline Add Playlist Form (Zero prompts, zero popups, works 100% in OBS) -->
+          <div id="spotifyAddPlaylistForm" class="hidden flex-col gap-2 p-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 shadow-inner">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                <span>➕</span> Add Spotify Playlist or Album
+              </span>
+              <button type="button" onclick="toggleAddPlaylistForm(false)" class="text-slate-400 hover:text-white text-xs px-1 cursor-pointer">✕</button>
+            </div>
+
+            <!-- Spotify URL/URI input + Paste Button -->
+            <div class="flex flex-col gap-1">
+              <label class="text-[9px] font-semibold text-slate-400">Spotify Link or URI:</label>
+              <div class="flex items-center gap-1">
+                <input
+                  type="text"
+                  id="newPlaylistUrlInput"
+                  placeholder="Paste Spotify link (open.spotify.com/...)"
+                  class="flex-1 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 text-[10px] focus:border-emerald-400 outline-none font-mono placeholder:text-slate-600"
+                >
+                <button
+                  type="button"
+                  id="btnPastePlaylistUrl"
+                  onclick="pastePlaylistFromClipboard()"
+                  class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold border border-slate-700 cursor-pointer shrink-0 transition"
+                  title="Paste from clipboard"
+                >
+                  📋 Paste
+                </button>
+              </div>
+            </div>
+
+            <!-- Display Name / Label input -->
+            <div class="flex flex-col gap-1">
+              <label class="text-[9px] font-semibold text-slate-400">Button Label (e.g. 🧛 Vampires, 🎸 Rock):</label>
+              <input
+                type="text"
+                id="newPlaylistNameInput"
+                placeholder="e.g. 🧛 Vampires or ☕ Cozy Lofi"
+                class="w-full px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 text-[10px] focus:border-emerald-400 outline-none placeholder:text-slate-600"
+              >
+            </div>
+
+            <!-- Inline Validation Error Notice -->
+            <div id="addPlaylistValidationMsg" class="hidden text-[9px] text-rose-400 font-semibold"></div>
+
+            <!-- Form Action Buttons -->
+            <div class="flex items-center justify-end gap-1.5 pt-0.5">
+              <button
+                type="button"
+                onclick="toggleAddPlaylistForm(false)"
+                class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-[10px] font-semibold transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                id="btnSubmitAddPlaylist"
+                onclick="submitAddPlaylistForm()"
+                class="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 text-[10px] font-black transition cursor-pointer shadow-sm flex items-center gap-1"
+              >
+                <span>💾</span> Save & Add
+              </button>
+            </div>
           </div>
 
           <!-- Dynamic 1-Click Buttons Shelf -->
@@ -1436,24 +1502,92 @@
       }
     }
 
-    function promptSaveNewPlaylist() {
-      const res = prompt("Paste your Spotify Playlist, Album, or Track link (e.g. https://open.spotify.com/playlist/...):", "");
-      if (!res) return;
-      const parsed = parseSpotifyResource(res);
-      if (!parsed) {
-        alert("Invalid Spotify URL or URI format. Please copy a link directly from Spotify.");
+    function toggleAddPlaylistForm(forceShow) {
+      const form = document.getElementById('spotifyAddPlaylistForm');
+      if (!form) return;
+      const shouldShow = (typeof forceShow === 'boolean') ? forceShow : form.classList.contains('hidden');
+      if (shouldShow) {
+        form.classList.remove('hidden');
+        form.classList.add('flex');
+        const urlInput = document.getElementById('newPlaylistUrlInput');
+        if (urlInput) {
+          urlInput.focus();
+        }
+        const errMsg = document.getElementById('addPlaylistValidationMsg');
+        if (errMsg) errMsg.classList.add('hidden');
+      } else {
+        form.classList.add('hidden');
+        form.classList.remove('flex');
+      }
+    }
+
+    async function pastePlaylistFromClipboard() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          const urlInput = document.getElementById('newPlaylistUrlInput');
+          if (urlInput && text) {
+            urlInput.value = text.trim();
+            const nameInput = document.getElementById('newPlaylistNameInput');
+            if (nameInput && !nameInput.value.trim()) {
+              if (text.includes('album')) nameInput.value = '💿 My Album';
+              else if (text.includes('track')) nameInput.value = '🎵 Track';
+              else nameInput.value = '🎵 Custom Playlist';
+            }
+          }
+        } else {
+          const urlInput = document.getElementById('newPlaylistUrlInput');
+          if (urlInput) urlInput.focus();
+        }
+      } catch(e) {
+        const urlInput = document.getElementById('newPlaylistUrlInput');
+        if (urlInput) urlInput.focus();
+      }
+    }
+
+    function submitAddPlaylistForm() {
+      const urlInput = document.getElementById('newPlaylistUrlInput');
+      const nameInput = document.getElementById('newPlaylistNameInput');
+      const errMsg = document.getElementById('addPlaylistValidationMsg');
+
+      const urlVal = (urlInput?.value || '').trim();
+      const nameVal = (nameInput?.value || '').trim() || '🎵 Custom Playlist';
+
+      if (!urlVal) {
+        if (errMsg) {
+          errMsg.textContent = "⚠️ Please paste a Spotify playlist, album, or track link.";
+          errMsg.classList.remove('hidden');
+        }
         return;
       }
-      const label = prompt("Enter a button label for this playlist (e.g. 🧛 Vampires, 🎸 Rock, ☕ Cozy):", "🎵 My Playlist") || "🎵 My Playlist";
+
+      const parsed = parseSpotifyResource(urlVal);
+      if (!parsed) {
+        if (errMsg) {
+          errMsg.textContent = "⚠️ Invalid Spotify link. Copy directly from Spotify (e.g. https://open.spotify.com/playlist/...).";
+          errMsg.classList.remove('hidden');
+        }
+        return;
+      }
+
       const playlists = getSavedPlaylists();
-      // Remove any existing entry with same id
+      // Remove any existing entry with the same ID
       const filtered = playlists.filter(p => p.id !== parsed.id);
-      filtered.push({ id: parsed.id, type: parsed.type, name: label.trim() });
+      filtered.push({ id: parsed.id, type: parsed.type, name: nameVal });
       savePlaylistsToStorage(filtered);
 
-      // Select it and switch to Playlists tab
-      setSpotifyPlaylist(`${parsed.type}:${parsed.id}`, label.trim(), true);
-      switchSpotifyDrawerTab('playlists');
+      // Select it and switch playback/embed
+      setSpotifyPlaylist(`${parsed.type}:${parsed.id}`, nameVal, true);
+
+      // Reset and hide form
+      if (urlInput) urlInput.value = '';
+      if (nameInput) nameInput.value = '';
+      if (errMsg) errMsg.classList.add('hidden');
+      toggleAddPlaylistForm(false);
+    }
+
+    function promptSaveNewPlaylist() {
+      toggleAddPlaylistForm(true);
     }
 
     function deleteSavedPlaylist(index) {
@@ -1908,7 +2042,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.216";
+    const TWITCH_OVERLAY_VERSION = "4.9.217";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -1996,6 +2130,9 @@
       window.renderSavedPlaylistButtons = renderSavedPlaylistButtons;
       window.promptSaveNewPlaylist = promptSaveNewPlaylist;
       window.deleteSavedPlaylist = deleteSavedPlaylist;
+      window.toggleAddPlaylistForm = toggleAddPlaylistForm;
+      window.pastePlaylistFromClipboard = pastePlaylistFromClipboard;
+      window.submitAddPlaylistForm = submitAddPlaylistForm;
 
       renderMovieState();
       setInterval(updateCountdown, 1000);
