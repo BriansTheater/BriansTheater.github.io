@@ -1,10 +1,10 @@
 {
-  "version": "4.9.206",
+  "version": "4.9.207",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.206",
+  "title": "Brian's Theater v4.9.207",
   "notes": [
-    "Enlarged Twitch stream countdown watch banner for crystal-clear readability.",
-    "Enlarged Twitch doors-open action button with larger icons.",
-    "Enhanced broadcast glow effects and responsive stream overlay typography."
+    "Added stacked two-line watch banner with festive Halloween icons.",
+    "Enhanced doors-open action button with large pumpkin and bat.",
+    "Optimized Twitch broadcast overlay legibility with prominent URL styling."
   ]
 }

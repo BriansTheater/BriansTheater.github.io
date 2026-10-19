@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.207] - 2026-10-18
+
+### What's New
+- Added stacked two-line watch banner with festive Halloween icons.
+- Enhanced doors-open action button with large pumpkin and bat.
+- Optimized Twitch broadcast overlay legibility with prominent URL styling.
+
 ## [4.9.206] - 2026-10-18
 
 ### What's New
