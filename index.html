@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.203 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.204 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -1095,45 +1095,144 @@
           <div class="p-5 rounded-xl bg-slate-950 border border-emerald-900/40 flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
-                <span>🎵</span> Spotify Stream Music (Twitch Overlay)
+                <span>🎵</span> Spotify Stream Music & Live Sync
               </h3>
               <span id="adminSpotifyStatusBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">SYNCED</span>
             </div>
-            <p class="text-xs text-slate-400">Control the corner music player on the Twitch overlay stream. Paste any playlist, album, or track from your Spotify account.</p>
 
-            <div>
-              <label class="text-xs font-semibold text-slate-300">Spotify Link or URI</label>
-              <input type="text" id="adminSpotifyUrl" placeholder="https://open.spotify.com/playlist/... or spotify:playlist:..." class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400 font-mono">
+            <!-- Mode Selector Tabs -->
+            <div class="flex rounded-lg bg-slate-900 p-1 border border-slate-800 text-xs font-semibold">
+              <button type="button" id="tabBtnSpotifyLive" onclick="switchSpotifyAdminTab('live')" class="flex-1 py-1.5 px-3 rounded-md bg-emerald-500 text-slate-950 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>🟢</span> Live Account Sync (Phone/PC)
+              </button>
+              <button type="button" id="tabBtnSpotifyPresets" onclick="switchSpotifyAdminTab('presets')" class="flex-1 py-1.5 px-3 rounded-md text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>📻</span> Playlist Presets (Embed)
+              </button>
             </div>
 
-            <div>
-              <label class="text-xs font-semibold text-slate-300">Display Name / Label</label>
-              <input type="text" id="adminSpotifyLabel" placeholder="e.g. 🎃 Horror Ambience or 🍿 Cinema Lofi" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400">
+            <!-- TAB 1: LIVE SPOTIFY ACCOUNT SYNC & REMOTE CONTROL -->
+            <div id="spotifyLiveTabPane" class="flex flex-col gap-3.5">
+              
+              <!-- State A: Disconnected View -->
+              <div id="spotifyLiveDisconnectedView" class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col gap-3">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 text-xl">
+                    <span>🎧</span>
+                  </div>
+                  <div class="flex flex-col gap-0.5">
+                    <h4 class="text-xs sm:text-sm font-bold text-slate-200">Sync with your Spotify Account</h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                      Play music directly from your <strong>phone, desktop app, or iPad</strong>. Your listening <strong>counts 100%</strong> toward your Spotify Wrapped & stats, and the song title, artist, album art, and equalizer automatically sync live to the Twitch stream overlay!
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-800/80">
+                  <button type="button" onclick="initiateSpotifyLogin()" class="py-2 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/></svg>
+                    <span>Connect Spotify Account</span>
+                  </button>
+                  <button type="button" onclick="openSpotifySetupModal()" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition flex items-center gap-1.5 cursor-pointer" title="Configure Spotify Client ID">
+                    <span>⚙️</span> Client ID Setup
+                  </button>
+                  <button type="button" onclick="toggleSpotifySimulation()" id="btnSpotifySimulate" class="py-2 px-3 rounded-lg bg-purple-950/50 hover:bg-purple-900/60 text-purple-300 font-semibold text-xs border border-purple-800/60 transition flex items-center gap-1.5 cursor-pointer ml-auto" title="Simulate live stream playback without connecting an account">
+                    <span>🧪</span> Test Live Sync
+                  </button>
+                </div>
+              </div>
+
+              <!-- State B: Connected Live Player HUD -->
+              <div id="spotifyLiveConnectedView" class="hidden p-4 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-emerald-500/40 shadow-lg shadow-emerald-950/30 flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">LIVE SYNC ACTIVE</span>
+                    <span id="spotifyLiveDeviceBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/60">📱 Ready</span>
+                  </div>
+                  <button type="button" onclick="disconnectSpotify()" class="text-xs text-rose-400 hover:text-rose-300 underline cursor-pointer">Disconnect</button>
+                </div>
+
+                <!-- Song Details Row -->
+                <div class="flex items-center gap-3.5">
+                  <img id="spotifyLiveAlbumArt" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23064e3b'/%3E%3Ctext x='50' y='55' font-size='30' text-anchor='middle' fill='%2334d399'%3E🎵%3C/text%3E%3C/svg%3E" alt="Album Cover" class="w-16 h-16 rounded-xl object-cover shadow-lg border border-emerald-500/30 shrink-0">
+                  <div class="flex flex-col min-w-0 flex-1 leading-snug">
+                    <div class="flex items-center gap-1.5">
+                      <span id="spotifyLivePlayingStatusIcon" class="text-emerald-400 text-xs">▶</span>
+                      <h4 id="spotifyLiveTrackTitle" class="text-sm font-black text-white truncate">Select music on Spotify</h4>
+                    </div>
+                    <p id="spotifyLiveArtistName" class="text-xs text-slate-300 truncate font-semibold mt-0.5">Spotify Connected</p>
+                    <p id="spotifyLiveAlbumName" class="text-[11px] text-slate-400 truncate mt-0.5">100% listening stats active</p>
+                  </div>
+                </div>
+
+                <!-- Live Seek / Progress Bar -->
+                <div class="flex flex-col gap-1 pt-1">
+                  <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div id="spotifyLiveProgressBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[0%] transition-all duration-300"></div>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <span id="spotifyLiveCurrentTime">0:00</span>
+                    <span id="spotifyLiveTotalTime">0:00</span>
+                  </div>
+                </div>
+
+                <!-- Remote Controls Row -->
+                <div class="flex items-center justify-between pt-1 border-t border-slate-800">
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="spotifyPrevTrack()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Previous Track">⏮</button>
+                    <button type="button" onclick="spotifyTogglePlay()" id="btnSpotifyLivePlayPause" class="h-8 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center justify-center gap-1 text-xs transition active:scale-95 cursor-pointer" title="Play / Pause">
+                      <span id="spotifyPlayPauseBtnIcon">⏸</span> <span id="spotifyPlayPauseBtnText">Pause</span>
+                    </button>
+                    <button type="button" onclick="spotifyNextTrack()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Next Track">⏭</button>
+                    <button type="button" onclick="refreshSpotifyPlaybackNow()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Refresh Live Data">🔄</button>
+                  </div>
+                  <a href="twitch.html" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1 transition" title="Preview live Twitch stream overlay">
+                    <span>📺</span> Stream Preview ↗
+                  </a>
+                </div>
+              </div>
+
             </div>
 
-            <div class="flex flex-col gap-1.5">
-              <span class="text-[11px] font-semibold text-slate-400">Quick Curated Presets:</span>
-              <div class="grid grid-cols-3 gap-2">
-                <button type="button" onclick="setAdminSpotifyPreset('playlist/5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Dark Horror Ambience')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
-                  🎃 Horror Ambience
+            <!-- TAB 2: PLAYLIST PRESETS (EMBED MODE) -->
+            <div id="spotifyPresetsTabPane" class="hidden flex-col gap-3.5">
+              <p class="text-xs text-slate-400">Control the corner music player on the Twitch overlay stream using direct Spotify playlist links.</p>
+
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Spotify Link or URI</label>
+                <input type="text" id="adminSpotifyUrl" placeholder="https://open.spotify.com/playlist/... or spotify:playlist:..." class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400 font-mono">
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Display Name / Label</label>
+                <input type="text" id="adminSpotifyLabel" placeholder="e.g. 🎃 Horror Ambience or 🍿 Cinema Lofi" class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400">
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[11px] font-semibold text-slate-400">Quick Curated Presets:</span>
+                <div class="grid grid-cols-3 gap-2">
+                  <button type="button" onclick="setAdminSpotifyPreset('playlist/5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Dark Horror Ambience')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
+                    🎃 Horror Ambience
+                  </button>
+                  <button type="button" onclick="setAdminSpotifyPreset('playlist/1Hk1D8z7JYh8RuDahFIl2b', '🍿 Iconic Film Scores')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
+                    🍿 Cinema Scores
+                  </button>
+                  <button type="button" onclick="setAdminSpotifyPreset('playlist/37i9dQZF1DWWQRwui0ExPn', '☕ Chill Lofi Beats')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
+                    ☕ Chill Lofi Beats
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex gap-2 pt-1">
+                <button type="button" onclick="dispatchAdminSpotify()" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-lg flex items-center justify-center gap-1.5 cursor-pointer">
+                  <span>📡</span> Broadcast Preset to Twitch
                 </button>
-                <button type="button" onclick="setAdminSpotifyPreset('playlist/1Hk1D8z7JYh8RuDahFIl2b', '🍿 Iconic Film Scores')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
-                  🍿 Cinema Scores
-                </button>
-                <button type="button" onclick="setAdminSpotifyPreset('playlist/37i9dQZF1DWWQRwui0ExPn', '☕ Chill Lofi Beats')" class="px-2 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold transition truncate">
-                  ☕ Chill Lofi Beats
-                </button>
+                <a href="twitch.html" target="_blank" class="px-3 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0" title="Preview live Twitch stream overlay">
+                  <span>📺</span> Preview ↗
+                </a>
               </div>
             </div>
 
-            <div class="flex gap-2 pt-1">
-              <button type="button" onclick="dispatchAdminSpotify()" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-lg flex items-center justify-center gap-1.5 cursor-pointer">
-                <span>📡</span> Broadcast Spotify Live to Twitch
-              </button>
-              <a href="twitch.html" target="_blank" class="px-3 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0" title="Preview live Twitch stream overlay">
-                <span>📺</span> Preview ↗
-              </a>
-            </div>
           </div>
         </div>
 
@@ -3260,12 +3359,93 @@
 
     </div>
 
+  <!-- ========================================== -->
+  <!-- SPOTIFY API CLIENT ID SETUP MODAL          -->
+  <!-- ========================================== -->
+  <div id="spotifySetupModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeSpotifySetupModal()">
+    <div class="morphic-panel bg-slate-900/95 border border-emerald-500/40 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(16,185,129,0.3)] relative flex flex-col gap-4 text-slate-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      
+      <!-- Top Glowing Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 rounded-t-3xl"></div>
+
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-lg">
+            <span>⚙️</span>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-100">Spotify Live Setup</h3>
+            <p class="text-xs text-slate-400">Connect your account for 100% listening stats & phone control</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSpotifySetupModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-sm transition cursor-pointer">✕</button>
+      </div>
+
+      <!-- Instructions List -->
+      <div class="flex flex-col gap-3 text-xs leading-relaxed text-slate-300">
+        
+        <!-- Step 1 -->
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-1.5">
+          <div class="flex items-center gap-2 font-bold text-emerald-400">
+            <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-[10px]">1</span>
+            <span>Open Spotify Developer Dashboard</span>
+          </div>
+          <p class="text-slate-400 pl-7">
+            Go to <a href="https://developer.spotify.com/dashboard" target="_blank" class="text-emerald-400 hover:text-emerald-300 underline font-semibold">developer.spotify.com/dashboard ↗</a>, log in with your Spotify account, and click <strong>"Create App"</strong>.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center gap-2 font-bold text-emerald-400">
+            <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-[10px]">2</span>
+            <span>Set App Redirect URI</span>
+          </div>
+          <p class="text-slate-400 pl-7">
+            In your Spotify App settings, paste this exact <strong>Redirect URI</strong> into the "Redirect URIs" box:
+          </p>
+          <div class="flex items-center gap-2 pl-7">
+            <input type="text" id="spotifyRedirectUriDisplay" readonly class="flex-1 py-1.5 px-3 rounded-lg bg-slate-900 border border-slate-700 text-emerald-300 font-mono text-[11px] select-all">
+            <button type="button" onclick="copySpotifyRedirectUri()" class="py-1.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shrink-0 transition cursor-pointer">
+              📋 Copy
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center gap-2 font-bold text-emerald-400">
+            <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-[10px]">3</span>
+            <span>Paste your Spotify Client ID</span>
+          </div>
+          <p class="text-slate-400 pl-7">
+            Copy the 32-character <strong>Client ID</strong> from your Spotify App dashboard and paste it below:
+          </p>
+          <div class="pl-7">
+            <input type="text" id="spotifyClientIdInput" placeholder="Paste Client ID (e.g. 4a8b1c...)" class="w-full py-2 px-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-emerald-400 font-mono text-xs">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+        <button type="button" onclick="closeSpotifySetupModal()" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" onclick="saveSpotifyClientIdAndConnect()" class="py-2.5 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/30 transition transform active:scale-95 flex items-center gap-1.5 cursor-pointer">
+          <span>🟢</span> Save & Connect Spotify
+        </button>
+      </div>
+
+    </div>
   </div>
 
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.203";
+    const APP_VERSION = "4.9.204";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4122,6 +4302,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.204": [
+        "Added live Spotify account sync with remote stream controls.",
+        "Preserves full listening stats and Spotify Wrapped stream credits.",
+        "Twitch stream overlay displays live album art and equalizer."
+      ],
       "4.9.203": [
         "Aligned Twitch stream watch link to tiny.cc/BriansTheater.",
         "Kept main theater page clean with zero watch URL.",
@@ -7869,6 +8054,610 @@
       switchTab('screening');
     }
 
+    // ==========================================
+    // 3. SPOTIFY LIVE ACCOUNT SYNC & REMOTE CONTROL
+    // ==========================================
+    let spotifyAccessToken = localStorage.getItem('brian_spotify_access_token') || null;
+    let spotifyRefreshToken = localStorage.getItem('brian_spotify_refresh_token') || null;
+    let spotifyTokenExpiresAt = parseInt(localStorage.getItem('brian_spotify_expires_at') || '0', 10);
+    let spotifyPollInterval = null;
+    let isSpotifySimulated = false;
+    let simTrackIndex = 0;
+    let simProgressMs = 35000;
+    let simInterval = null;
+    let currentSpotifyLivePayload = null;
+
+    const SIMULATED_SPOTIFY_TRACKS = [
+      {
+        trackTitle: "Halloween Theme - Main Title",
+        artistName: "John Carpenter",
+        albumName: "Halloween (Original 1978 Motion Picture Soundtrack)",
+        albumArt: "https://i.scdn.co/image/ab67616d0000b273b069d3568c07548972ca315c",
+        durationMs: 174000,
+        deviceName: "Brian's iPhone"
+      },
+      {
+        trackTitle: "Tubular Bells (Opening Theme)",
+        artistName: "Mike Oldfield",
+        albumName: "The Exorcist",
+        albumArt: "https://i.scdn.co/image/ab67616d0000b273574cbe1cf2d011f00ca09a9d",
+        durationMs: 258000,
+        deviceName: "Brian's Desktop Studio"
+      },
+      {
+        trackTitle: "Thriller",
+        artistName: "Michael Jackson",
+        albumName: "Thriller 25 Super Deluxe Edition",
+        albumArt: "https://i.scdn.co/image/ab67616d0000b2734121faee80edae79490da481",
+        durationMs: 357000,
+        deviceName: "Living Room Speaker"
+      }
+    ];
+
+    function getSpotifyRedirectUri() {
+      return window.location.origin + window.location.pathname;
+    }
+
+    function switchSpotifyAdminTab(tab) {
+      const btnLive = document.getElementById('tabBtnSpotifyLive');
+      const btnPresets = document.getElementById('tabBtnSpotifyPresets');
+      const paneLive = document.getElementById('spotifyLiveTabPane');
+      const panePresets = document.getElementById('spotifyPresetsTabPane');
+
+      if (tab === 'live') {
+        if (btnLive) {
+          btnLive.className = "flex-1 py-1.5 px-3 rounded-md bg-emerald-500 text-slate-950 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer";
+        }
+        if (btnPresets) {
+          btnPresets.className = "flex-1 py-1.5 px-3 rounded-md text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5 cursor-pointer";
+        }
+        if (paneLive) paneLive.classList.remove('hidden');
+        if (panePresets) panePresets.classList.add('hidden');
+      } else {
+        if (btnPresets) {
+          btnPresets.className = "flex-1 py-1.5 px-3 rounded-md bg-emerald-500 text-slate-950 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer";
+        }
+        if (btnLive) {
+          btnLive.className = "flex-1 py-1.5 px-3 rounded-md text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5 cursor-pointer";
+        }
+        if (panePresets) panePresets.classList.remove('hidden');
+        if (paneLive) paneLive.classList.add('hidden');
+      }
+    }
+
+    function openSpotifySetupModal() {
+      const modal = document.getElementById('spotifySetupModal');
+      const uriInput = document.getElementById('spotifyRedirectUriDisplay');
+      const clientInput = document.getElementById('spotifyClientIdInput');
+
+      if (uriInput) uriInput.value = getSpotifyRedirectUri();
+      if (clientInput) clientInput.value = localStorage.getItem('brian_spotify_client_id') || '';
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeSpotifySetupModal() {
+      const modal = document.getElementById('spotifySetupModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function copySpotifyRedirectUri() {
+      const uri = getSpotifyRedirectUri();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(uri).then(() => {
+          showTheaterToast("📋 Copied Spotify Redirect URI to clipboard!");
+        }).catch(() => {
+          prompt("Copy this Redirect URI:", uri);
+        });
+      } else {
+        prompt("Copy this Redirect URI:", uri);
+      }
+    }
+
+    function saveSpotifyClientIdAndConnect() {
+      const input = document.getElementById('spotifyClientIdInput');
+      const val = (input?.value || '').trim();
+      if (!val) {
+        showTheaterToast("⚠️ Please enter your 32-character Spotify Client ID.");
+        return;
+      }
+      localStorage.setItem('brian_spotify_client_id', val);
+      closeSpotifySetupModal();
+      initiateSpotifyLogin();
+    }
+
+    function generateRandomString(length) {
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+      const values = crypto.getRandomValues(new Uint8Array(length));
+      return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+    }
+
+    async function generateCodeChallenge(verifier) {
+      const data = new TextEncoder().encode(verifier);
+      const digest = await window.crypto.subtle.digest('SHA-256', data);
+      return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+    }
+
+    async function initiateSpotifyLogin() {
+      const clientId = (localStorage.getItem('brian_spotify_client_id') || '').trim();
+      if (!clientId) {
+        openSpotifySetupModal();
+        showTheaterToast("⚠️ Please set up your Spotify Client ID first.");
+        return;
+      }
+
+      try {
+        const verifier = generateRandomString(64);
+        const challenge = await generateCodeChallenge(verifier);
+        const redirectUri = getSpotifyRedirectUri();
+
+        localStorage.setItem('brian_spotify_code_verifier', verifier);
+
+        const scope = 'user-read-playback-state user-modify-playback-state user-read-currently-playing';
+        const authUrl = `https://accounts.spotify.com/authorize?` +
+          `client_id=${encodeURIComponent(clientId)}&` +
+          `response_type=code&` +
+          `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+          `scope=${encodeURIComponent(scope)}&` +
+          `code_challenge_method=S256&` +
+          `code_challenge=${encodeURIComponent(challenge)}`;
+
+        window.location.href = authUrl;
+      } catch(err) {
+        console.error('Failed to initiate Spotify login:', err);
+        showTheaterToast("❌ Failed to initiate Spotify login: " + err.message);
+      }
+    }
+
+    async function checkSpotifyOAuthCallback() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const error = params.get('error');
+
+      if (error) {
+        showTheaterToast(`❌ Spotify login cancelled or failed: ${error}`);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+      }
+
+      if (code) {
+        const verifier = localStorage.getItem('brian_spotify_code_verifier');
+        const clientId = localStorage.getItem('brian_spotify_client_id');
+        const redirectUri = getSpotifyRedirectUri();
+
+        // Immediately clean address bar
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        if (!verifier || !clientId) {
+          showTheaterToast("⚠️ Missing Spotify security verifier or Client ID.");
+          return;
+        }
+
+        try {
+          showTheaterToast("🔄 Exchanging Spotify authorization code...");
+          const body = new URLSearchParams({
+            client_id: clientId,
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: redirectUri,
+            code_verifier: verifier
+          });
+
+          const res = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.error_description || `HTTP ${res.status}`);
+          }
+
+          const data = await res.json();
+          spotifyAccessToken = data.access_token;
+          spotifyRefreshToken = data.refresh_token || spotifyRefreshToken;
+          spotifyTokenExpiresAt = Date.now() + (data.expires_in * 1000);
+
+          localStorage.setItem('brian_spotify_access_token', spotifyAccessToken);
+          if (spotifyRefreshToken) localStorage.setItem('brian_spotify_refresh_token', spotifyRefreshToken);
+          localStorage.setItem('brian_spotify_expires_at', spotifyTokenExpiresAt.toString());
+
+          showTheaterToast("🟢 Spotify account connected! Live stream sync active.");
+          startSpotifyPolling();
+        } catch(err) {
+          console.error('Spotify token exchange failed:', err);
+          showTheaterToast(`❌ Spotify connection error: ${err.message}`);
+        }
+      } else if (spotifyAccessToken) {
+        startSpotifyPolling();
+      }
+    }
+
+    async function getValidSpotifyToken() {
+      if (!spotifyAccessToken) return null;
+      if (Date.now() > spotifyTokenExpiresAt - 60000 && spotifyRefreshToken) {
+        const clientId = localStorage.getItem('brian_spotify_client_id');
+        try {
+          const body = new URLSearchParams({
+            client_id: clientId,
+            grant_type: 'refresh_token',
+            refresh_token: spotifyRefreshToken
+          });
+          const res = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body
+          });
+          if (res.ok) {
+            const data = await res.json();
+            spotifyAccessToken = data.access_token;
+            if (data.refresh_token) spotifyRefreshToken = data.refresh_token;
+            spotifyTokenExpiresAt = Date.now() + (data.expires_in * 1000);
+
+            localStorage.setItem('brian_spotify_access_token', spotifyAccessToken);
+            if (spotifyRefreshToken) localStorage.setItem('brian_spotify_refresh_token', spotifyRefreshToken);
+            localStorage.setItem('brian_spotify_expires_at', spotifyTokenExpiresAt.toString());
+          }
+        } catch(e) {
+          console.warn('Failed to refresh Spotify token:', e);
+        }
+      }
+      return spotifyAccessToken;
+    }
+
+    function formatTimeMs(ms) {
+      if (!ms || isNaN(ms)) return "0:00";
+      const totalSec = Math.floor(ms / 1000);
+      const mins = Math.floor(totalSec / 60);
+      const secs = (totalSec % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function renderSpotifyLiveActive(payload) {
+      const disconnectedView = document.getElementById('spotifyLiveDisconnectedView');
+      const connectedView = document.getElementById('spotifyLiveConnectedView');
+      const badge = document.getElementById('adminSpotifyStatusBadge');
+      const deviceBadge = document.getElementById('spotifyLiveDeviceBadge');
+      const albumArt = document.getElementById('spotifyLiveAlbumArt');
+      const trackTitle = document.getElementById('spotifyLiveTrackTitle');
+      const artistName = document.getElementById('spotifyLiveArtistName');
+      const albumName = document.getElementById('spotifyLiveAlbumName');
+      const progressBar = document.getElementById('spotifyLiveProgressBar');
+      const currTime = document.getElementById('spotifyLiveCurrentTime');
+      const totalTime = document.getElementById('spotifyLiveTotalTime');
+      const playIcon = document.getElementById('spotifyPlayPauseBtnIcon');
+      const playText = document.getElementById('spotifyPlayPauseBtnText');
+      const playStatusIcon = document.getElementById('spotifyLivePlayingStatusIcon');
+
+      if (disconnectedView) disconnectedView.classList.add('hidden');
+      if (connectedView) {
+        connectedView.classList.remove('hidden');
+        connectedView.classList.add('flex');
+      }
+
+      if (badge) {
+        badge.textContent = payload.isPlaying ? "LIVE SYNCED" : "PAUSED";
+        badge.className = payload.isPlaying ?
+          "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800" :
+          "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800";
+      }
+
+      if (deviceBadge) {
+        deviceBadge.textContent = payload.deviceName ? `📱 ${payload.deviceName}` : "📱 Active Device";
+      }
+
+      if (albumArt && payload.albumArt) albumArt.src = payload.albumArt;
+      if (trackTitle) trackTitle.textContent = payload.trackTitle || "Unknown Track";
+      if (artistName) artistName.textContent = payload.artistName || "Unknown Artist";
+      if (albumName) albumName.textContent = payload.albumName || "";
+
+      if (payload.durationMs) {
+        const pct = Math.min(100, Math.max(0, (payload.progressMs / payload.durationMs) * 100));
+        if (progressBar) progressBar.style.width = `${pct}%`;
+        if (currTime) currTime.textContent = formatTimeMs(payload.progressMs);
+        if (totalTime) totalTime.textContent = formatTimeMs(payload.durationMs);
+      }
+
+      if (playIcon) playIcon.textContent = payload.isPlaying ? "⏸" : "▶";
+      if (playText) playText.textContent = payload.isPlaying ? "Pause" : "Play";
+      if (playStatusIcon) playStatusIcon.textContent = payload.isPlaying ? "▶" : "⏸";
+    }
+
+    function renderSpotifyLiveInactive() {
+      const disconnectedView = document.getElementById('spotifyLiveDisconnectedView');
+      const connectedView = document.getElementById('spotifyLiveConnectedView');
+      const badge = document.getElementById('adminSpotifyStatusBadge');
+      const deviceBadge = document.getElementById('spotifyLiveDeviceBadge');
+      const trackTitle = document.getElementById('spotifyLiveTrackTitle');
+      const artistName = document.getElementById('spotifyLiveArtistName');
+      const albumName = document.getElementById('spotifyLiveAlbumName');
+      const playIcon = document.getElementById('spotifyPlayPauseBtnIcon');
+      const playText = document.getElementById('spotifyPlayPauseBtnText');
+
+      if (disconnectedView) disconnectedView.classList.add('hidden');
+      if (connectedView) {
+        connectedView.classList.remove('hidden');
+        connectedView.classList.add('flex');
+      }
+
+      if (badge) {
+        badge.textContent = "IDLE";
+        badge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-700";
+      }
+      if (deviceBadge) deviceBadge.textContent = "💤 Idle";
+      if (trackTitle) trackTitle.textContent = "No music currently playing";
+      if (artistName) artistName.textContent = "Play any track on Spotify to stream live";
+      if (albumName) albumName.textContent = "100% listening credit active";
+      if (playIcon) playIcon.textContent = "▶";
+      if (playText) playText.textContent = "Play";
+    }
+
+    async function broadcastSpotifyLiveState(payload) {
+      // 1. Instant local BroadcastChannel sync
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'spotify_live_update',
+            payload: payload
+          });
+        }
+      } catch(e) {}
+
+      // 2. Persistent Firebase RTDB sync for remote Twitch stream
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/spotifyLive.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) {
+        console.warn('Spotify Live Firebase sync error:', e);
+      }
+    }
+
+    async function fetchSpotifyPlayback() {
+      if (isSpotifySimulated) return;
+      const token = await getValidSpotifyToken();
+      if (!token) return;
+
+      try {
+        const res = await fetch('https://api.spotify.com/v1/me/player', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.status === 204 || res.status === 202) {
+          renderSpotifyLiveInactive();
+          return;
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          if (!data || !data.item) {
+            renderSpotifyLiveInactive();
+            return;
+          }
+
+          const payload = {
+            isActive: true,
+            isPlaying: !!data.is_playing,
+            trackTitle: data.item.name || "Unknown Track",
+            artistName: data.item.artists ? data.item.artists.map(a => a.name).join(', ') : "Unknown Artist",
+            albumName: data.item.album ? data.item.album.name : "",
+            albumArt: (data.item.album && data.item.album.images && data.item.album.images[0]) ? data.item.album.images[0].url : "",
+            progressMs: data.progress_ms || 0,
+            durationMs: data.item.duration_ms || 0,
+            deviceName: data.device ? data.device.name : "Spotify App",
+            deviceType: data.device ? data.device.type : "Device",
+            updatedAt: Date.now()
+          };
+
+          currentSpotifyLivePayload = payload;
+          renderSpotifyLiveActive(payload);
+          broadcastSpotifyLiveState(payload);
+        } else if (res.status === 401) {
+          disconnectSpotify(false);
+        }
+      } catch(err) {
+        console.warn('Error fetching Spotify playback:', err);
+      }
+    }
+
+    function startSpotifyPolling() {
+      if (spotifyPollInterval) clearInterval(spotifyPollInterval);
+      fetchSpotifyPlayback();
+      spotifyPollInterval = setInterval(fetchSpotifyPlayback, 3500);
+    }
+
+    function stopSpotifyPolling() {
+      if (spotifyPollInterval) {
+        clearInterval(spotifyPollInterval);
+        spotifyPollInterval = null;
+      }
+    }
+
+    function disconnectSpotify(notify = true) {
+      spotifyAccessToken = null;
+      spotifyRefreshToken = null;
+      spotifyTokenExpiresAt = 0;
+      localStorage.removeItem('brian_spotify_access_token');
+      localStorage.removeItem('brian_spotify_refresh_token');
+      localStorage.removeItem('brian_spotify_expires_at');
+      stopSpotifyPolling();
+
+      if (isSpotifySimulated) {
+        stopSpotifySimulation();
+      }
+
+      const disconnectedView = document.getElementById('spotifyLiveDisconnectedView');
+      const connectedView = document.getElementById('spotifyLiveConnectedView');
+      const badge = document.getElementById('adminSpotifyStatusBadge');
+
+      if (disconnectedView) disconnectedView.classList.remove('hidden');
+      if (connectedView) {
+        connectedView.classList.add('hidden');
+        connectedView.classList.remove('flex');
+      }
+      if (badge) {
+        badge.textContent = "SYNCED";
+        badge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800";
+      }
+
+      broadcastSpotifyLiveState({ isActive: false, isPlaying: false });
+      if (notify) showTheaterToast("👋 Disconnected Spotify account.");
+    }
+
+    async function spotifyTogglePlay() {
+      if (isSpotifySimulated) {
+        if (currentSpotifyLivePayload) {
+          currentSpotifyLivePayload.isPlaying = !currentSpotifyLivePayload.isPlaying;
+          renderSpotifyLiveActive(currentSpotifyLivePayload);
+          broadcastSpotifyLiveState(currentSpotifyLivePayload);
+          showTheaterToast(currentSpotifyLivePayload.isPlaying ? "▶ Resumed Playback" : "⏸ Paused Playback");
+        }
+        return;
+      }
+      const token = await getValidSpotifyToken();
+      if (!token || !currentSpotifyLivePayload) return;
+
+      const endpoint = currentSpotifyLivePayload.isPlaying ? 'pause' : 'play';
+      try {
+        await fetch(`https://api.spotify.com/v1/me/player/${endpoint}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setTimeout(fetchSpotifyPlayback, 400);
+      } catch(e) {
+        showTheaterToast("⚠️ Remote playback control error: " + e.message);
+      }
+    }
+
+    async function spotifyNextTrack() {
+      if (isSpotifySimulated) {
+        simTrackIndex = (simTrackIndex + 1) % SIMULATED_SPOTIFY_TRACKS.length;
+        simProgressMs = 5000;
+        updateSimulatedTrack();
+        showTheaterToast("⏭️ Simulated Next Track");
+        return;
+      }
+      const token = await getValidSpotifyToken();
+      if (!token) return;
+      try {
+        await fetch('https://api.spotify.com/v1/me/player/next', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setTimeout(fetchSpotifyPlayback, 600);
+      } catch(e) {
+        showTheaterToast("⚠️ Next track error: " + e.message);
+      }
+    }
+
+    async function spotifyPrevTrack() {
+      if (isSpotifySimulated) {
+        simTrackIndex = (simTrackIndex - 1 + SIMULATED_SPOTIFY_TRACKS.length) % SIMULATED_SPOTIFY_TRACKS.length;
+        simProgressMs = 5000;
+        updateSimulatedTrack();
+        showTheaterToast("⏮️ Simulated Previous Track");
+        return;
+      }
+      const token = await getValidSpotifyToken();
+      if (!token) return;
+      try {
+        await fetch('https://api.spotify.com/v1/me/player/previous', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setTimeout(fetchSpotifyPlayback, 600);
+      } catch(e) {
+        showTheaterToast("⚠️ Previous track error: " + e.message);
+      }
+    }
+
+    function refreshSpotifyPlaybackNow() {
+      if (isSpotifySimulated) {
+        updateSimulatedTrack();
+        showTheaterToast("🔄 Refreshed simulated playback!");
+        return;
+      }
+      fetchSpotifyPlayback();
+      showTheaterToast("🔄 Refreshed Spotify playback!");
+    }
+
+    function updateSimulatedTrack() {
+      const track = SIMULATED_SPOTIFY_TRACKS[simTrackIndex];
+      const payload = {
+        isActive: true,
+        isPlaying: true,
+        trackTitle: track.trackTitle,
+        artistName: track.artistName,
+        albumName: track.albumName,
+        albumArt: track.albumArt,
+        progressMs: simProgressMs,
+        durationMs: track.durationMs,
+        deviceName: track.deviceName,
+        deviceType: "Smartphone",
+        updatedAt: Date.now()
+      };
+      currentSpotifyLivePayload = payload;
+      renderSpotifyLiveActive(payload);
+      broadcastSpotifyLiveState(payload);
+    }
+
+    function toggleSpotifySimulation() {
+      if (isSpotifySimulated) {
+        stopSpotifySimulation();
+        showTheaterToast("⏹️ Stopped Live Spotify Simulation");
+      } else {
+        isSpotifySimulated = true;
+        simProgressMs = 12000;
+        updateSimulatedTrack();
+        if (simInterval) clearInterval(simInterval);
+        simInterval = setInterval(() => {
+          if (isSpotifySimulated && currentSpotifyLivePayload && currentSpotifyLivePayload.isPlaying) {
+            simProgressMs += 1000;
+            if (simProgressMs > currentSpotifyLivePayload.durationMs) {
+              simTrackIndex = (simTrackIndex + 1) % SIMULATED_SPOTIFY_TRACKS.length;
+              simProgressMs = 1000;
+            }
+            currentSpotifyLivePayload.progressMs = simProgressMs;
+            renderSpotifyLiveActive(currentSpotifyLivePayload);
+            broadcastSpotifyLiveState(currentSpotifyLivePayload);
+          }
+        }, 1000);
+
+        const simBtn = document.getElementById('btnSpotifySimulate');
+        if (simBtn) {
+          simBtn.innerHTML = "<span>⏹️</span> Stop Sim";
+          simBtn.className = "py-2 px-3 rounded-lg bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 font-semibold text-xs border border-rose-800/60 transition flex items-center gap-1.5 cursor-pointer ml-auto";
+        }
+        showTheaterToast("🧪 Started Live Spotify Simulation! Open Twitch overlay to test.");
+      }
+    }
+
+    function stopSpotifySimulation() {
+      isSpotifySimulated = false;
+      if (simInterval) {
+        clearInterval(simInterval);
+        simInterval = null;
+      }
+      const simBtn = document.getElementById('btnSpotifySimulate');
+      if (simBtn) {
+        simBtn.innerHTML = "<span>🧪</span> Test Live Sync";
+        simBtn.className = "py-2 px-3 rounded-lg bg-purple-950/50 hover:bg-purple-900/60 text-purple-300 font-semibold text-xs border border-purple-800/60 transition flex items-center gap-1.5 cursor-pointer ml-auto";
+      }
+      disconnectSpotify(false);
+    }
+
     function setAdminSpotifyPreset(resource, label) {
       const urlInput = document.getElementById('adminSpotifyUrl');
       const labelInput = document.getElementById('adminSpotifyLabel');
@@ -7937,6 +8726,11 @@
 
       showTheaterToast(`🎵 Spotify stream music updated to "${label}"!`);
     }
+
+    // Auto-check OAuth callback on load
+    window.addEventListener('DOMContentLoaded', () => {
+      checkSpotifyOAuthCallback();
+    });
 
     function triggerForceSync() {
       if (!isAdmin) {

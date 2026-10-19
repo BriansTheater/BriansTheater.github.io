@@ -322,6 +322,29 @@
         <button type="button" onclick="toggleSpotifyDrawer()" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
       </div>
 
+      <!-- Live Track Card (Shown when live sync is active) -->
+      <div id="spotifyLiveDrawerCard" class="hidden p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex-col gap-2.5">
+        <div class="flex items-center gap-3">
+          <img id="spotifyDrawerLiveArt" src="" alt="Album Art" class="w-16 h-16 rounded-lg object-cover shadow-md border border-emerald-500/30 shrink-0">
+          <div class="flex flex-col min-w-0 flex-1 leading-snug">
+            <h4 id="spotifyDrawerLiveTitle" class="text-xs font-black text-white truncate">Track Title</h4>
+            <p id="spotifyDrawerLiveArtist" class="text-[11px] font-semibold text-slate-300 truncate mt-0.5">Artist Name</p>
+            <p id="spotifyDrawerLiveAlbum" class="text-[10px] text-slate-400 truncate mt-0.5">Album Name</p>
+            <span id="spotifyDrawerLiveDevice" class="text-[9px] font-mono text-emerald-400 mt-1">🎧 Active Stream</span>
+          </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="flex flex-col gap-1">
+          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div id="spotifyDrawerLiveProgress" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[0%] transition-all duration-300"></div>
+          </div>
+          <div class="flex items-center justify-between text-[9px] font-mono text-slate-400">
+            <span id="spotifyDrawerLiveTime">0:00 / 0:00</span>
+            <span class="text-emerald-400 font-bold uppercase tracking-wider">LIVE ON STREAM</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Spotify Embed Container -->
       <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
         <iframe
@@ -335,7 +358,7 @@
       </div>
 
       <!-- Playlist Selection / Quick Presets -->
-      <div class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
+      <div id="spotifyPresetButtons" class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
         <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
         <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
         <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
@@ -350,11 +373,12 @@
       class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-emerald-500/40 hover:border-emerald-400 text-slate-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.45)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group"
       title="Click to expand Spotify Player / select playlist"
     >
-      <!-- Spotify Brand Icon -->
-      <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 shadow-sm group-hover:rotate-12 transition-transform">
-        <svg class="w-3.5 h-3.5 text-slate-950" fill="currentColor" viewBox="0 0 24 24">
+      <!-- Spotify Brand Icon / Live Album Art -->
+      <div id="spotifyBrandIcon" class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 shadow-sm group-hover:rotate-12 transition-transform overflow-hidden">
+        <svg id="spotifyDefaultBrandSvg" class="w-3.5 h-3.5 text-slate-950" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
         </svg>
+        <img id="spotifyLivePillArt" src="" alt="Album Art" class="w-full h-full object-cover hidden">
       </div>
 
       <!-- Live Animated Equalizer Bars -->
@@ -367,7 +391,7 @@
 
       <!-- Current Track / Playlist Name -->
       <div class="flex flex-col text-left leading-none max-w-[150px] sm:max-w-[200px] overflow-hidden">
-        <span class="text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase">NOW PLAYING</span>
+        <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase">NOW PLAYING</span>
         <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
       </div>
 
@@ -831,6 +855,8 @@
               } else if (event.data.type === 'party_url_update' && event.data.partyUrl) {
                 activeMovie.partyUrl = event.data.partyUrl;
                 updateCountdown();
+              } else if (event.data.type === 'spotify_live_update' && event.data.payload) {
+                setSpotifyLiveState(event.data.payload);
               } else if (event.data.type === 'spotify_update' && event.data.payload) {
                 setSpotifyPlaylist(event.data.payload.resource, event.data.payload.name);
               } else if (event.data.firebasePayload) {
@@ -846,7 +872,9 @@
         .then(res => res.json())
         .then(data => {
           applySyncPayload(data);
-          if (data && data.spotifyPlaylist) {
+          if (data && data.spotifyLive) {
+            setSpotifyLiveState(data.spotifyLive);
+          } else if (data && data.spotifyPlaylist) {
             setSpotifyPlaylist(data.spotifyPlaylist.resource, data.spotifyPlaylist.name);
           }
         })
@@ -865,7 +893,10 @@
             if (payload) {
               if (payload.path === '/' && payload.data) {
                 applySyncPayload(payload.data);
-                if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
+                if (payload.data.spotifyLive) setSpotifyLiveState(payload.data.spotifyLive);
+                else if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
+              } else if (payload.path === '/spotifyLive' && payload.data) {
+                setSpotifyLiveState(payload.data);
               } else if (payload.path === '/spotifyPlaylist' && payload.data) {
                 setSpotifyPlaylist(payload.data.resource, payload.data.name);
               } else if (payload.path === '/cinema' && payload.data) {
@@ -971,10 +1002,81 @@
       }
     }
 
+    function setSpotifyLiveState(liveData) {
+      if (!liveData) return;
+      const pillArt = document.getElementById('spotifyLivePillArt');
+      const defaultSvg = document.getElementById('spotifyDefaultBrandSvg');
+      const trackLabel = document.getElementById('spotifyTrackName');
+      const sublabel = document.getElementById('spotifyPillSublabel');
+      const liveDrawer = document.getElementById('spotifyLiveDrawerCard');
+      const embedBox = document.getElementById('spotifyEmbedContainer');
+      const presetButtons = document.getElementById('spotifyPresetButtons');
+
+      if (liveData.isActive && liveData.isPlaying) {
+        // 1. Mini Pill Updates
+        if (liveData.albumArt && pillArt) {
+          pillArt.src = liveData.albumArt;
+          pillArt.classList.remove('hidden');
+          if (defaultSvg) defaultSvg.classList.add('hidden');
+        }
+        if (trackLabel) {
+          trackLabel.textContent = `${liveData.trackTitle || 'Unknown'} • ${liveData.artistName || 'Unknown'}`;
+        }
+        if (sublabel) {
+          sublabel.textContent = liveData.deviceName ? `LIVE: ${liveData.deviceName.toUpperCase()}` : "NOW PLAYING";
+        }
+
+        // 2. Expanded Drawer Live Card
+        if (liveDrawer) {
+          liveDrawer.classList.remove('hidden');
+          liveDrawer.classList.add('flex');
+        }
+        if (embedBox) embedBox.classList.add('hidden');
+        if (presetButtons) presetButtons.classList.add('hidden');
+
+        const dArt = document.getElementById('spotifyDrawerLiveArt');
+        const dTitle = document.getElementById('spotifyDrawerLiveTitle');
+        const dArtist = document.getElementById('spotifyDrawerLiveArtist');
+        const dAlbum = document.getElementById('spotifyDrawerLiveAlbum');
+        const dDevice = document.getElementById('spotifyDrawerLiveDevice');
+        const dProgress = document.getElementById('spotifyDrawerLiveProgress');
+        const dTime = document.getElementById('spotifyDrawerLiveTime');
+
+        if (dArt && liveData.albumArt) dArt.src = liveData.albumArt;
+        if (dTitle) dTitle.textContent = liveData.trackTitle || 'Unknown Track';
+        if (dArtist) dArtist.textContent = liveData.artistName || 'Unknown Artist';
+        if (dAlbum) dAlbum.textContent = liveData.albumName || '';
+        if (dDevice) dDevice.textContent = liveData.deviceName ? `🎧 Listening on ${liveData.deviceName}` : '🎧 Active Stream';
+
+        if (liveData.durationMs) {
+          const pct = Math.min(100, Math.max(0, (liveData.progressMs / liveData.durationMs) * 100));
+          if (dProgress) dProgress.style.width = `${pct}%`;
+          const fmt = ms => {
+            const s = Math.floor(ms / 1000);
+            const m = Math.floor(s / 60);
+            const sec = (s % 60).toString().padStart(2, '0');
+            return `${m}:${sec}`;
+          };
+          if (dTime) dTime.textContent = `${fmt(liveData.progressMs)} / ${fmt(liveData.durationMs)}`;
+        }
+      } else {
+        // Inactive or paused: gracefully fallback to preset/embed mode
+        if (pillArt) pillArt.classList.add('hidden');
+        if (defaultSvg) defaultSvg.classList.remove('hidden');
+        if (sublabel) sublabel.textContent = "NOW PLAYING";
+        if (liveDrawer) {
+          liveDrawer.classList.add('hidden');
+          liveDrawer.classList.remove('flex');
+        }
+        if (embedBox) embedBox.classList.remove('hidden');
+        if (presetButtons) presetButtons.classList.remove('hidden');
+      }
+    }
+
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.203";
+    const TWITCH_OVERLAY_VERSION = "4.9.204";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

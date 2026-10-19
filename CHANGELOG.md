@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.204] - 2026-10-18
+
+### What's New
+- Added live Spotify account sync with remote stream controls.
+- Preserves full listening stats and Spotify Wrapped stream credits.
+- Twitch stream overlay displays live album art and equalizer.
+
 ## [4.9.203] - 2026-10-17
 
 ### What's New

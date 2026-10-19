@@ -1,10 +1,10 @@
 {
-  "version": "4.9.203",
-  "releaseDate": "2026-10-17",
-  "title": "Brian's Theater v4.9.203",
+  "version": "4.9.204",
+  "releaseDate": "2026-10-18",
+  "title": "Brian's Theater v4.9.204",
   "notes": [
-    "Aligned Twitch stream watch link to tiny.cc/BriansTheater.",
-    "Kept main theater page clean with zero watch URL.",
-    "Enter auditorium button shows Halloween styling when open."
+    "Added live Spotify account sync with remote stream controls.",
+    "Preserves full listening stats and Spotify Wrapped stream credits.",
+    "Twitch stream overlay displays live album art and equalizer."
   ]
 }
