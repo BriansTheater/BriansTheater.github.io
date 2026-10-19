@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.219] - 2026-10-19
+
+### What's New
+- Integrated Plex VIP as native in-page tab.
+- Preserves persistent top navigation bar and music playback.
+- Added interactive setup wizard with instant invite requests.
+- Added step-by-step pinning guide for Smart TVs.
+
 ## [4.9.218] - 2026-10-19
 
 ### What's New
