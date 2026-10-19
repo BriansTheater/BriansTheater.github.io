@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.209] - 2026-10-18
+
+### What's New
+- Removed pulse dot and arrow from Twitch stream banner.
+- Centered pumpkin and bat icons inside rounded banner border.
+- Optimized watch URL banner padding preventing horizontal icon clipping.
+
 ## [4.9.208] - 2026-10-18
 
 ### What's New

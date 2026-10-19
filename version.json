@@ -1,11 +1,10 @@
 {
-  "version": "4.9.208",
+  "version": "4.9.209",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.208",
+  "title": "Brian's Theater v4.9.209",
   "notes": [
-    "Added dynamic smart font scaling for short and long titles.",
-    "Short movie titles now render large, bold, and cinematic.",
-    "Long movie titles automatically scale down preventing layout clipping.",
-    "Synchronized smart title sizing across Twitch overlay and main stage."
+    "Removed pulse dot and arrow from Twitch stream banner.",
+    "Centered pumpkin and bat icons inside rounded banner border.",
+    "Optimized watch URL banner padding preventing horizontal icon clipping."
   ]
 }
