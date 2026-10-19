@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.222] - 2026-10-19
+
+### What's New
+- Reduced startup Firebase payload size by 92 percent.
+- Eliminated duplicate schedule re-rendering loops during initial startup.
+- Fixed empty trailer iframes and deferred Google Form loading.
+- Deferred authentication scripts and trimmed historical release bloat.
+
 ## [4.9.221] - 2026-10-19
 
 ### What's New

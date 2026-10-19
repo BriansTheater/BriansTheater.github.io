@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.221 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.222 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -27,9 +27,9 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
-  <!-- Firebase App & Google Sign-In SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <!-- Firebase App & Google Sign-In SDKs (Deferred so they never block First Paint) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <style>
     @keyframes glowPulse {
       0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 0 30px rgba(56, 189, 248, 0.2); }
@@ -573,7 +573,7 @@
 
           <!-- INLINE STAGE TRAILER PLAYER (Collapsible with No-Cookie YouTube Embed) -->
           <div id="stageTrailerPlayerContainer" class="hidden w-full aspect-video rounded-xl overflow-hidden border border-amber-500/40 bg-black shadow-2xl mt-1">
-            <iframe id="stageTrailerFrame" src="" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe id="stageTrailerFrame" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
 
         </div>
@@ -921,7 +921,7 @@
         <div style="flex: 1; width: 100%; position: relative; background: #0b0f19;">
           <iframe 
             id="googleFormIframe"
-            src="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?embedded=true" 
+            data-src="https://docs.google.com/forms/d/e/1FAIpQLSccTDJ65kIZZMV4bjjgeu2KXV6KLhiY7LtrA35qIls1wy9qZg/viewform?embedded=true" 
             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
             frameborder="0" 
             marginheight="0" 
@@ -3943,7 +3943,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.221";
+    const APP_VERSION = "4.9.222";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4300,45 +4300,52 @@
     };
 
     let authInstance = null;
-    try {
-      if (typeof firebase !== 'undefined') {
-        if (!firebase.apps || !firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-        if (firebase.auth) {
-          authInstance = firebase.auth();
-          window.authInstance = authInstance;
+    function initFirebaseAuthSDK() {
+      if (authInstance) return;
+      try {
+        if (typeof firebase !== 'undefined') {
+          if (!firebase.apps || !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          if (firebase.auth) {
+            authInstance = firebase.auth();
+            window.authInstance = authInstance;
 
-          // Enable persistent session
-          try {
-            authInstance.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-          } catch(e) {}
-
-          // Check for mobile redirect result
-          authInstance.getRedirectResult().then(result => {
-            if (result && result.user) {
-              handleAuthUser(result.user);
-              if (typeof isAdmin !== 'undefined' && isAdmin) switchTab('admin');
-            }
-          }).catch(err => {
-            console.warn("Firebase redirect auth result:", err);
-          });
-
-          authInstance.onAuthStateChanged(user => {
+            // Enable persistent session
             try {
-              if (user) {
-                handleAuthUser(user);
-              } else {
-                handleAuthSignedOut();
+              authInstance.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            } catch(e) {}
+
+            // Check for mobile redirect result
+            authInstance.getRedirectResult().then(result => {
+              if (result && result.user) {
+                handleAuthUser(result.user);
+                if (typeof isAdmin !== 'undefined' && isAdmin) switchTab('admin');
               }
-            } catch(authErr) {
-              console.warn("Error in onAuthStateChanged handler:", authErr);
-            }
-          });
+            }).catch(err => {
+              console.warn("Firebase redirect auth result:", err);
+            });
+
+            authInstance.onAuthStateChanged(user => {
+              try {
+                if (user) {
+                  handleAuthUser(user);
+                } else {
+                  handleAuthSignedOut();
+                }
+              } catch(authErr) {
+                console.warn("Error in onAuthStateChanged handler:", authErr);
+              }
+            });
+          }
         }
+      } catch(err) {
+        console.warn("Firebase Auth initialization:", err);
       }
-    } catch(err) {
-      console.warn("Firebase Auth initialization:", err);
+    }
+    initFirebaseAuthSDK();
+    if (!authInstance) {
+      document.addEventListener('DOMContentLoaded', initFirebaseAuthSDK);
     }
     
     // Target next upcoming premiere (Borderlands, Saturday Sept 19 at 7:00 PM PST)
@@ -5054,6 +5061,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.222": [
+        "Reduced startup Firebase payload size by 92 percent.",
+        "Eliminated duplicate schedule re-rendering loops during initial startup.",
+        "Fixed empty trailer iframes and deferred Google Form loading.",
+        "Deferred authentication scripts and trimmed historical release bloat."
+      ],
       "4.9.221": [
         "Harmonized Plex VIP button styling with standard navigation.",
         "Unified selected and unselected tab visual states across navbar.",
@@ -5115,1151 +5128,6 @@
         "Added whitespace-agnostic canonical artwork matching for all movies.",
         "Eliminated white letterbox borders across American Horror Story episodes.",
         "Added live warning badge alert when poster error detected."
-      ],
-      "4.9.210": [
-        "Added automatic post-movie schedule progression for Twitch overlay.",
-        "OBS stream overlay automatically advances when movie finishes screening.",
-        "Added continuous 15-second Firebase heartbeat polling for OBS Studio.",
-        "Enhanced real-time SSE stream with automatic error reconnection."
-      ],
-      "4.9.209": [
-        "Removed pulse dot and arrow from Twitch stream banner.",
-        "Centered pumpkin and bat icons inside rounded banner border.",
-        "Optimized watch URL banner padding preventing horizontal icon clipping."
-      ],
-      "4.9.208": [
-        "Added dynamic smart font scaling for short and long titles.",
-        "Short movie titles now render large, bold, and cinematic.",
-        "Long movie titles automatically scale down preventing layout clipping.",
-        "Synchronized smart title sizing across Twitch overlay and main stage."
-      ],
-      "4.9.207": [
-        "Added stacked two-line watch banner with festive Halloween icons.",
-        "Enhanced doors-open action button with large pumpkin and bat.",
-        "Optimized Twitch broadcast overlay legibility with prominent URL styling."
-      ],
-      "4.9.206": [
-        "Enlarged Twitch stream countdown watch banner for crystal-clear readability.",
-        "Enlarged Twitch doors-open action button with larger icons.",
-        "Enhanced broadcast glow effects and responsive stream overlay typography."
-      ],
-      "4.9.205": [
-        "Fixed Enter button URL linking to partywatch watch party.",
-        "Added Enter theater button editor inside Admin Control Studio.",
-        "Resolved dynamic trailer matching across all October lineup movies.",
-        "Fixed Spotify setup modal container and direct click interaction.",
-        "Themed Twitch doors-open URL button with festive Halloween gradient."
-      ],
-      "4.9.204": [
-        "Added live Spotify account sync with remote stream controls.",
-        "Preserves full listening stats and Spotify Wrapped stream credits.",
-        "Twitch stream overlay displays live album art and equalizer."
-      ],
-      "4.9.203": [
-        "Aligned Twitch stream watch link to tiny.cc/BriansTheater.",
-        "Kept main theater page clean with zero watch URL.",
-        "Enter auditorium button shows Halloween styling when open."
-      ],
-      "4.9.202": [
-        "Removed watch URL badge completely from main theater page.",
-        "Auditorium Enter button displays only when theater is open."
-      ],
-      "4.9.201": [
-        "Restored Enter auditorium button text with Halloween theme styling.",
-        "Maintained stream watch tiny URL on Twitch broadcast overlay."
-      ],
-      "4.9.200": [
-        "Updated main auditorium entrance button to display tiny.cc/BriansTheater.",
-        "Synced primary stage action link to direct theater shortlink.",
-        "Maintained countdown watch link pill for live party URL."
-      ],
-      "4.9.199": [
-        "Added silent automatic update detector to Twitch stream overlay.",
-        "Integrated PartyWatch URL on entrance buttons across all views.",
-        "Added live stream watch link badge to countdown displays."
-      ],
-      "4.9.198": [
-        "Synced glowing theme title and badge during live screening.",
-        "Resolved active movie trailers accurately in theater stage spotlight.",
-        "Added verified trailer video feeds for upcoming horror lineup."
-      ],
-      "4.9.197": [
-        "Dynamically omitted zero-value countdown boxes on Twitch stream overlay.",
-        "Synchronized doors-open countdown timing directly with main theater stage.",
-        "Smoothed responsive grid transitions for minutes and seconds countdowns."
-      ],
-      "4.9.196": [
-        "Added Spotify corner pill player with animated equalizer drawer.",
-        "Integrated live movie trailer replay upon theater door opening.",
-        "Added Spotify stream music broadcast card to Admin Studio."
-      ],
-      "4.9.195": [
-        "Removed technical status bar and footer from Twitch overlay.",
-        "Relocated Icons Showcase gallery link to Admin theme controls.",
-        "Streamlined Twitch stream display for ultra clean-cut aesthetic."
-      ],
-      "4.9.194": [
-        "Reduced movie title font size on Twitch stream overlay.",
-        "Ensured featured screening title fits neatly on one line.",
-        "Expanded overlay stage container width for balanced title layout."
-      ],
-      "4.9.193": [
-        "Synchronized main site movie title with green-to-purple Halloween styling.",
-        "Deepened purple gradient fade across Twitch overlay and main theater.",
-        "Removed yellow clutter from main stage category status badge."
-      ],
-      "4.9.192": [
-        "Added animated Haunted Candle to Twitch overlay header.",
-        "Restyled movie title with spectral green to purple gradient.",
-        "Eliminated yellow clutter on screening status badge."
-      ],
-      "4.9.191": [
-        "Synchronized Twitch stream overlay with main theater stage in real-time.",
-        "Eliminated concluded movie freeze on stream overlay display.",
-        "Added instant cross-tab sync and high-res poster artwork mapping."
-      ],
-      "4.9.190": [
-        "Replaced navbar bat with animated Haunted Candle icon.",
-        "Added dual-tone flame flicker with subtle scale pulse.",
-        "Maintained silky smooth 60fps animations across all viewports."
-      ],
-      "4.9.189": [
-        "Consolidated site to primary Main and Twitch stream pages.",
-        "Retired standalone live.html billboard to streamline codebase.",
-        "Maintained clean house and strict two-backup retention."
-      ],
-      "4.9.188": [
-        "Removed doors open badge and live screening text.",
-        "Restyled movie title with vivid spooky Halloween gradient.",
-        "Maintained clean house and strict two-backup retention."
-      ],
-      "4.9.187": [
-        "Synchronized core app version across all cinema application files.",
-        "Resolved version mismatch update prompt loop across all devices.",
-        "Ensured seamless service worker cache alignment."
-      ],
-      "4.9.186": [
-        "Removed Twitch live stream badge from overlay header.",
-        "Streamlined header branding to clean Shocktoberfest subtitle."
-      ],
-      "4.9.185": [
-        "Removed background and flank emoji icons from Twitch overlay.",
-        "Added gothic proscenium arches and theatrical spotlight framing."
-      ],
-      "4.9.184": [
-        "Unveiled Brian's Haunted Theater branding with Shocktoberfest styling.",
-        "Created interactive Halloween motion icons showcase gallery with animations.",
-        "Built spooky 1080p Twitch stream overlay with creepy atmospheric borders."
-      ],
-      "4.9.183": [
-        "Synced Brian's Theater signature branding on live billboard header.",
-        "Added gradient cinema logo icon and glowing text cluster.",
-        "Linked billboard header directly back to main theater portal."
-      ],
-      "4.9.182": [
-        "Launched stripped-down live cinema billboard view at live.html.",
-        "Added glowing countdown clock with hours, mins, and secs.",
-        "Integrated real-time Firebase SSE sync with zero page reloads."
-      ],
-      "4.9.181": [
-        "Unveiled Haunted Cinema Marquee countdown with glowing spooky frame.",
-        "Added warm pumpkin-orange glow to time digits and borders.",
-        "Added glowing spectral purple pulse to final seconds counter."
-      ],
-      "4.9.180": [
-        "Added creepy dangling spider to stage header for visual balance.",
-        "Enhanced corner cobwebs across both sides of stage card.",
-        "Maintained silky smooth GPU-accelerated festive animations across all viewports."
-      ],
-      "4.9.179": [
-        "Added floating witch next to stage bat for visual balance.",
-        "Enhanced seasonal Halloween stage atmosphere with glowing purple spectral flair.",
-        "Preserved silky 60fps GPU-accelerated creature animations on desktop and mobile."
-      ],
-      "4.9.178": [
-        "Unveiled Brian's Haunted Theater branding with spectral candle flicker.",
-        "Preserved clean navigation button labels with festive spooky icons.",
-        "Removed redundant premiere badges for a cleaner cinema stage.",
-        "Added eerie blinking creature eyes in dark stage margins.",
-        "Synchronized seasonal header and window title with live themes."
-      ],
-      "4.9.177": [
-        "Broadened festive seasonal themes across the entire website interface.",
-        "Implemented real-time Firebase cloud theme sync between devices.",
-        "Added full-screen GPU snowfall particles for holiday winter theme.",
-        "Themed navigation header, tab bar, and mobile drawer styles.",
-        "Synchronized live theme state seamlessly without requiring browser refreshes."
-      ],
-      "4.9.176": [
-        "Introduced festive Shocktoberfest Halloween theme with spooky ambient glow.",
-        "Introduced festive Holiday Winter Wonderland theme with gentle snowfall.",
-        "Added Smart Auto-Switch to detect holiday seasons automatically.",
-        "Added instant theme override selector inside Admin Studio.",
-        "Engineered lightweight GPU-accelerated seasonal animations for silky performance."
-      ],
-      "4.9.175": [
-        "Accelerated movie card rendering with off-screen content deferral.",
-        "Debounced search input eliminating keystroke lag in Vault.",
-        "Lazy-mounted Movie Vault for lightning-fast initial page load.",
-        "Fixed broken poster URLs and eliminated phantom network calls.",
-        "Optimized memory footprint and smoothed animation frame rates."
-      ],
-      "4.9.174": [
-        "Fully rebranded 2025 marathon across all catalogs and databases.",
-        "Standardized 2025 Shocktoberfest pumpkin orange badges on all cards.",
-        "Added cache buster preventing stale catalog script loading."
-      ],
-      "4.9.173": [
-        "Added Nightmare on Elm Street to Franchise Sagas dropdown.",
-        "Fixed 2025 Shocktoberfest card badges to display orange pumpkin.",
-        "Added Elm Street Freddy saga showcase card to Theater."
-      ],
-      "4.9.172": [
-        "Rebranded 2025 marathon records and sub-cards to 2025 Shocktoberfest.",
-        "Updated 2025 showcase section card to 2025 Shocktoberfest.",
-        "Synchronized all 2025 horror marathon links to Shocktoberfest."
-      ],
-      "4.9.171": [
-        "Excluded Christmas and Shocktoberfest from Franchise Sagas views.",
-        "Restricted Franchise Sagas dropdown to genuine movie franchises.",
-        "Moved movie genre tags from poster overlays into info boxes.",
-        "Added festival series year to annual film badge labels."
-      ],
-      "4.9.170": [
-        "Renamed Marathons button to Franchise Sagas across all views.",
-        "Cleaned up Franchise Sagas banner layout for clean look.",
-        "Consolidated all saga selections into single header dropdown menu.",
-        "Removed redundant filter sub-tabs and quick jump chip rows."
-      ],
-      "4.9.169": [
-        "Removed vintage holiday classics option from Christmas dropdown menu.",
-        "Deleted showcase hub cards and button from marathons flow.",
-        "Routed marathons button directly to all marathon movies.",
-        "Added interactive marathon saga dropdown inside festive marathon banner."
-      ],
-      "4.9.168": [
-        "Added living motion animated features to holiday banner top right.",
-        "Decorated Halloween banner with fluttering bat, ghost, and cobweb.",
-        "Decorated Christmas banner with drifting snow and twinkling star.",
-        "Ensured decorative animations never obstruct user interactions or dropdowns."
-      ],
-      "4.9.167": [
-        "Rebranded 2025 Scary Movie Marathon to 2025 Shocktoberfest.",
-        "Removed vintage horror option from Halloween edition dropdown.",
-        "Unified all seasonal movies under official Shocktoberfest brand.",
-        "Updated marathon badges and sub-cards to 2025 Shocktoberfest."
-      ],
-      "4.9.166": [
-        "Bypassed intermediate hub cards for direct holiday movie browsing.",
-        "Added interactive Shocktoberfest year dropdown inside festive Halloween banner.",
-        "Added interactive Christmas festival year dropdown inside seasonal banner.",
-        "Streamlined Marathon quick jump to focus strictly on sagas.",
-        "Removed redundant Annual wording across marathon and festival filters."
-      ],
-      "4.9.165": [
-        "Synced 2026 Shocktoberfest marathon hub with 22 scheduled titles.",
-        "Fixed lineup preview drawer showing incorrect prototype placeholder films.",
-        "Fixed collection filter returning zero results for Shocktoberfest titles.",
-        "Automated marathon collection tagging for all scheduled October screenings.",
-        "Pre-merged calendar screenings into Vault library on initial load."
-      ],
-      "4.9.164": [
-        "Removed volatile streaming platform badges from Vault cards.",
-        "Eliminated generic Featured Film fallback tags across library.",
-        "Added evergreen genre sanitizer for timeless movie metadata.",
-        "Streamlined card banner overlay with clean cinematic format badges.",
-        "Updated sample community requests with genuine movie genres."
-      ],
-      "4.9.163": [
-        "Scoped auto-import strictly to scheduled festival month calendar screenings.",
-        "Eliminated historical past database clutter from annual festival lineups.",
-        "Added dedicated On Schedule tab inside festival picker drawer.",
-        "Added separate Vault Classics tab for optional past movies.",
-        "Updated detected count badge to show exact scheduled screenings.",
-        "Enriched sample schedule with complete October 2026 screenings."
-      ],
-      "4.9.162": [
-        "1-click schedule and database auto-import in marathon wizard.",
-        "Added collapsible seasonal item picker to browse screenings.",
-        "Instant local search for theater schedule and database.",
-        "Upgraded TMDb multi-search with full TV show support.",
-        "Added TV show and scheduled status badges to search.",
-        "Live detected titles counter for festival lineups."
-      ],
-      "4.9.161": [
-        "Rebranded October 2026 screenings to month-long 2026 Shocktoberfest.",
-        "Added vibrant pumpkin orange festival badges for Shocktoberfest titles.",
-        "Added Annual Marathon sub-filter tabs for focused festival browsing.",
-        "Preserved crimson badges for historical single-day horror marathons.",
-        "Preserved emerald holiday badges for annual Christmas movie festivals.",
-        "Integrated interactive category filter tabs in Showcase Hub modal."
-      ],
-      "4.9.160": [
-        "Added live TMDb search autocomplete to Annual Marathon Wizard.",
-        "Interactive 1-click film chips for rapid festival lineup management.",
-        "Thematic franchise packs for instant 1-click batch movie additions.",
-        "Two-way synchronization between visual lineup chips and raw titles."
-      ],
-      "4.9.159": [
-        "Hidden reminder buttons when auditorium doors are open.",
-        "Streamlined stage entrance UI during live and seating events.",
-        "Display reminder and calendar buttons exclusively during countdowns."
-      ],
-      "4.9.158": [
-        "Auditorium doors automatically lock when screenings conclude.",
-        "Eliminated persistent live status for completed movie showtimes.",
-        "Self-healing schedule automatically transitions finished movies to concluded.",
-        "Synchronized live Firebase state to reset now playing."
-      ],
-      "4.9.157": [
-        "Added instant movie switcher for active and scheduled screenings.",
-        "Real-time TMDb autocomplete suggestions while typing replacement titles.",
-        "Automatic extraction of posters, runtimes, genres, and trailers.",
-        "Live synchronization to theater stage, countdown, and Firebase.",
-        "Dynamic tonight screening detection across admin controls."
-      ],
-      "4.9.156": [
-        "Accelerated initial page load with deferred asset loading pipeline.",
-        "Optimized Google Drive posters reducing image payloads up to 87%.",
-        "Enabled ultra-fast service worker caching for TMDB and media.",
-        "Deduplicated Firebase startup sync to prevent redundant REST calls."
-      ],
-      "4.9.155": [
-        "Integrated Kevin's work calendar to automatically detect open nights.",
-        "Auto-generated open movie night placeholders with date and showtimes.",
-        "Prioritized open placeholder slots when approving movie requests.",
-        "Added 1-click Kevin schedule scan in Google Sheets menu."
-      ],
-      "4.9.154": [
-        "Restored missing requested movies spill formula on Quick Schedule.",
-        "Automated self-healing live next movie countdown and status indicators.",
-        "Overhauled played movie removal script with fuzzy title matching.",
-        "Synchronized live screening schedule directly to theater website."
-      ],
-      "4.9.153": [
-        "Removed redundant doors open status from stage countdown.",
-        "Eliminated duplicate virtual auditorium doors text below timer.",
-        "Kept administrative override indicators active when doors are locked.",
-        "Polished stage countdown layout for clean widescreen presentation."
-      ],
-      "4.9.152": [
-        "Added 4-layer Plex library discovery guide for new patrons.",
-        "Highlighted MORE menu and sidebar library pinning instructions.",
-        "Added direct 1-click Plex Web app launch button.",
-        "Upgraded Discord slash command responses with library guide buttons.",
-        "Added 1-click setup guide emailer to admin patron studio."
-      ],
-      "4.9.151": [
-        "Permanently eliminated Update Alerts popup loop on reload.",
-        "Synchronized all theater application files to version 4.9.151.",
-        "Added ultra-friendly 2-step Plex account onboarding decision wizard.",
-        "Guided new patrons through 30-second free Plex registration.",
-        "Added direct top-right close button to update modal.",
-        "Transitioned Discord automation callouts to official slash command."
-      ],
-      "4.9.150": [
-        "Built real-time Plex patron user database in Firebase.",
-        "Added full Plex user management studio to admin menu.",
-        "Enabled manual patron adding, library controls, and auto-approval.",
-        "Added search and status filters for active Plex members.",
-        "Deployed hardened Firebase database rules for Plex user endpoints."
-      ],
-      "4.9.149": [
-        "Added instant VIP Plex access portal for theater friends.",
-        "Integrated automated invite claims with real-time status updates.",
-        "Added 3-step setup guide for Smart TVs and phones.",
-        "Linked Plex VIP portal to desktop and mobile navigation.",
-        "Added Discord bot command callout for fast link sharing."
-      ],
-      "4.9.148": [
-        "Hardened Firebase Realtime Database security rules against unauthorized writes.",
-        "Locked database root to prevent global write access vulnerabilities.",
-        "Restricted administrative database modifications to verified theater administrator accounts.",
-        "Enforced strict payload validation on visitor movie request submissions.",
-        "Secured account quota and TV watchlist endpoints from writes."
-      ],
-      "4.9.147": [
-        "Restored official Season 13 artwork across all AHS episodes.",
-        "Added high-definition episode stills for every AHS screening.",
-        "Scoped series updates to prevent episode artwork overwriting.",
-        "Enabled secure poster synchronization with Firebase Realtime Database.",
-        "Ensured bulk poster edits persist immediately across devices.",
-        "Cleaned legacy cached artwork on theater app launch."
-      ],
-      "4.9.146": [
-        "Restored missing schedule posters for upcoming horror lineup.",
-        "Added official high-resolution artwork for Evil Dead Burn.",
-        "Added verified poster for Abraham's Boys Dracula Story.",
-        "Added official high-definition artwork for The Seeding.",
-        "Added verified movie poster for Undertone release.",
-        "Integrated official high-resolution poster for They Will Kill You.",
-        "Added Stephen King's It 1990 miniseries poster.",
-        "Ensured reliable cross-origin poster loading across all devices."
-      ],
-      "4.9.145": [
-        "Fixed Google Sign-In initialization and variable hoisting sequence.",
-        "Prevented auth state change ReferenceErrors during theater startup.",
-        "Bypassed Service Worker caching for Firebase authentication endpoints.",
-        "Added one-click full page redirect option for Google login.",
-        "Protected admin studio tab access and session status."
-      ],
-      "4.9.144": [
-        "Fixed stage door closure hiding Enter button when closed.",
-        "Added prominent locked auditorium status banner on closed stage.",
-        "Protected door mode overrides from Firebase permission reset loops.",
-        "Protected custom artwork and bulk posters against Firebase overwrites.",
-        "Merged persistent bulk images automatically on schedule data sync.",
-        "Added quick 1-click admin door controls on stage."
-      ],
-      "4.9.143": [
-        "Added Bulk Select mode to Upcoming Lineup Gallery.",
-        "Added Bulk Apply to Series button in Media Studio.",
-        "Implemented instant multi-title poster and trailer synchronization.",
-        "Added smart franchise detection for American Horror Story series.",
-        "Added Master Annual Festival Hubs for Halloween and Christmas.",
-        "Added Annual Holiday Marathon setup wizard in admin portal.",
-        "Ending movies early locks doors while keeping Auto mode active."
-      ],
-      "4.9.142": [
-        "Cleaned up Vault marathons with master placeholder hub cards.",
-        "Collapsed 89 individual marathon titles into 7 clean hubs.",
-        "Added interactive film lineup preview drawer on marathon cards.",
-        "Added seamless Back to All Marathons navigation in collections."
-      ],
-      "4.9.141": [
-        "Restored permanently visible and active Enter button on stage.",
-        "Positioned countdown timer seamlessly above active Enter button.",
-        "Ensured continuous one-click entrance access across all door states.",
-        "Preserved live screening and pre-show countdown transition animations."
-      ],
-      "4.9.140": [
-        "Unified Vault marathon filter into one single toolbar button.",
-        "Clicking Marathons displays all marathons across every screening season.",
-        "Consecutively groups marathon sagas by franchise priority and sequence.",
-        "Added direct quick-jump chips for every theater marathon.",
-        "Integrated franchise marathon badges on individual movie cards."
-      ],
-      "4.9.139": [
-        "Enabled interactive Vault marathon toggle filter and showcase launcher.",
-        "Fixed marathon collection filter to display all sequential films.",
-        "Added dedicated banner and counters for marathon screening events.",
-        "Isolated franchise marathons from unrelated search substring collisions."
-      ],
-      "4.9.138": [
-        "Restored all American Horror Story posters across the schedule.",
-        "Added smart AHS acronym artwork resolution and series matching.",
-        "Synced master season posters to all scheduled episodes."
-      ],
-      "4.9.137": [
-        "Displayed 100% of scheduled movies in Admin Lineup Gallery.",
-        "Added live count badge to the Upcoming Lineup Gallery.",
-        "Added instant title search filter to the Admin Gallery."
-      ],
-      "4.9.136": [
-        "Restored postponed movies to official schedule with one click.",
-        "Fixed main page premiere visibility for confirmed scheduled dates.",
-        "Added intuitive reschedule and restore modal controls.",
-        "Restored Backrooms as the active upcoming theater premiere."
-      ],
-      "4.9.135": [
-        "Locked Quick Schedule sync strictly to dedicated Movies calendar.",
-        "Added automatic cleanup for movie events on personal calendar.",
-        "Defaulted bot calendar methods to dedicated Movies calendar ID.",
-        "Added cross-calendar deduplication tool in Google Sheets menu."
-      ],
-      "4.9.134": [
-        "Fixed Theater Bot skipping Row 2 on schedule.",
-        "Added smart title mismatch detection for movie schedules.",
-        "Support specific row auto-fill directly from command line.",
-        "Synchronized Data tab titles with live schedule updates."
-      ],
-      "4.9.133": [
-        "Added dynamic monthly intermission when current schedule concludes.",
-        "Automatically computes upcoming month for perpetual season transitions.",
-        "Replaced frozen zero countdown with interactive intermission stage.",
-        "Added custom intermission announcement control in Admin Studio.",
-        "Display upcoming month request CTA on schedule tab."
-      ],
-      "4.9.132": [
-        "Added instant movie rescheduling options for changed release dates.",
-        "Added one-click theater closure and postponed status management.",
-        "Postponed Backrooms screening and safely closed virtual auditorium.",
-        "Advanced countdown to next upcoming premiere without interruption.",
-        "Integrated schedule manager into Brian's Admin Control Studio."
-      ],
-      "4.9.131": [
-        "Fixed infinite update alert popup loop upon page reload.",
-        "Added session memory preventing repeated update prompts.",
-        "Synchronized app versions across service worker and frontend.",
-        "Expanded reload cooldown window for seamless background sync."
-      ],
-      "4.9.130": [
-        "Eliminated 15-second polling loop saving 99% Firebase bandwidth.",
-        "Cached movie catalog locally preventing heavy repetitive downloads.",
-        "Connected tab visibility sync with 15-minute fallback protection.",
-        "Reduced Realtime Database network egress to near-zero."
-      ],
-      "4.9.129": [
-        "Purged conflicting ghost schedule data from Firebase database.",
-        "Enforced single Next Up badge across upcoming lineup.",
-        "Normalized subsequent movie badges to proper weekday tags.",
-        "Shielded official cinema schedule from external bot overwrites.",
-        "Guaranteed Backrooms displays Wednesday with zero badge flipping."
-      ],
-      "4.9.128": [
-        "Kept movie runtime strictly on one single line.",
-        "Compacted details table pills across Vault and Schedule tabs.",
-        "Upgraded Poster Studio with native resizable dialog window.",
-        "Added 1-click Default, Large, and Max studio size presets.",
-        "Saved studio window dimension preferences in local storage."
-      ],
-      "4.9.127": [
-        "Fixed 2:00 AM showtime display across schedule cards.",
-        "Enforced Pacific Time dates preventing UTC day shifts.",
-        "Shielded master movie schedule from external bot overwrites.",
-        "Guaranteed authentic 7:00 PM virtual cinema start times."
-      ],
-      "4.9.126": [
-        "Added persistent dismissible completion dialog for poster saves.",
-        "Keeps save confirmations visible until you explicitly dismiss them.",
-        "Detailed breakdown of Drive, Buffer, and Calendar sync.",
-        "Upgraded bulk batch processing with persistent summary modal."
-      ],
-      "4.9.125": [
-        "Streamlined Google Sheets Admin menus and removed clutter.",
-        "Organized Google Drive posters into automated monthly subfolders.",
-        "Automated Google Calendar event scheduling on poster save.",
-        "Added 1-Click batch studio rendering to Drive and Buffer.",
-        "Added 1-Click monthly schedule reset with Drive folder trash."
-      ],
-      "4.9.124": [
-        "Connected custom designated Google Drive posters folder.",
-        "Fixed binary PNG file writing for Google Drive posters.",
-        "Restored instant image preview and Windows Photos support.",
-        "Links direct Drive URLs into Data sheet Column Y.",
-        "Dispatches custom widescreen posters into Buffer queues."
-      ],
-      "4.9.123": [
-        "Fixed studio poster syncing across Quick Schedule tab.",
-        "Stored custom posters in Data sheet Column Y.",
-        "Synchronized custom posters to Firebase Realtime Database.",
-        "Prioritized studio posters over default TMDB artwork."
-      ],
-      "4.9.122": [
-        "Precision 1:00 AM PST Buffer timing with zero drift.",
-        "Auto-queues announcement to Buffer immediately on poster save.",
-        "Prioritizes custom widescreen studio poster from Column Y.",
-        "Direct Google CDN links ensure crisp social media attachments."
-      ],
-      "4.9.121": [
-        "Added Typography & Font Studio with custom poster controls.",
-        "Curated 11 cinema-grade font families via Google Fonts.",
-        "Smart Genre Auto-Match recommends fonts tailored to movies.",
-        "Added live font size sliders with real-time redraw.",
-        "Added radiant color glow presets for title text."
-      ],
-      "4.9.120": [
-        "Defaulted fit mode to contain with ambient blur background.",
-        "Fixed cropped and zoomed in movie poster backgrounds.",
-        "Eliminated all 16 blocking browser alert popups completely.",
-        "Added sleek inline status badges and floating toasts."
-      ],
-      "4.9.119": [
-        "Relocated studio poster storage to Column Y.",
-        "Protected ETag in Column X from accidental overwriting.",
-        "Synchronized studio posters to Firebase live theater instantly.",
-        "Buffer scheduler now pulls artwork from Column Y.",
-        "Poster Studio schedule loader now reads Column Y posters."
-      ],
-      "4.9.118": [
-        "Relocated studio poster storage to Column X.",
-        "Protected movie End Time in Column H from overwriting.",
-        "Synchronized studio posters to Firebase live theater instantly.",
-        "Buffer scheduler now pulls artwork from Column X.",
-        "Poster Studio schedule loader now reads Column X posters."
-      ],
-      "4.9.117": [
-        "Added one-click Refresh Schedule button to Poster Studio.",
-        "Instant schedule loading without consuming TMDB or Google quotas.",
-        "Prevented placeholder movie titles from triggering false search errors.",
-        "Reused existing studio artwork directly from Data sheet."
-      ],
-      "4.9.116": [
-        "Smart Search now auto-fills only your selected rows.",
-        "Protected Google accounts from daily UrlFetch quota limits.",
-        "Prevented old errors from blocking new movie auto-fills.",
-        "Populated full summaries and trailers for new schedule additions.",
-        "Added friendly one-click guidance to run Theater Bot."
-      ],
-      "4.9.115": [
-        "Added automated social media scheduling via Buffer GraphQL API.",
-        "Scheduled announcements at 12:00 AM on screening days.",
-        "Dynamically integrated TMDB movie links and high-res posters.",
-        "Skipped generic placeholder movie titles like 'movie' automatically.",
-        "Enabled saving custom Poster Studio artwork to Google Drive."
-      ],
-      "4.9.114": [
-        "Fixed Scary Movie poster reverting to Chucky image.",
-        "Restored official Ghostface 2026 poster for Scary Movie.",
-        "Eliminated Normal movie flash when reloading the theater.",
-        "Updated upcoming premiere stage baseline to Borderlands."
-      ],
-      "4.9.113": [
-        "Added instant real-time auto-refresh for schedule movie images.",
-        "Eliminated manual page refreshes when updating movie posters.",
-        "Synchronized poster changes across open browser tabs instantly.",
-        "Streamlined Firebase real-time listeners for live card re-rendering."
-      ],
-      "4.9.112": [
-        "Eliminated service worker and version mismatch reload loop.",
-        "Added dismissed update memory to prevent repetitive toasts.",
-        "Synchronized app version across html, service worker, and backend.",
-        "Maintained instant single reload without recurring update prompts."
-      ],
-      "4.9.111": [
-        "Added Google Tasks reminder integration for upcoming movie nights.",
-        "Set midnight reminder due times on scheduled movie dates.",
-        "Protected completed tasks from being duplicated or re-added.",
-        "Integrated Google Tasks syncing directly into Calendar sync tool."
-      ],
-      "4.9.110": [
-        "Protected Google Calendar from burst rate limit exceptions.",
-        "Added safe calendar call wrapper with pacing and backoff.",
-        "Capped batch calendar operations to eliminate quota errors.",
-        "Maintained instant responsive calendar and task synchronization."
-      ],
-      "4.9.109": [
-        "Allowed Movie and Movies placeholder titles to sync.",
-        "Maintained movie night scheduling when title is undecided.",
-        "Ensured placeholder movies receive calendar events smoothly.",
-        "Cleaned synopsis and badges for flexible movie night planning."
-      ],
-      "4.9.108": [
-        "Eliminated stage reload flicker and initial movie flipping.",
-        "Added pre-paint local storage hydration for 0ms refresh continuity.",
-        "Aligned static HTML placeholders directly with active next premiere.",
-        "Synchronized default fallback objects seamlessly across all scripts."
-      ],
-      "4.9.107": [
-        "Updated calendar sync to target Data sheet exclusively.",
-        "Saved event IDs and calendar links into Data sheet.",
-        "Purged accidental duplicate entries from Quick Schedule sheet.",
-        "Added cross-calendar duplicate cleaner for single clean movie events."
-      ],
-      "4.9.106": [
-        "Protected cinema database from Discord scheduled event overwrite loops.",
-        "Added smart date parser supporting flexible date inputs.",
-        "Automated Google Calendar synchronization directly on schedule edits.",
-        "Ensured automatic sync triggers activate smoothly on sheet open."
-      ],
-      "4.9.105": [
-        "Added one-click Google Calendar duplicate cleaner and sweep tool.",
-        "Automatically purges duplicate events within a 120-day window.",
-        "Preserves richest event metadata and synopsis for each showtime.",
-        "Added calendar cleanup shortcuts to admin and maintenance menus."
-      ],
-      "4.9.104": [
-        "Updated calendar sync to update existing events without duplicates.",
-        "Added smart event matching by normalized movie title.",
-        "Automatically purged redundant duplicate events created by previous runs.",
-        "Ensured persistent event IDs and calendar links across sheets."
-      ],
-      "4.9.103": [
-        "Conducted exhaustive bug scan across all tabs and features.",
-        "Added defensive null guards and fetch rejection handlers.",
-        "Added automatic fallback for stage cinema poster image.",
-        "Verified responsive layout across viewports with zero console errors."
-      ],
-      "4.9.102": [
-        "Fixed schedule loading crash caused by undefined alert variable.",
-        "Hidden entrance button when screening is over and closed.",
-        "Removed redundant alert banner from main theater stage card.",
-        "Verified responsive layout across viewports with zero console errors."
-      ],
-      "4.9.101": [
-        "Moved clean live screening alert banner to Theater tab.",
-        "Dedicated Schedule tab exclusively to upcoming movie lineup.",
-        "Updated stage countdown engine to control theater alert banner.",
-        "Verified responsive layout with zero console errors."
-      ],
-      "4.9.100": [
-        "Removed auditorium stream active late arrivals welcome subtext.",
-        "Removed duplicate Enter button from Schedule tab banner.",
-        "Enabled permanently active Enter button on Theater stage.",
-        "Verified responsive layout with zero console errors."
-      ],
-      "4.9.99": [
-        "Removed auditorium doors are open from schedule banner.",
-        "Cleaned stage entrance subtext and seating status labels.",
-        "Streamlined countdown subheads for show start indicators.",
-        "Verified responsive layout with zero console errors."
-      ],
-      "4.9.98": [
-        "Simplified entrance gold button text to Enter.",
-        "Streamlined live screening alert banner button to Enter.",
-        "Maintained clean subtext indicators for active auditorium status.",
-        "Verified responsive layout with zero console errors."
-      ],
-      "4.9.97": [
-        "Fixed live screening runtime countdown reference error on stage.",
-        "Unlocked live screening entrance button during active movie presentations.",
-        "Restored schedule tab rendering during live screening showtimes.",
-        "Ensured real-time countdown updates with zero console errors."
-      ],
-      "4.9.96": [
-        "Rebranded Annual Hub to Marathons across controls and modal.",
-        "Added franchise cards for Harry Potter and Pirates runs.",
-        "Added action showcase cards for Fast and Ghostbusters marathons.",
-        "Enabled one-tap vault filtering for legendary movie marathons.",
-        "Verified clean responsive layouts and zero console errors."
-      ],
-      "4.9.95": [
-        "Reordered Vault header with stats bar positioned at the top.",
-        "Dedicated full-width second row for media and source filters.",
-        "Positioned annual years and festival theme shortcuts below filters.",
-        "Streamlined responsive spacing across mobile, tablet, and desktop screens.",
-        "Zero console errors and seamless filter interactions fully verified."
-      ],
-      "4.9.94": [
-        "Moved festival date badges down into metadata pill rows.",
-        "Opened top-right sky for unblocked living motion animations.",
-        "Fluttering bat and ghost now move freely without obstruction.",
-        "Drifting snowflakes and sparkles glide across open card headers.",
-        "Harmonized badge hierarchy across all Halloween and Christmas cards.",
-        "Verified clean responsive layouts and zero console errors."
-      ],
-      "4.9.93": [
-        "Pumpkin Ember morphic card for 2025 Halloween Marathon.",
-        "Added animated fluttering bat and floating spectral ghost wisp.",
-        "Pulsing candlelight ambient glow with purple graveyard fog backdrop.",
-        "Glossy molten amber-orange gradient action button with active styling.",
-        "Added companion swaying snow and twinkling stars to Christmas.",
-        "Full interactive vault filtering and responsive layout verified."
-      ],
-      "4.9.92": [
-        "Frosted Aurora morphic cards for Christmas festival lineups.",
-        "Dual emerald and ruby ambient glow with frost backdrop.",
-        "Added sparkling snow crystal accents and festive badge pills.",
-        "Glossy emerald to ruby gradient festival action buttons.",
-        "Applied to both 2024 and 2025 Christmas events.",
-        "Full responsive and interactive vault filtering verified."
-      ],
-      "4.9.91": [
-        "Redesigned Movie Media Studio header with spacious two-tier layout.",
-        "Fixed button and input overlap in admin media header.",
-        "Expanded movie title editor into dedicated full-width input bar.",
-        "Added direct Google Sheets sync button beside movie selector.",
-        "Verified responsive layout across mobile, tablet, and desktop viewports."
-      ],
-      "4.9.90": [
-        "Unified Movie Media Studio into one single screen.",
-        "Preview posters and official YouTube trailers side-by-side.",
-        "Added 1-click master save button for all movie media.",
-        "Integrated inline movie title editor to fix typos instantly.",
-        "Renamed movie titles sync to Google Sheets and site.",
-        "Added direct Google Sheets sync button to refresh catalog.",
-        "Protected Google Sheets movie titles from automatic overwriting.",
-        "Fixed 2025 Scary Movie Marathon row name and details."
-      ],
-      "4.9.89": [
-        "Restored verified high-res TMDB artwork for holiday festival films.",
-        "Eliminated 404 placeholder fallbacks across 2024 Christmas lineup.",
-        "Added official poster artwork for all community movie requests.",
-        "Enhanced artwork dictionary to prevent missing poster canvas displays.",
-        "Synchronized verified poster paths across web app and catalog."
-      ],
-      "4.9.88": [
-        "Integrated official 2024 Christmas Festival archive with 25 movies.",
-        "Sequenced December 2024 holiday festival daily from Dec 1-25.",
-        "Added dedicated 2024 Christmas Festival showcase in Annual Hub.",
-        "Each 2024 festival film displays sequential Holiday Film badges.",
-        "Updated screening counts and vintage archives for historical accuracy."
-      ],
-      "4.9.87": [
-        "Dynamically indexed collection movie order and total film count.",
-        "Sequenced Christmas screening festival films from 1 to 22.",
-        "Preserved sequential marathon film numbering from 1 to 11.",
-        "Added themed emerald holiday badges for Christmas festival films.",
-        "Eliminated static fallback causing all collection cards showing 1."
-      ],
-      "4.9.86": [
-        "Added annual screening archive browser with quick year selector pills.",
-        "Added dedicated Halloween and Christmas annual holiday collection filters.",
-        "Added interactive Annual Collections and Holiday Hub showcase modal.",
-        "Themed collection banners highlight yearly archives and holiday festivals.",
-        "One-click reset returns to full vault movie archive effortlessly."
-      ],
-      "4.9.85": [
-        "Added individual movie sub-cards for full marathon film collection.",
-        "Each marathon movie features verified artwork and embedded trailers.",
-        "One-click collection filter browses all marathon films in sequence.",
-        "Marathon event hub card links directly to individual sub-cards.",
-        "Zero external search windows for streamlined in-app video playback."
-      ],
-      "4.9.81": [
-        "Added styled scrollbars to movie card plot summaries.",
-        "Preserved clean multi-line breaks across all movie summaries.",
-        "Formatted 2025 Mystery Scary Movie Marathon full lineup.",
-        "Enhanced admin media studio summary preview with scrollbars.",
-        "Supported scrollable synopsis in both Schedule and Vault cards."
-      ],
-      "4.9.80": [
-        "Unified movie media studio consolidates posters, trailers, and plot summaries.",
-        "Added editable plot summary, year, runtime, and genre controls.",
-        "Corrected 2025 Mystery Scary Movie Marathon date and time.",
-        "Prevented past marathon titles from colliding with upcoming schedule.",
-        "Removed redundant scheduled status badges from vault trailer row."
-      ],
-      "4.9.79": [
-        "Fixed trailer dropdown resetting to top movie during background sync.",
-        "Preserved selected movie and query during live catalog updates.",
-        "Prevented background sync from wiping active trailer search candidates.",
-        "Safe indexed candidate cards prevent special character parsing bugs.",
-        "Disabled intrusive autoplay audio on initial candidate auto-selection."
-      ],
-      "4.9.78": [
-        "Added title correction input to Movie Trailers Preview Manager.",
-        "Introduced interactive visual TMDB candidate gallery for trailers.",
-        "Added one-click YouTube video preview to trailer candidate cards.",
-        "Added one-click reset to default trailer in admin studio.",
-        "Upgraded trailer search to multi-search with TV show fallback."
-      ],
-      "4.9.77": [
-        "Added title correction input to Movie Posters Artwork Manager.",
-        "Introduced interactive visual TMDB candidate gallery for custom artwork.",
-        "Added quick navigation section switcher to Admin Control Studio.",
-        "Populated movie selector with all scheduled and vault titles.",
-        "Replaced blocking browser alerts with sleek inline status toasts."
-      ],
-      "4.9.76": [
-        "Completely removed PIN and passkey inputs from admin authentication.",
-        "Restored pure one-click Google Sign-In for administrator portal.",
-        "Cleaned up admin modal to eliminate unwanted passkey forms.",
-        "Retained streamlined top navigation bar with public cinema tabs.",
-        "Ensured authorized Google accounts remain exclusive admin access method."
-      ],
-      "4.9.75": [
-        "Removed Admin Portal button from the main navigation bar.",
-        "Added Master Admin Passkey unlock for instant studio access.",
-        "Resolved Google sign-in popup conflicts and unauthorized domain errors.",
-        "Fixed artwork rendering for Neighbors 2: Sorority Rising everywhere.",
-        "Streamlined top navigation bar with clean public cinema tabs."
-      ],
-      "4.9.74": [
-        "Deduplicated informal movie requests against official scheduled titles.",
-        "Eliminated duplicate Neighbors 2 card in Vault library.",
-        "Merged requester credit onto full official movie card.",
-        "Enhanced Vault matching to recognize subtitle and schedule variations.",
-        "Ensured single clean movie card per scheduled screening."
-      ],
-      "4.9.73": [
-        "Concluded screenings now accurately display as Watched in Vault.",
-        "Past screening dates properly format under clean Watched status.",
-        "Active and upcoming screenings retain their Scheduled status banner.",
-        "Enhanced Vault filtering across past movies and active requests.",
-        "Synchronized live schedule status checks with current date thresholds."
-      ],
-      "4.9.72": [
-        "Added verified runtimes for scheduled and requested cinema titles.",
-        "Vault cards now highlight Scheduled status with screening dates.",
-        "Eliminated duplicate status tags to preserve clean card layout.",
-        "Merged live theater schedule details directly into catalog movies.",
-        "Streamlined card UI to a single unified status section."
-      ],
-      "4.9.71": [
-        "Removed redundant Watched badge from Vault movie poster artwork.",
-        "Preserved clean, unobstructed widescreen artwork across all past titles.",
-        "Kept dedicated screening date section intact at card bottom.",
-        "Retained Request and TV badges for relevant catalog items.",
-        "Streamlined Vault card layout for cleaner cinema browsing experience."
-      ],
-      "4.9.70": [
-        "Eliminated automatic Enter Theater popup on normal page loads.",
-        "Update alerts now strictly appear only for newer versions.",
-        "Preserved What's New modal exclusively for manual clicks.",
-        "Removed premature service worker waiting prompts on startup.",
-        "Ensured clean theater viewing with zero unexpected popups."
-      ],
-      "4.9.69": [
-        "Added script to send past movies to Google Calendar.",
-        "Automatically discovers Google Calendar named movies with smart fallback.",
-        "Synchronizes past screening dates, showtimes, synopses, and trailers.",
-        "Updates existing calendar events and links newly created ones.",
-        "Added 1-click execution to Google Sheets calendar submenu."
-      ],
-      "4.9.68": [
-        "Eliminated automatic Enter Theater popup on normal page loads.",
-        "Update alerts now strictly appear only for newer versions.",
-        "Preserved What's New modal exclusively for manual clicks.",
-        "Removed premature service worker waiting prompts on startup.",
-        "Ensured clean theater viewing with zero unexpected popups."
-      ],
-      "4.9.67": [
-        "Added TMDB franchise collection detection to movie requests.",
-        "Introduced interactive bulk selection modal for movie sagas.",
-        "Enabled one-click requesting for all franchise installments.",
-        "Added select all and individual toggle controls for sagas.",
-        "Automated batch submission straight into Google Sheets queue."
-      ],
-      "4.9.66": [
-        "Reorganized Brian's Theater Google Sheets menus with clean hierarchy.",
-        "Eliminated redundant duplicate actions across all submenus.",
-        "Purged obsolete in-sheet search tab menu options.",
-        "Grouped tools into five focused and logical submenus.",
-        "Positioned Search & Edit Past Movies at top level."
-      ],
-      "4.9.65": [
-        "Added instant one-click row deletion to search popup.",
-        "Added confirmation alert preventing accidental movie row deletion.",
-        "Enabled real-time DOM card removal on row deletion.",
-        "Synchronized live stats decrementing immediately on deleted titles.",
-        "Deployed updated backend deletion endpoint to Google Sheets."
-      ],
-      "4.9.64": [
-        "Moved live movie, TV, and unsorted stats to search popup.",
-        "Added one-click type filtering across past movies catalog.",
-        "Added color-coded classification badges to all result cards.",
-        "Enabled instant type reclassification directly from the modal.",
-        "Deployed updated backend and search dialog to Apps Script."
-      ],
-      "4.9.63": [
-        "Built sleek Search & Edit Movies popup modal for sheets.",
-        "Added real-time debounced title search across past movies catalog.",
-        "Implemented instant row jumping and title renaming capabilities.",
-        "Integrated Search & Edit Movies into primary theater menus.",
-        "Pushed updated Apps Script backend across project environments."
-      ],
-      "4.9.62": [
-        "Automated cloud background execution for past movies formatting.",
-        "Integrated auto-correction directly into Google Sheets heartbeat sync.",
-        "Enhanced date normalizer for ISO and standard date formats.",
-        "Prevented recursive sync loops during past movies batch writes.",
-        "Synchronized live spreadsheet updates automatically without manual clicks."
-      ],
-      "4.9.61": [
-        "Instant one-click past movies correction using verified library.",
-        "Automatically fixes title typos and removes calendar artifacts.",
-        "Populates rich plot summaries, runtimes, and YouTube trailer links.",
-        "Executes single batch write in two seconds without timeouts.",
-        "Synchronizes pristine movie catalog to Firebase realtime database."
-      ],
-      "4.9.60": [
-        "Upgraded Past Movies auto-fill with 4-minute batch execution.",
-        "Added automatic background continuation triggers every 30 seconds.",
-        "Permanently eliminated in-cell pause limit text messages.",
-        "Automatically processes remaining movies until entire catalog completes.",
-        "Cleaned movie cells to keep spreadsheet descriptions pristine."
-      ],
-      "4.9.59": [
-        "Redesigned Vault search and counter with zero mobile text collision.",
-        "Optimized movie filter tabs for one-tap mobile phone tapping.",
-        "Polished mobile card layout and eliminated duplicate date overlays.",
-        "Expanded trailer buttons to full width for responsive mobile viewing.",
-        "Removed inner scroll trap for smooth natural page scrolling."
-      ],
-      "4.9.58": [
-        "Added one-click Past Movies auto-fill to Google Sheets.",
-        "Automatically populates missing movie runtimes and plot summaries.",
-        "Gemini AI fallback enriches titles missing from TMDB.",
-        "Writes detailed overviews and official YouTube trailer links.",
-        "Removed redundant Community Requests section from mobile phones."
-      ],
-      "4.9.57": [
-        "Completely removed redundant Community Requests section from phones.",
-        "Eliminated mobile screen clutter and saved phone resources.",
-        "Preserved streamlined Morphic ticket submission receipt stub.",
-        "Maintained background anti-spam rate limiting and validation defenses."
-      ],
-      "4.9.56": [
-        "Enriched all 459 past Vault movies with official TMDB posters.",
-        "Added verified widescreen cinema backdrops across the entire catalog.",
-        "Synchronized official movie runtimes, release years, and plot summaries.",
-        "Linked high-definition official YouTube trailers across confirmed screenings.",
-        "Preserved watched dates and screening times for every title."
-      ],
-      "4.9.55": [
-        "Integrated real headless Chrome automated end-to-end testing.",
-        "Eliminated 401 console error on custom request submission.",
-        "Verified live Community Requests Queue rendering in browser DOM.",
-        "Verified anti-spam honeypot and 30-second cooldown in browser.",
-        "Synchronized community movie requests seamlessly across tabs."
-      ],
-      "4.9.54": [
-        "Restored live Community Requests Queue on Requests tab.",
-        "Dynamically synchronized user movie requests into Vault tab.",
-        "Added honeypot trap to silently block automated spam bots.",
-        "Enforced thirty second request cooldown to prevent rapid spam.",
-        "Blocked external URL links and promo spam in requests.",
-        "Added backend duplicate filtering to keep spreadsheet clean."
-      ],
-      "4.9.53": [
-        "Permanently eliminated automated reload countdown loop on update alerts.",
-        "Service worker stops caching HTML documents to prevent stale views.",
-        "Added full service worker unregistration on manual app reload.",
-        "Guaranteed instant clean HTML load from server on reload.",
-        "Resolved browser cache lock and synchronized live versions cleanly."
-      ],
-      "4.9.52": [
-        "Dynamically synchronized footer version badge with active app version.",
-        "Unified version badges across footer, sidebar, and admin studio.",
-        "Added automatic version badge synchronizer on page startup.",
-        "Guaranteed footer version number updates instantly on new releases.",
-        "Eliminated stale hardcoded version tags throughout entire layout."
-      ],
-      "4.9.51": [
-        "Directly synced movie requests to Google Sheets spreadsheet.",
-        "Added real-time database pipeline for instant request ingestion.",
-        "Mapped all columns to match Google Form response sheet.",
-        "Added automatic checkboxes for scheduled and watched status.",
-        "Ensured 100% reliable delivery for all community suggestions."
-      ],
-      "4.9.50": [
-        "Aligned Vault cards to match exact Schedule tab styling.",
-        "Added dedicated Watched section displaying formatted screening date.",
-        "Standardized top poster badge with glowing watched indicator.",
-        "Unified summary header with uppercase icon styling across cards.",
-        "Streamlined card details grid for pixel-perfect cinema layout."
-      ],
-      "4.9.49": [
-        "Upgraded Vault cards to match Schedule tab layout.",
-        "Added 16:9 poster artwork banner to every movie.",
-        "Prominently featured watched dates and times across cards.",
-        "Added two-column details grid for times, runtime, year.",
-        "Integrated interactive trailer player drawer into Vault cards.",
-        "Synchronized all 459 past movies from Google Sheets."
-      ],
-      "4.9.48": [
-        "Transformed movie request tab into multi-color morphic theme.",
-        "Integrated glassmorphic frosted cards with ambient color glows.",
-        "Updated platform badges with signature iridescent brand gradient.",
-        "Enhanced TMDb movie suggestions with frosted glass styling.",
-        "Redesigned digital request pass with glowing holographic accents."
-      ],
-      "4.9.47": [
-        "Built custom cinema front-end for Google Form movie requests.",
-        "Added live movie suggestions with poster previews as you type.",
-        "Integrated interactive streaming platform badges and selection chips.",
-        "Created gold digital ticket confirmation pass for submitted requests.",
-        "Direct seamless submission to Google Form and Google Sheets."
-      ],
-      "4.9.46": [
-        "Hardened database security and resolved unauthorized access risks.",
-        "Hidden top navigation bar on smartphones for clean space.",
-        "Streamlined menu button label to Menu across header.",
-        "Permanently fixed update alert loop with hard cache purge.",
-        "Instant automatic update delivery with zero stale cache."
-      ],
-      "4.9.45": [
-        "Removed redundant title and date overlay from theater poster.",
-        "Unobstructed widescreen cinema artwork display on main stage.",
-        "Eliminated duplicate text repetition across screening room header.",
-        "Polished Theater tab layout with clean visual hierarchy.",
-        "Enhanced performance and fast responsive screen transitions."
-      ],
-      "4.9.44": [
-        "Added TMDB 1-click official trailer auto-discovery.",
-        "Built interactive Trailer Editor inside Admin Control Studio.",
-        "Unlocked 58 past movie trailers from Column N.",
-        "Full trailer sync across Column N and Column W.",
-        "Live player preview to verify trailers before saving."
-      ],
-      "4.9.43": [
-        "Removed unverified trailers from all community request cards.",
-        "Fixed incorrect Dune 2 fallback trailer on requests.",
-        "Request cards now cleanly display Awaiting Schedule badge.",
-        "Trailers only unlock once a movie is scheduled.",
-        "Verified trailer playback across confirmed past screenings."
-      ],
-      "4.9.42": [
-        "Upgraded poster status badges to high-contrast dark pills.",
-        "Guaranteed 100% legibility on bright white poster backgrounds.",
-        "Added top cinema vignette shadow to schedule cards.",
-        "Brightened Tomorrow status badge with glowing neon indicator.",
-        "Enhanced visual contrast across all screening artwork banners."
-      ],
-      "4.9.41": [
-        "Consolidated update alert into single popup with summary.",
-        "Eliminated duplicate post-reload popup so page loads cleanly.",
-        "Renamed Vault archive title to Movie Vault & Archive.",
-        "Simplified update alerts modal title and update summary.",
-        "Enhanced theater loading speed and smooth navigation flow."
-      ],
-      "4.9.40": [
-        "Renamed Movie Vault tab to Vault across entire app.",
-        "Updated main menu navigation bar with Vault label.",
-        "Updated mobile sidebar drawer link to Vault.",
-        "Updated home screen PWA shortcut title to Vault.",
-        "Cleaned navigation bar layout for streamlined theater browsing."
-      ],
-      "4.9.39": [
-        "Renamed Screening Room tab to Theater across entire app.",
-        "Updated main menu navigation bar with Theater label.",
-        "Updated mobile sidebar drawer link to Theater.",
-        "Updated home screen PWA shortcut title to Theater.",
-        "Streamlined navigation naming for cleaner browsing experience."
-      ],
-      "4.9.38": [
-        "Removed cluttered Theater Status banner from mobile layout.",
-        "Screening room now immediately highlights the main stage.",
-        "Optimized responsive mobile design for iOS and Android.",
-        "Cleaned redundant text lines above the hero card.",
-        "Enhanced mobile layout spacing across all screen sizes."
-      ],
-      "4.9.37": [
-        "Fixed update loop with strict current-version check.",
-        "Startup What's New prompt never auto-reloads page.",
-        "HTML navigation requests now fetch fresh from network.",
-        "Countdown timer safely disabled when running latest version.",
-        "Cleaned Service Worker activation hooks to stop loop."
-      ],
-      "4.9.36": [
-        "Update button now displays Update Now.",
-        "Added automated countdown timer to auto-apply updates.",
-        "Button shows live remaining seconds before updating.",
-        "Instantly applies update when countdown hits zero.",
-        "Countdown cancels cleanly if user dismisses toast."
-      ],
-      "4.9.35": [
-        "Renamed app to Brian's Theater.",
-        "Installed app on home screen shows Brian's Theater.",
-        "Long movie titles now wrap across two lines cleanly.",
-        "Badges and years moved to separate dedicated row.",
-        "Multi-layer update detection runs reliably in background."
-      ],
-      "4.9.34": [
-        "Update popup now shows automatically on every visit.",
-        "Fixed missing toast for new and returning visitors.",
-        "Movie Vault now filters movies vs TV shows.",
-        "Each vault card shows a Movie or TV badge.",
-        "Multi-layer update detection running in background."
-      ],
-      "4.9.33": [
-        "Added Movie Vault filter to separate movies from TV shows.",
-        "Fixed search crowding so Avatar movie displays cleanly.",
-        "Added TV show and movie badges on all vault cards.",
-        "Added active multi-layer update detection with popup toast.",
-        "Updated Service Worker cache to version 4.9.33."
-      ],
-      "4.9.32": [
-        "Removed redundant featured screening card from schedule tab.",
-        "Focused schedule tab directly on upcoming movie lineup.",
-        "Streamlined layout for faster browsing of screening dates.",
-        "Maintained background sync for accurate countdowns."
-      ],
-      "4.9.31": [
-        "Popup toaster alerts for new app versions.",
-        "One-click refresh button to instantly install updates.",
-        "App Store style What's New feature release notes.",
-        "On-demand What's New viewer in sidebar and footer.",
-        "Smooth slide-in glassmorphism animations for updates."
-      ],
-      "4.9.30": [
-        "Next movie automatically rolls over when screening concludes.",
-        "Stage now features next premiere artwork and date display.",
-        "Added working trailer player and YouTube button on stage.",
-        "Added Add to Calendar reminder button on main stage.",
-        "Synchronized live changes in real time via Firebase stream.",
-        "Renamed Schedule and Next Up menu tab to Schedule."
       ]
     };
 
@@ -6773,8 +5641,13 @@
             renderSchedule();
           }
           if (tab === 'vault') {
-            if (typeof ensurePastMoviesCatalogLoaded === 'function') ensurePastMoviesCatalogLoaded();
-            if (typeof fetchFirebasePastMoviesIfNeeded === 'function') fetchFirebasePastMoviesIfNeeded();
+            if (typeof ensurePastMoviesCatalogLoaded === 'function') {
+              ensurePastMoviesCatalogLoaded().then(list => {
+                if ((!list || list.length === 0) && typeof fetchFirebasePastMoviesIfNeeded === 'function') {
+                  fetchFirebasePastMoviesIfNeeded();
+                }
+              });
+            }
             renderVault();
           }
           if (tab === 'plex') {
@@ -7045,7 +5918,7 @@
       };
     }
 
-    function applySinglePosterUpdate(title, imageUrl, broadcast = false) {
+    function applySinglePosterUpdate(title, imageUrl, broadcast = false, skipRender = false) {
       if (!title || !imageUrl) return;
       const cleanTitle = String(title).replace(/^🎬\s*/, '').trim();
       if (!cleanTitle) return;
@@ -7057,9 +5930,11 @@
       if (title && String(title).trim() !== cleanTitle) {
         customMovieImages[String(title).trim()] = imageUrl;
       }
-      try {
-        localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
-      } catch(e) {}
+      if (!skipRender) {
+        try {
+          localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages));
+        } catch(e) {}
+      }
 
       // 2. Broadcast to other open tabs on this browser
       if (broadcast && theaterBroadcastChannel) {
@@ -7125,24 +6000,26 @@
         });
       }
 
-      // 5. Re-render schedule cards
-      if (typeof renderSchedule === 'function') {
+      // 5. Re-render schedule cards (skipped during batch startup hydration)
+      if (!skipRender && typeof renderSchedule === 'function') {
         renderSchedule(window.theaterScheduleCache);
       }
 
       // 6. Direct visual mutation on rendered schedule card images in DOM for 0ms latency
-      try {
-        const schedGrid = document.getElementById('scheduleCardsGrid');
-        if (schedGrid) {
-          const imgs = schedGrid.querySelectorAll('img');
-          imgs.forEach(img => {
-            const alt = String(img.alt || '').replace(/^🎬\s*/, '').toLowerCase().trim();
-            if (matchesScheduleItem({ title: alt })) {
-              img.src = imageUrl;
-            }
-          });
-        }
-      } catch(e) {}
+      if (!skipRender) {
+        try {
+          const schedGrid = document.getElementById('scheduleCardsGrid');
+          if (schedGrid) {
+            const imgs = schedGrid.querySelectorAll('img');
+            imgs.forEach(img => {
+              const alt = String(img.alt || '').replace(/^🎬\s*/, '').toLowerCase().trim();
+              if (matchesScheduleItem({ title: alt })) {
+                img.src = imageUrl;
+              }
+            });
+          }
+        } catch(e) {}
+      }
 
       // 7. Update stage and next poster if active
       try {
@@ -8144,7 +7021,7 @@
       if (!container || !frame) return;
 
       if (isStageTrailerOpen) {
-        frame.src = "";
+        frame.removeAttribute('src');
         container.classList.add('hidden');
         if (label) label.textContent = "Trailer ▾";
         if (btn) btn.className = "py-2.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 hover:border-amber-400/50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95";
@@ -12850,6 +11727,11 @@
     // Live Firebase Realtime Handler
     function applyFirebaseData(data) {
       if (!data) return;
+      try {
+        const sig = JSON.stringify(data);
+        if (window._lastAppliedFirebaseSig === sig) return;
+        window._lastAppliedFirebaseSig = sig;
+      } catch(e) {}
       const now = Date.now();
 
       // 1. Authoritative Cinema Schedule Resolution
@@ -13002,7 +11884,7 @@
         try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
         for (const [k, v] of Object.entries(customMovieImages)) {
           if (typeof v === 'string') {
-            applySinglePosterUpdate(k, v, false);
+            applySinglePosterUpdate(k, v, false, true);
           }
         }
       }
@@ -13087,7 +11969,8 @@
       if (data.requests && Array.isArray(data.requests) && data.requests.length > 0) {
         communityRequests = data.requests;
         loadRequests();
-      } else {
+      } else if ((!communityRequests || communityRequests.length === 0) && !window._requestsFallbackFetched) {
+        window._requestsFallbackFetched = true;
         fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/requests.json')
           .then(r => r.json())
           .then(reqData => {
@@ -13105,7 +11988,8 @@
       // Sync live Plex VIP users database from Firebase
       if (data.plexUsers) {
         applyPlexUsersFromData(data.plexUsers);
-      } else {
+      } else if ((!plexUsersMap || Object.keys(plexUsersMap).length === 0) && !window._plexUsersFallbackFetched) {
+        window._plexUsersFallbackFetched = true;
         syncPlexUsersFromFirebase(false);
       }
     }
@@ -13130,7 +12014,7 @@
                   Object.assign(customMovieImages, payload.data);
                   try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
                   for (const [k, v] of Object.entries(payload.data)) {
-                    if (typeof v === 'string') applySinglePosterUpdate(k, v, false);
+                    if (typeof v === 'string') applySinglePosterUpdate(k, v, false, true);
                   }
                   renderSchedule(window.theaterScheduleCache);
                 }
@@ -13186,7 +12070,7 @@
                 Object.assign(customMovieImages, payload.data);
                 try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
                 for (const [k, v] of Object.entries(payload.data)) {
-                  if (typeof v === 'string') applySinglePosterUpdate(k, v, false);
+                  if (typeof v === 'string') applySinglePosterUpdate(k, v, false, true);
                 }
                 renderSchedule(window.theaterScheduleCache);
               } else if (payload.path === '/seasonalTheme' && payload.data) {
@@ -15179,7 +14063,7 @@
           ${hasTrailer ? `
           <div id="trailerViewer-${cardKey}" class="hidden flex-col gap-2 mt-2 pt-2.5 border-t border-slate-800/80">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
-              <iframe id="trailerFrame-${cardKey}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(hub.title)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe id="trailerFrame-${cardKey}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" title="Trailer: ${escapeHtml(hub.title)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
               <span class="truncate font-mono">🍿 ${escapeHtml(hub.title)} Trailer</span>
@@ -15702,7 +14586,7 @@
         const prevBtnText = document.getElementById(`trailerBtnText-${activeCardTrailerIdx}`);
         const prevBtn = document.getElementById(`trailerBtn-${activeCardTrailerIdx}`);
         if (prevViewer) prevViewer.classList.add('hidden');
-        if (prevFrame) prevFrame.src = "";
+        if (prevFrame) prevFrame.removeAttribute('src');
         if (prevBtnText) prevBtnText.textContent = "Watch Trailer ▾";
         if (prevBtn) prevBtn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95";
         activeCardTrailerIdx = null;
@@ -16281,7 +15165,7 @@
             <!-- Vault Dropdown Video Viewer Drawer -->
             <div id="trailerViewer-vault-${idx}" class="hidden flex-col gap-2 mt-2 pt-3 border-t border-slate-800/80">
               <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
-                <iframe id="trailerFrame-vault-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(cleanTitle)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="trailerFrame-vault-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" title="Trailer: ${escapeHtml(cleanTitle)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
               <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
                 <span class="truncate font-mono">🍿 ${escapeHtml(cleanTitle)} Trailer</span>
@@ -16847,8 +15731,23 @@
     }
 
     function mergePastMoviesIntoVault(pastList) {
-      if (!Array.isArray(pastList)) return;
+      if (!Array.isArray(pastList) || pastList.length === 0) return;
       let added = 0;
+
+      // Fast O(1) title index to avoid O(N^2) scans across 600+ catalog items
+      const vaultByTitle = new Map();
+      for (let i = 0; i < vaultMovies.length; i++) {
+        const v = vaultMovies[i];
+        if (!v || !v.title) continue;
+        const k = v.title.toLowerCase().trim();
+        let bucket = vaultByTitle.get(k);
+        if (!bucket) {
+          bucket = [];
+          vaultByTitle.set(k, bucket);
+        }
+        bucket.push(v);
+      }
+
       pastList.forEach(m => {
         if (!m || !m.title) return;
         let cleanTitle = m.title.replace(/^🎬\s*/, '').replace(/^Movie:\s*/i, '').replace(/\s+at\s+.*$/i, '').trim();
@@ -16867,8 +15766,9 @@
         const itemSource = isActuallyPast ? (m.source || "past") : (m.source === "past" ? "request" : (m.source || "request"));
         const defaultStatus = m.status || (isActuallyPast ? "Watched" : "Not Scheduled");
 
-        const existing = vaultMovies.find(v => {
-          if (v.title.toLowerCase().trim() !== cleanTitle.toLowerCase().trim()) return false;
+        const lowerClean = cleanTitle.toLowerCase().trim();
+        const candidates = vaultByTitle.get(lowerClean);
+        const existing = candidates ? candidates.find(v => {
           // If both have different non-empty watch dates, check if separate annual screenings or collections
           const vDate = v.watchDate || v.date || '';
           if (vDate && watchDate && vDate !== watchDate) {
@@ -16878,10 +15778,10 @@
             if (v.marathonCollection && m.marathonCollection && v.marathonCollection !== m.marathonCollection) return false;
           }
           return true;
-        });
+        }) : null;
 
         if (!existing) {
-          vaultMovies.push({
+          const newEntry = {
             title: cleanTitle,
             mediaType: m.mediaType || ((cleanTitle.toLowerCase().includes("season") || cleanTitle.toLowerCase().includes("episode") || (m.genre && m.genre.includes("TV"))) ? "tv" : "movie"),
             year: m.releaseYear || m.year || "Past",
@@ -16908,7 +15808,14 @@
             marathonTotal: m.marathonTotal || null,
             screeningYear: m.screeningYear || null,
             holidayCategory: m.holidayCategory || ""
-          });
+          };
+          vaultMovies.push(newEntry);
+          let bucket = vaultByTitle.get(lowerClean);
+          if (!bucket) {
+            bucket = [];
+            vaultByTitle.set(lowerClean, bucket);
+          }
+          bucket.push(newEntry);
           added++;
         } else {
           // 100% preservation of Column N data, watch date, times, trailer, and artwork
@@ -16966,8 +15873,10 @@
 
     // Ingest pre-cached past movies catalog and sync theater stats
     function ingestPastMoviesCatalog() {
+      if (window._pastCatalogIngested) return;
       const localPastList = (typeof window !== 'undefined') ? (window.INITIAL_PAST_MOVIES || window.PAST_MOVIES_DATA) : null;
       if (Array.isArray(localPastList) && localPastList.length > 0) {
+        window._pastCatalogIngested = true;
         localPastList.forEach(m => {
           if (!m) return;
           if (m.title && /^2025\s*(mystery\s*)?(scary\s*movie\s*marathon|shocktoberfest)$/i.test(m.title)) {
@@ -17014,10 +15923,10 @@
     }
 
     function fetchFirebasePastMoviesIfNeeded() {
-      if (!window._pastMoviesLoaded && (!window.pastMoviesCatalog || window.pastMoviesCatalog.length === 0)) {
+      if (!window._pastMoviesLoaded && !window._pastCatalogIngested && (!window.pastMoviesCatalog || window.pastMoviesCatalog.length === 0)) {
         window._pastMoviesLoaded = true;
-        fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterSync/pastMovies.json')
-          .then(r => r.json())
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterArchive/pastMovies.json?auth=${FIREBASE_SECRET_KEY}`)
+          .then(r => r.ok ? r.json() : null)
           .then(pastData => {
             if (Array.isArray(pastData) && pastData.length > 0) {
               mergePastMoviesIntoVault(pastData);
@@ -17110,7 +16019,7 @@
         if (btn) btn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-bold border border-amber-300 transition flex items-center gap-1.5 shadow-md active:scale-95";
         activeCardTrailerIdx = id;
       } else {
-        frame.src = "";
+        frame.removeAttribute('src');
         viewer.classList.add('hidden');
         if (btnText) btnText.textContent = "Watch Trailer ▾";
         if (btn) btn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 transition flex items-center gap-1.5 shadow-sm active:scale-95";
@@ -17131,6 +16040,10 @@
       if (!grid) return;
       const isHidden = grid.classList.contains('hidden');
       if (isHidden) {
+        if (grid.dataset.needsHydration === 'true' && Array.isArray(window._cachedPastScheduleItems)) {
+          grid.innerHTML = window._cachedPastScheduleItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
+          grid.dataset.needsHydration = 'false';
+        }
         grid.classList.remove('hidden');
         grid.classList.add('grid');
         if (arrow) arrow.textContent = '▴ Hide Concluded';
@@ -17373,7 +16286,7 @@
           <!-- Dropdown Video Viewer Drawer -->
           <div id="trailerViewer-${btnPrefix}-${idx}" class="hidden flex-col gap-2 mt-2 pt-3 border-t border-slate-800/80">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl">
-              <iframe id="trailerFrame-${btnPrefix}-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" src="" title="Trailer: ${escapeHtml(s.title || '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe id="trailerFrame-${btnPrefix}-${idx}" data-trailer-id="${escapeHtml(trailerId)}" class="w-full h-full" title="Trailer: ${escapeHtml(s.title || '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
               <span class="truncate font-mono">🍿 ${escapeHtml(s.title || '')} Trailer</span>
@@ -17514,7 +16427,8 @@
         }
       }
 
-      // Render recently concluded shelf
+      // Render recently concluded shelf (lazy-hydrated when shelf is expanded)
+      window._cachedPastScheduleItems = pastItems;
       const concWrapper = document.getElementById('concludedScreeningsWrapper');
       const concGrid = document.getElementById('concludedCardsGrid');
       const concTitle = document.getElementById('concludedShelfTitle');
@@ -17523,7 +16437,12 @@
           concWrapper.classList.remove('hidden');
           concWrapper.classList.add('flex');
           if (concTitle) concTitle.textContent = `Recently Concluded Screenings (${pastItems.length})`;
-          concGrid.innerHTML = pastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
+          if (!concGrid.classList.contains('hidden')) {
+            concGrid.innerHTML = pastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
+            concGrid.dataset.needsHydration = 'false';
+          } else {
+            concGrid.dataset.needsHydration = 'true';
+          }
         } else {
           concWrapper.classList.add('hidden');
           concWrapper.classList.remove('flex');
@@ -18982,6 +17901,10 @@ Enjoy the show! 🎬✨`;
       if (!rawWrapper || !customContainer) return;
 
       if (rawWrapper.classList.contains('hidden')) {
+        const gfIframe = document.getElementById('googleFormIframe');
+        if (gfIframe && !gfIframe.getAttribute('src') && gfIframe.dataset.src) {
+          gfIframe.src = gfIframe.dataset.src;
+        }
         rawWrapper.classList.remove('hidden');
         rawWrapper.classList.add('flex');
         customContainer.classList.add('hidden');

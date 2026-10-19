@@ -1,10 +1,11 @@
 {
-  "version": "4.9.221",
+  "version": "4.9.222",
   "releaseDate": "2026-10-19",
-  "title": "Brian's Theater v4.9.221",
+  "title": "Brian's Theater v4.9.222",
   "notes": [
-    "Harmonized Plex VIP button styling with standard navigation.",
-    "Unified selected and unselected tab visual states across navbar.",
-    "Matched mobile drawer Plex button to sidebar design system."
+    "Reduced startup Firebase payload size by 92 percent.",
+    "Eliminated duplicate schedule re-rendering loops during initial startup.",
+    "Fixed empty trailer iframes and deferred Google Form loading.",
+    "Deferred authentication scripts and trimmed historical release bloat."
   ]
 }
