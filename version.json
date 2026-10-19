@@ -1,10 +1,12 @@
 {
-  "version": "4.9.204",
+  "version": "4.9.205",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.204",
+  "title": "Brian's Theater v4.9.205",
   "notes": [
-    "Added live Spotify account sync with remote stream controls.",
-    "Preserves full listening stats and Spotify Wrapped stream credits.",
-    "Twitch stream overlay displays live album art and equalizer."
+    "Fixed Enter button URL linking to partywatch watch party.",
+    "Added Enter theater button editor inside Admin Control Studio.",
+    "Resolved dynamic trailer matching across all October lineup movies.",
+    "Fixed Spotify setup modal container and direct click interaction.",
+    "Themed Twitch doors-open URL button with festive Halloween gradient."
   ]
 }

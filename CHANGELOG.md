@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.205] - 2026-10-18
+
+### What's New
+- Fixed Enter button URL linking to partywatch watch party.
+- Added Enter theater button editor inside Admin Control Studio.
+- Resolved dynamic trailer matching across all October lineup movies.
+- Fixed Spotify setup modal container and direct click interaction.
+- Themed Twitch doors-open URL button with festive Halloween gradient.
+
 ## [4.9.204] - 2026-10-18
 
 ### What's New

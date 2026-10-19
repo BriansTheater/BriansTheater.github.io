@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.204 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.205 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -488,7 +488,7 @@
               <button type="button" onclick="setDoorOverrideMode('force_open')" id="stageBtnDoorOpen" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 hover:border-amber-400 transition active:scale-95 shadow-sm cursor-pointer">Open</button>
               <button type="button" onclick="setDoorOverrideMode('force_closed')" id="stageBtnDoorClose" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 hover:border-red-400 transition active:scale-95 shadow-sm cursor-pointer">Close</button>
               <button type="button" onclick="concludeCurrentShowEarly()" id="stageBtnEndEarly" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-rose-950 text-rose-300 border border-rose-700/60 hover:border-rose-400 transition active:scale-95 shadow-sm cursor-pointer" title="Conclude current show early and close doors now">End</button>
-              <button type="button" onclick="promptPartyWatchUrl()" id="stageBtnSetPartyUrl" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition active:scale-95 shadow-sm cursor-pointer" title="Configure Watch / Party Link">URL 🔗</button>
+              <button type="button" onclick="openEnterButtonConfigModal()" id="stageBtnSetPartyUrl" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition active:scale-95 shadow-sm cursor-pointer" title="Configure Enter Theater Button & Watch URL">Edit Button 🚪</button>
             </div>
           </div>
           
@@ -535,7 +535,7 @@
 
           <!-- STATE B: ENTER THEATER BUTTON (Visible ONLY when doors are open) -->
           <div id="theaterDoorsOpenCta" class="hidden flex-col gap-2 w-full">
-            <a id="btnEnterAuditorium" href="http://tiny.cc/BriansTheater" target="_blank" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black text-base sm:text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(249,115,22,0.45)] hover:shadow-[0_0_45px_rgba(168,85,247,0.65)] border border-orange-500/40 transition transform active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer">
+            <a id="btnEnterAuditorium" href="http://tiny.cc/partywatch" target="_blank" rel="noopener noreferrer" class="theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black text-base sm:text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(249,115,22,0.45)] hover:shadow-[0_0_45px_rgba(168,85,247,0.65)] border border-orange-500/40 transition transform active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer">
               <span id="btnEnterIconLeft">🎃</span>
               <span id="btnEnterAuditoriumText">Enter</span>
               <span id="btnEnterIconRight">🦇</span>
@@ -1064,6 +1064,64 @@
                 <span>Smart Auto detects month: Oct is Shocktoberfest, Dec is Christmas, otherwise Default.</span>
                 <a href="halloween-icons.html" target="_blank" rel="noopener noreferrer" class="text-orange-400 hover:text-orange-300 underline font-semibold shrink-0 ml-2">Browse All Icons & Badges ↗</a>
               </div>
+            </div>
+          </div>
+
+          <!-- 1B. Enter Theater Button & Watch Link Controller -->
+          <div class="p-5 rounded-xl bg-slate-950 border border-amber-500/40 flex flex-col gap-4 shadow-xl">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                <span>🚪</span> Enter Theater Button & Watch Link
+              </h3>
+              <span id="adminEnterBtnSyncBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">SYNCED</span>
+            </div>
+            <p class="text-xs text-slate-400">Configure the destination link, display text, and icons for the main auditorium Enter button and Twitch overlay.</p>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-semibold text-slate-300">Destination Watch URL</label>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                  <button type="button" onclick="setAdminEnterUrlPreset('partywatch')" class="text-amber-400 hover:text-amber-300 underline font-medium cursor-pointer">PartyWatch</button>
+                  <span class="text-slate-600">•</span>
+                  <button type="button" onclick="setAdminEnterUrlPreset('theater')" class="text-sky-400 hover:text-sky-300 underline font-medium cursor-pointer">Brian's Theater</button>
+                  <span class="text-slate-600">•</span>
+                  <button type="button" onclick="setAdminEnterUrlPreset('meet')" class="text-emerald-400 hover:text-emerald-300 underline font-medium cursor-pointer">Google Meet</button>
+                </div>
+              </div>
+              <input type="text" id="adminEnterButtonUrl" value="http://tiny.cc/partywatch" placeholder="e.g. http://tiny.cc/partywatch" oninput="previewAdminEnterButton()" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div class="sm:col-span-2">
+                <label class="text-xs font-semibold text-slate-300">Button Text</label>
+                <input type="text" id="adminEnterButtonText" value="Enter" placeholder="e.g. Enter" oninput="previewAdminEnterButton()" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Icons (Left / Right)</label>
+                <div class="flex gap-1.5 mt-1">
+                  <input type="text" id="adminEnterIconLeft" value="🎃" maxlength="4" oninput="previewAdminEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Left Emoji Icon">
+                  <input type="text" id="adminEnterIconRight" value="🦇" maxlength="4" oninput="previewAdminEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Right Emoji Icon">
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Button Preview -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col gap-2">
+              <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Live Preview</span>
+              <a id="adminEnterBtnPreview" href="http://tiny.cc/partywatch" target="_blank" rel="noopener noreferrer" class="theater-btn w-full py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black text-sm tracking-widest uppercase shadow-[0_0_20px_rgba(249,115,22,0.35)] border border-orange-500/40 flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-95">
+                <span id="adminEnterPreviewIconLeft">🎃</span>
+                <span id="adminEnterPreviewText">Enter</span>
+                <span id="adminEnterPreviewIconRight">🦇</span>
+              </a>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="saveAdminEnterButtonConfig()" class="flex-1 py-2.5 px-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-md flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+                <span>💾</span> <span>Save & Broadcast Button</span>
+              </button>
+              <button type="button" onclick="resetAdminEnterButtonConfig()" class="py-2.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition active:scale-95 cursor-pointer" title="Reset to default PartyWatch settings">
+                <span>🔄</span> Reset
+              </button>
             </div>
           </div>
 
@@ -3358,11 +3416,12 @@
       </div>
 
     </div>
+  </div>
 
   <!-- ========================================== -->
   <!-- SPOTIFY API CLIENT ID SETUP MODAL          -->
   <!-- ========================================== -->
-  <div id="spotifySetupModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeSpotifySetupModal()">
+  <div id="spotifySetupModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[999999] hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeSpotifySetupModal()">
     <div class="morphic-panel bg-slate-900/95 border border-emerald-500/40 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(16,185,129,0.3)] relative flex flex-col gap-4 text-slate-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
       
       <!-- Top Glowing Bar -->
@@ -3442,10 +3501,82 @@
     </div>
   </div>
 
+  <!-- ENTER THEATER BUTTON CONFIG MODAL -->
+  <div id="enterButtonConfigModal" class="hidden fixed inset-0 z-[999999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative w-full max-w-lg rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/50 p-6 shadow-2xl flex flex-col gap-4 text-xs text-slate-300">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🚪</span>
+          <h3 class="text-base font-bold text-slate-100">Edit Enter Theater Button & URL</h3>
+        </div>
+        <button type="button" onclick="closeEnterButtonConfigModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">
+        Configure the link, label, and emoji icons for the primary Enter Auditorium button shown when theater doors are open.
+      </p>
+
+      <!-- URL Input & Presets -->
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-200">Destination Watch URL</label>
+          <div class="flex items-center gap-1.5 text-[10px]">
+            <button type="button" onclick="setAdminEnterUrlPreset('partywatch')" class="text-amber-400 hover:text-amber-300 underline font-medium cursor-pointer">PartyWatch</button>
+            <span class="text-slate-600">•</span>
+            <button type="button" onclick="setAdminEnterUrlPreset('theater')" class="text-sky-400 hover:text-sky-300 underline font-medium cursor-pointer">Brian's Theater</button>
+            <span class="text-slate-600">•</span>
+            <button type="button" onclick="setAdminEnterUrlPreset('meet')" class="text-emerald-400 hover:text-emerald-300 underline font-medium cursor-pointer">Google Meet</button>
+          </div>
+        </div>
+        <input type="text" id="modalEnterButtonUrl" value="http://tiny.cc/partywatch" placeholder="e.g. http://tiny.cc/partywatch" oninput="previewModalEnterButton()" class="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400 font-mono">
+      </div>
+
+      <!-- Text & Icons -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="sm:col-span-2 flex flex-col gap-1">
+          <label class="text-xs font-semibold text-slate-200">Button Text</label>
+          <input type="text" id="modalEnterButtonText" value="Enter" placeholder="e.g. Enter" oninput="previewModalEnterButton()" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-semibold text-slate-200">Icons (Left / Right)</label>
+          <div class="flex gap-1.5">
+            <input type="text" id="modalEnterIconLeft" value="🎃" maxlength="4" oninput="previewModalEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Left Emoji">
+            <input type="text" id="modalEnterIconRight" value="🦇" maxlength="4" oninput="previewModalEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Right Emoji">
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Preview -->
+      <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2">
+        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Button Preview</span>
+        <a id="modalEnterBtnPreview" href="http://tiny.cc/partywatch" target="_blank" rel="noopener noreferrer" class="theater-btn w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black text-sm sm:text-base tracking-widest uppercase shadow-[0_0_25px_rgba(249,115,22,0.4)] border border-orange-500/40 flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-95">
+          <span id="modalEnterPreviewIconLeft">🎃</span>
+          <span id="modalEnterPreviewText">Enter</span>
+          <span id="modalEnterPreviewIconRight">🦇</span>
+        </a>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeEnterButtonConfigModal()" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" onclick="saveModalEnterButtonConfig()" class="py-2.5 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/30 transition transform active:scale-95 flex items-center gap-1.5 cursor-pointer">
+          <span>💾</span> Save & Broadcast
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.204";
+    const APP_VERSION = "4.9.205";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -3476,24 +3607,278 @@
     } catch(e) {}
     window.movieEarlyConclusionUntilMs = movieEarlyConclusionUntilMs;
 
-    let partyWatchUrl = "http://tiny.cc/BriansTheater";
+    let partyWatchUrl = "http://tiny.cc/partywatch";
     try {
       const savedPartyUrl = localStorage.getItem('brian_theater_party_url');
       if (savedPartyUrl) partyWatchUrl = savedPartyUrl;
     } catch(e) {}
     window.partyWatchUrl = partyWatchUrl;
 
-    function syncPartyWatchUrls(url) {
-      if (url) {
-        partyWatchUrl = url;
-        window.partyWatchUrl = url;
-        try { localStorage.setItem('brian_theater_party_url', url); } catch(e) {}
+    let enterButtonText = "Enter";
+    let enterIconLeft = "🎃";
+    let enterIconRight = "🦇";
+    try {
+      const savedText = localStorage.getItem('brian_theater_enter_btn_text');
+      if (savedText) enterButtonText = savedText;
+      const savedIconL = localStorage.getItem('brian_theater_enter_icon_left');
+      if (savedIconL) enterIconLeft = savedIconL;
+      const savedIconR = localStorage.getItem('brian_theater_enter_icon_right');
+      if (savedIconR) enterIconRight = savedIconR;
+    } catch(e) {}
+    window.enterButtonText = enterButtonText;
+    window.enterIconLeft = enterIconLeft;
+    window.enterIconRight = enterIconRight;
+
+    function syncPartyWatchUrls(url, text, iconL, iconR) {
+      if (url && typeof url === 'string') {
+        partyWatchUrl = url.trim();
+        window.partyWatchUrl = partyWatchUrl;
+        try { localStorage.setItem('brian_theater_party_url', partyWatchUrl); } catch(e) {}
       }
-      const raw = (partyWatchUrl || "http://tiny.cc/BriansTheater").trim();
+      if (text !== undefined && text !== null && typeof text === 'string') {
+        enterButtonText = text.trim();
+        window.enterButtonText = enterButtonText;
+        try { localStorage.setItem('brian_theater_enter_btn_text', enterButtonText); } catch(e) {}
+      }
+      if (iconL !== undefined && iconL !== null && typeof iconL === 'string') {
+        enterIconLeft = iconL.trim();
+        window.enterIconLeft = enterIconLeft;
+        try { localStorage.setItem('brian_theater_enter_icon_left', enterIconLeft); } catch(e) {}
+      }
+      if (iconR !== undefined && iconR !== null && typeof iconR === 'string') {
+        enterIconRight = iconR.trim();
+        window.enterIconRight = enterIconRight;
+        try { localStorage.setItem('brian_theater_enter_icon_right', enterIconRight); } catch(e) {}
+      }
+
+      const raw = (partyWatchUrl || "http://tiny.cc/partywatch").trim();
       const btnLink = document.getElementById('btnEnterAuditorium');
       const btnText = document.getElementById('btnEnterAuditoriumText');
-      if (btnLink) btnLink.href = raw;
-      if (btnText) btnText.textContent = "Enter";
+      const iconLeftEl = document.getElementById('btnEnterIconLeft');
+      const iconRightEl = document.getElementById('btnEnterIconRight');
+
+      if (btnLink) {
+        btnLink.href = raw;
+        btnLink.target = "_blank";
+        btnLink.rel = "noopener noreferrer";
+      }
+      if (btnText) btnText.textContent = enterButtonText || "Enter";
+      if (iconLeftEl) iconLeftEl.textContent = enterIconLeft || "🎃";
+      if (iconRightEl) iconRightEl.textContent = enterIconRight || "🦇";
+
+      // Also keep Admin inputs synchronized
+      const adminUrl = document.getElementById('adminEnterButtonUrl');
+      const adminTxt = document.getElementById('adminEnterButtonText');
+      const adminL = document.getElementById('adminEnterIconLeft');
+      const adminR = document.getElementById('adminEnterIconRight');
+      if (adminUrl && adminUrl.value !== raw) adminUrl.value = raw;
+      if (adminTxt && adminTxt.value !== enterButtonText) adminTxt.value = enterButtonText;
+      if (adminL && adminL.value !== enterIconLeft) adminL.value = enterIconLeft;
+      if (adminR && adminR.value !== enterIconRight) adminR.value = enterIconRight;
+
+      // Keep Modal inputs synchronized
+      const modalUrl = document.getElementById('modalEnterButtonUrl');
+      const modalTxt = document.getElementById('modalEnterButtonText');
+      const modalL = document.getElementById('modalEnterIconLeft');
+      const modalR = document.getElementById('modalEnterIconRight');
+      if (modalUrl && modalUrl.value !== raw) modalUrl.value = raw;
+      if (modalTxt && modalTxt.value !== enterButtonText) modalTxt.value = enterButtonText;
+      if (modalL && modalL.value !== enterIconLeft) modalL.value = enterIconLeft;
+      if (modalR && modalR.value !== enterIconRight) modalR.value = enterIconRight;
+
+      previewAdminEnterButton();
+      previewModalEnterButton();
+    }
+
+    // Attach click handler to ensure Enter button navigation never fails
+    function initEnterButtonListener() {
+      const enterBtn = document.getElementById('btnEnterAuditorium');
+      if (enterBtn && !enterBtn.dataset.listenerAttached) {
+        enterBtn.dataset.listenerAttached = "true";
+        enterBtn.addEventListener('click', function(e) {
+          const dest = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
+          if (!dest) return;
+          this.href = dest;
+          try {
+            const win = window.open(dest, '_blank', 'noopener,noreferrer');
+            if (win) {
+              e.preventDefault();
+              win.focus();
+            }
+          } catch(err) {
+            // Default browser navigation will proceed
+          }
+        });
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initEnterButtonListener);
+    } else {
+      initEnterButtonListener();
+    }
+
+    function openEnterButtonConfigModal() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const modal = document.getElementById('enterButtonConfigModal');
+      const urlInput = document.getElementById('modalEnterButtonUrl');
+      const txtInput = document.getElementById('modalEnterButtonText');
+      const leftInput = document.getElementById('modalEnterIconLeft');
+      const rightInput = document.getElementById('modalEnterIconRight');
+
+      if (urlInput) urlInput.value = partyWatchUrl || "http://tiny.cc/partywatch";
+      if (txtInput) txtInput.value = enterButtonText || "Enter";
+      if (leftInput) leftInput.value = enterIconLeft || "🎃";
+      if (rightInput) rightInput.value = enterIconRight || "🦇";
+
+      previewModalEnterButton();
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeEnterButtonConfigModal() {
+      const modal = document.getElementById('enterButtonConfigModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function setAdminEnterUrlPreset(preset) {
+      let targetUrl = "http://tiny.cc/partywatch";
+      if (preset === 'theater') targetUrl = "http://tiny.cc/BriansTheater";
+      else if (preset === 'meet') targetUrl = "https://meet.google.com/jzp-zikj-ojm";
+
+      const adminUrl = document.getElementById('adminEnterButtonUrl');
+      const modalUrl = document.getElementById('modalEnterButtonUrl');
+      if (adminUrl) adminUrl.value = targetUrl;
+      if (modalUrl) modalUrl.value = targetUrl;
+
+      previewAdminEnterButton();
+      previewModalEnterButton();
+    }
+
+    function previewAdminEnterButton() {
+      const url = document.getElementById('adminEnterButtonUrl')?.value || "http://tiny.cc/partywatch";
+      const text = document.getElementById('adminEnterButtonText')?.value || "Enter";
+      const left = document.getElementById('adminEnterIconLeft')?.value || "🎃";
+      const right = document.getElementById('adminEnterIconRight')?.value || "🦇";
+
+      const previewBtn = document.getElementById('adminEnterBtnPreview');
+      const previewText = document.getElementById('adminEnterPreviewText');
+      const previewLeft = document.getElementById('adminEnterPreviewIconLeft');
+      const previewRight = document.getElementById('adminEnterPreviewIconRight');
+
+      if (previewBtn) previewBtn.href = url;
+      if (previewText) previewText.textContent = text;
+      if (previewLeft) previewLeft.textContent = left;
+      if (previewRight) previewRight.textContent = right;
+    }
+
+    function previewModalEnterButton() {
+      const url = document.getElementById('modalEnterButtonUrl')?.value || "http://tiny.cc/partywatch";
+      const text = document.getElementById('modalEnterButtonText')?.value || "Enter";
+      const left = document.getElementById('modalEnterIconLeft')?.value || "🎃";
+      const right = document.getElementById('modalEnterIconRight')?.value || "🦇";
+
+      const previewBtn = document.getElementById('modalEnterBtnPreview');
+      const previewText = document.getElementById('modalEnterPreviewText');
+      const previewLeft = document.getElementById('modalEnterPreviewIconLeft');
+      const previewRight = document.getElementById('modalEnterPreviewIconRight');
+
+      if (previewBtn) previewBtn.href = url;
+      if (previewText) previewText.textContent = text;
+      if (previewLeft) previewLeft.textContent = left;
+      if (previewRight) previewRight.textContent = right;
+    }
+
+    async function saveAdminEnterButtonConfig() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const url = (document.getElementById('adminEnterButtonUrl')?.value || '').trim() || "http://tiny.cc/partywatch";
+      const text = (document.getElementById('adminEnterButtonText')?.value || '').trim() || "Enter";
+      const iconL = (document.getElementById('adminEnterIconLeft')?.value || '').trim() || "🎃";
+      const iconR = (document.getElementById('adminEnterIconRight')?.value || '').trim() || "🦇";
+
+      syncPartyWatchUrls(url, text, iconL, iconR);
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            partyUrl: url,
+            enterButtonText: text,
+            enterButtonIconLeft: iconL,
+            enterButtonIconRight: iconR
+          })
+        });
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'enter_button_update',
+            partyUrl: url,
+            enterButtonText: text,
+            enterButtonIconLeft: iconL,
+            enterButtonIconRight: iconR
+          });
+        }
+      } catch(e) {}
+
+      showTheaterToast(`🚪 Enter Theater button updated & broadcasted!`);
+    }
+
+    async function saveModalEnterButtonConfig() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const url = (document.getElementById('modalEnterButtonUrl')?.value || '').trim() || "http://tiny.cc/partywatch";
+      const text = (document.getElementById('modalEnterButtonText')?.value || '').trim() || "Enter";
+      const iconL = (document.getElementById('modalEnterIconLeft')?.value || '').trim() || "🎃";
+      const iconR = (document.getElementById('modalEnterIconRight')?.value || '').trim() || "🦇";
+
+      syncPartyWatchUrls(url, text, iconL, iconR);
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            partyUrl: url,
+            enterButtonText: text,
+            enterButtonIconLeft: iconL,
+            enterButtonIconRight: iconR
+          })
+        });
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'enter_button_update',
+            partyUrl: url,
+            enterButtonText: text,
+            enterButtonIconLeft: iconL,
+            enterButtonIconRight: iconR
+          });
+        }
+      } catch(e) {}
+
+      closeEnterButtonConfigModal();
+      showTheaterToast(`🚪 Enter Theater button updated to ${text} (${url})!`);
+    }
+
+    function resetAdminEnterButtonConfig() {
+      syncPartyWatchUrls("http://tiny.cc/partywatch", "Enter", "🎃", "🦇");
+      showTheaterToast("🔄 Enter button reset to PartyWatch defaults.");
     }
 
     function syncAppVersionBadges() {
@@ -4302,6 +4687,13 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.205": [
+        "Fixed Enter button URL linking to partywatch watch party.",
+        "Added Enter theater button editor inside Admin Control Studio.",
+        "Resolved dynamic trailer matching across all October lineup movies.",
+        "Fixed Spotify setup modal container and direct click interaction.",
+        "Themed Twitch doors-open URL button with festive Halloween gradient."
+      ],
       "4.9.204": [
         "Added live Spotify account sync with remote stream controls.",
         "Preserves full listening stats and Spotify Wrapped stream credits.",
@@ -7202,8 +7594,8 @@
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
-      const cur = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/BriansTheater";
-      const res = prompt("Enter stream / party watch URL (e.g. http://tiny.cc/BriansTheater):", cur);
+      const cur = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
+      const res = prompt("Enter stream / party watch URL (e.g. http://tiny.cc/partywatch):", cur);
       if (res && res.trim()) {
         const cleaned = res.trim();
         syncPartyWatchUrls(cleaned);
@@ -7234,7 +7626,16 @@
       if (nextObj && nextObj.trailerId && nextObj.trailerId.trim()) {
         return nextObj.trailerId.trim();
       }
+      if (nextObj && nextObj.trailerUrl) {
+        const id = (typeof extractYouTubeId === 'function') ? extractYouTubeId(nextObj.trailerUrl) : null;
+        if (id) return id;
+      }
       if (nextObj && nextObj.movie) {
+        if (nextObj.movie.trailerId && nextObj.movie.trailerId.trim()) return nextObj.movie.trailerId.trim();
+        if (nextObj.movie.trailerUrl) {
+          const id = (typeof extractYouTubeId === 'function') ? extractYouTubeId(nextObj.movie.trailerUrl) : null;
+          if (id) return id;
+        }
         const fromMovie = (typeof getTrailerIdForMovie === 'function') ? getTrailerIdForMovie(nextObj.movie) : null;
         if (fromMovie && fromMovie.trim()) return fromMovie.trim();
       }
@@ -7250,6 +7651,17 @@
           for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
             if (k.toLowerCase() === lower && v) return v;
           }
+          if (lower.includes('nosferatu')) return 'nulvWqYUM8k';
+          if (lower.includes('evil dead')) return 'smTK_AeAPHs';
+          if (lower.includes('seeding')) return 'BunlosQQw-I';
+          if (lower.includes('backroom')) return '0HjdiohVOik';
+          if (lower.includes('hokum')) return 'fDooSsgINLQ';
+          if (lower.includes('undertone')) return '1_TRSEcMvR0';
+          if (lower.includes('kill you')) return 's0PGrtw0X1Q';
+          if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
+          if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
+          if (lower.includes('ahs') || lower.includes('american horror')) return '-9KfZwbvdvU';
+          if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
         }
       }
       return "vWs79_NK2h0"; // Sensible seasonal premiere trailer fallback
@@ -7555,9 +7967,9 @@
 
         // Enter button is active and visible during live screening!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "Enter";
+        if (btnEnterText) btnEnterText.textContent = enterButtonText || "Enter";
         const btnAudLinkLive = document.getElementById('btnEnterAuditorium');
-        if (btnAudLinkLive) btnAudLinkLive.href = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/BriansTheater";
+        if (btnAudLinkLive) btnAudLinkLive.href = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (stateMode === 2) {
@@ -7589,9 +8001,9 @@
 
         // Enter button is active and visible during pre-show seating!
         setEntranceState(true);
-        if (btnEnterText) btnEnterText.textContent = "Enter";
+        if (btnEnterText) btnEnterText.textContent = enterButtonText || "Enter";
         const btnAudLinkOpen = document.getElementById('btnEnterAuditorium');
-        if (btnAudLinkOpen) btnAudLinkOpen.href = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/BriansTheater";
+        if (btnAudLinkOpen) btnAudLinkOpen.href = (typeof partyWatchUrl !== 'undefined' ? partyWatchUrl : window.partyWatchUrl) || "http://tiny.cc/partywatch";
         if (btnEnterSubtext) btnEnterSubtext.textContent = "";
 
       } else if (nextObj.isIntermission) {
@@ -7755,9 +8167,16 @@
     function setTrailer(url) {
       const videoId = extractYouTubeId(url);
       if (videoId) {
-        const frame = document.getElementById('trailerFrame');
+        const frame = document.getElementById('stageTrailerFrame') || document.getElementById('trailerFrame');
         if (frame) {
-          frame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+          frame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+        }
+        const container = document.getElementById('stageTrailerPlayerContainer');
+        if (container) {
+          container.classList.remove('hidden');
+          isStageTrailerOpen = true;
+          const label = document.getElementById('stageTrailerBtnLabel');
+          if (label) label.textContent = "Close Trailer";
         }
         const adminInput = document.getElementById('adminTrailerUrl');
         if (adminInput) adminInput.value = url;
@@ -8049,8 +8468,35 @@
       }
       setTrailer(url);
 
+      const videoId = extractYouTubeId(url);
+
+      // Sync to Firebase for realtime Twitch overlay and multi-client update
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            trailerUrl: url,
+            trailerId: videoId || '',
+            timestamp: Date.now()
+          })
+        }).catch(() => {});
+      } catch(e) {}
+
+      // Broadcast to local tabs
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'stage_trailer_update',
+            trailerUrl: url,
+            trailerId: videoId || ''
+          });
+        }
+      } catch(e) {}
+
       fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' }).catch(() => {});
-      showTheaterToast(`🎬 Trailer broadcasted live to stage!`);
+      showTheaterToast(`🎬 Trailer broadcasted live to stage & stream!`);
       switchTab('screening');
     }
 
@@ -12546,9 +12992,17 @@
           return SCHEDULE_TRAILERS[cleanTitle];
         }
         const lower = cleanTitle.toLowerCase();
-        for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
-          if (k.toLowerCase() === lower) return v;
-        }
+        if (lower.includes('nosferatu')) return 'nulvWqYUM8k';
+        if (lower.includes('evil dead')) return 'smTK_AeAPHs';
+        if (lower.includes('seeding')) return 'BunlosQQw-I';
+        if (lower.includes('backroom')) return '0HjdiohVOik';
+        if (lower.includes('hokum')) return 'fDooSsgINLQ';
+        if (lower.includes('undertone')) return '1_TRSEcMvR0';
+        if (lower.includes('kill you')) return 's0PGrtw0X1Q';
+        if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
+        if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
+        if (lower.includes('ahs') || lower.includes('american horror')) return '-9KfZwbvdvU';
+        if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
       }
 
       return "";
