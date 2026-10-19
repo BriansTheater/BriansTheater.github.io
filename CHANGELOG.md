@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.221] - 2026-10-19
+
+### What's New
+- Harmonized Plex VIP button styling with standard navigation.
+- Unified selected and unselected tab visual states across navbar.
+- Matched mobile drawer Plex button to sidebar design system.
+
 ## [4.9.220] - 2026-10-19
 
 ### What's New

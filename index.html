@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.220 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.221 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -408,7 +408,7 @@
           <span id="navLabel-requests">Request</span>
         </button>
 
-        <button onclick="switchTab('plex')" id="nav-plex" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 transition flex items-center gap-2">
+        <button onclick="switchTab('plex')" id="nav-plex" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
           <span id="navIcon-plex">🎟️</span>
           <span id="navLabel-plex">Plex VIP</span>
         </button>
@@ -2424,10 +2424,10 @@
             <span id="sidebarNavLabel-requests" class="flex-1">Request</span>
             <span class="text-[10px] text-slate-500 font-mono">Suggest</span>
           </button>
-          <button id="sidebarNav-plex" onclick="switchTab('plex'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-indigo-500/10 hover:from-amber-500/20 hover:to-indigo-500/20 text-amber-200 border border-amber-500/30 text-xs font-semibold transition flex items-center gap-2.5 group cursor-pointer">
+          <button id="sidebarNav-plex" onclick="switchTab('plex'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
             <span id="sidebarNavIcon-plex" class="text-sm group-hover:scale-110 transition-transform">🎟️</span>
-            <span id="sidebarNavLabel-plex" class="flex-1">Plex VIP Access</span>
-            <span class="text-[10px] text-amber-400 font-mono">Join Free</span>
+            <span id="sidebarNavLabel-plex" class="flex-1">Plex VIP</span>
+            <span class="text-[10px] text-slate-500 font-mono">VIP</span>
           </button>
           <button id="sidebarNavAdmin" onclick="switchTab('admin'); toggleSidebar(false);" class="hidden w-full text-left px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-2.5 group">
             <span class="text-sm group-hover:scale-110 transition-transform">👑</span>
@@ -3943,7 +3943,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.220";
+    const APP_VERSION = "4.9.221";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5054,6 +5054,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.221": [
+        "Harmonized Plex VIP button styling with standard navigation.",
+        "Unified selected and unselected tab visual states across navbar.",
+        "Matched mobile drawer Plex button to sidebar design system."
+      ],
       "4.9.220": [
         "Fixed poster image flashing loop on Twitch overlay.",
         "Synchronized overlay version detector to stop recursive reloads.",
@@ -6759,11 +6764,7 @@
         if (tab === targetTab) {
           view.classList.remove('hidden');
           if (btn) {
-            if (tab === 'plex') {
-              btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow-md transition flex items-center gap-2";
-            } else {
-              btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
-            }
+            btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
           }
           if (tab === 'screening') {
             if (typeof applySeasonalTheme === 'function') applySeasonalTheme();
@@ -6787,11 +6788,7 @@
         } else {
           view.classList.add('hidden');
           if (btn) {
-            if (tab === 'plex') {
-              btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 transition flex items-center gap-2";
-            } else {
-              btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2";
-            }
+            btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2";
           }
         }
       });

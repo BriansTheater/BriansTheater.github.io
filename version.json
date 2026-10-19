@@ -1,11 +1,10 @@
 {
-  "version": "4.9.220",
+  "version": "4.9.221",
   "releaseDate": "2026-10-19",
-  "title": "Brian's Theater v4.9.220",
+  "title": "Brian's Theater v4.9.221",
   "notes": [
-    "Fixed poster image flashing loop on Twitch overlay.",
-    "Synchronized overlay version detector to stop recursive reloads.",
-    "Added local poster cache hydration for instant display.",
-    "Pre-seeded upcoming screening metadata to eliminate placeholder flicker."
+    "Harmonized Plex VIP button styling with standard navigation.",
+    "Unified selected and unselected tab visual states across navbar.",
+    "Matched mobile drawer Plex button to sidebar design system."
   ]
 }
