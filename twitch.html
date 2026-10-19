@@ -208,11 +208,20 @@
         <!-- Static/Closed Poster Image -->
         <img
           id="heroPosterImg"
-          src="https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg"
+          src="https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg"
           alt="Featured Movie Screening"
           class="w-full h-full object-cover object-center transition-opacity duration-700"
           onerror="handlePosterError(this)"
         />
+
+        <!-- Poster Error Warning Badge (Visible if artwork is missing or invalid) -->
+        <div id="posterErrorBadge" class="hidden absolute top-3 sm:top-4 right-3 sm:right-4 z-20 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-rose-950/90 border border-rose-500/80 text-rose-200 font-mono text-xs sm:text-sm font-black tracking-wide shadow-[0_0_25px_rgba(244,63,94,0.55)] backdrop-blur-md">
+          <span class="text-base sm:text-lg animate-bounce">⚠️</span>
+          <div class="flex flex-col text-left leading-tight">
+            <span class="text-rose-100 font-black tracking-wider uppercase drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">POSTER ERROR DETECTED</span>
+            <span class="text-[9px] sm:text-[10px] text-rose-300 font-sans font-medium">Default image in use — please update poster</span>
+          </div>
+        </div>
 
         <!-- Live Doors Open Trailer Replay Player (Replaces poster when doors open) -->
         <div id="heroTrailerContainer" class="hidden absolute inset-0 w-full h-full bg-black z-10 flex items-center justify-center">
@@ -434,6 +443,8 @@
     let eventSource = null;
     let lastKnownPayload = {};
 
+    const DEFAULT_FALLBACK_POSTER = "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg";
+
     // Curated High-Res Movie Artwork Map (Matches main theater stage)
     const verifiedMovieArtworks = {
       "Evil Dead Burn": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
@@ -455,25 +466,89 @@
       "It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
       "AHS": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13 e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
       "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "American Horror Story: Season 13, Episode 9": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "AHS: s13 e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "American Horror Story: Season 13, Episode 10": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13 e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
       "AHS: s13e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "American Horror Story: Season 13, Episode 11": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "AHS: s13 e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
       "AHS: s13e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
-      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg"
+      "American Horror Story: Season 13, Episode 12": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "AHS: s13 e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
+      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
+      "American Horror Story: Season 13, Episode 13": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg"
     };
 
     function getMovieArtworkUrl(title, customMap) {
       if (!title) return '';
-      const clean = title.replace(/^🎬\s*/, '').trim();
-      if (customMap && customMap[clean]) {
-        const v = customMap[clean];
-        return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+      const clean = String(title).replace(/^[🎬🎭🎞️🍿📽️\s]+/, '').trim();
+      if (!clean) return '';
+
+      const lower = clean.toLowerCase().trim();
+      const norm = lower.replace(/[^a-z0-9]/g, '');
+
+      const extractEpNum = (str) => {
+        if (!str) return null;
+        const m = str.match(/(?:e|ep|episode)\s*(\d+)/i);
+        return m ? parseInt(m[1], 10) : null;
+      };
+      const isAhsTitle = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
+      const queryEp = isAhsTitle ? extractEpNum(lower) : null;
+
+      const searchDict = (dict) => {
+        if (!dict) return null;
+        if (dict[clean]) {
+          const v = dict[clean];
+          return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+        }
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase().trim() === lower) {
+            return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+          }
+        }
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) {
+            return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+          }
+        }
+        if (queryEp !== null) {
+          for (const [k, v] of Object.entries(dict)) {
+            const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if ((kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) && extractEpNum(k) === queryEp) {
+              return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+            }
+          }
+        }
+        for (const [k, v] of Object.entries(dict)) {
+          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (!isAhsTitle) {
+            if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) {
+              return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+            }
+          }
+        }
+        return null;
+      };
+
+      const customResult = searchDict(customMap);
+      if (customResult) return customResult;
+
+      const verifiedResult = searchDict(verifiedMovieArtworks);
+      if (verifiedResult) return verifiedResult;
+
+      if (isAhsTitle) {
+        if (queryEp === 9 || lower.includes('details')) return "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg";
+        if (queryEp === 10 || lower.includes('prodigal')) return "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg";
+        if (queryEp === 11 || lower.includes('madison')) return "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg";
+        if (queryEp === 12 || lower.includes('sisters')) return "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg";
+        if (queryEp === 13 || lower.includes('devils')) return "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg";
+        return "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg";
       }
-      if (verifiedMovieArtworks[clean]) return verifiedMovieArtworks[clean];
-      const lower = clean.toLowerCase();
-      for (const [k, v] of Object.entries(verifiedMovieArtworks)) {
-        if (k.toLowerCase() === lower) return v;
-      }
+
       return '';
     }
 
@@ -577,11 +652,12 @@
       title: "Abraham's Boys A Dracula Story",
       startMs: 1792288800000,
       endMs: 1792294140000,
-      posterUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      posterUrl: DEFAULT_FALLBACK_POSTER,
       trailerId: "",
       showtimeText: "Saturday, Oct 17, 2026 • 7:00 PM PST",
       isNowPlaying: false,
-      doorMode: "auto"
+      doorMode: "auto",
+      isPosterError: false
     };
     window.activeMovie = activeMovie;
 
@@ -756,11 +832,23 @@
       return dateStr || 'Saturday, Oct 17, 2026 • 7:00 PM PST';
     }
 
-    // 3. Fallback poster image handler
+    // 3. Fallback poster image handler & error badge indicator
+    function showPosterErrorBadge(show) {
+      const badge = document.getElementById('posterErrorBadge');
+      if (!badge) return;
+      if (show) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
     function handlePosterError(imgEl) {
+      activeMovie.isPosterError = true;
+      showPosterErrorBadge(true);
       if (!imgEl.dataset.failed) {
         imgEl.dataset.failed = "true";
-        imgEl.src = "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg";
+        imgEl.src = DEFAULT_FALLBACK_POSTER;
       }
     }
 
@@ -800,6 +888,14 @@
       if (titleEl) titleEl.textContent = cleanTitle;
       applySmartMovieTitleSizing(cleanTitle);
       if (showtimeEl) showtimeEl.textContent = activeMovie.showtimeText;
+
+      // Check poster error condition
+      if (activeMovie.isPosterError || !activeMovie.posterUrl || activeMovie.posterUrl === DEFAULT_FALLBACK_POSTER) {
+        showPosterErrorBadge(true);
+      } else {
+        showPosterErrorBadge(false);
+      }
+
       if (posterEl && activeMovie.posterUrl) {
         if (posterEl.src !== activeMovie.posterUrl) {
           posterEl.style.opacity = '0.3';
@@ -909,7 +1005,13 @@
         activeMovie.showtimeText = formatShowtime(target.startMs, target.date, target.time);
 
         let resolvedPoster = target.posterUrl || getMovieArtworkUrl(activeMovie.title, merged.moviePosters);
-        if (resolvedPoster) activeMovie.posterUrl = resolvedPoster;
+        if (resolvedPoster) {
+          activeMovie.posterUrl = resolvedPoster;
+          activeMovie.isPosterError = false;
+        } else {
+          activeMovie.posterUrl = DEFAULT_FALLBACK_POSTER;
+          activeMovie.isPosterError = true;
+        }
 
         let resolvedTrailer = target.trailerId;
         if (!resolvedTrailer && target.trailerUrl) {
@@ -941,7 +1043,19 @@
       if (!payload) return;
       if (payload.title) activeMovie.title = payload.title.replace(/^🎬\s*/, '').trim();
       if (payload.date) activeMovie.showtimeText = payload.date;
-      if (payload.poster) activeMovie.posterUrl = payload.poster;
+      if (payload.poster) {
+        activeMovie.posterUrl = payload.poster;
+        activeMovie.isPosterError = false;
+      } else if (payload.title) {
+        const found = getMovieArtworkUrl(payload.title, lastKnownPayload.moviePosters);
+        if (found) {
+          activeMovie.posterUrl = found;
+          activeMovie.isPosterError = false;
+        } else {
+          activeMovie.posterUrl = DEFAULT_FALLBACK_POSTER;
+          activeMovie.isPosterError = true;
+        }
+      }
       if (payload.startMs || payload.targetMs) activeMovie.startMs = payload.startMs || payload.targetMs;
       if (payload.doorMode) activeMovie.doorMode = payload.doorMode;
       if (payload.partyUrl) activeMovie.partyUrl = payload.partyUrl;
@@ -1229,7 +1343,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.210";
+    const TWITCH_OVERLAY_VERSION = "4.9.211";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

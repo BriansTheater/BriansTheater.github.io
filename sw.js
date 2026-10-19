@@ -1,9 +1,9 @@
-// VERSION: 4.9.210
+// VERSION: 4.9.211
 // Brian's Theater PWA Service Worker
 // Offline Support & Asset Caching for Google / iOS Apps
 // ==========================================
 
-const CACHE_NAME = 'brian-theater-v4.9.210';
+const CACHE_NAME = 'brian-theater-v4.9.211';
 const MEDIA_CACHE_NAME = 'brian-theater-media-v1';
 const STATIC_ASSETS = [
   './manifest.json',

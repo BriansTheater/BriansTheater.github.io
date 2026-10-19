@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.211] - 2026-10-18
+
+### What's New
+- Added whitespace-agnostic canonical artwork matching for all movies.
+- Eliminated white letterbox borders across American Horror Story episodes.
+- Added live warning badge alert when poster error detected.
+
 ## [4.9.210] - 2026-10-18
 
 ### What's New

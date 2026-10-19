@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.210 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.211 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3579,7 +3579,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.210";
+    const APP_VERSION = "4.9.211";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4690,6 +4690,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.211": [
+        "Added whitespace-agnostic canonical artwork matching for all movies.",
+        "Eliminated white letterbox borders across American Horror Story episodes.",
+        "Added live warning badge alert when poster error detected."
+      ],
       "4.9.210": [
         "Added automatic post-movie schedule progression for Twitch overlay.",
         "OBS stream overlay automatically advances when movie finishes screening.",
@@ -6477,10 +6482,15 @@
       "AHS: s13e6: The return of devils night": "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg",
       "AHS: s13e7: The Baddest Witch Of Them All": "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg",
       "AHS: s13e8: Hell No": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
+      "AHS: s13 e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
       "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "AHS: s13 e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13 e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
       "AHS: s13e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "AHS: s13 e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
       "AHS: s13e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "AHS: s13 e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
       "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
       "Evil Dead Burn": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
       "Evil Dead": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
