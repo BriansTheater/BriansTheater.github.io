@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.208] - 2026-10-18
+
+### What's New
+- Added dynamic smart font scaling for all movie titles.
+- Short movie titles now render large, bold, and cinematic.
+- Long movie titles automatically scale down preventing layout clipping.
+- Synchronized smart title sizing across Twitch overlay and stage.
+
 ## [4.9.207] - 2026-10-18
 
 ### What's New

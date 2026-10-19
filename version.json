@@ -1,10 +1,11 @@
 {
-  "version": "4.9.207",
+  "version": "4.9.208",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.207",
+  "title": "Brian's Theater v4.9.208",
   "notes": [
-    "Added stacked two-line watch banner with festive Halloween icons.",
-    "Enhanced doors-open action button with large pumpkin and bat.",
-    "Optimized Twitch broadcast overlay legibility with prominent URL styling."
+    "Added dynamic smart font scaling for short and long titles.",
+    "Short movie titles now render large, bold, and cinematic.",
+    "Long movie titles automatically scale down preventing layout clipping.",
+    "Synchronized smart title sizing across Twitch overlay and main stage."
   ]
 }

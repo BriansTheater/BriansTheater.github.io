@@ -184,12 +184,12 @@
     </header>
 
     <!-- B. SCREENING STATUS & MOVIE TITLE -->
-    <section class="flex flex-col items-center gap-1 mb-2.5 sm:mb-3">
+    <section class="flex flex-col items-center gap-1 mb-2.5 sm:mb-3 w-full px-4 text-center">
       <span id="screeningStatusBadge" class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-purple-300/90 uppercase">
         NEXT SCHEDULED SCREENING
       </span>
 
-      <h2 id="movieTitle" class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight flex items-center justify-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)] whitespace-nowrap">
+      <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)] transition-all duration-300 max-w-full">
         <span id="movieTitleText">Abraham's Boys A Dracula Story</span>
       </h2>
 
@@ -759,13 +759,41 @@
       }
     }
 
-    // 4. Update DOM with active movie state
+    // 4. Smart Movie Title Font Scaler (Auto-scales based on title length)
+    function applySmartMovieTitleSizing(titleText) {
+      const titleHeading = document.getElementById('movieTitle');
+      if (!titleHeading) return;
+      const cleanTitle = (titleText || '').replace(/^🎬\s*/, '').trim();
+      const len = cleanTitle.length;
+
+      const baseClasses = "font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)] transition-all duration-300 max-w-full";
+
+      let sizeClasses = "text-3xl sm:text-5xl md:text-6xl whitespace-nowrap";
+      if (len <= 16) {
+        // Short titles: "The Seeding", "Hokum", "Nosferatu", "Borderlands"
+        sizeClasses = "text-3xl sm:text-5xl md:text-6xl whitespace-nowrap";
+      } else if (len <= 28) {
+        // Medium titles: "A Nightmare on Elm St", "The Texas Chain Saw"
+        sizeClasses = "text-2xl sm:text-4xl md:text-5xl whitespace-nowrap";
+      } else if (len <= 42) {
+        // Long titles: "Abraham's Boys A Dracula Story"
+        sizeClasses = "text-xl sm:text-2xl md:text-3xl lg:text-4xl px-2 leading-tight";
+      } else {
+        // Extra long titles
+        sizeClasses = "text-lg sm:text-xl md:text-2xl lg:text-3xl px-2 leading-tight break-words";
+      }
+      titleHeading.className = `${sizeClasses} ${baseClasses}`;
+    }
+
+    // 5. Update DOM with active movie state
     function renderMovieState() {
       const titleEl = document.getElementById('movieTitleText');
       const showtimeEl = document.getElementById('movieShowtime');
       const posterEl = document.getElementById('heroPosterImg');
 
-      if (titleEl) titleEl.textContent = (activeMovie.title || 'Coming Soon').replace(/^🎬\s*/, '').trim();
+      const cleanTitle = (activeMovie.title || 'Coming Soon').replace(/^🎬\s*/, '').trim();
+      if (titleEl) titleEl.textContent = cleanTitle;
+      applySmartMovieTitleSizing(cleanTitle);
       if (showtimeEl) showtimeEl.textContent = activeMovie.showtimeText;
       if (posterEl && activeMovie.posterUrl) {
         if (posterEl.src !== activeMovie.posterUrl) {
@@ -1150,7 +1178,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.207";
+    const TWITCH_OVERLAY_VERSION = "4.9.208";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
