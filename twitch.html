@@ -588,6 +588,16 @@
     // 1. Digital Countdown Clock Loop (Synchronized with main theater doors opening)
     function updateCountdown() {
       const now = Date.now();
+
+      // AUTO-PROGRESSION: If current movie is concluded or ended, automatically advance to next upcoming premiere!
+      if (typeof resolveActiveOrNextMovie === 'function') {
+        const curEnd = Number(activeMovie.endMs) || 0;
+        const curStart = Number(activeMovie.startMs) || 0;
+        if (isMovieConcluded(activeMovie, now) || (curEnd > 0 && now >= curEnd) || (curStart > 0 && now >= curStart + (4 * 3600000))) {
+          resolveActiveOrNextMovie(now);
+        }
+      }
+
       const startMs = Number(activeMovie.startMs) || 0;
       const endMs = Number(activeMovie.endMs) || (startMs ? startMs + (105 * 60 * 1000) : 0);
 
@@ -802,13 +812,9 @@
       updateCountdown();
     }
 
-    // 5. Parse and apply incoming Firebase Data
-    function applySyncPayload(data) {
-      if (!data) return;
-      Object.assign(lastKnownPayload, data);
+    // 5. Dynamic Schedule & Movie Progression Resolver
+    function resolveActiveOrNextMovie(now = Date.now()) {
       const merged = lastKnownPayload;
-
-      const now = Date.now();
       if (merged.doorMode) activeMovie.doorMode = merged.doorMode;
       if (merged.partyUrl) activeMovie.partyUrl = merged.partyUrl;
 
@@ -860,8 +866,7 @@
         }
       }
 
-      // 3. If not actively live, search upcoming schedules sorted by startMs
-
+      // 3. Search upcoming schedules chronologically
       const upcoming = allSchedules.filter(s => {
         if (!s || !s.title) return false;
         if (isMovieConcluded(s, now)) return false;
@@ -893,7 +898,11 @@
 
       const target = foundNow || foundNext;
       if (target) {
-        activeMovie.title = target.title.replace(/^🎬\s*/, '').trim();
+        const cleanTargetTitle = target.title.replace(/^🎬\s*/, '').trim();
+        const hasTitleChanged = (activeMovie.title !== cleanTargetTitle);
+        const hasTimeChanged = (activeMovie.startMs !== target.startMs);
+
+        activeMovie.title = cleanTargetTitle;
         if (target.startMs) activeMovie.startMs = target.startMs;
         if (target.endMs) activeMovie.endMs = target.endMs;
         activeMovie.isNowPlaying = Boolean(foundNow);
@@ -912,8 +921,19 @@
         }
         activeMovie.trailerId = resolvedTrailer || '';
 
-        renderMovieState();
+        if (hasTitleChanged || hasTimeChanged) {
+          console.log(`[TwitchAutoProgression] Transitioned active movie to: ${activeMovie.title} (${activeMovie.showtimeText})`);
+          renderMovieState();
+        }
       }
+    }
+
+    // 6. Parse and apply incoming Firebase Data
+    function applySyncPayload(data) {
+      if (!data) return;
+      Object.assign(lastKnownPayload, data);
+      resolveActiveOrNextMovie(Date.now());
+      renderMovieState();
     }
 
     // Apply instantaneous state broadcast from main theater page
@@ -964,67 +984,103 @@
         }
       } catch(e) {}
 
-      // Initial HTTP Snapshot from Firebase RTDB
-      fetch(FIREBASE_RTDB_URL)
-        .then(res => res.json())
-        .then(data => {
-          applySyncPayload(data);
-          if (data && data.spotifyLive) {
-            setSpotifyLiveState(data.spotifyLive);
-          } else if (data && data.spotifyPlaylist) {
-            setSpotifyPlaylist(data.spotifyPlaylist.resource, data.spotifyPlaylist.name);
-          }
-        })
-        .catch(err => {
-          console.warn('Initial Firebase fetch error:', err);
-        });
-
-      // Persistent Real-Time SSE Stream
-      try {
-        if (eventSource) eventSource.close();
-        eventSource = new EventSource(FIREBASE_RTDB_URL);
-
-        eventSource.addEventListener('put', (event) => {
-          try {
-            const payload = JSON.parse(event.data);
-            if (payload) {
-              if (payload.path === '/' && payload.data) {
-                applySyncPayload(payload.data);
-                if (payload.data.spotifyLive) setSpotifyLiveState(payload.data.spotifyLive);
-                else if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
-              } else if (payload.path === '/spotifyLive' && payload.data) {
-                setSpotifyLiveState(payload.data);
-              } else if (payload.path === '/spotifyPlaylist' && payload.data) {
-                setSpotifyPlaylist(payload.data.resource, payload.data.name);
-              } else if (payload.path === '/cinema' && payload.data) {
-                applySyncPayload({ cinema: payload.data });
-              } else if (payload.path === '/doorMode' && payload.data) {
-                applySyncPayload({ doorMode: payload.data });
-              } else if (payload.path === '/schedule' && payload.data) {
-                applySyncPayload({ schedule: payload.data });
-              } else if (payload.path === '/officialSchedule' && payload.data) {
-                applySyncPayload({ officialSchedule: payload.data });
-              } else if (payload.path === '/moviePosters' && payload.data) {
-                applySyncPayload({ moviePosters: payload.data });
-              } else if (payload.data && typeof payload.data === 'object') {
-                applySyncPayload(payload.data);
+      // Active Firebase Polling Heartbeat (Guarantees OBS updates reliably even if SSE drops)
+      async function pollFirebaseHeartbeat() {
+        try {
+          const res = await fetch(`${FIREBASE_RTDB_URL}?_t=${Date.now()}`, { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data) {
+              applySyncPayload(data);
+              if (data.spotifyLive) {
+                setSpotifyLiveState(data.spotifyLive);
+              } else if (data.spotifyPlaylist) {
+                setSpotifyPlaylist(data.spotifyPlaylist.resource, data.spotifyPlaylist.name);
               }
             }
-          } catch(e) {}
-        });
-
-        eventSource.addEventListener('patch', (event) => {
-          try {
-            const payload = JSON.parse(event.data);
-            if (payload && payload.data) applySyncPayload(payload.data);
-          } catch(e) {}
-        });
-
-        eventSource.onerror = () => {};
-        eventSource.onopen = () => {};
-      } catch(err) {
-        console.warn('SSE Error:', err);
+          }
+        } catch(err) {
+          console.warn('[FirebaseHeartbeat] Connection check:', err);
+        }
       }
+
+      window.pollFirebaseHeartbeat = pollFirebaseHeartbeat;
+
+      // 1. Initial snapshot & continuous 15-second heartbeat poll for OBS
+      pollFirebaseHeartbeat();
+      setInterval(pollFirebaseHeartbeat, 15000);
+
+      // 2. Persistent Real-Time SSE Stream with auto-reconnection
+      let sseReconnectTimer = null;
+      function connectSSE() {
+        try {
+          if (eventSource) {
+            try { eventSource.close(); } catch(e) {}
+          }
+          eventSource = new EventSource(FIREBASE_RTDB_URL);
+
+          eventSource.addEventListener('put', (event) => {
+            try {
+              const payload = JSON.parse(event.data);
+              if (payload) {
+                if (payload.path === '/' && payload.data) {
+                  applySyncPayload(payload.data);
+                  if (payload.data.spotifyLive) setSpotifyLiveState(payload.data.spotifyLive);
+                  else if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
+                } else if (payload.path === '/spotifyLive' && payload.data) {
+                  setSpotifyLiveState(payload.data);
+                } else if (payload.path === '/spotifyPlaylist' && payload.data) {
+                  setSpotifyPlaylist(payload.data.resource, payload.data.name);
+                } else if (payload.path === '/cinema' && payload.data) {
+                  applySyncPayload({ cinema: payload.data });
+                } else if (payload.path === '/doorMode' && payload.data) {
+                  applySyncPayload({ doorMode: payload.data });
+                } else if (payload.path === '/schedule' && payload.data) {
+                  applySyncPayload({ schedule: payload.data });
+                } else if (payload.path === '/officialSchedule' && payload.data) {
+                  applySyncPayload({ officialSchedule: payload.data });
+                } else if (payload.path === '/moviePosters' && payload.data) {
+                  applySyncPayload({ moviePosters: payload.data });
+                } else if (payload.data && typeof payload.data === 'object') {
+                  applySyncPayload(payload.data);
+                }
+              }
+            } catch(e) {}
+          });
+
+          eventSource.addEventListener('patch', (event) => {
+            try {
+              const payload = JSON.parse(event.data);
+              if (payload && payload.data) applySyncPayload(payload.data);
+            } catch(e) {}
+          });
+
+          eventSource.onerror = () => {
+            if (!sseReconnectTimer) {
+              sseReconnectTimer = setTimeout(() => {
+                sseReconnectTimer = null;
+                connectSSE();
+              }, 5000);
+            }
+          };
+
+          eventSource.onopen = () => {
+            if (sseReconnectTimer) {
+              clearTimeout(sseReconnectTimer);
+              sseReconnectTimer = null;
+            }
+          };
+        } catch(err) {
+          if (!sseReconnectTimer) {
+            sseReconnectTimer = setTimeout(() => {
+              sseReconnectTimer = null;
+              connectSSE();
+            }, 5000);
+          }
+        }
+      }
+
+      connectSSE();
     }
 
     // 7. Mini Spotify Player Widget Logic
@@ -1173,7 +1229,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.209";
+    const TWITCH_OVERLAY_VERSION = "4.9.210";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -1238,6 +1294,11 @@
           setSpotifyPlaylist(`${savedType}:${savedId}`, savedName || "🎵 Stream Music");
         }
       } catch(e) {}
+
+      window.renderMovieState = renderMovieState;
+      window.updateCountdown = updateCountdown;
+      window.resolveActiveOrNextMovie = resolveActiveOrNextMovie;
+      window.applySyncPayload = applySyncPayload;
 
       renderMovieState();
       setInterval(updateCountdown, 1000);

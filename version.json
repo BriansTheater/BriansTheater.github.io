@@ -1,10 +1,11 @@
 {
-  "version": "4.9.209",
+  "version": "4.9.210",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.209",
+  "title": "Brian's Theater v4.9.210",
   "notes": [
-    "Removed pulse dot and arrow from Twitch stream banner.",
-    "Centered pumpkin and bat icons inside rounded banner border.",
-    "Optimized watch URL banner padding preventing horizontal icon clipping."
+    "Added automatic post-movie schedule progression for Twitch overlay.",
+    "OBS stream overlay automatically advances when movie finishes screening.",
+    "Added continuous 15-second Firebase heartbeat polling for OBS Studio.",
+    "Enhanced real-time SSE stream with automatic error reconnection."
   ]
 }

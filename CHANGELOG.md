@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.210] - 2026-10-18
+
+### What's New
+- Added automatic post-movie schedule progression for Twitch overlay.
+- OBS stream overlay automatically advances when movie finishes screening.
+- Added continuous 15-second Firebase heartbeat polling for OBS Studio.
+- Enhanced real-time SSE stream with automatic error reconnection.
+
 ## [4.9.209] - 2026-10-18
 
 ### What's New
