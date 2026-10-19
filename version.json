@@ -1,10 +1,10 @@
 {
-  "version": "4.9.211",
+  "version": "4.9.212",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.211",
+  "title": "Brian's Theater v4.9.212",
   "notes": [
-    "Added whitespace-agnostic canonical artwork matching for all movies.",
-    "Eliminated white letterbox borders across American Horror Story episodes.",
-    "Added live warning badge alert when poster error detected."
+    "Spotify stream pill now accurately displays live playback status.",
+    "Equalizer animation pauses automatically when music is not playing.",
+    "Prevents Twitch overlay from displaying playing when audio paused."
   ]
 }

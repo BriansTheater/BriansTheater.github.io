@@ -136,6 +136,11 @@
     .eq-bar-2 { animation: eqBarPulse 0.65s ease-in-out infinite 0.2s; }
     .eq-bar-3 { animation: eqBarPulse 0.95s ease-in-out infinite 0.4s; }
     .eq-bar-4 { animation: eqBarPulse 0.75s ease-in-out infinite 0.1s; }
+    .eq-paused span {
+      animation: none !important;
+      height: 3px !important;
+      opacity: 0.4 !important;
+    }
   </style>
 </head>
 <body class="w-full h-full relative flex items-center justify-center">
@@ -415,7 +420,7 @@
       </div>
 
       <!-- Live Animated Equalizer Bars -->
-      <div class="flex items-end gap-0.5 h-3.5 px-0.5" aria-hidden="true">
+      <div id="spotifyEqBars" class="flex items-end gap-0.5 h-3.5 px-0.5 eq-paused" aria-hidden="true">
         <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
         <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
         <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
@@ -424,7 +429,7 @@
 
       <!-- Current Track / Playlist Name -->
       <div class="flex flex-col text-left leading-none max-w-[150px] sm:max-w-[200px] overflow-hidden">
-        <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase">NOW PLAYING</span>
+        <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">PAUSED</span>
         <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
       </div>
 
@@ -1223,6 +1228,8 @@
 
       const iframe = document.getElementById('spotifyIframe');
       const trackLabel = document.getElementById('spotifyTrackName');
+      const sublabel = document.getElementById('spotifyPillSublabel');
+      const eqBars = document.getElementById('spotifyEqBars');
 
       if (iframe) {
         iframe.src = `https://open.spotify.com/embed/${parsed.type}/${parsed.id}?utm_source=generator&theme=0`;
@@ -1230,6 +1237,11 @@
       if (trackLabel) {
         trackLabel.textContent = displayName || `Spotify ${parsed.type.toUpperCase()}`;
       }
+      if (sublabel) {
+        sublabel.textContent = "PAUSED";
+        sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase";
+      }
+      if (eqBars) eqBars.classList.add('eq-paused');
 
       try {
         localStorage.setItem('brian_twitch_spotify_id', parsed.id);
@@ -1270,17 +1282,28 @@
     }
 
     function setSpotifyLiveState(liveData) {
-      if (!liveData) return;
       const pillArt = document.getElementById('spotifyLivePillArt');
       const defaultSvg = document.getElementById('spotifyDefaultBrandSvg');
       const trackLabel = document.getElementById('spotifyTrackName');
       const sublabel = document.getElementById('spotifyPillSublabel');
+      const eqBars = document.getElementById('spotifyEqBars');
+      const pill = document.getElementById('spotifyPill');
       const liveDrawer = document.getElementById('spotifyLiveDrawerCard');
       const embedBox = document.getElementById('spotifyEmbedContainer');
       const presetButtons = document.getElementById('spotifyPresetButtons');
 
-      if (liveData.isActive && liveData.isPlaying) {
-        // 1. Mini Pill Updates
+      const isPlaying = Boolean(liveData && liveData.isActive && liveData.isPlaying);
+
+      if (isPlaying) {
+        // Active and playing: Start equalizer animation and announce NOW PLAYING
+        if (eqBars) eqBars.classList.remove('eq-paused');
+        if (sublabel) {
+          sublabel.textContent = liveData.deviceName ? `LIVE: ${liveData.deviceName.toUpperCase()}` : "NOW PLAYING";
+          sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase";
+        }
+        if (pill) {
+          pill.className = "inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-emerald-500/40 hover:border-emerald-400 text-slate-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.45)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group";
+        }
         if (liveData.albumArt && pillArt) {
           pillArt.src = liveData.albumArt;
           pillArt.classList.remove('hidden');
@@ -1289,11 +1312,8 @@
         if (trackLabel) {
           trackLabel.textContent = `${liveData.trackTitle || 'Unknown'} • ${liveData.artistName || 'Unknown'}`;
         }
-        if (sublabel) {
-          sublabel.textContent = liveData.deviceName ? `LIVE: ${liveData.deviceName.toUpperCase()}` : "NOW PLAYING";
-        }
 
-        // 2. Expanded Drawer Live Card
+        // Expanded Drawer Live Card
         if (liveDrawer) {
           liveDrawer.classList.remove('hidden');
           liveDrawer.classList.add('flex');
@@ -1327,10 +1347,34 @@
           if (dTime) dTime.textContent = `${fmt(liveData.progressMs)} / ${fmt(liveData.durationMs)}`;
         }
       } else {
-        // Inactive or paused: gracefully fallback to preset/embed mode
-        if (pillArt) pillArt.classList.add('hidden');
-        if (defaultSvg) defaultSvg.classList.remove('hidden');
-        if (sublabel) sublabel.textContent = "NOW PLAYING";
+        // Paused, stopped, or disconnected: PAUSE equalizer and NEVER display "NOW PLAYING"
+        if (eqBars) eqBars.classList.add('eq-paused');
+        if (pill) {
+          pill.className = "inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-slate-700/60 hover:border-slate-500 text-slate-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group";
+        }
+
+        if (liveData && liveData.trackTitle) {
+          if (sublabel) {
+            sublabel.textContent = "PAUSED";
+            sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-amber-400/80 uppercase";
+          }
+          if (trackLabel) {
+            trackLabel.textContent = `${liveData.trackTitle} • ${liveData.artistName || ''}`;
+          }
+          if (liveData.albumArt && pillArt) {
+            pillArt.src = liveData.albumArt;
+            pillArt.classList.remove('hidden');
+            if (defaultSvg) defaultSvg.classList.add('hidden');
+          }
+        } else {
+          if (sublabel) {
+            sublabel.textContent = "PAUSED";
+            sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase";
+          }
+          if (pillArt) pillArt.classList.add('hidden');
+          if (defaultSvg) defaultSvg.classList.remove('hidden');
+        }
+
         if (liveDrawer) {
           liveDrawer.classList.add('hidden');
           liveDrawer.classList.remove('flex');
@@ -1343,7 +1387,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.211";
+    const TWITCH_OVERLAY_VERSION = "4.9.212";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -1413,6 +1457,8 @@
       window.updateCountdown = updateCountdown;
       window.resolveActiveOrNextMovie = resolveActiveOrNextMovie;
       window.applySyncPayload = applySyncPayload;
+      window.setSpotifyLiveState = setSpotifyLiveState;
+      window.setSpotifyPlaylist = setSpotifyPlaylist;
 
       renderMovieState();
       setInterval(updateCountdown, 1000);

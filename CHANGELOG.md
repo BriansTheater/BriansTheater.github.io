@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.212] - 2026-10-18
+
+### What's New
+- Spotify stream pill now accurately displays live playback status.
+- Equalizer animation pauses automatically when music is not playing.
+- Prevents Twitch overlay from displaying playing when audio paused.
+
 ## [4.9.211] - 2026-10-18
 
 ### What's New
