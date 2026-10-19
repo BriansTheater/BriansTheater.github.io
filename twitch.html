@@ -443,6 +443,7 @@
   <!-- ========================================== -->
   <script>
     const FIREBASE_RTDB_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
+    const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
     let eventSource = null;
     let lastKnownPayload = {};
 
@@ -1279,7 +1280,12 @@
       }
     }
 
+    let currentSpotifyLive = null;
+    let twitchSpotifyPollInterval = null;
+
     function setSpotifyLiveState(liveData) {
+      currentSpotifyLive = liveData;
+      window.currentSpotifyLive = liveData;
       const pillArt = document.getElementById('spotifyLivePillArt');
       const defaultSvg = document.getElementById('spotifyDefaultBrandSvg');
       const trackLabel = document.getElementById('spotifyTrackName');
@@ -1290,13 +1296,19 @@
       const embedBox = document.getElementById('spotifyEmbedContainer');
       const presetButtons = document.getElementById('spotifyPresetButtons');
 
-      const isPlaying = Boolean(liveData && liveData.isActive && liveData.isPlaying);
+      // Validate freshness: if last update was more than 45 seconds ago, treat playback as stopped/paused
+      const isFresh = Boolean(liveData && liveData.updatedAt && (Date.now() - liveData.updatedAt < 45000));
+      const isPlaying = Boolean(liveData && liveData.isActive && liveData.isPlaying && isFresh);
 
       if (isPlaying) {
-        // Active and playing: Start equalizer animation and announce NOW PLAYING
+        // Active and playing: Start equalizer animation and announce NOW PLAYING or PODCAST LIVE
         if (eqBars) eqBars.classList.remove('eq-paused');
         if (sublabel) {
-          sublabel.textContent = liveData.deviceName ? `LIVE: ${liveData.deviceName.toUpperCase()}` : "NOW PLAYING";
+          if (liveData.isEpisode) {
+            sublabel.textContent = liveData.deviceName ? `PODCAST: ${liveData.deviceName.toUpperCase()}` : "PODCAST LIVE";
+          } else {
+            sublabel.textContent = liveData.deviceName ? `LIVE: ${liveData.deviceName.toUpperCase()}` : "NOW PLAYING";
+          }
           sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase";
         }
         if (pill) {
@@ -1308,7 +1320,9 @@
           if (defaultSvg) defaultSvg.classList.add('hidden');
         }
         if (trackLabel) {
-          trackLabel.textContent = `${liveData.trackTitle || 'Unknown'} • ${liveData.artistName || 'Unknown'}`;
+          const track = liveData.trackTitle || (liveData.isEpisode ? 'Podcast Episode' : 'Unknown Track');
+          const artist = liveData.artistName || (liveData.isEpisode ? (liveData.showName || 'Podcast') : 'Unknown Artist');
+          trackLabel.textContent = `${track} • ${artist}`;
         }
 
         // Expanded Drawer Live Card
@@ -1328,10 +1342,16 @@
         const dTime = document.getElementById('spotifyDrawerLiveTime');
 
         if (dArt && liveData.albumArt) dArt.src = liveData.albumArt;
-        if (dTitle) dTitle.textContent = liveData.trackTitle || 'Unknown Track';
-        if (dArtist) dArtist.textContent = liveData.artistName || 'Unknown Artist';
-        if (dAlbum) dAlbum.textContent = liveData.albumName || '';
-        if (dDevice) dDevice.textContent = liveData.deviceName ? `🎧 Listening on ${liveData.deviceName}` : '🎧 Active Stream';
+        if (dTitle) dTitle.textContent = liveData.trackTitle || (liveData.isEpisode ? 'Podcast Episode' : 'Unknown Track');
+        if (dArtist) dArtist.textContent = liveData.artistName || (liveData.isEpisode ? (liveData.showName || 'Podcast') : 'Unknown Artist');
+        if (dAlbum) dAlbum.textContent = liveData.albumName || (liveData.isEpisode ? (liveData.showName || 'Podcast Show') : '');
+        if (dDevice) {
+          if (liveData.isEpisode) {
+            dDevice.textContent = liveData.deviceName ? `🎙️ ${liveData.deviceName}` : '🎙️ Podcast Stream';
+          } else {
+            dDevice.textContent = liveData.deviceName ? `🎧 Listening on ${liveData.deviceName}` : '🎧 Active Stream';
+          }
+        }
 
         if (liveData.durationMs) {
           const pct = Math.min(100, Math.max(0, (liveData.progressMs / liveData.durationMs) * 100));
@@ -1357,7 +1377,9 @@
             sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-amber-400/80 uppercase";
           }
           if (trackLabel) {
-            trackLabel.textContent = `${liveData.trackTitle} • ${liveData.artistName || ''}`;
+            const track = liveData.trackTitle;
+            const artist = liveData.artistName || (liveData.isEpisode ? (liveData.showName || '') : '');
+            trackLabel.textContent = artist ? `${track} • ${artist}` : track;
           }
           if (liveData.albumArt && pillArt) {
             pillArt.src = liveData.albumArt;
@@ -1382,10 +1404,145 @@
       }
     }
 
+    // Direct Twitch Spotify Polling & Token Management
+    async function getTwitchSpotifyToken() {
+      let accessToken = null;
+      let refreshToken = null;
+      let expiresAt = 0;
+      let clientId = null;
+      try {
+        accessToken = localStorage.getItem('brian_spotify_access_token');
+        refreshToken = localStorage.getItem('brian_spotify_refresh_token');
+        expiresAt = parseInt(localStorage.getItem('brian_spotify_expires_at') || '0', 10);
+        clientId = localStorage.getItem('brian_spotify_client_id');
+      } catch(e) {}
+
+      if (!accessToken && !refreshToken) return null;
+
+      if (Date.now() > expiresAt - 60000 && refreshToken && clientId) {
+        try {
+          const body = new URLSearchParams({
+            client_id: clientId,
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken
+          });
+          const res = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body
+          });
+          if (res.ok) {
+            const data = await res.json();
+            accessToken = data.access_token;
+            localStorage.setItem('brian_spotify_access_token', accessToken);
+            if (data.refresh_token) localStorage.setItem('brian_spotify_refresh_token', data.refresh_token);
+            localStorage.setItem('brian_spotify_expires_at', (Date.now() + (data.expires_in * 1000)).toString());
+          }
+        } catch(e) {
+          console.warn('[Twitch] Spotify token refresh error:', e);
+        }
+      }
+      return accessToken;
+    }
+
+    async function syncSpotifyToFirebase(payload) {
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/spotifyLive.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) {}
+    }
+
+    async function fetchTwitchSpotifyPlayback() {
+      const token = await getTwitchSpotifyToken();
+      if (!token) return;
+
+      try {
+        const res = await fetch('https://api.spotify.com/v1/me/player?additional_types=episode', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.status === 204 || res.status === 202) {
+          if (currentSpotifyLive && currentSpotifyLive.isActive) {
+            const idlePayload = { isActive: false, isPlaying: false, updatedAt: Date.now() };
+            setSpotifyLiveState(idlePayload);
+            syncSpotifyToFirebase(idlePayload);
+          }
+          return;
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          if (!data || !data.item) {
+            if (currentSpotifyLive && currentSpotifyLive.isActive) {
+              const idlePayload = { isActive: false, isPlaying: false, updatedAt: Date.now() };
+              setSpotifyLiveState(idlePayload);
+              syncSpotifyToFirebase(idlePayload);
+            }
+            return;
+          }
+
+          const isEpisode = data.currently_playing_type === 'episode';
+          const showName = (data.item.show && data.item.show.name) || (data.item.show && data.item.show.publisher) || "";
+          const artists = data.item.artists ? data.item.artists.map(a => a.name).join(', ') : (showName || "Podcast");
+          const album = (data.item.album && data.item.album.name) || showName || "";
+          const artwork = (data.item.images && data.item.images[0] && data.item.images[0].url) ||
+                          (data.item.album && data.item.album.images && data.item.album.images[0] && data.item.album.images[0].url) ||
+                          (data.item.show && data.item.show.images && data.item.show.images[0] && data.item.show.images[0].url) || "";
+
+          const payload = {
+            isActive: true,
+            isPlaying: !!data.is_playing,
+            isEpisode: isEpisode,
+            showName: showName,
+            trackTitle: data.item.name || (isEpisode ? "Podcast Episode" : "Unknown Track"),
+            artistName: artists,
+            albumName: album,
+            albumArt: artwork,
+            progressMs: data.progress_ms || 0,
+            durationMs: data.item.duration_ms || 0,
+            deviceName: data.device ? data.device.name : "Spotify App",
+            deviceType: data.device ? data.device.type : "Device",
+            updatedAt: Date.now()
+          };
+
+          setSpotifyLiveState(payload);
+          syncSpotifyToFirebase(payload);
+        }
+      } catch(err) {
+        console.warn('[Twitch] Error fetching Spotify:', err);
+      }
+    }
+
+    function checkSpotifyHeartbeat() {
+      if (currentSpotifyLive && currentSpotifyLive.isPlaying) {
+        const elapsed = Date.now() - (currentSpotifyLive.updatedAt || 0);
+        if (elapsed > 45000) {
+          setSpotifyLiveState({ ...currentSpotifyLive, isPlaying: false });
+        }
+      }
+    }
+
+    function initTwitchSpotifySync() {
+      try {
+        const token = localStorage.getItem('brian_spotify_access_token');
+        const refreshToken = localStorage.getItem('brian_spotify_refresh_token');
+        if (token || refreshToken) {
+          fetchTwitchSpotifyPlayback();
+          if (!twitchSpotifyPollInterval) {
+            twitchSpotifyPollInterval = setInterval(fetchTwitchSpotifyPlayback, 3500);
+          }
+        }
+      } catch(e) {}
+      setInterval(checkSpotifyHeartbeat, 5000);
+    }
+
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.213";
+    const TWITCH_OVERLAY_VERSION = "4.9.214";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -1457,10 +1614,13 @@
       window.applySyncPayload = applySyncPayload;
       window.setSpotifyLiveState = setSpotifyLiveState;
       window.setSpotifyPlaylist = setSpotifyPlaylist;
+      window.fetchTwitchSpotifyPlayback = fetchTwitchSpotifyPlayback;
+      window.checkSpotifyHeartbeat = checkSpotifyHeartbeat;
 
       renderMovieState();
       setInterval(updateCountdown, 1000);
       initRealtimeSync();
+      initTwitchSpotifySync();
 
       // Start automatic update checks (every 30 seconds & on focus/visibility change)
       setTimeout(checkForTwitchOverlayUpdate, 3000);

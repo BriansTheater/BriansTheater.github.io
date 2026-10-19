@@ -1,10 +1,11 @@
 {
-  "version": "4.9.213",
+  "version": "4.9.214",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.213",
+  "title": "Brian's Theater v4.9.214",
   "notes": [
-    "Centered Spotify soundtrack pill inside main Twitch overlay layout.",
-    "Spotify player now flows naturally directly below countdown card.",
-    "Expanded soundtrack drawer pops up centered above Spotify pill."
+    "Added Spotify podcast and show support for live overlay.",
+    "Added direct Spotify polling from Twitch overlay with background refresh.",
+    "Added stale heartbeat guard preventing stuck playback on stream overlay.",
+    "Synchronized inactive states to Firebase when Spotify pauses."
   ]
 }

@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.214] - 2026-10-18
+
+### What's New
+- Added Spotify podcast and show support for live overlay.
+- Added direct Spotify polling from Twitch overlay with background refresh.
+- Added stale heartbeat guard preventing stuck playback on stream overlay.
+- Synchronized inactive states to Firebase when Spotify pauses.
+
 ## [4.9.213] - 2026-10-18
 
 ### What's New

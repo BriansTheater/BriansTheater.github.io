@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.213 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.214 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3579,7 +3579,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.213";
+    const APP_VERSION = "4.9.214";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4690,6 +4690,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.214": [
+        "Added Spotify podcast and show support for live overlay.",
+        "Added direct Spotify polling from Twitch overlay with background refresh.",
+        "Added stale heartbeat guard preventing stuck playback on stream overlay.",
+        "Synchronized inactive states to Firebase when Spotify pauses."
+      ],
       "4.9.213": [
         "Centered Spotify soundtrack pill inside main Twitch overlay layout.",
         "Spotify player now flows naturally directly below countdown card.",
@@ -8923,6 +8929,11 @@
       if (albumName) albumName.textContent = "100% listening credit active";
       if (playIcon) playIcon.textContent = "▶";
       if (playText) playText.textContent = "Play";
+
+      if (currentSpotifyLivePayload && currentSpotifyLivePayload.isActive) {
+        currentSpotifyLivePayload = { isActive: false, isPlaying: false, updatedAt: Date.now() };
+        broadcastSpotifyLiveState(currentSpotifyLivePayload);
+      }
     }
 
     async function broadcastSpotifyLiveState(payload) {
@@ -8955,7 +8966,7 @@
       if (!token) return;
 
       try {
-        const res = await fetch('https://api.spotify.com/v1/me/player', {
+        const res = await fetch('https://api.spotify.com/v1/me/player?additional_types=episode', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -8971,13 +8982,23 @@
             return;
           }
 
+          const isEpisode = data.currently_playing_type === 'episode';
+          const showName = (data.item.show && data.item.show.name) || (data.item.show && data.item.show.publisher) || "";
+          const artists = data.item.artists ? data.item.artists.map(a => a.name).join(', ') : (showName || "Podcast");
+          const album = (data.item.album && data.item.album.name) || showName || "";
+          const artwork = (data.item.images && data.item.images[0] && data.item.images[0].url) ||
+                          (data.item.album && data.item.album.images && data.item.album.images[0] && data.item.album.images[0].url) ||
+                          (data.item.show && data.item.show.images && data.item.show.images[0] && data.item.show.images[0].url) || "";
+
           const payload = {
             isActive: true,
             isPlaying: !!data.is_playing,
-            trackTitle: data.item.name || "Unknown Track",
-            artistName: data.item.artists ? data.item.artists.map(a => a.name).join(', ') : "Unknown Artist",
-            albumName: data.item.album ? data.item.album.name : "",
-            albumArt: (data.item.album && data.item.album.images && data.item.album.images[0]) ? data.item.album.images[0].url : "",
+            isEpisode: isEpisode,
+            showName: showName,
+            trackTitle: data.item.name || (isEpisode ? "Podcast Episode" : "Unknown Track"),
+            artistName: artists,
+            albumName: album,
+            albumArt: artwork,
             progressMs: data.progress_ms || 0,
             durationMs: data.item.duration_ms || 0,
             deviceName: data.device ? data.device.name : "Spotify App",
