@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.223] - 2026-10-19
+
+### What's New
+- Wrapped Axel tombstone inscription text cleanly across two lines.
+- Fixed right-edge text cutoff behind central stream player.
+
 ## [4.9.222] - 2026-10-19
 
 ### What's New
