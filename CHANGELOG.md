@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.216] - 2026-10-18
+
+### What's New
+- Added permanent 1-click saved playlists shelf in Spotify drawer.
+- Added dual-mode switcher tabs for live stream and playlists.
+- Saved custom Spotify playlists now persist and sync seamlessly.
+- Added 1-click deletion to easily manage saved playlist buttons.
+
 ## [4.9.215] - 2026-10-18
 
 ### What's New

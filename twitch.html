@@ -356,7 +356,27 @@
           <button type="button" onclick="toggleSpotifyDrawer()" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
         </div>
 
-        <!-- Live Track Card (Shown when live sync is active) -->
+        <!-- Dual Mode Switcher Tabs -->
+        <div class="flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-800 text-[10px] font-bold gap-1">
+          <button
+            type="button"
+            id="tabSpotifyLive"
+            onclick="switchSpotifyDrawerTab('live')"
+            class="flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm cursor-pointer"
+          >
+            <span>📡</span> Live Stream
+          </button>
+          <button
+            type="button"
+            id="tabSpotifyPlaylists"
+            onclick="switchSpotifyDrawerTab('playlists')"
+            class="flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-medium cursor-pointer"
+          >
+            <span>🎵</span> Saved Playlists
+          </button>
+        </div>
+
+        <!-- Mode 1: Live Track Card (Shown when live sync is active) -->
         <div id="spotifyLiveDrawerCard" class="hidden p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex-col gap-2.5">
           <div class="flex items-center gap-3">
             <img id="spotifyDrawerLiveArt" src="" alt="Album Art" class="w-16 h-16 rounded-lg object-cover shadow-md border border-emerald-500/30 shrink-0">
@@ -387,24 +407,47 @@
           </div>
         </div>
 
-        <!-- Spotify Embed Container -->
-        <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
-          <iframe
-            id="spotifyIframe"
-            class="w-full h-full border-0 rounded-xl"
-            src="https://open.spotify.com/embed/playlist/5fnANvKo5Ep7TLEPPjfAzJ?utm_source=generator&theme=0"
-            title="Spotify Music Stream"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          ></iframe>
+        <!-- Mode 1 Inactive Helper Banner (Shown if live tab selected but no music playing) -->
+        <div id="spotifyLiveIdleHelper" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-center flex flex-col items-center gap-2">
+          <p class="text-[11px] text-slate-300">🎧 Stream is synced with your Spotify account.</p>
+          <p class="text-[10px] text-slate-400">Play any song or podcast on your Spotify app, or switch to your Saved Playlists below.</p>
+          <button type="button" onclick="switchSpotifyDrawerTab('playlists')" class="mt-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[10px] font-bold border border-emerald-500/40 transition cursor-pointer">
+            🎵 Browse Saved Playlists
+          </button>
         </div>
 
-        <!-- Playlist Selection / Quick Presets -->
-        <div id="spotifyPresetButtons" class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
-          <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience', true)" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
-          <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores', true)" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
-          <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi', true)" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
-          <button type="button" onclick="promptCustomSpotify()" class="px-2 py-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition shrink-0 cursor-pointer font-bold">+ Custom</button>
+        <!-- Mode 2: Saved Playlists Section -->
+        <div id="spotifyPlaylistsSection" class="hidden flex-col gap-2.5">
+          <!-- Spotify Embed Container -->
+          <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
+            <iframe
+              id="spotifyIframe"
+              class="w-full h-full border-0 rounded-xl"
+              src="https://open.spotify.com/embed/playlist/5fnANvKo5Ep7TLEPPjfAzJ?utm_source=generator&theme=0"
+              title="Spotify Music Stream"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <!-- Saved Playlist 1-Click Buttons Header -->
+          <div class="flex items-center justify-between text-[11px] font-bold text-slate-300 pt-1 border-t border-slate-800/80">
+            <span class="flex items-center gap-1.5">
+              <span>💽</span> Saved Playlists
+            </span>
+            <button
+              type="button"
+              onclick="promptSaveNewPlaylist()"
+              class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer"
+            >
+              + Add Playlist
+            </button>
+          </div>
+
+          <!-- Dynamic 1-Click Buttons Shelf -->
+          <div id="spotifyPresetButtons" class="flex flex-wrap items-center gap-1.5 max-h-36 overflow-y-auto pr-0.5 text-[10px]">
+            <!-- Hydrated dynamically by renderSavedPlaylistButtons() -->
+          </div>
         </div>
       </div>
 
@@ -1113,6 +1156,8 @@
                 setSpotifyLiveState(event.data.payload);
               } else if (event.data.type === 'spotify_update' && event.data.payload) {
                 setSpotifyPlaylist(event.data.payload.resource, event.data.payload.name);
+              } else if (event.data.type === 'saved_playlists_update' && event.data.playlists) {
+                if (typeof savePlaylistsToStorage === 'function') savePlaylistsToStorage(event.data.playlists, false);
               } else if (event.data.firebasePayload) {
                 applySyncPayload(event.data.firebasePayload);
               }
@@ -1133,6 +1178,9 @@
                 setSpotifyLiveState(data.spotifyLive);
               } else if (data.spotifyPlaylist) {
                 setSpotifyPlaylist(data.spotifyPlaylist.resource, data.spotifyPlaylist.name);
+              }
+              if (data.savedPlaylists && Array.isArray(data.savedPlaylists) && typeof savePlaylistsToStorage === 'function') {
+                savePlaylistsToStorage(data.savedPlaylists, false);
               }
             }
           }
@@ -1164,10 +1212,15 @@
                   applySyncPayload(payload.data);
                   if (payload.data.spotifyLive) setSpotifyLiveState(payload.data.spotifyLive);
                   else if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
+                  if (payload.data.savedPlaylists && Array.isArray(payload.data.savedPlaylists) && typeof savePlaylistsToStorage === 'function') {
+                    savePlaylistsToStorage(payload.data.savedPlaylists, false);
+                  }
                 } else if (payload.path === '/spotifyLive' && payload.data) {
                   setSpotifyLiveState(payload.data);
                 } else if (payload.path === '/spotifyPlaylist' && payload.data) {
                   setSpotifyPlaylist(payload.data.resource, payload.data.name);
+                } else if (payload.path === '/savedPlaylists' && Array.isArray(payload.data) && typeof savePlaylistsToStorage === 'function') {
+                  savePlaylistsToStorage(payload.data, false);
                 } else if (payload.path === '/cinema' && payload.data) {
                   applySyncPayload({ cinema: payload.data });
                 } else if (payload.path === '/doorMode' && payload.data) {
@@ -1220,15 +1273,205 @@
       connectSSE();
     }
 
-    // 7. Mini Spotify Player Widget Logic
+    // 7. Mini Spotify Player Widget & Saved Playlists Engine
+    const DEFAULT_SAVED_PLAYLISTS = [
+      { id: '5fnANvKo5Ep7TLEPPjfAzJ', type: 'playlist', name: '🎃 Horror Ambience' },
+      { id: '1Hk1D8z7JYh8RuDahFIl2b', type: 'playlist', name: '🍿 Cinema Scores' },
+      { id: '37i9dQZF1DWWQRwui0ExPn', type: 'playlist', name: '🎧 Chill Lofi' }
+    ];
+
     let currentSpotifyUri = "5fnANvKo5Ep7TLEPPjfAzJ"; // Default: Spooky Downtempo Ambience
     let currentSpotifyType = "playlist";
+    let activeSpotifyDrawerTab = "live"; // 'live' or 'playlists'
+
+    function getSavedPlaylists() {
+      try {
+        const raw = localStorage.getItem('brian_saved_spotify_playlists');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch(e) {}
+      return [...DEFAULT_SAVED_PLAYLISTS];
+    }
+
+    function savePlaylistsToStorage(playlists, syncRemote = true) {
+      if (!Array.isArray(playlists)) return;
+      try {
+        localStorage.setItem('brian_saved_spotify_playlists', JSON.stringify(playlists));
+      } catch(e) {}
+
+      renderSavedPlaylistButtons();
+
+      if (syncRemote) {
+        // Sync to Firebase RTDB
+        try {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/savedPlaylists.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(playlists)
+          }).catch(() => {});
+        } catch(e) {}
+
+        // Broadcast to shared channel across open tabs
+        try {
+          if (typeof BroadcastChannel !== 'undefined') {
+            const syncChannel = new BroadcastChannel('brian_theater_sync');
+            syncChannel.postMessage({
+              type: 'saved_playlists_update',
+              playlists: playlists
+            });
+          }
+        } catch(e) {}
+      }
+    }
+
+    function renderSavedPlaylistButtons() {
+      const container = document.getElementById('spotifyPresetButtons');
+      if (!container) return;
+      const playlists = getSavedPlaylists();
+      container.innerHTML = '';
+
+      playlists.forEach((p, idx) => {
+        const isCurrent = (currentSpotifyUri === p.id);
+        const itemWrap = document.createElement('div');
+        itemWrap.className = "flex items-center rounded-lg border transition group overflow-hidden " +
+          (isCurrent
+            ? "bg-emerald-500 text-slate-950 font-bold border-emerald-400 shadow-md shadow-emerald-500/20"
+            : "bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700/70");
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = "px-2.5 py-1.5 text-left text-[10px] font-semibold flex items-center gap-1.5 cursor-pointer flex-1 truncate";
+        btn.title = `Switch to ${p.name}`;
+        btn.innerHTML = `<span class="truncate">${p.name}</span>`;
+        btn.onclick = () => {
+          setSpotifyPlaylist(`${p.type || 'playlist'}:${p.id}`, p.name, true);
+        };
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = "px-1.5 py-1.5 text-[9px] text-slate-400 hover:text-rose-400 opacity-60 group-hover:opacity-100 transition cursor-pointer shrink-0";
+        delBtn.title = `Remove "${p.name}"`;
+        delBtn.textContent = '✕';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteSavedPlaylist(idx);
+        };
+
+        itemWrap.appendChild(btn);
+        itemWrap.appendChild(delBtn);
+        container.appendChild(itemWrap);
+      });
+    }
+
+    function switchSpotifyDrawerTab(tab) {
+      activeSpotifyDrawerTab = tab;
+      const tabLive = document.getElementById('tabSpotifyLive');
+      const tabPlaylists = document.getElementById('tabSpotifyPlaylists');
+
+      if (tab === 'live') {
+        if (tabLive) {
+          tabLive.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm cursor-pointer";
+        }
+        if (tabPlaylists) {
+          tabPlaylists.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-medium cursor-pointer";
+        }
+      } else {
+        if (tabPlaylists) {
+          tabPlaylists.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm cursor-pointer";
+        }
+        if (tabLive) {
+          tabLive.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-medium cursor-pointer";
+        }
+      }
+
+      updateSpotifyDrawerDisplay();
+    }
+
+    function updateSpotifyDrawerDisplay() {
+      const liveCard = document.getElementById('spotifyLiveDrawerCard');
+      const liveIdleHelper = document.getElementById('spotifyLiveIdleHelper');
+      const playlistsSection = document.getElementById('spotifyPlaylistsSection');
+
+      if (activeSpotifyDrawerTab === 'live') {
+        if (playlistsSection) {
+          playlistsSection.classList.add('hidden');
+          playlistsSection.classList.remove('flex');
+        }
+        const hasLiveMusic = Boolean(currentSpotifyLive && currentSpotifyLive.trackTitle && currentSpotifyLive.isActive);
+        if (hasLiveMusic) {
+          if (liveCard) {
+            liveCard.classList.remove('hidden');
+            liveCard.classList.add('flex');
+          }
+          if (liveIdleHelper) {
+            liveIdleHelper.classList.add('hidden');
+            liveIdleHelper.classList.remove('flex');
+          }
+        } else {
+          if (liveCard) {
+            liveCard.classList.add('hidden');
+            liveCard.classList.remove('flex');
+          }
+          if (liveIdleHelper) {
+            liveIdleHelper.classList.remove('hidden');
+            liveIdleHelper.classList.add('flex');
+          }
+        }
+      } else {
+        // Mode 2: Saved Playlists
+        if (liveCard) {
+          liveCard.classList.add('hidden');
+          liveCard.classList.remove('flex');
+        }
+        if (liveIdleHelper) {
+          liveIdleHelper.classList.add('hidden');
+          liveIdleHelper.classList.remove('flex');
+        }
+        if (playlistsSection) {
+          playlistsSection.classList.remove('hidden');
+          playlistsSection.classList.add('flex');
+        }
+      }
+    }
+
+    function promptSaveNewPlaylist() {
+      const res = prompt("Paste your Spotify Playlist, Album, or Track link (e.g. https://open.spotify.com/playlist/...):", "");
+      if (!res) return;
+      const parsed = parseSpotifyResource(res);
+      if (!parsed) {
+        alert("Invalid Spotify URL or URI format. Please copy a link directly from Spotify.");
+        return;
+      }
+      const label = prompt("Enter a button label for this playlist (e.g. 🧛 Vampires, 🎸 Rock, ☕ Cozy):", "🎵 My Playlist") || "🎵 My Playlist";
+      const playlists = getSavedPlaylists();
+      // Remove any existing entry with same id
+      const filtered = playlists.filter(p => p.id !== parsed.id);
+      filtered.push({ id: parsed.id, type: parsed.type, name: label.trim() });
+      savePlaylistsToStorage(filtered);
+
+      // Select it and switch to Playlists tab
+      setSpotifyPlaylist(`${parsed.type}:${parsed.id}`, label.trim(), true);
+      switchSpotifyDrawerTab('playlists');
+    }
+
+    function deleteSavedPlaylist(index) {
+      const playlists = getSavedPlaylists();
+      if (index >= 0 && index < playlists.length) {
+        playlists.splice(index, 1);
+        if (playlists.length === 0) {
+          playlists.push(...DEFAULT_SAVED_PLAYLISTS);
+        }
+        savePlaylistsToStorage(playlists);
+      }
+    }
 
     function parseSpotifyResource(input) {
       if (!input || typeof input !== 'string') return null;
       const clean = input.trim();
-      // Match URI: spotify:playlist:xxx or spotify:track:xxx or spotify:album:xxx
-      const uriMatch = clean.match(/^spotify:(playlist|track|album):([a-zA-Z0-9]+)/i);
+      // Match URI: (spotify:)?(playlist|track|album)[:/]([a-zA-Z0-9]+)
+      const uriMatch = clean.match(/^(?:spotify:)?(playlist|track|album)[:/]([a-zA-Z0-9]+)/i);
       if (uriMatch) return { type: uriMatch[1].toLowerCase(), id: uriMatch[2] };
       // Match URL: open.spotify.com/(playlist|track|album)/xxx
       const urlMatch = clean.match(/open\.spotify\.com\/(playlist|track|album)\/([a-zA-Z0-9]+)/i);
@@ -1263,11 +1506,17 @@
       if (!parsed) return;
       currentSpotifyType = parsed.type;
       currentSpotifyUri = parsed.id;
+      currentSpotifyLive = null; // Clear live override so pill reflects the selected playlist
 
       const iframe = document.getElementById('spotifyIframe');
       const trackLabel = document.getElementById('spotifyTrackName');
       const sublabel = document.getElementById('spotifyPillSublabel');
       const eqBars = document.getElementById('spotifyEqBars');
+      const pillArt = document.getElementById('spotifyLivePillArt');
+      const defaultSvg = document.getElementById('spotifyDefaultBrandSvg');
+
+      if (pillArt) pillArt.classList.add('hidden');
+      if (defaultSvg) defaultSvg.classList.remove('hidden');
 
       if (iframe) {
         iframe.src = `https://open.spotify.com/embed/${parsed.type}/${parsed.id}?utm_source=generator&theme=0`;
@@ -1276,7 +1525,7 @@
         trackLabel.textContent = displayName || `Spotify ${parsed.type.toUpperCase()}`;
       }
       if (sublabel) {
-        sublabel.textContent = "PAUSED";
+        sublabel.textContent = "PLAYLIST";
         sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase";
       }
       if (eqBars) eqBars.classList.add('eq-paused');
@@ -1287,6 +1536,9 @@
         localStorage.setItem('brian_twitch_spotify_name', displayName || `Spotify ${parsed.type}`);
       } catch(e) {}
 
+      renderSavedPlaylistButtons();
+      updateSpotifyDrawerDisplay();
+
       if (autoPlay) {
         playSpotifyUri(parsed.type, parsed.id);
       }
@@ -1295,32 +1547,17 @@
     function toggleSpotifyDrawer() {
       const drawer = document.getElementById('spotifyDrawer');
       if (drawer) {
+        const isOpening = drawer.classList.contains('hidden');
         drawer.classList.toggle('hidden');
         drawer.classList.toggle('flex');
+        if (isOpening) {
+          updateSpotifyDrawerDisplay();
+        }
       }
     }
 
     function promptCustomSpotify() {
-      const res = prompt("Paste your Spotify Playlist, Album, or Track link (e.g. https://open.spotify.com/playlist/...):", "");
-      if (res) {
-        const parsed = parseSpotifyResource(res);
-        if (parsed) {
-          const name = prompt("Enter a display name for this playlist/song (optional):", "🎵 My Playlist") || "🎵 My Playlist";
-          setSpotifyPlaylist(res, name, true);
-          // Broadcast to shared channel
-          try {
-            if (typeof BroadcastChannel !== 'undefined') {
-              const syncChannel = new BroadcastChannel('brian_theater_sync');
-              syncChannel.postMessage({
-                type: 'spotify_update',
-                payload: { resource: res, name: name }
-              });
-            }
-          } catch(e) {}
-        } else {
-          alert("Invalid Spotify URL or URI format. Please copy a link directly from Spotify.");
-        }
-      }
+      promptSaveNewPlaylist();
     }
 
     async function toggleTwitchSpotifyPlayback() {
@@ -1460,13 +1697,6 @@
         }
 
         // Expanded Drawer Live Card
-        if (liveDrawer) {
-          liveDrawer.classList.remove('hidden');
-          liveDrawer.classList.add('flex');
-        }
-        if (embedBox) embedBox.classList.add('hidden');
-        if (presetButtons) presetButtons.classList.add('hidden');
-
         const dArt = document.getElementById('spotifyDrawerLiveArt');
         const dTitle = document.getElementById('spotifyDrawerLiveTitle');
         const dArtist = document.getElementById('spotifyDrawerLiveArtist');
@@ -1535,14 +1765,9 @@
           if (pillArt) pillArt.classList.add('hidden');
           if (defaultSvg) defaultSvg.classList.remove('hidden');
         }
-
-        if (liveDrawer) {
-          liveDrawer.classList.add('hidden');
-          liveDrawer.classList.remove('flex');
-        }
-        if (embedBox) embedBox.classList.remove('hidden');
-        if (presetButtons) presetButtons.classList.remove('hidden');
       }
+
+      updateSpotifyDrawerDisplay();
     }
 
     // Direct Twitch Spotify Polling & Token Management
@@ -1683,7 +1908,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.215";
+    const TWITCH_OVERLAY_VERSION = "4.9.216";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -1749,6 +1974,10 @@
         }
       } catch(e) {}
 
+      // 3. Initialize Saved Playlists buttons & drawer display state
+      renderSavedPlaylistButtons();
+      updateSpotifyDrawerDisplay();
+
       window.renderMovieState = renderMovieState;
       window.updateCountdown = updateCountdown;
       window.resolveActiveOrNextMovie = resolveActiveOrNextMovie;
@@ -1760,6 +1989,13 @@
       window.twitchSpotifyPrev = twitchSpotifyPrev;
       window.fetchTwitchSpotifyPlayback = fetchTwitchSpotifyPlayback;
       window.checkSpotifyHeartbeat = checkSpotifyHeartbeat;
+      window.switchSpotifyDrawerTab = switchSpotifyDrawerTab;
+      window.updateSpotifyDrawerDisplay = updateSpotifyDrawerDisplay;
+      window.getSavedPlaylists = getSavedPlaylists;
+      window.savePlaylistsToStorage = savePlaylistsToStorage;
+      window.renderSavedPlaylistButtons = renderSavedPlaylistButtons;
+      window.promptSaveNewPlaylist = promptSaveNewPlaylist;
+      window.deleteSavedPlaylist = deleteSavedPlaylist;
 
       renderMovieState();
       setInterval(updateCountdown, 1000);

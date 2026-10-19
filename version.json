@@ -1,11 +1,11 @@
 {
-  "version": "4.9.215",
+  "version": "4.9.216",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.215",
+  "title": "Brian's Theater v4.9.216",
   "notes": [
-    "Added interactive Play and Pause button on Spotify stream pill.",
-    "Selecting soundtrack playlists now automatically triggers live playback on Spotify.",
-    "Added drawer transport controls for quick next and previous tracks.",
-    "Synchronized play and pause icons with real-time stream status."
+    "Added permanent 1-click saved playlists shelf in Spotify drawer.",
+    "Added dual-mode switcher tabs for live stream and playlists.",
+    "Saved custom Spotify playlists now persist and sync seamlessly.",
+    "Added 1-click deletion to easily manage saved playlist buttons."
   ]
 }
