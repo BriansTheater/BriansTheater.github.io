@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎃 Brian's Haunted Theater • Twitch Stream Overlay (1080p)</title>
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+
+  <link rel="preconnect" href="https://brianstheater-default-rtdb.firebaseio.com" crossorigin>
+  <link rel="dns-prefetch" href="https://brianstheater-default-rtdb.firebaseio.com">
+  <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+  <link rel="dns-prefetch" href="https://image.tmdb.org">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinzel: ['Cinzel', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Reset & Viewport containment for 1080p Stream */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 28%, #160a29 0%, #0b0517 45%, #030207 100%);
+      color: #e2e8f0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Ambient fog drift across bottom */
+    @keyframes fogRoll {
+      0% { transform: translateX(-12%); opacity: 0.28; }
+      50% { transform: translateX(8%); opacity: 0.55; }
+      100% { transform: translateX(-12%); opacity: 0.28; }
+    }
+    .fog-layer {
+      animation: fogRoll 20s ease-in-out infinite;
+    }
+
+    /* Subtle eerie candle flicker for title and header candle */
+    @keyframes eerieCandleFlicker {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.45)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25)); transform: scale(1); }
+      30% { filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.8)) drop-shadow(0 0 35px rgba(168, 85, 247, 0.6)); transform: scale(1.06); }
+      60% { filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35)) drop-shadow(0 0 14px rgba(168, 85, 247, 0.15)); transform: scale(0.97); }
+      85% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.65)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.4)); transform: scale(1.03); }
+    }
+    .anim-candle { animation: eerieCandleFlicker 3s ease-in-out infinite; }
+    .anim-flicker { animation: eerieCandleFlicker 4s ease-in-out infinite; }
+
+    /* Center Ambient Backlight Aura */
+    .hero-glow-aura {
+      position: absolute;
+      inset: -15px;
+      background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.22) 0%, rgba(168, 85, 247, 0.15) 50%, transparent 75%);
+      filter: blur(32px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Gothic Proscenium Arch Pillars on the sides */
+    .gothic-flank-left {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 140px;
+      background: linear-gradient(90deg, rgba(2, 1, 6, 0.95) 0%, rgba(13, 6, 25, 0.75) 50%, transparent 100%);
+      border-right: 1px solid rgba(168, 85, 247, 0.12);
+      box-shadow: inset -15px 0 25px rgba(168, 85, 247, 0.08);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .gothic-flank-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 140px;
+      background: linear-gradient(-90deg, rgba(2, 1, 6, 0.95) 0%, rgba(13, 6, 25, 0.75) 50%, transparent 100%);
+      border-left: 1px solid rgba(168, 85, 247, 0.12);
+      box-shadow: inset 15px 0 25px rgba(168, 85, 247, 0.08);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Diagonal Atmospheric Spotlights */
+    .spotlight-left {
+      position: absolute;
+      top: -20px;
+      left: 10%;
+      width: 320px;
+      height: 700px;
+      background: linear-gradient(145deg, rgba(168, 85, 247, 0.08) 0%, rgba(245, 158, 11, 0.03) 40%, transparent 70%);
+      filter: blur(28px);
+      transform: rotate(18deg);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .spotlight-right {
+      position: absolute;
+      top: -20px;
+      right: 10%;
+      width: 320px;
+      height: 700px;
+      background: linear-gradient(-145deg, rgba(245, 158, 11, 0.08) 0%, rgba(168, 85, 247, 0.03) 40%, transparent 70%);
+      filter: blur(28px);
+      transform: rotate(-18deg);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Mini Spotify Corner Pill & Equalizer Bars */
+    @keyframes eqBarPulse {
+      0%, 100% { height: 4px; opacity: 0.6; }
+      50% { height: 16px; opacity: 1; }
+    }
+    .eq-bar-1 { animation: eqBarPulse 0.85s ease-in-out infinite; }
+    .eq-bar-2 { animation: eqBarPulse 0.65s ease-in-out infinite 0.2s; }
+    .eq-bar-3 { animation: eqBarPulse 0.95s ease-in-out infinite 0.4s; }
+    .eq-bar-4 { animation: eqBarPulse 0.75s ease-in-out infinite 0.1s; }
+    .eq-paused span {
+      animation: none !important;
+      height: 3px !important;
+      opacity: 0.4 !important;
+    }
+  </style>
+</head>
+<body class="w-full h-full relative flex items-center justify-center">
+
+  <!-- ========================================== -->
+  <!-- 1. CREEPY ATMOSPHERIC BACKGROUND (NO ICONS)-->
+  <!-- ========================================== -->
+
+  <!-- Diagonal Theatrical Light Beams -->
+  <div class="spotlight-left"></div>
+  <div class="spotlight-right"></div>
+
+  <!-- Left & Right Gothic Proscenium Flanks -->
+  <div class="gothic-flank-left"></div>
+  <div class="gothic-flank-right"></div>
+
+  <!-- Ambient Rolling Ground Mist -->
+  <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-10 overflow-hidden opacity-50">
+    <div class="w-[140%] h-full bg-gradient-to-t from-purple-950/80 via-slate-900/30 to-transparent fog-layer"></div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 2. CENTER STAGE: THE LIVE BILLBOARD (1080p)-->
+  <!-- ========================================== -->
+  <main class="relative z-20 w-full max-w-5xl mx-auto px-4 py-3 flex flex-col items-center justify-center text-center">
+
+    <!-- A. TOP THEATER BRANDING TITLE -->
+    <header class="mb-2 sm:mb-3">
+      <div class="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-950/90 border border-orange-500/40 shadow-[0_0_25px_rgba(249,115,22,0.25)] backdrop-blur-md">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 shadow-lg shadow-orange-950/60 flex items-center justify-center text-slate-950 font-black text-lg sm:text-2xl shrink-0">
+          <span>🎃</span>
+        </div>
+        <div class="flex flex-col text-left">
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-400 leading-tight anim-flicker">
+              Brian's Haunted Theater
+            </h1>
+            <span class="anim-candle inline-block text-base sm:text-lg select-none" title="Shocktoberfest Haunted Candle">🕯️</span>
+          </div>
+          <span class="text-[9px] sm:text-[10px] text-slate-400 font-mono tracking-wider uppercase font-semibold">
+            Shocktoberfest Edition
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- B. SCREENING STATUS & MOVIE TITLE -->
+    <section class="flex flex-col items-center gap-1 mb-2.5 sm:mb-3 w-full px-4 text-center">
+      <span id="screeningStatusBadge" class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-purple-300/90 uppercase">
+        NEXT SCHEDULED SCREENING
+      </span>
+
+      <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)] transition-all duration-300 max-w-full">
+        <span id="movieTitleText">Abraham's Boys A Dracula Story</span>
+      </h2>
+
+      <p id="movieShowtime" class="text-xs sm:text-sm md:text-base text-slate-300 font-medium tracking-wide">
+        Saturday, Oct 17, 2026 • 7:00 PM PST
+      </p>
+    </section>
+
+    <!-- C. CENTER HERO POSTER FRAME (16:9 Glowing Widescreen) -->
+    <section class="relative w-full max-w-2xl sm:max-w-3xl mb-3 sm:mb-4 flex items-center justify-center">
+      <!-- Glow Aura -->
+      <div class="hero-glow-aura"></div>
+
+      <!-- Poster & Live Trailer Frame -->
+      <div id="posterFrame" class="relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(245,158,11,0.35)] aspect-[16/9] max-h-[42vh] flex items-center justify-center">
+        <!-- Static/Closed Poster Image -->
+        <img
+          id="heroPosterImg"
+          src="https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg"
+          alt="Featured Movie Screening"
+          class="w-full h-full object-cover object-center transition-opacity duration-700"
+          onerror="handlePosterError(this)"
+        />
+
+        <!-- Poster Error Warning Badge (Visible if artwork is missing or invalid) -->
+        <div id="posterErrorBadge" class="hidden absolute top-3 sm:top-4 right-3 sm:right-4 z-20 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-rose-950/90 border border-rose-500/80 text-rose-200 font-mono text-xs sm:text-sm font-black tracking-wide shadow-[0_0_25px_rgba(244,63,94,0.55)] backdrop-blur-md">
+          <span class="text-base sm:text-lg animate-bounce">⚠️</span>
+          <div class="flex flex-col text-left leading-tight">
+            <span class="text-rose-100 font-black tracking-wider uppercase drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">POSTER ERROR DETECTED</span>
+            <span class="text-[9px] sm:text-[10px] text-rose-300 font-sans font-medium">Default image in use — please update poster</span>
+          </div>
+        </div>
+
+        <!-- Live Doors Open Trailer Replay Player (Replaces poster when doors open) -->
+        <div id="heroTrailerContainer" class="hidden absolute inset-0 w-full h-full bg-black z-10 flex items-center justify-center">
+          <iframe
+            id="heroTrailerFrame"
+            class="w-full h-full border-0 pointer-events-auto"
+            src=""
+            title="Movie Cinema Trailer"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+          <div class="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-full bg-red-600/90 text-white font-mono text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 shadow-lg shadow-red-950/50">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+            <span>CINEMA TRAILER LIVE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- D. DIGITAL COUNTDOWN CARD CONTAINER -->
+    <section id="countdownContainer" class="w-full max-w-xl">
+      <div id="countdownBox" class="w-full bg-slate-950/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.25)] flex flex-col items-center gap-3">
+        
+        <!-- Header Label -->
+        <div id="countdownHeader" class="text-xs sm:text-sm font-mono font-bold tracking-[0.25em] text-amber-300 uppercase flex items-center justify-center gap-2">
+          <span id="countdownHeaderText">THEATER DOORS OPEN IN</span>
+        </div>
+
+        <!-- Digits Grid -->
+        <div id="countdownGrid" class="grid grid-cols-3 gap-2.5 sm:gap-3.5 w-full font-mono">
+          
+          <!-- Optional Days Column -->
+          <div id="colDays" class="hidden flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+            <span id="countDays" class="text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none">00</span>
+            <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">DAYS</span>
+          </div>
+
+          <!-- Hours Column -->
+          <div id="colHours" class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+            <span id="countHours" class="text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none">00</span>
+            <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">HOURS</span>
+          </div>
+
+          <!-- Minutes Column -->
+          <div id="colMins" class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+            <span id="countMins" class="text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none">00</span>
+            <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">MINS</span>
+          </div>
+
+          <!-- Seconds Column -->
+          <div id="colSecs" class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+            <span id="countSecs" class="text-2xl sm:text-4xl font-black text-amber-300 tracking-tight leading-none">00</span>
+            <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SECS</span>
+          </div>
+
+        </div>
+
+        <!-- Stream Watch URL Banner (Visible during countdown) -->
+        <div id="countdownUrlBadge" class="w-full flex items-center justify-center pt-2">
+          <a
+            id="countdownUrlLink"
+            href="http://tiny.cc/BriansTheater"
+            target="_blank"
+            class="w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/20 to-purple-500/15 hover:from-amber-500/25 hover:via-orange-500/30 hover:to-purple-500/25 border-2 border-amber-400/80 hover:border-amber-300 shadow-[0_0_30px_rgba(245,158,11,0.4)] transition-all flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden"
+          >
+            <div class="flex items-center justify-center shrink-0">
+              <span class="text-2xl sm:text-3xl md:text-4xl filter drop-shadow select-none">🎃</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center text-center flex-1 min-w-0 px-1">
+              <span class="text-xs sm:text-sm font-mono font-black tracking-[0.25em] text-amber-300 uppercase group-hover:text-amber-200">
+                JOIN THEATER:
+              </span>
+              <span id="countdownUrlText" class="text-lg sm:text-xl md:text-2xl font-mono font-black tracking-normal sm:tracking-wider text-white uppercase underline underline-offset-4 decoration-amber-400 truncate max-w-full">
+                tiny.cc/BriansTheater
+              </span>
+            </div>
+
+            <div class="flex items-center justify-center shrink-0">
+              <span class="text-2xl sm:text-3xl md:text-4xl filter drop-shadow select-none">🦇</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Enter Theater Action Button (Activated when Doors Open) -->
+        <div id="doorsOpenActions" class="hidden w-full pt-2">
+          <a
+            id="doorsOpenLink"
+            href="http://tiny.cc/BriansTheater"
+            target="_blank"
+            class="theater-btn w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black shadow-[0_0_40px_rgba(249,115,22,0.6)] hover:shadow-[0_0_55px_rgba(168,85,247,0.85)] border-2 border-orange-400/80 transition transform active:scale-95 flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden"
+          >
+            <div class="flex items-center justify-center shrink-0">
+              <span class="text-2xl sm:text-3xl md:text-4xl filter drop-shadow select-none">🎃</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center text-center flex-1 min-w-0 px-1">
+              <span class="text-xs sm:text-sm font-mono font-black tracking-[0.25em] text-amber-200 uppercase filter drop-shadow">
+                DOORS OPEN • JOIN NOW
+              </span>
+              <span id="doorsOpenBtnText" class="text-lg sm:text-xl md:text-2xl font-mono font-black tracking-normal sm:tracking-wider text-white uppercase underline underline-offset-4 decoration-amber-300 filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] truncate max-w-full">
+                tiny.cc/BriansTheater
+              </span>
+            </div>
+
+            <div class="flex items-center justify-center shrink-0">
+              <span class="text-2xl sm:text-3xl md:text-4xl filter drop-shadow select-none">🦇</span>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- E. CENTERED SOUNDTRACK / SPOTIFY PILL -->
+    <div id="spotifyCornerWidget" class="relative z-30 mt-3 sm:mt-4 flex flex-col items-center justify-center select-none font-sans w-full max-w-xl">
+      
+      <!-- Expanded Floating Spotify Player Drawer -->
+      <div id="spotifyDrawer" class="hidden mb-2.5 p-3 rounded-2xl bg-slate-950/95 border border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-xl w-80 max-w-[90vw] flex-col gap-2.5 transition-all text-left">
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
+            </svg>
+            <span class="text-xs font-bold text-slate-200">Theater Soundtrack</span>
+          </div>
+          <button type="button" onclick="toggleSpotifyDrawer()" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
+        </div>
+
+        <!-- Dual Mode Switcher Tabs -->
+        <div class="flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-800 text-[10px] font-bold gap-1">
+          <button
+            type="button"
+            id="tabSpotifyLive"
+            onclick="switchSpotifyDrawerTab('live')"
+            class="flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm cursor-pointer"
+          >
+            <span>📡</span> Live Stream
+          </button>
+          <button
+            type="button"
+            id="tabSpotifyPlaylists"
+            onclick="switchSpotifyDrawerTab('playlists')"
+            class="flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-medium cursor-pointer"
+          >
+            <span>🎵</span> Saved Playlists
+          </button>
+        </div>
+
+        <!-- Mode 1: Live Track Card (Shown when live sync is active) -->
+        <div id="spotifyLiveDrawerCard" class="hidden p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex-col gap-2.5">
+          <div class="flex items-center gap-3">
+            <img id="spotifyDrawerLiveArt" src="" alt="Album Art" class="w-16 h-16 rounded-lg object-cover shadow-md border border-emerald-500/30 shrink-0">
+            <div class="flex flex-col min-w-0 flex-1 leading-snug">
+              <h4 id="spotifyDrawerLiveTitle" class="text-xs font-black text-white truncate">Track Title</h4>
+              <p id="spotifyDrawerLiveArtist" class="text-[11px] font-semibold text-slate-300 truncate mt-0.5">Artist Name</p>
+              <p id="spotifyDrawerLiveAlbum" class="text-[10px] text-slate-400 truncate mt-0.5">Album Name</p>
+              <span id="spotifyDrawerLiveDevice" class="text-[9px] font-mono text-emerald-400 mt-1">🎧 Active Stream</span>
+            </div>
+          </div>
+          <!-- Progress Bar -->
+          <div class="flex flex-col gap-1">
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+              <div id="spotifyDrawerLiveProgress" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[0%] transition-all duration-300"></div>
+            </div>
+            <div class="flex items-center justify-between text-[9px] font-mono text-slate-400">
+              <span id="spotifyDrawerLiveTime">0:00 / 0:00</span>
+              <span class="text-emerald-400 font-bold uppercase tracking-wider">LIVE ON STREAM</span>
+            </div>
+          </div>
+          <!-- Transport Controls -->
+          <div class="flex items-center justify-center gap-3 pt-1 border-t border-slate-800/80">
+            <button type="button" onclick="twitchSpotifyPrev()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Previous Track">⏮</button>
+            <button type="button" onclick="toggleTwitchSpotifyPlayback()" class="h-8 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold flex items-center justify-center gap-1.5 text-xs transition active:scale-95 cursor-pointer" title="Play / Pause">
+              <span id="spotifyDrawerPlayIcon">▶</span> <span id="spotifyDrawerPlayText">Play</span>
+            </button>
+            <button type="button" onclick="twitchSpotifyNext()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Next Track">⏭</button>
+          </div>
+        </div>
+
+        <!-- Mode 1 Inactive Helper Banner (Shown if live tab selected but no music playing) -->
+        <div id="spotifyLiveIdleHelper" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-center flex flex-col items-center gap-2">
+          <p class="text-[11px] text-slate-300">🎧 Stream is synced with your Spotify account.</p>
+          <p class="text-[10px] text-slate-400">Play any song or podcast on your Spotify app, or switch to your Saved Playlists below.</p>
+          <button type="button" onclick="switchSpotifyDrawerTab('playlists')" class="mt-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[10px] font-bold border border-emerald-500/40 transition cursor-pointer">
+            🎵 Browse Saved Playlists
+          </button>
+        </div>
+
+        <!-- Mode 2: Saved Playlists Section -->
+        <div id="spotifyPlaylistsSection" class="hidden flex-col gap-2.5">
+          <!-- Spotify Embed Container -->
+          <div id="spotifyEmbedContainer" class="w-full rounded-xl overflow-hidden bg-black/60 min-h-[152px] h-[152px]">
+            <iframe
+              id="spotifyIframe"
+              class="w-full h-full border-0 rounded-xl"
+              src="https://open.spotify.com/embed/playlist/5fnANvKo5Ep7TLEPPjfAzJ?utm_source=generator&theme=0"
+              title="Spotify Music Stream"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <!-- Saved Playlist 1-Click Buttons Header -->
+          <div class="flex items-center justify-between text-[11px] font-bold text-slate-300 pt-1 border-t border-slate-800/80">
+            <span class="flex items-center gap-1.5">
+              <span>💽</span> Saved Playlists
+            </span>
+            <button
+              type="button"
+              id="btnToggleAddPlaylistForm"
+              onclick="toggleAddPlaylistForm()"
+              class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-500/50 transition"
+            >
+              <span>+</span> Add Playlist
+            </button>
+          </div>
+
+          <!-- Inline Add Playlist Form (Zero prompts, zero popups, works 100% in OBS) -->
+          <div id="spotifyAddPlaylistForm" class="hidden flex-col gap-2 p-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 shadow-inner">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                <span>➕</span> Add Spotify Playlist or Album
+              </span>
+              <button type="button" onclick="toggleAddPlaylistForm(false)" class="text-slate-400 hover:text-white text-xs px-1 cursor-pointer">✕</button>
+            </div>
+
+            <!-- Spotify URL/URI input + Paste Button -->
+            <div class="flex flex-col gap-1">
+              <label class="text-[9px] font-semibold text-slate-400">Spotify Link or URI:</label>
+              <div class="flex items-center gap-1">
+                <input
+                  type="text"
+                  id="newPlaylistUrlInput"
+                  placeholder="Paste Spotify link (open.spotify.com/...)"
+                  class="flex-1 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 text-[10px] focus:border-emerald-400 outline-none font-mono placeholder:text-slate-600"
+                >
+                <button
+                  type="button"
+                  id="btnPastePlaylistUrl"
+                  onclick="pastePlaylistFromClipboard()"
+                  class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold border border-slate-700 cursor-pointer shrink-0 transition"
+                  title="Paste from clipboard"
+                >
+                  📋 Paste
+                </button>
+              </div>
+            </div>
+
+            <!-- Display Name / Label input -->
+            <div class="flex flex-col gap-1">
+              <label class="text-[9px] font-semibold text-slate-400">Button Label (e.g. 🧛 Vampires, 🎸 Rock):</label>
+              <input
+                type="text"
+                id="newPlaylistNameInput"
+                placeholder="e.g. 🧛 Vampires or ☕ Cozy Lofi"
+                class="w-full px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 text-[10px] focus:border-emerald-400 outline-none placeholder:text-slate-600"
+              >
+            </div>
+
+            <!-- Inline Validation Error Notice -->
+            <div id="addPlaylistValidationMsg" class="hidden text-[9px] text-rose-400 font-semibold"></div>
+
+            <!-- Form Action Buttons -->
+            <div class="flex items-center justify-end gap-1.5 pt-0.5">
+              <button
+                type="button"
+                onclick="toggleAddPlaylistForm(false)"
+                class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-[10px] font-semibold transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                id="btnSubmitAddPlaylist"
+                onclick="submitAddPlaylistForm()"
+                class="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 text-[10px] font-black transition cursor-pointer shadow-sm flex items-center gap-1"
+              >
+                <span>💾</span> Save & Add
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic 1-Click Buttons Shelf -->
+          <div id="spotifyPresetButtons" class="flex flex-wrap items-center gap-1.5 max-h-36 overflow-y-auto pr-0.5 text-[10px]">
+            <!-- Hydrated dynamically by renderSavedPlaylistButtons() -->
+          </div>
+        </div>
+      </div>
+
+      <!-- The Centered Pill -->
+      <div
+        id="spotifyPill"
+        onclick="toggleSpotifyDrawer()"
+        class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-950/90 border border-slate-700/60 hover:border-slate-500 text-slate-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group"
+        title="Click to expand Spotify Player / select playlist"
+      >
+        <!-- Spotify Brand Icon / Live Album Art -->
+        <div id="spotifyBrandIcon" class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 shadow-sm group-hover:rotate-12 transition-transform overflow-hidden">
+          <svg id="spotifyDefaultBrandSvg" class="w-3.5 h-3.5 text-slate-950" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-.9.2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4.6-1.1 8.5-.6 11.6 1.3.3.2.4.6.2.9zm1.5-3.3c-.3.4-.8.5-1.2.3-3.2-2-8.1-2.6-11.9-1.4-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.4-1.3 9.7-.7 13.3 1.5.4.2.5.7.3 1.1zm.1-3.4C15.2 8.4 8.8 8.2 5.1 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1.1 15.8 1.6.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.3z"/>
+          </svg>
+          <img id="spotifyLivePillArt" src="" alt="Album Art" class="w-full h-full object-cover hidden">
+        </div>
+
+        <!-- Live Animated Equalizer Bars -->
+        <div id="spotifyEqBars" class="flex items-end gap-0.5 h-3.5 px-0.5 eq-paused" aria-hidden="true">
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
+          <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-4"></span>
+        </div>
+
+        <!-- Current Track / Playlist Name -->
+        <div class="flex flex-col text-left leading-none max-w-[180px] sm:max-w-[240px] overflow-hidden">
+          <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">PAUSED</span>
+          <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
+        </div>
+
+        <!-- Play / Pause Action Button on the Pill -->
+        <button
+          type="button"
+          id="spotifyPillPlayBtn"
+          onclick="event.stopPropagation(); toggleTwitchSpotifyPlayback();"
+          class="w-7 h-7 rounded-full bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 flex items-center justify-center font-bold text-xs shadow-md transition-all hover:scale-110 active:scale-90 ml-1 shrink-0 cursor-pointer"
+          title="Play / Pause Spotify"
+        >
+          <span id="spotifyPillPlayIcon" class="ml-0.5">▶</span>
+        </button>
+
+        <!-- Expand Arrow -->
+        <span class="text-[10px] text-slate-400 group-hover:text-emerald-300 transition-colors ml-0.5">▲</span>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ========================================== -->
+  <!-- 3. REALTIME JAVASCRIPT LOGIC               -->
+  <!-- ========================================== -->
+  <script>
+    const FIREBASE_RTDB_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
+    const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
+    let eventSource = null;
+    let lastKnownPayload = {};
+
+    const DEFAULT_FALLBACK_POSTER = "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg";
+
+    // Curated High-Res Movie Artwork Map (Matches main theater stage)
+    const verifiedMovieArtworks = {
+      "Evil Dead Burn": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
+      "Evil Dead": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
+      "Abraham's Boys A Dracula Story": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "Abraham's Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "Abrahams Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
+      "The Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
+      "Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
+      "UnderTone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "Undertone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
+      "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
+      "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephens King: It (1980)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephens King: It": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephen King's It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "Stephen King's It": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
+      "AHS": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13 e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "American Horror Story: Season 13, Episode 9": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      "AHS: s13 e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13e10: The prodigal son": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "American Horror Story: Season 13, Episode 10": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13 e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "AHS: s13e11: Madison Happy Ending": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "American Horror Story: Season 13, Episode 11": "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      "AHS: s13 e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "AHS: s13e12: Sisters in Arms": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "American Horror Story: Season 13, Episode 12": "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg",
+      "AHS: s13 e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
+      "AHS: s13e13: Devils of a good time": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
+      "American Horror Story: Season 13, Episode 13": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg"
+    };
+
+    function getMovieArtworkUrl(title, customMap) {
+      if (!title) return '';
+      const clean = String(title).replace(/^[🎬🎭🎞️🍿📽️\s]+/, '').trim();
+      if (!clean) return '';
+
+      const lower = clean.toLowerCase().trim();
+      const norm = lower.replace(/[^a-z0-9]/g, '');
+
+      const extractEpNum = (str) => {
+        if (!str) return null;
+        const m = str.match(/(?:e|ep|episode)\s*(\d+)/i);
+        return m ? parseInt(m[1], 10) : null;
+      };
+      const isAhsTitle = norm.startsWith('ahs') || norm.startsWith('americanhorrorstory');
+      const queryEp = isAhsTitle ? extractEpNum(lower) : null;
+
+      const searchDict = (dict) => {
+        if (!dict) return null;
+        if (dict[clean]) {
+          const v = dict[clean];
+          return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+        }
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase().trim() === lower) {
+            return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+          }
+        }
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) {
+            return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+          }
+        }
+        if (queryEp !== null) {
+          for (const [k, v] of Object.entries(dict)) {
+            const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if ((kNorm.startsWith('ahs') || kNorm.startsWith('americanhorrorstory')) && extractEpNum(k) === queryEp) {
+              return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+            }
+          }
+        }
+        for (const [k, v] of Object.entries(dict)) {
+          const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (!isAhsTitle) {
+            if (kNorm && norm && (norm.startsWith(kNorm) || kNorm.startsWith(norm))) {
+              return (typeof v === 'object') ? (v.backdropUrl || v.posterUrl) : v;
+            }
+          }
+        }
+        return null;
+      };
+
+      const customResult = searchDict(customMap);
+      if (customResult) return customResult;
+
+      const verifiedResult = searchDict(verifiedMovieArtworks);
+      if (verifiedResult) return verifiedResult;
+
+      if (isAhsTitle) {
+        if (queryEp === 9 || lower.includes('details')) return "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg";
+        if (queryEp === 10 || lower.includes('prodigal')) return "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg";
+        if (queryEp === 11 || lower.includes('madison')) return "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg";
+        if (queryEp === 12 || lower.includes('sisters')) return "https://image.tmdb.org/t/p/w780/n7ECmVaS5z6B4OEoxgucnZlYmY9.jpg";
+        if (queryEp === 13 || lower.includes('devils')) return "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg";
+        return "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg";
+      }
+
+      return '';
+    }
+
+    function isMovieConcluded(item, now = Date.now()) {
+      if (!item) return true;
+      if (item.status === 'CONCLUDED') return true;
+      const end = Number(item.endMs) || 0;
+      const start = Number(item.startMs) || 0;
+      if (end > 0 && now >= end) return true;
+      if (start > 0 && now >= start + (4 * 3600000)) return true;
+      return false;
+    }
+
+    // Curated Trailer Mappings for Cinema Screenings
+    const SCHEDULE_TRAILERS = {
+      "Abraham's Boys A Dracula Story": "vWs79_NK2h0",
+      "Abraham's Boys": "vWs79_NK2h0",
+      "Abrahams Boys": "vWs79_NK2h0",
+      "Neighbors": "kL5c2Szf3E4",
+      "Neighbors 2": "X2i9Zz_AqTg",
+      "Machine Gun Preacher": "q5D4v8a7o4M",
+      "manchine gun pearcher": "q5D4v8a7o4M",
+      "The Whisper Man": "rT22nYLaeWc",
+      "Blade Runner 2049": "gCcx85zbxz4",
+      "Dune: Part Two": "Way9Dexny3w",
+      "Deadpool & Wolverine": "73_1biulkYk",
+      "Spider-Man: Across the Spider-Verse": "cqGjhVJWtEg",
+      "Oppenheimer": "uYPbbksJxIg",
+      "Interstellar": "zSWdZVtXT7E",
+      "The Dark Knight": "EXeTwQWrcwY",
+      "The interview": "KpyVENBPj5M",
+      "Pineapple Express": "BWZt4v6b1hI",
+      "beast": "oQMc7Sq366I",
+      "mother mary": "3VbW9A6gGgQ",
+      "Normal": "dQw4w9WgXcQ",
+      "Dog Man": "Wa0B2s7E2b8",
+      "Borderlands": "l3XzepN03KQ",
+      "Scary Movie": "cGgWAHXuTKc",
+      "Scary Movie 2026": "cGgWAHXuTKc",
+      "A Nightmare on Elm Street": "dCVh4lBfW-c",
+      "A Nightmare on Elm Street 2: Freddy's Revenge": "b-dZa6xt6hQ",
+      "A Nightmare on Elm Street 3: Dream Warriors": "oy-hgBu1h0w",
+      "A Nightmare on Elm Street 4: The Dream Master": "2m1a2Pt8Vjw",
+      "A Nightmare on Elm Street 5: The Dream Child": "qa4lBfEWBBs",
+      "Freddy's Dead: The Final Nightmare": "PhcKV5e4RoU",
+      "Wes Craven's New Nightmare": "9dLQYxBYGTQ",
+      "Freddy vs. Jason": "ipbCUW3umJU",
+      "Freddy vs Jason": "ipbCUW3umJU",
+      "A Nightmare on Elm Street (2010)": "ZuYoEtEI_go",
+      "Clown in a Cornfield": "lWUKnQVCAhk",
+      "IT Chapter Two": "Pr85vto4dbo",
+      "The Seeding": "BunlosQQw-I",
+      "Seeding": "BunlosQQw-I",
+      "UnderTone": "1_TRSEcMvR0",
+      "Undertone": "1_TRSEcMvR0",
+      "they will kill you": "s0PGrtw0X1Q",
+      "They Will Kill You": "s0PGrtw0X1Q",
+      "Stephen King's It": "FnCdOQsX5kc",
+      "Stephens King: It (1990)": "FnCdOQsX5kc",
+      "NOSFERATU": "nulvWqYUM8k",
+      "Nosferatu": "nulvWqYUM8k",
+      "Evil Dead Rise": "smTK_AeAPHs",
+      "Backrooms": "0HjdiohVOik",
+      "The Backrooms": "0HjdiohVOik",
+      "Hokum": "fDooSsgINLQ",
+      "Abraham's Boys A Dracula Story": "vWs79_NK2h0",
+      "Abraham's Boys": "vWs79_NK2h0",
+      "Abrahams Boys": "vWs79_NK2h0"
+    };
+
+    function getTrailerIdForTitle(title, customTrailers) {
+      if (!title) return '';
+      const clean = title.replace(/^🎬\s*/, '').trim();
+      if (customTrailers && customTrailers[clean]) {
+        const val = customTrailers[clean];
+        const m = String(val).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
+        return m ? m[1] : val;
+      }
+      if (SCHEDULE_TRAILERS[clean]) return SCHEDULE_TRAILERS[clean];
+      const lower = clean.toLowerCase();
+      for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
+        if (k.toLowerCase() === lower) return v;
+      }
+      // Substring & Franchise Matching
+      if (lower.includes('nosferatu')) return 'nulvWqYUM8k';
+      if (lower.includes('evil dead')) return 'smTK_AeAPHs';
+      if (lower.includes('seeding')) return 'BunlosQQw-I';
+      if (lower.includes('backroom')) return '0HjdiohVOik';
+      if (lower.includes('hokum')) return 'fDooSsgINLQ';
+      if (lower.includes('undertone')) return '1_TRSEcMvR0';
+      if (lower.includes('kill you')) return 's0PGrtw0X1Q';
+      if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
+      if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
+      if (lower.includes('ahs') || lower.includes('american horror')) return '-9KfZwbvdvU';
+      if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
+      return '';
+    }
+
+    // Active state model (Initial seed synchronized with main stage)
+    let activeMovie = {
+      title: "Abraham's Boys A Dracula Story",
+      startMs: 1792288800000,
+      endMs: 1792294140000,
+      posterUrl: DEFAULT_FALLBACK_POSTER,
+      trailerId: "",
+      showtimeText: "Saturday, Oct 17, 2026 • 7:00 PM PST",
+      isNowPlaying: false,
+      doorMode: "auto",
+      isPosterError: false
+    };
+    window.activeMovie = activeMovie;
+
+    // 1. Digital Countdown Clock Loop (Synchronized with main theater doors opening)
+    function updateCountdown() {
+      const now = Date.now();
+
+      // AUTO-PROGRESSION: If current movie is concluded or ended, automatically advance to next upcoming premiere!
+      if (typeof resolveActiveOrNextMovie === 'function') {
+        const curEnd = Number(activeMovie.endMs) || 0;
+        const curStart = Number(activeMovie.startMs) || 0;
+        if (isMovieConcluded(activeMovie, now) || (curEnd > 0 && now >= curEnd) || (curStart > 0 && now >= curStart + (4 * 3600000))) {
+          resolveActiveOrNextMovie(now);
+        }
+      }
+
+      const startMs = Number(activeMovie.startMs) || 0;
+      const endMs = Number(activeMovie.endMs) || (startMs ? startMs + (105 * 60 * 1000) : 0);
+
+      // Doors open 10 minutes (600,000ms) prior to screening time
+      const doorsOpenMs = startMs - 600000;
+      const diffDoors = Math.max(0, doorsOpenMs - now);
+      const isWithin10Mins = (diffDoors <= 0 && now < startMs);
+      const isLiveScreening = (startMs > 0 && now >= startMs && (!endMs || now < endMs));
+
+      const countdownHeader = document.getElementById('countdownHeaderText');
+      const doorsOpenBadge = document.getElementById('doorsOpenBadge');
+      const doorsOpenActions = document.getElementById('doorsOpenActions');
+      const countdownGrid = document.getElementById('countdownGrid');
+      const screeningSubtitle = document.getElementById('screeningStatusBadge');
+
+      const isForcedOpen = (activeMovie.doorMode === 'force_open' || activeMovie.doorMode === 'open');
+      const isForcedClosed = (activeMovie.doorMode === 'force_closed');
+      const areDoorsOpen = isForcedOpen || (!isForcedClosed && (isWithin10Mins || isLiveScreening));
+
+      const heroPoster = document.getElementById('heroPosterImg');
+      const heroTrailer = document.getElementById('heroTrailerContainer');
+      const heroTrailerFrame = document.getElementById('heroTrailerFrame');
+
+      const countdownUrlBadge = document.getElementById('countdownUrlBadge');
+      const doorsOpenLink = document.getElementById('doorsOpenLink');
+      const streamTheaterUrl = 'http://tiny.cc/BriansTheater';
+      const targetWatchUrl = (activeMovie.partyUrl || lastKnownPayload.partyUrl || streamTheaterUrl).trim();
+      const displayWatchText = (targetWatchUrl.includes('partywatch') || !targetWatchUrl) ? 'tiny.cc/BriansTheater' : targetWatchUrl.replace(/^https?:\/\//i, '');
+
+      if (doorsOpenLink) doorsOpenLink.href = targetWatchUrl;
+      if (doorsOpenBtnText) doorsOpenBtnText.textContent = displayWatchText;
+      const countUrlLink = document.getElementById('countdownUrlLink');
+      const countUrlText = document.getElementById('countdownUrlText');
+      if (countUrlLink) countUrlLink.href = targetWatchUrl;
+      if (countUrlText) countUrlText.textContent = displayWatchText;
+
+      if (areDoorsOpen) {
+        // Doors Open / Live Screen state
+        if (countdownHeader) {
+          countdownHeader.textContent = isLiveScreening ? "LIVE SCREENING IN PROGRESS!" : "THEATER DOORS ARE OPEN!";
+        }
+        if (doorsOpenBadge) doorsOpenBadge.classList.remove('hidden');
+        if (doorsOpenActions) doorsOpenActions.classList.remove('hidden');
+        if (countdownUrlBadge) countdownUrlBadge.classList.add('hidden');
+        if (countdownGrid) countdownGrid.classList.add('hidden');
+        if (screeningSubtitle) {
+          screeningSubtitle.textContent = isLiveScreening ? "NOW SCREENING IN THEATER" : "DOORS OPEN • SEATING NOW";
+          screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-400 uppercase";
+        }
+
+        // Live Cinema Trailer Replay in place of Poster
+        const trailerId = activeMovie.trailerId || getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers);
+        if (trailerId && heroTrailer && heroTrailerFrame) {
+          heroTrailer.classList.remove('hidden');
+          if (heroPoster) heroPoster.classList.add('hidden');
+          const desiredSrc = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailerId)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(trailerId)}&rel=0&modestbranding=1&controls=1`;
+          if (heroTrailerFrame.src !== desiredSrc) {
+            heroTrailerFrame.src = desiredSrc;
+          }
+        }
+        return;
+      }
+
+      // Revert trailer back to poster when doors closed
+      if (heroTrailer && !heroTrailer.classList.contains('hidden')) {
+        heroTrailer.classList.add('hidden');
+        if (heroTrailerFrame) heroTrailerFrame.src = "";
+      }
+      if (heroPoster && heroPoster.classList.contains('hidden')) {
+        heroPoster.classList.remove('hidden');
+      }
+
+      // Doors Closed Countdown State
+      if (doorsOpenBadge) doorsOpenBadge.classList.add('hidden');
+      if (doorsOpenActions) doorsOpenActions.classList.add('hidden');
+      if (countdownUrlBadge) countdownUrlBadge.classList.remove('hidden');
+      if (countdownGrid) countdownGrid.classList.remove('hidden');
+      if (screeningSubtitle) {
+        screeningSubtitle.textContent = "NEXT SCHEDULED SCREENING";
+        screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-purple-300/90 uppercase";
+      }
+      if (countdownHeader) countdownHeader.textContent = "THEATER DOORS OPEN IN";
+
+      // Target countdown to doors opening (10 min before show)
+      const totalSeconds = Math.max(0, Math.floor(diffDoors / 1000));
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+
+      const colDays = document.getElementById('colDays');
+      const colHours = document.getElementById('colHours');
+      const colMins = document.getElementById('colMins');
+      const colSecs = document.getElementById('colSecs');
+
+      const countDays = document.getElementById('countDays');
+      const countHours = document.getElementById('countHours');
+      const countMins = document.getElementById('countMins');
+      const countSecs = document.getElementById('countSecs');
+
+      if (countDays) countDays.textContent = String(days).padStart(2, '0');
+      if (countHours) countHours.textContent = String(hours).padStart(2, '0');
+      if (countMins) countMins.textContent = String(mins).padStart(2, '0');
+      if (countSecs) countSecs.textContent = String(secs).padStart(2, '0');
+
+      // Dynamic unit box hiding: omit 0 Days, 0 Hours, and 0 Mins
+      if (days > 0) {
+        if (colDays) colDays.classList.remove('hidden');
+        if (colHours) colHours.classList.remove('hidden');
+        if (colMins) colMins.classList.remove('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-4 gap-2.5 sm:gap-3.5 w-full font-mono';
+      } else if (hours > 0) {
+        if (colDays) colDays.classList.add('hidden');
+        if (colHours) colHours.classList.remove('hidden');
+        if (colMins) colMins.classList.remove('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-3 max-w-md mx-auto gap-2.5 sm:gap-3.5 w-full font-mono';
+      } else if (mins > 0) {
+        if (colDays) colDays.classList.add('hidden');
+        if (colHours) colHours.classList.add('hidden');
+        if (colMins) colMins.classList.remove('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-2 max-w-xs mx-auto gap-2.5 sm:gap-3.5 w-full font-mono';
+      } else {
+        // Only seconds remaining (<60s)
+        if (colDays) colDays.classList.add('hidden');
+        if (colHours) colHours.classList.add('hidden');
+        if (colMins) colMins.classList.add('hidden');
+        if (colSecs) colSecs.classList.remove('hidden');
+        if (countdownGrid) countdownGrid.className = 'grid grid-cols-1 max-w-[140px] mx-auto gap-2.5 sm:gap-3.5 w-full font-mono';
+      }
+    }
+
+    // 2. Format localized screening time string (Matches main stage exactly)
+    function formatShowtime(startMs, dateStr, timeStr) {
+      if (startMs) {
+        try {
+          const d = new Date(startMs);
+          const datePart = d.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            timeZone: 'America/Los_Angeles'
+          });
+          const timePart = d.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZone: 'America/Los_Angeles'
+          });
+          return `${datePart} • ${timePart} PST`;
+        } catch(e) {}
+      }
+      if (dateStr && timeStr) return `${dateStr} • ${timeStr} PST`;
+      return dateStr || 'Saturday, Oct 17, 2026 • 7:00 PM PST';
+    }
+
+    // 3. Fallback poster image handler & error badge indicator
+    function showPosterErrorBadge(show) {
+      const badge = document.getElementById('posterErrorBadge');
+      if (!badge) return;
+      if (show) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function handlePosterError(imgEl) {
+      activeMovie.isPosterError = true;
+      showPosterErrorBadge(true);
+      if (!imgEl.dataset.failed) {
+        imgEl.dataset.failed = "true";
+        imgEl.src = DEFAULT_FALLBACK_POSTER;
+      }
+    }
+
+    // 4. Smart Movie Title Font Scaler (Auto-scales based on title length)
+    function applySmartMovieTitleSizing(titleText) {
+      const titleHeading = document.getElementById('movieTitle');
+      if (!titleHeading) return;
+      const cleanTitle = (titleText || '').replace(/^🎬\s*/, '').trim();
+      const len = cleanTitle.length;
+
+      const baseClasses = "font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)] transition-all duration-300 max-w-full";
+
+      let sizeClasses = "text-3xl sm:text-5xl md:text-6xl whitespace-nowrap";
+      if (len <= 16) {
+        // Short titles: "The Seeding", "Hokum", "Nosferatu", "Borderlands"
+        sizeClasses = "text-3xl sm:text-5xl md:text-6xl whitespace-nowrap";
+      } else if (len <= 28) {
+        // Medium titles: "A Nightmare on Elm St", "The Texas Chain Saw"
+        sizeClasses = "text-2xl sm:text-4xl md:text-5xl whitespace-nowrap";
+      } else if (len <= 42) {
+        // Long titles: "Abraham's Boys A Dracula Story"
+        sizeClasses = "text-xl sm:text-2xl md:text-3xl lg:text-4xl px-2 leading-tight";
+      } else {
+        // Extra long titles
+        sizeClasses = "text-lg sm:text-xl md:text-2xl lg:text-3xl px-2 leading-tight break-words";
+      }
+      titleHeading.className = `${sizeClasses} ${baseClasses}`;
+    }
+
+    // 5. Update DOM with active movie state
+    function renderMovieState() {
+      const titleEl = document.getElementById('movieTitleText');
+      const showtimeEl = document.getElementById('movieShowtime');
+      const posterEl = document.getElementById('heroPosterImg');
+
+      const cleanTitle = (activeMovie.title || 'Coming Soon').replace(/^🎬\s*/, '').trim();
+      if (titleEl) titleEl.textContent = cleanTitle;
+      applySmartMovieTitleSizing(cleanTitle);
+      if (showtimeEl) showtimeEl.textContent = activeMovie.showtimeText;
+
+      // Check poster error condition
+      if (activeMovie.isPosterError || !activeMovie.posterUrl || activeMovie.posterUrl === DEFAULT_FALLBACK_POSTER) {
+        showPosterErrorBadge(true);
+      } else {
+        showPosterErrorBadge(false);
+      }
+
+      if (posterEl && activeMovie.posterUrl) {
+        if (posterEl.src !== activeMovie.posterUrl) {
+          posterEl.style.opacity = '0.3';
+          setTimeout(() => {
+            posterEl.src = activeMovie.posterUrl;
+            posterEl.onload = () => { posterEl.style.opacity = '1'; };
+          }, 150);
+        }
+      }
+      updateCountdown();
+    }
+
+    // 5. Dynamic Schedule & Movie Progression Resolver
+    function resolveActiveOrNextMovie(now = Date.now()) {
+      const merged = lastKnownPayload;
+      if (merged.doorMode) activeMovie.doorMode = merged.doorMode;
+      if (merged.partyUrl) activeMovie.partyUrl = merged.partyUrl;
+
+      let foundNow = null;
+      let foundNext = null;
+
+      // 1. Check if cinema.nowPlaying is actively screening right now
+      if (merged.cinema && merged.cinema.nowPlaying && merged.cinema.nowPlaying !== 'No Movie Playing') {
+        const endMs = Number(merged.cinema.endMs) || 0;
+        const startMs = Number(merged.cinema.startMs) || (endMs ? endMs - (105 * 60 * 1000) : 0);
+        const isNotConcluded = !isMovieConcluded({ endMs, startMs }, now);
+        const isTimeMatch = (endMs > 0 && now < endMs) || (startMs > 0 && now >= startMs && now < startMs + (4 * 3600000));
+        const isForcedLive = (merged.doorMode === 'force_open' || merged.doorMode === 'open');
+
+        if (isNotConcluded && (isTimeMatch || isForcedLive)) {
+          foundNow = {
+            title: merged.cinema.nowPlaying,
+            startMs: startMs || (now - 600000),
+            endMs: endMs || (now + 3600000),
+            posterUrl: merged.cinema.nowPlayingPoster || getMovieArtworkUrl(merged.cinema.nowPlaying, merged.moviePosters)
+          };
+        }
+      }
+
+      // 2. Gather all schedule entries
+      const allSchedules = [];
+      if (Array.isArray(merged.schedule)) allSchedules.push(...merged.schedule);
+      if (Array.isArray(merged.officialSchedule)) allSchedules.push(...merged.officialSchedule);
+      if (Array.isArray(merged.cinema && merged.cinema.schedule)) allSchedules.push(...merged.cinema.schedule);
+
+      // Check if any schedule entry is actively screening right now
+      if (!foundNow) {
+        const liveEntry = allSchedules.find(s => {
+          if (!s || !s.title) return false;
+          if (isMovieConcluded(s, now)) return false;
+          const sStart = Number(s.startMs) || 0;
+          const sEnd = Number(s.endMs) || (sStart ? sStart + (105 * 60 * 1000) : 0);
+          return (sStart > 0 && sEnd > 0 && now >= sStart && now < sEnd);
+        });
+        if (liveEntry) {
+          foundNow = {
+            title: liveEntry.title,
+            startMs: Number(liveEntry.startMs),
+            endMs: Number(liveEntry.endMs),
+            date: liveEntry.date,
+            time: liveEntry.startTime || liveEntry.time,
+            posterUrl: liveEntry.posterUrl || liveEntry.imageUrl || getMovieArtworkUrl(liveEntry.title, merged.moviePosters)
+          };
+        }
+      }
+
+      // 3. Search upcoming schedules chronologically
+      const upcoming = allSchedules.filter(s => {
+        if (!s || !s.title) return false;
+        if (isMovieConcluded(s, now)) return false;
+        const sEnd = Number(s.endMs) || 0;
+        const sStart = Number(s.startMs) || 0;
+        return (sEnd > now || sStart > now);
+      }).sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+
+      if (upcoming.length > 0) {
+        const next = upcoming[0];
+        foundNext = {
+          title: next.title,
+          startMs: Number(next.startMs),
+          endMs: Number(next.endMs),
+          date: next.date,
+          time: next.startTime || next.time,
+          posterUrl: next.posterUrl || next.imageUrl || getMovieArtworkUrl(next.title, merged.moviePosters)
+        };
+      } else if (merged.cinema && merged.cinema.nextTitle && merged.cinema.nextTitle !== 'No Movie Scheduled') {
+        const nextStart = Number(merged.cinema.nextStartMs) || 0;
+        if (nextStart > now) {
+          foundNext = {
+            title: merged.cinema.nextTitle,
+            startMs: nextStart,
+            posterUrl: merged.cinema.nextPoster || getMovieArtworkUrl(merged.cinema.nextTitle, merged.moviePosters)
+          };
+        }
+      }
+
+      const target = foundNow || foundNext;
+      if (target) {
+        const cleanTargetTitle = target.title.replace(/^🎬\s*/, '').trim();
+        const hasTitleChanged = (activeMovie.title !== cleanTargetTitle);
+        const hasTimeChanged = (activeMovie.startMs !== target.startMs);
+
+        activeMovie.title = cleanTargetTitle;
+        if (target.startMs) activeMovie.startMs = target.startMs;
+        if (target.endMs) activeMovie.endMs = target.endMs;
+        activeMovie.isNowPlaying = Boolean(foundNow);
+        activeMovie.showtimeText = formatShowtime(target.startMs, target.date, target.time);
+
+        let resolvedPoster = target.posterUrl || getMovieArtworkUrl(activeMovie.title, merged.moviePosters);
+        if (resolvedPoster) {
+          activeMovie.posterUrl = resolvedPoster;
+          activeMovie.isPosterError = false;
+        } else {
+          activeMovie.posterUrl = DEFAULT_FALLBACK_POSTER;
+          activeMovie.isPosterError = true;
+        }
+
+        let resolvedTrailer = target.trailerId;
+        if (!resolvedTrailer && target.trailerUrl) {
+          const m = String(target.trailerUrl).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
+          if (m) resolvedTrailer = m[1];
+        }
+        if (!resolvedTrailer) {
+          resolvedTrailer = getTrailerIdForTitle(activeMovie.title, merged.movieTrailers);
+        }
+        activeMovie.trailerId = resolvedTrailer || '';
+
+        if (hasTitleChanged || hasTimeChanged) {
+          console.log(`[TwitchAutoProgression] Transitioned active movie to: ${activeMovie.title} (${activeMovie.showtimeText})`);
+          renderMovieState();
+        }
+      }
+    }
+
+    // 6. Parse and apply incoming Firebase Data
+    function applySyncPayload(data) {
+      if (!data) return;
+      Object.assign(lastKnownPayload, data);
+      resolveActiveOrNextMovie(Date.now());
+      renderMovieState();
+    }
+
+    // Apply instantaneous state broadcast from main theater page
+    function applyStageBroadcast(payload) {
+      if (!payload) return;
+      if (payload.title) activeMovie.title = payload.title.replace(/^🎬\s*/, '').trim();
+      if (payload.date) activeMovie.showtimeText = payload.date;
+      if (payload.poster) {
+        activeMovie.posterUrl = payload.poster;
+        activeMovie.isPosterError = false;
+      } else if (payload.title) {
+        const found = getMovieArtworkUrl(payload.title, lastKnownPayload.moviePosters);
+        if (found) {
+          activeMovie.posterUrl = found;
+          activeMovie.isPosterError = false;
+        } else {
+          activeMovie.posterUrl = DEFAULT_FALLBACK_POSTER;
+          activeMovie.isPosterError = true;
+        }
+      }
+      if (payload.startMs || payload.targetMs) activeMovie.startMs = payload.startMs || payload.targetMs;
+      if (payload.doorMode) activeMovie.doorMode = payload.doorMode;
+      if (payload.partyUrl) activeMovie.partyUrl = payload.partyUrl;
+      if (payload.trailerId) {
+        activeMovie.trailerId = payload.trailerId;
+      } else if (payload.trailerUrl) {
+        const m = String(payload.trailerUrl).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
+        activeMovie.trailerId = m ? m[1] : '';
+      } else if (payload.title) {
+        activeMovie.trailerId = getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers);
+      }
+      renderMovieState();
+    }
+
+    // 6. Connect to Realtime Firebase SSE Feed & Broadcast Channel
+    function initRealtimeSync() {
+      // Shared Broadcast Channel for instant zero-latency cross-tab sync
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const syncChannel = new BroadcastChannel('brian_theater_sync');
+          syncChannel.onmessage = (event) => {
+            if (event.data) {
+              if (event.data.type === 'stage_update' && event.data.payload) {
+                applyStageBroadcast(event.data.payload);
+              } else if (event.data.type === 'stage_trailer_update' && event.data.trailerId) {
+                activeMovie.trailerId = event.data.trailerId;
+                renderMovieState();
+              } else if ((event.data.type === 'party_url_update' || event.data.type === 'enter_button_update') && event.data.partyUrl) {
+                activeMovie.partyUrl = event.data.partyUrl;
+                updateCountdown();
+              } else if (event.data.type === 'spotify_live_update' && event.data.payload) {
+                setSpotifyLiveState(event.data.payload);
+              } else if (event.data.type === 'spotify_update' && event.data.payload) {
+                setSpotifyPlaylist(event.data.payload.resource, event.data.payload.name);
+              } else if (event.data.type === 'saved_playlists_update' && event.data.playlists) {
+                if (typeof savePlaylistsToStorage === 'function') savePlaylistsToStorage(event.data.playlists, false);
+              } else if (event.data.firebasePayload) {
+                applySyncPayload(event.data.firebasePayload);
+              }
+            }
+          };
+        }
+      } catch(e) {}
+
+      // Active Firebase Polling Heartbeat (Guarantees OBS updates reliably even if SSE drops)
+      async function pollFirebaseHeartbeat() {
+        try {
+          const res = await fetch(`${FIREBASE_RTDB_URL}?_t=${Date.now()}`, { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data) {
+              applySyncPayload(data);
+              if (data.spotifyLive) {
+                setSpotifyLiveState(data.spotifyLive);
+              } else if (data.spotifyPlaylist) {
+                setSpotifyPlaylist(data.spotifyPlaylist.resource, data.spotifyPlaylist.name);
+              }
+              if (data.savedPlaylists && Array.isArray(data.savedPlaylists) && typeof savePlaylistsToStorage === 'function') {
+                savePlaylistsToStorage(data.savedPlaylists, false);
+              }
+            }
+          }
+        } catch(err) {
+          console.warn('[FirebaseHeartbeat] Connection check:', err);
+        }
+      }
+
+      window.pollFirebaseHeartbeat = pollFirebaseHeartbeat;
+
+      // 1. Initial snapshot & continuous 15-second heartbeat poll for OBS
+      pollFirebaseHeartbeat();
+      setInterval(pollFirebaseHeartbeat, 15000);
+
+      // 2. Persistent Real-Time SSE Stream with auto-reconnection
+      let sseReconnectTimer = null;
+      function connectSSE() {
+        try {
+          if (eventSource) {
+            try { eventSource.close(); } catch(e) {}
+          }
+          eventSource = new EventSource(FIREBASE_RTDB_URL);
+
+          eventSource.addEventListener('put', (event) => {
+            try {
+              const payload = JSON.parse(event.data);
+              if (payload) {
+                if (payload.path === '/' && payload.data) {
+                  applySyncPayload(payload.data);
+                  if (payload.data.spotifyLive) setSpotifyLiveState(payload.data.spotifyLive);
+                  else if (payload.data.spotifyPlaylist) setSpotifyPlaylist(payload.data.spotifyPlaylist.resource, payload.data.spotifyPlaylist.name);
+                  if (payload.data.savedPlaylists && Array.isArray(payload.data.savedPlaylists) && typeof savePlaylistsToStorage === 'function') {
+                    savePlaylistsToStorage(payload.data.savedPlaylists, false);
+                  }
+                } else if (payload.path === '/spotifyLive' && payload.data) {
+                  setSpotifyLiveState(payload.data);
+                } else if (payload.path === '/spotifyPlaylist' && payload.data) {
+                  setSpotifyPlaylist(payload.data.resource, payload.data.name);
+                } else if (payload.path === '/savedPlaylists' && Array.isArray(payload.data) && typeof savePlaylistsToStorage === 'function') {
+                  savePlaylistsToStorage(payload.data, false);
+                } else if (payload.path === '/cinema' && payload.data) {
+                  applySyncPayload({ cinema: payload.data });
+                } else if (payload.path === '/doorMode' && payload.data) {
+                  applySyncPayload({ doorMode: payload.data });
+                } else if (payload.path === '/schedule' && payload.data) {
+                  applySyncPayload({ schedule: payload.data });
+                } else if (payload.path === '/officialSchedule' && payload.data) {
+                  applySyncPayload({ officialSchedule: payload.data });
+                } else if (payload.path === '/moviePosters' && payload.data) {
+                  applySyncPayload({ moviePosters: payload.data });
+                } else if (payload.data && typeof payload.data === 'object') {
+                  applySyncPayload(payload.data);
+                }
+              }
+            } catch(e) {}
+          });
+
+          eventSource.addEventListener('patch', (event) => {
+            try {
+              const payload = JSON.parse(event.data);
+              if (payload && payload.data) applySyncPayload(payload.data);
+            } catch(e) {}
+          });
+
+          eventSource.onerror = () => {
+            if (!sseReconnectTimer) {
+              sseReconnectTimer = setTimeout(() => {
+                sseReconnectTimer = null;
+                connectSSE();
+              }, 5000);
+            }
+          };
+
+          eventSource.onopen = () => {
+            if (sseReconnectTimer) {
+              clearTimeout(sseReconnectTimer);
+              sseReconnectTimer = null;
+            }
+          };
+        } catch(err) {
+          if (!sseReconnectTimer) {
+            sseReconnectTimer = setTimeout(() => {
+              sseReconnectTimer = null;
+              connectSSE();
+            }, 5000);
+          }
+        }
+      }
+
+      connectSSE();
+    }
+
+    // 7. Mini Spotify Player Widget & Saved Playlists Engine
+    const DEFAULT_SAVED_PLAYLISTS = [
+      { id: '5fnANvKo5Ep7TLEPPjfAzJ', type: 'playlist', name: '🎃 Horror Ambience' },
+      { id: '1Hk1D8z7JYh8RuDahFIl2b', type: 'playlist', name: '🍿 Cinema Scores' },
+      { id: '37i9dQZF1DWWQRwui0ExPn', type: 'playlist', name: '🎧 Chill Lofi' }
+    ];
+
+    let currentSpotifyUri = "5fnANvKo5Ep7TLEPPjfAzJ"; // Default: Spooky Downtempo Ambience
+    let currentSpotifyType = "playlist";
+    let activeSpotifyDrawerTab = "live"; // 'live' or 'playlists'
+
+    function getSavedPlaylists() {
+      try {
+        const raw = localStorage.getItem('brian_saved_spotify_playlists');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch(e) {}
+      return [...DEFAULT_SAVED_PLAYLISTS];
+    }
+
+    function savePlaylistsToStorage(playlists, syncRemote = true) {
+      if (!Array.isArray(playlists)) return;
+      try {
+        localStorage.setItem('brian_saved_spotify_playlists', JSON.stringify(playlists));
+      } catch(e) {}
+
+      renderSavedPlaylistButtons();
+
+      if (syncRemote) {
+        // Sync to Firebase RTDB
+        try {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/savedPlaylists.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(playlists)
+          }).catch(() => {});
+        } catch(e) {}
+
+        // Broadcast to shared channel across open tabs
+        try {
+          if (typeof BroadcastChannel !== 'undefined') {
+            const syncChannel = new BroadcastChannel('brian_theater_sync');
+            syncChannel.postMessage({
+              type: 'saved_playlists_update',
+              playlists: playlists
+            });
+          }
+        } catch(e) {}
+      }
+    }
+
+    function renderSavedPlaylistButtons() {
+      const container = document.getElementById('spotifyPresetButtons');
+      if (!container) return;
+      const playlists = getSavedPlaylists();
+      container.innerHTML = '';
+
+      playlists.forEach((p, idx) => {
+        const isCurrent = (currentSpotifyUri === p.id);
+        const itemWrap = document.createElement('div');
+        itemWrap.className = "flex items-center rounded-lg border transition group overflow-hidden " +
+          (isCurrent
+            ? "bg-emerald-500 text-slate-950 font-bold border-emerald-400 shadow-md shadow-emerald-500/20"
+            : "bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700/70");
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = "px-2.5 py-1.5 text-left text-[10px] font-semibold flex items-center gap-1.5 cursor-pointer flex-1 truncate";
+        btn.title = `Switch to ${p.name}`;
+        btn.innerHTML = `<span class="truncate">${p.name}</span>`;
+        btn.onclick = () => {
+          setSpotifyPlaylist(`${p.type || 'playlist'}:${p.id}`, p.name, true);
+        };
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = "px-1.5 py-1.5 text-[9px] text-slate-400 hover:text-rose-400 opacity-60 group-hover:opacity-100 transition cursor-pointer shrink-0";
+        delBtn.title = `Remove "${p.name}"`;
+        delBtn.textContent = '✕';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteSavedPlaylist(idx);
+        };
+
+        itemWrap.appendChild(btn);
+        itemWrap.appendChild(delBtn);
+        container.appendChild(itemWrap);
+      });
+    }
+
+    function switchSpotifyDrawerTab(tab) {
+      activeSpotifyDrawerTab = tab;
+      const tabLive = document.getElementById('tabSpotifyLive');
+      const tabPlaylists = document.getElementById('tabSpotifyPlaylists');
+
+      if (tab === 'live') {
+        if (tabLive) {
+          tabLive.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm cursor-pointer";
+        }
+        if (tabPlaylists) {
+          tabPlaylists.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-medium cursor-pointer";
+        }
+      } else {
+        if (tabPlaylists) {
+          tabPlaylists.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm cursor-pointer";
+        }
+        if (tabLive) {
+          tabLive.className = "flex-1 py-1.5 rounded-lg text-center transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 font-medium cursor-pointer";
+        }
+      }
+
+      updateSpotifyDrawerDisplay();
+    }
+
+    function updateSpotifyDrawerDisplay() {
+      const liveCard = document.getElementById('spotifyLiveDrawerCard');
+      const liveIdleHelper = document.getElementById('spotifyLiveIdleHelper');
+      const playlistsSection = document.getElementById('spotifyPlaylistsSection');
+
+      if (activeSpotifyDrawerTab === 'live') {
+        if (playlistsSection) {
+          playlistsSection.classList.add('hidden');
+          playlistsSection.classList.remove('flex');
+        }
+        const hasLiveMusic = Boolean(currentSpotifyLive && currentSpotifyLive.trackTitle && currentSpotifyLive.isActive);
+        if (hasLiveMusic) {
+          if (liveCard) {
+            liveCard.classList.remove('hidden');
+            liveCard.classList.add('flex');
+          }
+          if (liveIdleHelper) {
+            liveIdleHelper.classList.add('hidden');
+            liveIdleHelper.classList.remove('flex');
+          }
+        } else {
+          if (liveCard) {
+            liveCard.classList.add('hidden');
+            liveCard.classList.remove('flex');
+          }
+          if (liveIdleHelper) {
+            liveIdleHelper.classList.remove('hidden');
+            liveIdleHelper.classList.add('flex');
+          }
+        }
+      } else {
+        // Mode 2: Saved Playlists
+        if (liveCard) {
+          liveCard.classList.add('hidden');
+          liveCard.classList.remove('flex');
+        }
+        if (liveIdleHelper) {
+          liveIdleHelper.classList.add('hidden');
+          liveIdleHelper.classList.remove('flex');
+        }
+        if (playlistsSection) {
+          playlistsSection.classList.remove('hidden');
+          playlistsSection.classList.add('flex');
+        }
+      }
+    }
+
+    function toggleAddPlaylistForm(forceShow) {
+      const form = document.getElementById('spotifyAddPlaylistForm');
+      if (!form) return;
+      const shouldShow = (typeof forceShow === 'boolean') ? forceShow : form.classList.contains('hidden');
+      if (shouldShow) {
+        form.classList.remove('hidden');
+        form.classList.add('flex');
+        const urlInput = document.getElementById('newPlaylistUrlInput');
+        if (urlInput) {
+          urlInput.focus();
+        }
+        const errMsg = document.getElementById('addPlaylistValidationMsg');
+        if (errMsg) errMsg.classList.add('hidden');
+      } else {
+        form.classList.add('hidden');
+        form.classList.remove('flex');
+      }
+    }
+
+    async function pastePlaylistFromClipboard() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          const urlInput = document.getElementById('newPlaylistUrlInput');
+          if (urlInput && text) {
+            urlInput.value = text.trim();
+            const nameInput = document.getElementById('newPlaylistNameInput');
+            if (nameInput && !nameInput.value.trim()) {
+              if (text.includes('album')) nameInput.value = '💿 My Album';
+              else if (text.includes('track')) nameInput.value = '🎵 Track';
+              else nameInput.value = '🎵 Custom Playlist';
+            }
+          }
+        } else {
+          const urlInput = document.getElementById('newPlaylistUrlInput');
+          if (urlInput) urlInput.focus();
+        }
+      } catch(e) {
+        const urlInput = document.getElementById('newPlaylistUrlInput');
+        if (urlInput) urlInput.focus();
+      }
+    }
+
+    function submitAddPlaylistForm() {
+      const urlInput = document.getElementById('newPlaylistUrlInput');
+      const nameInput = document.getElementById('newPlaylistNameInput');
+      const errMsg = document.getElementById('addPlaylistValidationMsg');
+
+      const urlVal = (urlInput?.value || '').trim();
+      const nameVal = (nameInput?.value || '').trim() || '🎵 Custom Playlist';
+
+      if (!urlVal) {
+        if (errMsg) {
+          errMsg.textContent = "⚠️ Please paste a Spotify playlist, album, or track link.";
+          errMsg.classList.remove('hidden');
+        }
+        return;
+      }
+
+      const parsed = parseSpotifyResource(urlVal);
+      if (!parsed) {
+        if (errMsg) {
+          errMsg.textContent = "⚠️ Invalid Spotify link. Copy directly from Spotify (e.g. https://open.spotify.com/playlist/...).";
+          errMsg.classList.remove('hidden');
+        }
+        return;
+      }
+
+      const playlists = getSavedPlaylists();
+      // Remove any existing entry with the same ID
+      const filtered = playlists.filter(p => p.id !== parsed.id);
+      filtered.push({ id: parsed.id, type: parsed.type, name: nameVal });
+      savePlaylistsToStorage(filtered);
+
+      // Select it and switch playback/embed
+      setSpotifyPlaylist(`${parsed.type}:${parsed.id}`, nameVal, true);
+
+      // Reset and hide form
+      if (urlInput) urlInput.value = '';
+      if (nameInput) nameInput.value = '';
+      if (errMsg) errMsg.classList.add('hidden');
+      toggleAddPlaylistForm(false);
+    }
+
+    function promptSaveNewPlaylist() {
+      toggleAddPlaylistForm(true);
+    }
+
+    function deleteSavedPlaylist(index) {
+      const playlists = getSavedPlaylists();
+      if (index >= 0 && index < playlists.length) {
+        playlists.splice(index, 1);
+        if (playlists.length === 0) {
+          playlists.push(...DEFAULT_SAVED_PLAYLISTS);
+        }
+        savePlaylistsToStorage(playlists);
+      }
+    }
+
+    function parseSpotifyResource(input) {
+      if (!input || typeof input !== 'string') return null;
+      const clean = input.trim();
+      // Match URI: (spotify:)?(playlist|track|album)[:/]([a-zA-Z0-9]+)
+      const uriMatch = clean.match(/^(?:spotify:)?(playlist|track|album)[:/]([a-zA-Z0-9]+)/i);
+      if (uriMatch) return { type: uriMatch[1].toLowerCase(), id: uriMatch[2] };
+      // Match URL: open.spotify.com/(playlist|track|album)/xxx
+      const urlMatch = clean.match(/open\.spotify\.com\/(playlist|track|album)\/([a-zA-Z0-9]+)/i);
+      if (urlMatch) return { type: urlMatch[1].toLowerCase(), id: urlMatch[2] };
+      // Fallback ID if alphanumeric
+      if (/^[a-zA-Z0-9]{22}$/.test(clean)) return { type: 'playlist', id: clean };
+      return null;
+    }
+
+    async function playSpotifyUri(type, id) {
+      const token = await getTwitchSpotifyToken();
+      if (!token) return;
+      try {
+        await fetch('https://api.spotify.com/v1/me/player/play', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            context_uri: `spotify:${type}:${id}`
+          })
+        });
+        setTimeout(fetchTwitchSpotifyPlayback, 600);
+      } catch(e) {
+        console.warn('[Twitch] Error starting playlist playback:', e);
+      }
+    }
+
+    function setSpotifyPlaylist(resourceInput, displayName, autoPlay = false) {
+      const parsed = parseSpotifyResource(resourceInput);
+      if (!parsed) return;
+      currentSpotifyType = parsed.type;
+      currentSpotifyUri = parsed.id;
+      currentSpotifyLive = null; // Clear live override so pill reflects the selected playlist
+
+      const iframe = document.getElementById('spotifyIframe');
+      const trackLabel = document.getElementById('spotifyTrackName');
+      const sublabel = document.getElementById('spotifyPillSublabel');
+      const eqBars = document.getElementById('spotifyEqBars');
+      const pillArt = document.getElementById('spotifyLivePillArt');
+      const defaultSvg = document.getElementById('spotifyDefaultBrandSvg');
+
+      if (pillArt) pillArt.classList.add('hidden');
+      if (defaultSvg) defaultSvg.classList.remove('hidden');
+
+      if (iframe) {
+        iframe.src = `https://open.spotify.com/embed/${parsed.type}/${parsed.id}?utm_source=generator&theme=0`;
+      }
+      if (trackLabel) {
+        trackLabel.textContent = displayName || `Spotify ${parsed.type.toUpperCase()}`;
+      }
+      if (sublabel) {
+        sublabel.textContent = "PLAYLIST";
+        sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase";
+      }
+      if (eqBars) eqBars.classList.add('eq-paused');
+
+      try {
+        localStorage.setItem('brian_twitch_spotify_id', parsed.id);
+        localStorage.setItem('brian_twitch_spotify_type', parsed.type);
+        localStorage.setItem('brian_twitch_spotify_name', displayName || `Spotify ${parsed.type}`);
+      } catch(e) {}
+
+      renderSavedPlaylistButtons();
+      updateSpotifyDrawerDisplay();
+
+      if (autoPlay) {
+        playSpotifyUri(parsed.type, parsed.id);
+      }
+    }
+
+    function toggleSpotifyDrawer() {
+      const drawer = document.getElementById('spotifyDrawer');
+      if (drawer) {
+        const isOpening = drawer.classList.contains('hidden');
+        drawer.classList.toggle('hidden');
+        drawer.classList.toggle('flex');
+        if (isOpening) {
+          updateSpotifyDrawerDisplay();
+        }
+      }
+    }
+
+    function promptCustomSpotify() {
+      promptSaveNewPlaylist();
+    }
+
+    async function toggleTwitchSpotifyPlayback() {
+      const token = await getTwitchSpotifyToken();
+      const playBtnIcon = document.getElementById('spotifyPillPlayIcon');
+      const drawerPlayIcon = document.getElementById('spotifyDrawerPlayIcon');
+      const drawerPlayText = document.getElementById('spotifyDrawerPlayText');
+
+      const isPlaying = Boolean(currentSpotifyLive && currentSpotifyLive.isActive && currentSpotifyLive.isPlaying);
+
+      if (isPlaying) {
+        if (playBtnIcon) { playBtnIcon.textContent = "▶"; playBtnIcon.classList.add('ml-0.5'); }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "▶";
+        if (drawerPlayText) drawerPlayText.textContent = "Play";
+        if (currentSpotifyLive) {
+          setSpotifyLiveState({ ...currentSpotifyLive, isPlaying: false });
+        }
+
+        if (token) {
+          try {
+            await fetch('https://api.spotify.com/v1/me/player/pause', {
+              method: 'PUT',
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setTimeout(fetchTwitchSpotifyPlayback, 400);
+          } catch(e) {
+            console.warn('[Twitch] Error pausing Spotify:', e);
+          }
+        }
+      } else {
+        if (playBtnIcon) { playBtnIcon.textContent = "⏸"; playBtnIcon.classList.remove('ml-0.5'); }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "⏸";
+        if (drawerPlayText) drawerPlayText.textContent = "Pause";
+
+        if (token) {
+          try {
+            const hasExisting = Boolean(currentSpotifyLive && currentSpotifyLive.trackTitle);
+            const body = hasExisting ? undefined : JSON.stringify({ context_uri: `spotify:${currentSpotifyType}:${currentSpotifyUri}` });
+
+            await fetch('https://api.spotify.com/v1/me/player/play', {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                ...(body ? { 'Content-Type': 'application/json' } : {})
+              },
+              body: body
+            });
+            setTimeout(fetchTwitchSpotifyPlayback, 500);
+          } catch(e) {
+            console.warn('[Twitch] Error resuming Spotify:', e);
+          }
+        } else {
+          toggleSpotifyDrawer();
+        }
+      }
+    }
+
+    async function twitchSpotifyNext() {
+      const token = await getTwitchSpotifyToken();
+      if (token) {
+        try {
+          await fetch('https://api.spotify.com/v1/me/player/next', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          setTimeout(fetchTwitchSpotifyPlayback, 600);
+        } catch(e) {}
+      }
+    }
+
+    async function twitchSpotifyPrev() {
+      const token = await getTwitchSpotifyToken();
+      if (token) {
+        try {
+          await fetch('https://api.spotify.com/v1/me/player/previous', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          setTimeout(fetchTwitchSpotifyPlayback, 600);
+        } catch(e) {}
+      }
+    }
+
+    let currentSpotifyLive = null;
+    let twitchSpotifyPollInterval = null;
+
+    function setSpotifyLiveState(liveData) {
+      currentSpotifyLive = liveData;
+      window.currentSpotifyLive = liveData;
+      const pillArt = document.getElementById('spotifyLivePillArt');
+      const defaultSvg = document.getElementById('spotifyDefaultBrandSvg');
+      const trackLabel = document.getElementById('spotifyTrackName');
+      const sublabel = document.getElementById('spotifyPillSublabel');
+      const eqBars = document.getElementById('spotifyEqBars');
+      const pill = document.getElementById('spotifyPill');
+      const liveDrawer = document.getElementById('spotifyLiveDrawerCard');
+      const embedBox = document.getElementById('spotifyEmbedContainer');
+      const presetButtons = document.getElementById('spotifyPresetButtons');
+      const playBtnIcon = document.getElementById('spotifyPillPlayIcon');
+      const drawerPlayIcon = document.getElementById('spotifyDrawerPlayIcon');
+      const drawerPlayText = document.getElementById('spotifyDrawerPlayText');
+
+      // Validate freshness: if last update was more than 45 seconds ago, treat playback as stopped/paused
+      const isFresh = Boolean(liveData && liveData.updatedAt && (Date.now() - liveData.updatedAt < 45000));
+      const isPlaying = Boolean(liveData && liveData.isActive && liveData.isPlaying && isFresh);
+
+      if (isPlaying) {
+        // Active and playing: Start equalizer animation and announce NOW PLAYING or PODCAST LIVE
+        if (eqBars) eqBars.classList.remove('eq-paused');
+        if (playBtnIcon) {
+          playBtnIcon.textContent = "⏸";
+          playBtnIcon.classList.remove('ml-0.5');
+        }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "⏸";
+        if (drawerPlayText) drawerPlayText.textContent = "Pause";
+
+        if (sublabel) {
+          if (liveData.isEpisode) {
+            sublabel.textContent = liveData.deviceName ? `PODCAST: ${liveData.deviceName.toUpperCase()}` : "PODCAST LIVE";
+          } else {
+            sublabel.textContent = liveData.deviceName ? `LIVE: ${liveData.deviceName.toUpperCase()}` : "NOW PLAYING";
+          }
+          sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-emerald-400/90 uppercase";
+        }
+        if (pill) {
+          pill.className = "inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-emerald-500/40 hover:border-emerald-400 text-slate-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.45)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group";
+        }
+        if (liveData.albumArt && pillArt) {
+          pillArt.src = liveData.albumArt;
+          pillArt.classList.remove('hidden');
+          if (defaultSvg) defaultSvg.classList.add('hidden');
+        }
+        if (trackLabel) {
+          const track = liveData.trackTitle || (liveData.isEpisode ? 'Podcast Episode' : 'Unknown Track');
+          const artist = liveData.artistName || (liveData.isEpisode ? (liveData.showName || 'Podcast') : 'Unknown Artist');
+          trackLabel.textContent = `${track} • ${artist}`;
+        }
+
+        // Expanded Drawer Live Card
+        const dArt = document.getElementById('spotifyDrawerLiveArt');
+        const dTitle = document.getElementById('spotifyDrawerLiveTitle');
+        const dArtist = document.getElementById('spotifyDrawerLiveArtist');
+        const dAlbum = document.getElementById('spotifyDrawerLiveAlbum');
+        const dDevice = document.getElementById('spotifyDrawerLiveDevice');
+        const dProgress = document.getElementById('spotifyDrawerLiveProgress');
+        const dTime = document.getElementById('spotifyDrawerLiveTime');
+
+        if (dArt && liveData.albumArt) dArt.src = liveData.albumArt;
+        if (dTitle) dTitle.textContent = liveData.trackTitle || (liveData.isEpisode ? 'Podcast Episode' : 'Unknown Track');
+        if (dArtist) dArtist.textContent = liveData.artistName || (liveData.isEpisode ? (liveData.showName || 'Podcast') : 'Unknown Artist');
+        if (dAlbum) dAlbum.textContent = liveData.albumName || (liveData.isEpisode ? (liveData.showName || 'Podcast Show') : '');
+        if (dDevice) {
+          if (liveData.isEpisode) {
+            dDevice.textContent = liveData.deviceName ? `🎙️ ${liveData.deviceName}` : '🎙️ Podcast Stream';
+          } else {
+            dDevice.textContent = liveData.deviceName ? `🎧 Listening on ${liveData.deviceName}` : '🎧 Active Stream';
+          }
+        }
+
+        if (liveData.durationMs) {
+          const pct = Math.min(100, Math.max(0, (liveData.progressMs / liveData.durationMs) * 100));
+          if (dProgress) dProgress.style.width = `${pct}%`;
+          const fmt = ms => {
+            const s = Math.floor(ms / 1000);
+            const m = Math.floor(s / 60);
+            const sec = (s % 60).toString().padStart(2, '0');
+            return `${m}:${sec}`;
+          };
+          if (dTime) dTime.textContent = `${fmt(liveData.progressMs)} / ${fmt(liveData.durationMs)}`;
+        }
+      } else {
+        // Paused, stopped, or disconnected: PAUSE equalizer and NEVER display "NOW PLAYING"
+        if (eqBars) eqBars.classList.add('eq-paused');
+        if (playBtnIcon) {
+          playBtnIcon.textContent = "▶";
+          playBtnIcon.classList.add('ml-0.5');
+        }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "▶";
+        if (drawerPlayText) drawerPlayText.textContent = "Play";
+
+        if (pill) {
+          pill.className = "inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-slate-700/60 hover:border-slate-500 text-slate-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group";
+        }
+
+        if (liveData && liveData.trackTitle) {
+          if (sublabel) {
+            sublabel.textContent = "PAUSED";
+            sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-amber-400/80 uppercase";
+          }
+          if (trackLabel) {
+            const track = liveData.trackTitle;
+            const artist = liveData.artistName || (liveData.isEpisode ? (liveData.showName || '') : '');
+            trackLabel.textContent = artist ? `${track} • ${artist}` : track;
+          }
+          if (liveData.albumArt && pillArt) {
+            pillArt.src = liveData.albumArt;
+            pillArt.classList.remove('hidden');
+            if (defaultSvg) defaultSvg.classList.add('hidden');
+          }
+        } else {
+          if (sublabel) {
+            sublabel.textContent = "PAUSED";
+            sublabel.className = "text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase";
+          }
+          if (pillArt) pillArt.classList.add('hidden');
+          if (defaultSvg) defaultSvg.classList.remove('hidden');
+        }
+      }
+
+      updateSpotifyDrawerDisplay();
+    }
+
+    // Direct Twitch Spotify Polling & Token Management
+    async function getTwitchSpotifyToken() {
+      let accessToken = null;
+      let refreshToken = null;
+      let expiresAt = 0;
+      let clientId = null;
+      try {
+        accessToken = localStorage.getItem('brian_spotify_access_token');
+        refreshToken = localStorage.getItem('brian_spotify_refresh_token');
+        expiresAt = parseInt(localStorage.getItem('brian_spotify_expires_at') || '0', 10);
+        clientId = localStorage.getItem('brian_spotify_client_id');
+      } catch(e) {}
+
+      if (!accessToken && !refreshToken) return null;
+
+      if (Date.now() > expiresAt - 60000 && refreshToken && clientId) {
+        try {
+          const body = new URLSearchParams({
+            client_id: clientId,
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken
+          });
+          const res = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body
+          });
+          if (res.ok) {
+            const data = await res.json();
+            accessToken = data.access_token;
+            localStorage.setItem('brian_spotify_access_token', accessToken);
+            if (data.refresh_token) localStorage.setItem('brian_spotify_refresh_token', data.refresh_token);
+            localStorage.setItem('brian_spotify_expires_at', (Date.now() + (data.expires_in * 1000)).toString());
+          }
+        } catch(e) {
+          console.warn('[Twitch] Spotify token refresh error:', e);
+        }
+      }
+      return accessToken;
+    }
+
+    async function syncSpotifyToFirebase(payload) {
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/spotifyLive.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) {}
+    }
+
+    async function fetchTwitchSpotifyPlayback() {
+      const token = await getTwitchSpotifyToken();
+      if (!token) return;
+
+      try {
+        const res = await fetch('https://api.spotify.com/v1/me/player?additional_types=episode', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.status === 204 || res.status === 202) {
+          if (currentSpotifyLive && currentSpotifyLive.isActive) {
+            const idlePayload = { isActive: false, isPlaying: false, updatedAt: Date.now() };
+            setSpotifyLiveState(idlePayload);
+            syncSpotifyToFirebase(idlePayload);
+          }
+          return;
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          if (!data || !data.item) {
+            if (currentSpotifyLive && currentSpotifyLive.isActive) {
+              const idlePayload = { isActive: false, isPlaying: false, updatedAt: Date.now() };
+              setSpotifyLiveState(idlePayload);
+              syncSpotifyToFirebase(idlePayload);
+            }
+            return;
+          }
+
+          const isEpisode = data.currently_playing_type === 'episode';
+          const showName = (data.item.show && data.item.show.name) || (data.item.show && data.item.show.publisher) || "";
+          const artists = data.item.artists ? data.item.artists.map(a => a.name).join(', ') : (showName || "Podcast");
+          const album = (data.item.album && data.item.album.name) || showName || "";
+          const artwork = (data.item.images && data.item.images[0] && data.item.images[0].url) ||
+                          (data.item.album && data.item.album.images && data.item.album.images[0] && data.item.album.images[0].url) ||
+                          (data.item.show && data.item.show.images && data.item.show.images[0] && data.item.show.images[0].url) || "";
+
+          const payload = {
+            isActive: true,
+            isPlaying: !!data.is_playing,
+            isEpisode: isEpisode,
+            showName: showName,
+            trackTitle: data.item.name || (isEpisode ? "Podcast Episode" : "Unknown Track"),
+            artistName: artists,
+            albumName: album,
+            albumArt: artwork,
+            progressMs: data.progress_ms || 0,
+            durationMs: data.item.duration_ms || 0,
+            deviceName: data.device ? data.device.name : "Spotify App",
+            deviceType: data.device ? data.device.type : "Device",
+            updatedAt: Date.now()
+          };
+
+          setSpotifyLiveState(payload);
+          syncSpotifyToFirebase(payload);
+        }
+      } catch(err) {
+        console.warn('[Twitch] Error fetching Spotify:', err);
+      }
+    }
+
+    function checkSpotifyHeartbeat() {
+      if (currentSpotifyLive && currentSpotifyLive.isPlaying) {
+        const elapsed = Date.now() - (currentSpotifyLive.updatedAt || 0);
+        if (elapsed > 45000) {
+          setSpotifyLiveState({ ...currentSpotifyLive, isPlaying: false });
+        }
+      }
+    }
+
+    function initTwitchSpotifySync() {
+      try {
+        const token = localStorage.getItem('brian_spotify_access_token');
+        const refreshToken = localStorage.getItem('brian_spotify_refresh_token');
+        if (token || refreshToken) {
+          fetchTwitchSpotifyPlayback();
+          if (!twitchSpotifyPollInterval) {
+            twitchSpotifyPollInterval = setInterval(fetchTwitchSpotifyPlayback, 3500);
+          }
+        }
+      } catch(e) {}
+      setInterval(checkSpotifyHeartbeat, 5000);
+    }
+
+    // ==========================================
+    // 5. AUTOMATIC VERSION UPDATE DETECTOR
+    // ==========================================
+    const TWITCH_OVERLAY_VERSION = "4.9.217";
+    window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
+    let isCheckingForOverlayUpdate = false;
+
+    function isNewerVersion(remote, current) {
+      if (!remote || !current) return false;
+      const r = remote.replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+      const c = current.replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+      for (let i = 0; i < Math.max(r.length, c.length); i++) {
+        const rv = r[i] || 0;
+        const cv = c[i] || 0;
+        if (rv > cv) return true;
+        if (rv < cv) return false;
+      }
+      return false;
+    }
+
+    async function checkForTwitchOverlayUpdate() {
+      if (isCheckingForOverlayUpdate) return;
+      isCheckingForOverlayUpdate = true;
+      try {
+        const res = await fetch(`./version.json?_t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const vData = await res.json();
+          if (vData && vData.version && isNewerVersion(vData.version, TWITCH_OVERLAY_VERSION)) {
+            console.log(`[TwitchAutoUpdate] New version detected: v${vData.version} (current: v${TWITCH_OVERLAY_VERSION}). Reloading stream overlay...`);
+            // Seamless reload
+            window.location.reload(true);
+            return;
+          }
+        }
+      } catch (e) {
+        // Silent fail on transient network disconnects
+      } finally {
+        isCheckingForOverlayUpdate = false;
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Instant hydration from shared stage cache if present
+      try {
+        const cached = localStorage.getItem('brian_theater_last_stage');
+        if (cached) {
+          const stageData = JSON.parse(cached);
+          if (stageData && stageData.title) {
+            applyStageBroadcast({
+              title: stageData.title,
+              date: stageData.date,
+              poster: stageData.poster,
+              targetMs: stageData.targetMs
+            });
+          }
+        }
+      } catch(e) {}
+
+      // 2. Hydrate Spotify preference if saved
+      try {
+        const savedId = localStorage.getItem('brian_twitch_spotify_id');
+        const savedType = localStorage.getItem('brian_twitch_spotify_type') || 'playlist';
+        const savedName = localStorage.getItem('brian_twitch_spotify_name');
+        if (savedId) {
+          setSpotifyPlaylist(`${savedType}:${savedId}`, savedName || "🎵 Stream Music");
+        }
+      } catch(e) {}
+
+      // 3. Initialize Saved Playlists buttons & drawer display state
+      renderSavedPlaylistButtons();
+      updateSpotifyDrawerDisplay();
+
+      window.renderMovieState = renderMovieState;
+      window.updateCountdown = updateCountdown;
+      window.resolveActiveOrNextMovie = resolveActiveOrNextMovie;
+      window.applySyncPayload = applySyncPayload;
+      window.setSpotifyLiveState = setSpotifyLiveState;
+      window.setSpotifyPlaylist = setSpotifyPlaylist;
+      window.toggleTwitchSpotifyPlayback = toggleTwitchSpotifyPlayback;
+      window.twitchSpotifyNext = twitchSpotifyNext;
+      window.twitchSpotifyPrev = twitchSpotifyPrev;
+      window.fetchTwitchSpotifyPlayback = fetchTwitchSpotifyPlayback;
+      window.checkSpotifyHeartbeat = checkSpotifyHeartbeat;
+      window.switchSpotifyDrawerTab = switchSpotifyDrawerTab;
+      window.updateSpotifyDrawerDisplay = updateSpotifyDrawerDisplay;
+      window.getSavedPlaylists = getSavedPlaylists;
+      window.savePlaylistsToStorage = savePlaylistsToStorage;
+      window.renderSavedPlaylistButtons = renderSavedPlaylistButtons;
+      window.promptSaveNewPlaylist = promptSaveNewPlaylist;
+      window.deleteSavedPlaylist = deleteSavedPlaylist;
+      window.toggleAddPlaylistForm = toggleAddPlaylistForm;
+      window.pastePlaylistFromClipboard = pastePlaylistFromClipboard;
+      window.submitAddPlaylistForm = submitAddPlaylistForm;
+
+      renderMovieState();
+      setInterval(updateCountdown, 1000);
+      initRealtimeSync();
+      initTwitchSpotifySync();
+
+      // Start automatic update checks (every 30 seconds & on focus/visibility change)
+      setTimeout(checkForTwitchOverlayUpdate, 3000);
+      setInterval(checkForTwitchOverlayUpdate, 30000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') checkForTwitchOverlayUpdate();
+      });
+      window.addEventListener('focus', checkForTwitchOverlayUpdate);
+    });
+  </script>
+</body>
+</html>

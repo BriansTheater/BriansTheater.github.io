@@ -75,30 +75,59 @@
       pointer-events: none;
     }
 
-    /* Gothic Proscenium Arch Pillars on the sides */
-    .gothic-flank-left {
+    /* Photorealistic Haunted Graveyard Flanks & Sky Backdrop */
+    .graveyard-sky-backdrop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.90;
+      filter: contrast(105%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .center-readability-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 55%, rgba(2, 3, 5, 0.88) 0%, rgba(2, 3, 5, 0.5) 45%, rgba(2, 3, 5, 0) 75%);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .graveyard-flank-left {
       position: absolute;
       left: 0;
       top: 0;
       bottom: 0;
-      width: 140px;
-      background: linear-gradient(90deg, rgba(2, 1, 6, 0.95) 0%, rgba(13, 6, 25, 0.75) 50%, transparent 100%);
-      border-right: 1px solid rgba(168, 85, 247, 0.12);
-      box-shadow: inset -15px 0 25px rgba(168, 85, 247, 0.08);
-      pointer-events: none;
+      width: 34%;
       z-index: 10;
+      pointer-events: none;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
     }
-    .gothic-flank-right {
+    .graveyard-flank-right {
       position: absolute;
       right: 0;
       top: 0;
       bottom: 0;
-      width: 140px;
-      background: linear-gradient(-90deg, rgba(2, 1, 6, 0.95) 0%, rgba(13, 6, 25, 0.75) 50%, transparent 100%);
-      border-left: 1px solid rgba(168, 85, 247, 0.12);
-      box-shadow: inset 15px 0 25px rgba(168, 85, 247, 0.08);
-      pointer-events: none;
+      width: 34%;
       z-index: 10;
+      pointer-events: none;
+      overflow: hidden;
+      mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+    }
+    @media (max-width: 1024px) {
+      .graveyard-flank-left, .graveyard-flank-right {
+        width: 28%;
+        opacity: 0.85;
+      }
+    }
+    @media (max-width: 768px) {
+      .graveyard-flank-left, .graveyard-flank-right {
+        display: none;
+      }
     }
 
     /* Diagonal Atmospheric Spotlights */
@@ -146,19 +175,45 @@
 <body class="w-full h-full relative flex items-center justify-center">
 
   <!-- ========================================== -->
-  <!-- 1. CREEPY ATMOSPHERIC BACKGROUND (NO ICONS)-->
+  <!-- 1. CREEPY ATMOSPHERIC BACKGROUND -->
   <!-- ========================================== -->
+
+  <!-- 16:9 Panoramic Haunted Midnight Sky Backdrop -->
+  <img 
+    src="images/graveyard_sky_panoramic.jpg" 
+    alt="Haunted Cemetery Panoramic Sky" 
+    class="graveyard-sky-backdrop"
+  />
+
+  <!-- Center Card Readability Vignette (Leaves top sky bright) -->
+  <div class="center-readability-vignette"></div>
 
   <!-- Diagonal Theatrical Light Beams -->
   <div class="spotlight-left"></div>
   <div class="spotlight-right"></div>
 
-  <!-- Left & Right Gothic Proscenium Flanks -->
-  <div class="gothic-flank-left"></div>
-  <div class="gothic-flank-right"></div>
+  <!-- Left Photorealistic Wing: Axel, Dwarf, Soul -->
+  <div class="graveyard-flank-left">
+    <img 
+      src="images/graveyard_flank_left.jpg" 
+      alt="Haunted Graveyard Left Wing: Dwarf, Soul, Axel" 
+      class="w-full h-full object-cover object-left opacity-95 filter contrast-105"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-[#020305]/60 via-transparent to-[#020305]/40"></div>
+  </div>
+
+  <!-- Right Photorealistic Wing: Red, Orlaando, ShaneDew -->
+  <div class="graveyard-flank-right">
+    <img 
+      src="images/graveyard_flank_right.jpg" 
+      alt="Haunted Graveyard Right Wing: Red, Orlaando, ShaneDew" 
+      class="w-full h-full object-cover object-right opacity-95 filter contrast-105"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-[#020305]/60 via-transparent to-[#020305]/40"></div>
+  </div>
 
   <!-- Ambient Rolling Ground Mist -->
-  <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-10 overflow-hidden opacity-50">
+  <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-15 overflow-hidden opacity-50">
     <div class="w-[140%] h-full bg-gradient-to-t from-purple-950/80 via-slate-900/30 to-transparent fog-layer"></div>
   </div>
 
@@ -2042,7 +2097,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.217";
+    const TWITCH_OVERLAY_VERSION = "4.9.218";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

@@ -1,11 +1,11 @@
 {
-  "version": "4.9.217",
-  "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.217",
+  "version": "4.9.218",
+  "releaseDate": "2026-10-19",
+  "title": "Brian's Theater v4.9.218",
   "notes": [
-    "Added inline Add Playlist form directly in Spotify drawer.",
-    "Allows adding Spotify playlists without needing any admin access.",
-    "Added quick clipboard paste button for fast link entry.",
-    "Eliminated browser popups for 100% compatibility in OBS."
+    "Added photorealistic haunted graveyard flanks to Twitch overlay.",
+    "Carved custom crew epitaphs directly into stone headstones.",
+    "Added seamless 16:9 panoramic midnight sky backdrop.",
+    "Archived prior overlay version safely as twitch_old.html."
   ]
 }

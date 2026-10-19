@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.218] - 2026-10-19
+
+### What's New
+- Added photorealistic haunted graveyard flanks to Twitch overlay.
+- Carved custom crew epitaphs directly into stone headstones.
+- Added seamless 16:9 panoramic midnight sky backdrop.
+- Archived prior overlay version safely as twitch_old.html.
+
 ## [4.9.217] - 2026-10-18
 
 ### What's New
