@@ -1,11 +1,11 @@
 {
-  "version": "4.9.214",
+  "version": "4.9.215",
   "releaseDate": "2026-10-18",
-  "title": "Brian's Theater v4.9.214",
+  "title": "Brian's Theater v4.9.215",
   "notes": [
-    "Added Spotify podcast and show support for live overlay.",
-    "Added direct Spotify polling from Twitch overlay with background refresh.",
-    "Added stale heartbeat guard preventing stuck playback on stream overlay.",
-    "Synchronized inactive states to Firebase when Spotify pauses."
+    "Added interactive Play and Pause button on Spotify stream pill.",
+    "Selecting soundtrack playlists now automatically triggers live playback on Spotify.",
+    "Added drawer transport controls for quick next and previous tracks.",
+    "Synchronized play and pause icons with real-time stream status."
   ]
 }

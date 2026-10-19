@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.215] - 2026-10-18
+
+### What's New
+- Added interactive Play and Pause button on Spotify stream pill.
+- Selecting soundtrack playlists now automatically triggers live playback on Spotify.
+- Added drawer transport controls for quick next and previous tracks.
+- Synchronized play and pause icons with real-time stream status.
+
 ## [4.9.214] - 2026-10-18
 
 ### What's New

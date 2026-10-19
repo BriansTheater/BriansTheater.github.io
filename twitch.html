@@ -377,6 +377,14 @@
               <span class="text-emerald-400 font-bold uppercase tracking-wider">LIVE ON STREAM</span>
             </div>
           </div>
+          <!-- Transport Controls -->
+          <div class="flex items-center justify-center gap-3 pt-1 border-t border-slate-800/80">
+            <button type="button" onclick="twitchSpotifyPrev()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Previous Track">⏮</button>
+            <button type="button" onclick="toggleTwitchSpotifyPlayback()" class="h-8 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold flex items-center justify-center gap-1.5 text-xs transition active:scale-95 cursor-pointer" title="Play / Pause">
+              <span id="spotifyDrawerPlayIcon">▶</span> <span id="spotifyDrawerPlayText">Play</span>
+            </button>
+            <button type="button" onclick="twitchSpotifyNext()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition active:scale-95 cursor-pointer" title="Next Track">⏭</button>
+          </div>
         </div>
 
         <!-- Spotify Embed Container -->
@@ -393,9 +401,9 @@
 
         <!-- Playlist Selection / Quick Presets -->
         <div id="spotifyPresetButtons" class="flex items-center gap-1.5 pt-1 overflow-x-auto text-[10px]">
-          <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
-          <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
-          <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
+          <button type="button" onclick="setSpotifyPlaylist('5fnANvKo5Ep7TLEPPjfAzJ', '🎃 Horror Ambience', true)" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎃 Horror</button>
+          <button type="button" onclick="setSpotifyPlaylist('1Hk1D8z7JYh8RuDahFIl2b', '🍿 Cinema Scores', true)" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🍿 Cinema</button>
+          <button type="button" onclick="setSpotifyPlaylist('37i9dQZF1DWWQRwui0ExPn', '🎧 Chill Lofi', true)" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-emerald-950/60 text-slate-300 hover:text-emerald-300 border border-slate-800 transition shrink-0 cursor-pointer">🎧 Lofi</button>
           <button type="button" onclick="promptCustomSpotify()" class="px-2 py-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition shrink-0 cursor-pointer font-bold">+ Custom</button>
         </div>
       </div>
@@ -428,6 +436,17 @@
           <span id="spotifyPillSublabel" class="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">PAUSED</span>
           <span id="spotifyTrackName" class="text-xs font-semibold text-slate-200 truncate mt-0.5">🎃 Horror Ambience</span>
         </div>
+
+        <!-- Play / Pause Action Button on the Pill -->
+        <button
+          type="button"
+          id="spotifyPillPlayBtn"
+          onclick="event.stopPropagation(); toggleTwitchSpotifyPlayback();"
+          class="w-7 h-7 rounded-full bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 flex items-center justify-center font-bold text-xs shadow-md transition-all hover:scale-110 active:scale-90 ml-1 shrink-0 cursor-pointer"
+          title="Play / Pause Spotify"
+        >
+          <span id="spotifyPillPlayIcon" class="ml-0.5">▶</span>
+        </button>
 
         <!-- Expand Arrow -->
         <span class="text-[10px] text-slate-400 group-hover:text-emerald-300 transition-colors ml-0.5">▲</span>
@@ -1219,7 +1238,27 @@
       return null;
     }
 
-    function setSpotifyPlaylist(resourceInput, displayName) {
+    async function playSpotifyUri(type, id) {
+      const token = await getTwitchSpotifyToken();
+      if (!token) return;
+      try {
+        await fetch('https://api.spotify.com/v1/me/player/play', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            context_uri: `spotify:${type}:${id}`
+          })
+        });
+        setTimeout(fetchTwitchSpotifyPlayback, 600);
+      } catch(e) {
+        console.warn('[Twitch] Error starting playlist playback:', e);
+      }
+    }
+
+    function setSpotifyPlaylist(resourceInput, displayName, autoPlay = false) {
       const parsed = parseSpotifyResource(resourceInput);
       if (!parsed) return;
       currentSpotifyType = parsed.type;
@@ -1247,6 +1286,10 @@
         localStorage.setItem('brian_twitch_spotify_type', parsed.type);
         localStorage.setItem('brian_twitch_spotify_name', displayName || `Spotify ${parsed.type}`);
       } catch(e) {}
+
+      if (autoPlay) {
+        playSpotifyUri(parsed.type, parsed.id);
+      }
     }
 
     function toggleSpotifyDrawer() {
@@ -1263,7 +1306,7 @@
         const parsed = parseSpotifyResource(res);
         if (parsed) {
           const name = prompt("Enter a display name for this playlist/song (optional):", "🎵 My Playlist") || "🎵 My Playlist";
-          setSpotifyPlaylist(res, name);
+          setSpotifyPlaylist(res, name, true);
           // Broadcast to shared channel
           try {
             if (typeof BroadcastChannel !== 'undefined') {
@@ -1277,6 +1320,87 @@
         } else {
           alert("Invalid Spotify URL or URI format. Please copy a link directly from Spotify.");
         }
+      }
+    }
+
+    async function toggleTwitchSpotifyPlayback() {
+      const token = await getTwitchSpotifyToken();
+      const playBtnIcon = document.getElementById('spotifyPillPlayIcon');
+      const drawerPlayIcon = document.getElementById('spotifyDrawerPlayIcon');
+      const drawerPlayText = document.getElementById('spotifyDrawerPlayText');
+
+      const isPlaying = Boolean(currentSpotifyLive && currentSpotifyLive.isActive && currentSpotifyLive.isPlaying);
+
+      if (isPlaying) {
+        if (playBtnIcon) { playBtnIcon.textContent = "▶"; playBtnIcon.classList.add('ml-0.5'); }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "▶";
+        if (drawerPlayText) drawerPlayText.textContent = "Play";
+        if (currentSpotifyLive) {
+          setSpotifyLiveState({ ...currentSpotifyLive, isPlaying: false });
+        }
+
+        if (token) {
+          try {
+            await fetch('https://api.spotify.com/v1/me/player/pause', {
+              method: 'PUT',
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setTimeout(fetchTwitchSpotifyPlayback, 400);
+          } catch(e) {
+            console.warn('[Twitch] Error pausing Spotify:', e);
+          }
+        }
+      } else {
+        if (playBtnIcon) { playBtnIcon.textContent = "⏸"; playBtnIcon.classList.remove('ml-0.5'); }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "⏸";
+        if (drawerPlayText) drawerPlayText.textContent = "Pause";
+
+        if (token) {
+          try {
+            const hasExisting = Boolean(currentSpotifyLive && currentSpotifyLive.trackTitle);
+            const body = hasExisting ? undefined : JSON.stringify({ context_uri: `spotify:${currentSpotifyType}:${currentSpotifyUri}` });
+
+            await fetch('https://api.spotify.com/v1/me/player/play', {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                ...(body ? { 'Content-Type': 'application/json' } : {})
+              },
+              body: body
+            });
+            setTimeout(fetchTwitchSpotifyPlayback, 500);
+          } catch(e) {
+            console.warn('[Twitch] Error resuming Spotify:', e);
+          }
+        } else {
+          toggleSpotifyDrawer();
+        }
+      }
+    }
+
+    async function twitchSpotifyNext() {
+      const token = await getTwitchSpotifyToken();
+      if (token) {
+        try {
+          await fetch('https://api.spotify.com/v1/me/player/next', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          setTimeout(fetchTwitchSpotifyPlayback, 600);
+        } catch(e) {}
+      }
+    }
+
+    async function twitchSpotifyPrev() {
+      const token = await getTwitchSpotifyToken();
+      if (token) {
+        try {
+          await fetch('https://api.spotify.com/v1/me/player/previous', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          setTimeout(fetchTwitchSpotifyPlayback, 600);
+        } catch(e) {}
       }
     }
 
@@ -1295,6 +1419,9 @@
       const liveDrawer = document.getElementById('spotifyLiveDrawerCard');
       const embedBox = document.getElementById('spotifyEmbedContainer');
       const presetButtons = document.getElementById('spotifyPresetButtons');
+      const playBtnIcon = document.getElementById('spotifyPillPlayIcon');
+      const drawerPlayIcon = document.getElementById('spotifyDrawerPlayIcon');
+      const drawerPlayText = document.getElementById('spotifyDrawerPlayText');
 
       // Validate freshness: if last update was more than 45 seconds ago, treat playback as stopped/paused
       const isFresh = Boolean(liveData && liveData.updatedAt && (Date.now() - liveData.updatedAt < 45000));
@@ -1303,6 +1430,13 @@
       if (isPlaying) {
         // Active and playing: Start equalizer animation and announce NOW PLAYING or PODCAST LIVE
         if (eqBars) eqBars.classList.remove('eq-paused');
+        if (playBtnIcon) {
+          playBtnIcon.textContent = "⏸";
+          playBtnIcon.classList.remove('ml-0.5');
+        }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "⏸";
+        if (drawerPlayText) drawerPlayText.textContent = "Pause";
+
         if (sublabel) {
           if (liveData.isEpisode) {
             sublabel.textContent = liveData.deviceName ? `PODCAST: ${liveData.deviceName.toUpperCase()}` : "PODCAST LIVE";
@@ -1367,6 +1501,13 @@
       } else {
         // Paused, stopped, or disconnected: PAUSE equalizer and NEVER display "NOW PLAYING"
         if (eqBars) eqBars.classList.add('eq-paused');
+        if (playBtnIcon) {
+          playBtnIcon.textContent = "▶";
+          playBtnIcon.classList.add('ml-0.5');
+        }
+        if (drawerPlayIcon) drawerPlayIcon.textContent = "▶";
+        if (drawerPlayText) drawerPlayText.textContent = "Play";
+
         if (pill) {
           pill.className = "inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-950/90 border border-slate-700/60 hover:border-slate-500 text-slate-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 group";
         }
@@ -1542,7 +1683,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.214";
+    const TWITCH_OVERLAY_VERSION = "4.9.215";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -1614,6 +1755,9 @@
       window.applySyncPayload = applySyncPayload;
       window.setSpotifyLiveState = setSpotifyLiveState;
       window.setSpotifyPlaylist = setSpotifyPlaylist;
+      window.toggleTwitchSpotifyPlayback = toggleTwitchSpotifyPlayback;
+      window.twitchSpotifyNext = twitchSpotifyNext;
+      window.twitchSpotifyPrev = twitchSpotifyPrev;
       window.fetchTwitchSpotifyPlayback = fetchTwitchSpotifyPlayback;
       window.checkSpotifyHeartbeat = checkSpotifyHeartbeat;
 
