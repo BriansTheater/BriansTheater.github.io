@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.220] - 2026-10-19
+
+### What's New
+- Fixed poster image flashing loop on Twitch overlay.
+- Synchronized overlay version detector to stop recursive reloads.
+- Added local poster cache hydration for instant display.
+- Pre-seeded upcoming screening metadata to eliminate placeholder flicker.
+
 ## [4.9.219] - 2026-10-19
 
 ### What's New

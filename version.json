@@ -1,11 +1,11 @@
 {
-  "version": "4.9.219",
+  "version": "4.9.220",
   "releaseDate": "2026-10-19",
-  "title": "Brian's Theater v4.9.219",
+  "title": "Brian's Theater v4.9.220",
   "notes": [
-    "Integrated Plex VIP as native in-page tab.",
-    "Preserves persistent top navigation bar and music playback.",
-    "Added interactive setup wizard with instant invite requests.",
-    "Added step-by-step pinning guide for Smart TVs."
+    "Fixed poster image flashing loop on Twitch overlay.",
+    "Synchronized overlay version detector to stop recursive reloads.",
+    "Added local poster cache hydration for instant display.",
+    "Pre-seeded upcoming screening metadata to eliminate placeholder flicker."
   ]
 }

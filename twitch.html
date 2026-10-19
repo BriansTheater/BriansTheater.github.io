@@ -250,11 +250,11 @@
       </span>
 
       <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)] transition-all duration-300 max-w-full">
-        <span id="movieTitleText">Abraham's Boys A Dracula Story</span>
+        <span id="movieTitleText">AHS: s13 e9: the devils is in the Details</span>
       </h2>
 
       <p id="movieShowtime" class="text-xs sm:text-sm md:text-base text-slate-300 font-medium tracking-wide">
-        Saturday, Oct 17, 2026 • 7:00 PM PST
+        Wednesday, Oct 21, 2026 • 7:00 PM PST
       </p>
     </section>
 
@@ -268,7 +268,7 @@
         <!-- Static/Closed Poster Image -->
         <img
           id="heroPosterImg"
-          src="https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg"
+          src="https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg"
           alt="Featured Movie Screening"
           class="w-full h-full object-cover object-center transition-opacity duration-700"
           onerror="handlePosterError(this)"
@@ -836,16 +836,27 @@
 
     // Active state model (Initial seed synchronized with main stage)
     let activeMovie = {
-      title: "Abraham's Boys A Dracula Story",
-      startMs: 1792288800000,
-      endMs: 1792294140000,
-      posterUrl: DEFAULT_FALLBACK_POSTER,
-      trailerId: "",
-      showtimeText: "Saturday, Oct 17, 2026 • 7:00 PM PST",
+      title: "AHS: s13 e9: the devils is in the Details",
+      startMs: 1792634400000,
+      endMs: 1792636380000,
+      posterUrl: "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
+      trailerId: "-9KId5kYpgg",
+      showtimeText: "Wednesday, Oct 21, 2026 • 7:00 PM PST",
       isNowPlaying: false,
       doorMode: "auto",
       isPosterError: false
     };
+
+    // Instant local cache hydration to prevent even a single millisecond of placeholder flash
+    try {
+      const cachedMovieStr = localStorage.getItem('brian_twitch_active_movie');
+      if (cachedMovieStr) {
+        const cached = JSON.parse(cachedMovieStr);
+        if (cached && cached.title && cached.posterUrl) {
+          Object.assign(activeMovie, cached);
+        }
+      }
+    } catch(e) {}
     window.activeMovie = activeMovie;
 
     // 1. Digital Countdown Clock Loop (Synchronized with main theater doors opening)
@@ -1090,8 +1101,28 @@
             posterEl.src = activeMovie.posterUrl;
             posterEl.onload = () => { posterEl.style.opacity = '1'; };
           }, 150);
+        } else {
+          posterEl.style.opacity = '1';
         }
       }
+
+      // Persist active movie state for instant seamless boot next time
+      try {
+        if (activeMovie.title && activeMovie.posterUrl) {
+          localStorage.setItem('brian_twitch_active_movie', JSON.stringify({
+            title: activeMovie.title,
+            startMs: activeMovie.startMs,
+            endMs: activeMovie.endMs,
+            posterUrl: activeMovie.posterUrl,
+            trailerId: activeMovie.trailerId,
+            showtimeText: activeMovie.showtimeText,
+            isNowPlaying: activeMovie.isNowPlaying,
+            doorMode: activeMovie.doorMode,
+            isPosterError: activeMovie.isPosterError
+          }));
+        }
+      } catch(e) {}
+
       updateCountdown();
     }
 
@@ -2097,7 +2128,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.218";
+    const TWITCH_OVERLAY_VERSION = "4.9.220";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -2122,8 +2153,15 @@
         if (res.ok) {
           const vData = await res.json();
           if (vData && vData.version && isNewerVersion(vData.version, TWITCH_OVERLAY_VERSION)) {
+            // Guard against infinite reload loop if cache serves older overlay HTML
+            try {
+              if (sessionStorage.getItem('twitch_reloaded_version') === vData.version) {
+                console.warn(`[TwitchAutoUpdate] Already attempted reload for v${vData.version}. Skipping loop.`);
+                return;
+              }
+              sessionStorage.setItem('twitch_reloaded_version', vData.version);
+            } catch(se) {}
             console.log(`[TwitchAutoUpdate] New version detected: v${vData.version} (current: v${TWITCH_OVERLAY_VERSION}). Reloading stream overlay...`);
-            // Seamless reload
             window.location.reload(true);
             return;
           }
@@ -2143,12 +2181,16 @@
         if (cached) {
           const stageData = JSON.parse(cached);
           if (stageData && stageData.title) {
-            applyStageBroadcast({
-              title: stageData.title,
-              date: stageData.date,
-              poster: stageData.poster,
-              targetMs: stageData.targetMs
-            });
+            const targetMs = Number(stageData.targetMs) || 0;
+            const now = Date.now();
+            if (!targetMs || targetMs > now || targetMs + (4 * 3600000) > now) {
+              applyStageBroadcast({
+                title: stageData.title,
+                date: stageData.date,
+                poster: stageData.poster,
+                targetMs: stageData.targetMs
+              });
+            }
           }
         }
       } catch(e) {}
