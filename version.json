@@ -1,9 +1,9 @@
 {
-  "version": "4.9.224",
+  "version": "4.9.225",
   "releaseDate": "2026-10-20",
-  "title": "Brian's Theater v4.9.224",
+  "title": "Brian's Theater v4.9.225",
   "notes": [
-    "Deployed Cinemark 2026 Tracker to GitHub Pages.",
-    "Added live public URL for cinema visit logging."
+    "Converted Cinemark Tracker into public viewing dashboard.",
+    "Locked logging and editing behind Google admin sign-in."
   ]
 }

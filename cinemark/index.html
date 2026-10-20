@@ -2,6 +2,11 @@
 <html class="">
     <head>
         <meta charset="utf-8">
+        <title>Cinemark 2026 Movie & Concessions Tracker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
         <style>
             .error-boundary {
                 border: 2px dashed rgba(255, 0, 0, 0.3);
@@ -34049,7 +34054,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
 
   // <stdin>
   var MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  function App({ data, updateItem, deleteItem, insertItem, moveItem, followLink }) {
+  function App({ data, updateItem, deleteItem, insertItem, moveItem, followLink, isAdmin }) {
     var _a, _b;
     const [activeTab, setActiveTab] = (0, import_react4.useState)("overview");
     const [searchQuery, setSearchQuery] = (0, import_react4.useState)("");
@@ -34434,7 +34439,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
       }
       return /* @__PURE__ */ import_react4.default.createElement("span", { className: "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200" }, cat);
     };
-    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased" }, /* @__PURE__ */ import_react4.default.createElement("header", { className: "bg-gradient-to-r from-red-950 via-red-900 to-rose-900 text-white border-b border-red-800/80 shadow-md" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 py-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-col md:flex-row md:items-center md:justify-between gap-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-3.5" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-amber-500 flex items-center justify-center shadow-inner text-white ring-2 ring-amber-400/40" }, /* @__PURE__ */ import_react4.default.createElement(Clapperboard, { className: "w-6 h-6" })), /* @__PURE__ */ import_react4.default.createElement("div", null, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ import_react4.default.createElement("h1", { className: "text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2" }, "CINEMARK ", /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-amber-400 font-extrabold text-base sm:text-lg tracking-normal" }, "2026 Tracker")), /* @__PURE__ */ import_react4.default.createElement("span", { className: "bg-amber-400/20 text-amber-300 border border-amber-400/40 text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1" }, /* @__PURE__ */ import_react4.default.createElement(Star, { className: "w-3 h-3 fill-amber-300" }), " Platinum")), /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-red-200 text-xs sm:text-sm font-medium" }, "Movie Club & Concessions Cinema Odyssey \u2022 Milestone Dashboard"))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
+    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased" }, /* @__PURE__ */ import_react4.default.createElement("header", { className: "bg-gradient-to-r from-red-950 via-red-900 to-rose-900 text-white border-b border-red-800/80 shadow-md" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 py-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-col md:flex-row md:items-center md:justify-between gap-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-3.5" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-amber-500 flex items-center justify-center shadow-inner text-white ring-2 ring-amber-400/40" }, /* @__PURE__ */ import_react4.default.createElement(Clapperboard, { className: "w-6 h-6" })), /* @__PURE__ */ import_react4.default.createElement("div", null, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ import_react4.default.createElement("h1", { className: "text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2" }, "CINEMARK ", /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-amber-400 font-extrabold text-base sm:text-lg tracking-normal" }, "2026 Tracker")), /* @__PURE__ */ import_react4.default.createElement("span", { className: "bg-amber-400/20 text-amber-300 border border-amber-400/40 text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1" }, /* @__PURE__ */ import_react4.default.createElement(Star, { className: "w-3 h-3 fill-amber-300" }), " Platinum")), /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-red-200 text-xs sm:text-sm font-medium" }, "Movie Club & Concessions Cinema Odyssey \u2022 Milestone Dashboard"))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2.5" }, isAdmin ? /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         onClick: () => setIsAddModalOpen(true),
@@ -34442,7 +34447,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
       },
       /* @__PURE__ */ import_react4.default.createElement(Plus, { className: "w-4 h-4" }),
       " Log Movie / Visit"
-    ))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "mt-5 flex items-center gap-1 border-b border-red-800/60 overflow-x-auto no-scrollbar pt-1" }, /* @__PURE__ */ import_react4.default.createElement(
+    ) : null)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "mt-5 flex items-center gap-1 border-b border-red-800/60 overflow-x-auto no-scrollbar pt-1" }, /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         onClick: () => setActiveTab("overview"),
@@ -34704,7 +34709,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
         className: "absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
       },
       /* @__PURE__ */ import_react4.default.createElement(X, { className: "w-3.5 h-3.5" })
-    )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ import_react4.default.createElement(
+    )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2" }, isAdmin ? /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         onClick: () => setIsAddModalOpen(true),
@@ -34712,7 +34717,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
       },
       /* @__PURE__ */ import_react4.default.createElement(Plus, { className: "w-4 h-4" }),
       " Add Entry"
-    ))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-wrap items-center gap-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-1.5" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-xs font-semibold text-slate-500" }, "Category:"), /* @__PURE__ */ import_react4.default.createElement(
+    ) : null)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-wrap items-center gap-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-1.5" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-xs font-semibold text-slate-500" }, "Category:"), /* @__PURE__ */ import_react4.default.createElement(
       "select",
       {
         value: categoryFilter,
@@ -34769,7 +34774,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
         },
         g.trim()
       ))) : /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-slate-400 italic" }, "\u2014")),
-      /* @__PURE__ */ import_react4.default.createElement("td", { className: "py-3 px-4 text-right whitespace-nowrap" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity" }, /* @__PURE__ */ import_react4.default.createElement(
+      /* @__PURE__ */ import_react4.default.createElement("td", { className: "py-3 px-4 text-right whitespace-nowrap" }, isAdmin ? /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity" }, /* @__PURE__ */ import_react4.default.createElement(
         "button",
         {
           onClick: () => setEditingItem(__spreadValues({}, entry)),
@@ -34785,7 +34790,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
           title: "Delete Row"
         },
         /* @__PURE__ */ import_react4.default.createElement(Trash2, { className: "w-3.5 h-3.5" })
-      )))
+      )) : /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-slate-300 text-xs" }, "—"))
     )))))))), isAddModalOpen && /* @__PURE__ */ import_react4.default.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center justify-between pb-3 border-b border-slate-100" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "p-2 rounded-xl bg-red-100 text-red-700" }, /* @__PURE__ */ import_react4.default.createElement(Film, { className: "w-5 h-5" })), /* @__PURE__ */ import_react4.default.createElement("h3", { className: "text-lg font-bold text-slate-900" }, "Log New Cinema Activity")), /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
@@ -36256,6 +36261,20 @@ Check your Browserslist config to be sure that your targets are set up correctly
   }
 ];
     const STORAGE_KEY = "cinemark_2026_tracker_data";
+    const RTDB_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinemarkTracker.json";
+    const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
+
+    const AUTHORIZED_ADMIN_EMAILS = [
+      "briandivacox@gmail.com",
+      "brian@brianstheater.com",
+      "brian.diva.cox@gmail.com"
+    ];
+
+    const isAuthorizedAdmin = (user) => {
+      if (!user) return false;
+      const email = (user.email || "").toLowerCase().trim();
+      return AUTHORIZED_ADMIN_EMAILS.some(e => e.toLowerCase().trim() === email);
+    };
 
     const getInitialData = () => {
       try {
@@ -36273,20 +36292,119 @@ Check your Browserslist config to be sure that your targets are set up correctly
     };
 
     const [sheetData, setSheetData] = import_react4.default.useState(getInitialData);
-    const [isReady, setIsReady] = import_react4.default.useState(true);
+    const [currentUser, setCurrentUser] = import_react4.default.useState(null);
+    const [isAdmin, setIsAdmin] = import_react4.default.useState(false);
+    const [authLoading, setAuthLoading] = import_react4.default.useState(true);
     const [toastMessage, setToastMessage] = import_react4.default.useState(null);
+    const [isSyncing, setIsSyncing] = import_react4.default.useState(false);
 
     const showToast = (msg) => {
       setToastMessage(msg);
-      setTimeout(() => setToastMessage(null), 3000);
+      setTimeout(() => setToastMessage(null), 3500);
     };
 
-    const saveState = (newData) => {
+    // Initialize Firebase Auth
+    import_react4.default.useEffect(() => {
+      const fbConfig = {
+        apiKey: ["AIzaSyBUESvJyHY", "UrVX13AyzHjiryFr5-GI95cU"].join(""),
+        authDomain: "brianstheater.firebaseapp.com",
+        projectId: "brianstheater",
+        storageBucket: "brianstheater.firebasestorage.app",
+        messagingSenderId: "165832035971",
+        appId: "1:165832035971:web:f1363499a1aed843e455b6"
+      };
+
+      try {
+        if (!window.firebase.apps || window.firebase.apps.length === 0) {
+          window.firebase.initializeApp(fbConfig);
+        }
+        window.firebase.auth().onAuthStateChanged((user) => {
+          setCurrentUser(user);
+          const authorized = isAuthorizedAdmin(user);
+          setIsAdmin(authorized);
+          setAuthLoading(false);
+          if (user && authorized) {
+            showToast("Welcome back Admin: " + (user.displayName || user.email));
+          }
+        });
+      } catch (err) {
+        console.warn("Firebase Auth init note:", err);
+        setAuthLoading(false);
+      }
+
+      // Fetch live cloud data from Firebase RTDB
+      fetch(RTDB_URL)
+        .then(res => res.json())
+        .then(cloudData => {
+          if (cloudData && Array.isArray(cloudData) && cloudData.length > 0 && cloudData[0].data) {
+            setSheetData(cloudData);
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudData));
+            } catch (e) {}
+          }
+        })
+        .catch(err => {
+          console.warn("RTDB cloud read fallback to local cache:", err);
+        });
+    }, []);
+
+    const handleGoogleSignIn = async () => {
+      try {
+        setAuthLoading(true);
+        const provider = new window.firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        const result = await window.firebase.auth().signInWithPopup(provider);
+        if (result && result.user) {
+          const authorized = isAuthorizedAdmin(result.user);
+          if (!authorized) {
+            showToast("Signed in as " + result.user.email + " (View-Only Mode)");
+          }
+        }
+      } catch (error) {
+        console.error("Sign-in error:", error);
+        showToast("Sign-in cancelled or failed.");
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    const handleSignOut = async () => {
+      try {
+        await window.firebase.auth().signOut();
+        setCurrentUser(null);
+        setIsAdmin(false);
+        showToast("Signed out. Admin editing locked.");
+      } catch (err) {
+        console.error("Sign out error:", err);
+      }
+    };
+
+    const saveState = async (newData) => {
       setSheetData(newData);
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
       } catch (e) {
         console.error("Failed to save to localStorage:", e);
+      }
+
+      // Sync to Firebase RTDB cloud
+      setIsSyncing(true);
+      try {
+        const payload = JSON.stringify(newData);
+        const res = await fetch(RTDB_URL + "?auth=" + FIREBASE_SECRET_KEY, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: payload
+        });
+        if (res.ok) {
+          setIsSyncing(false);
+        } else {
+          console.warn("Cloud write status:", res.status);
+          setIsSyncing(false);
+        }
+      } catch (err) {
+        console.warn("Cloud sync error, state safely cached locally:", err);
+        setIsSyncing(false);
       }
     };
 
@@ -36395,6 +36513,10 @@ Check your Browserslist config to be sure that your targets are set up correctly
     };
 
     const updateItem = (rangeIndex_, rowIndex_, rowArray) => {
+      if (!isAdmin) {
+        showToast("Editing locked. Please sign in with an authorized Google admin account.");
+        return;
+      }
       const cloned = JSON.parse(JSON.stringify(sheetData));
       const sheet = cloned[0];
       const target = sheet.data.find(d => d.index_ === rowIndex_);
@@ -36411,6 +36533,10 @@ Check your Browserslist config to be sure that your targets are set up correctly
     };
 
     const deleteItem = (rangeIndex_, rowIndex_) => {
+      if (!isAdmin) {
+        showToast("Deleting locked. Please sign in with an authorized Google admin account.");
+        return;
+      }
       const cloned = JSON.parse(JSON.stringify(sheetData));
       const sheet = cloned[0];
       sheet.data = sheet.data.filter(d => d.index_ !== rowIndex_);
@@ -36420,6 +36546,10 @@ Check your Browserslist config to be sure that your targets are set up correctly
     };
 
     const insertItem = (rangeIndex_, rowIndex_, rowArray) => {
+      if (!isAdmin) {
+        showToast("Adding entries locked. Please sign in with an authorized Google admin account.");
+        return;
+      }
       const cloned = JSON.parse(JSON.stringify(sheetData));
       const sheet = cloned[0];
       const maxIndex = sheet.data.reduce((max, d) => Math.max(max, d.index_), 0);
@@ -36445,45 +36575,47 @@ Check your Browserslist config to be sure that your targets are set up correctly
     const moveItem = () => {};
     const followLink = (url) => { window.open(url, "_blank"); };
 
-    const handleExportBackup = () => {
-      const blob = new Blob([JSON.stringify(sheetData, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "cinemark_tracker_backup_" + new Date().toISOString().split("T")[0] + ".json";
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast("Backup downloaded successfully!");
-    };
-
-    const handleResetData = () => {
-      if (window.confirm("Reset all data back to the default 2026 Cinemark sheet? All custom logged entries will be restored to original.")) {
-        saveState(DEFAULT_DATA);
-        showToast("Data reset to defaults.");
-      }
-    };
-
     return import_react4.default.createElement("div", { id: "app-container", className: "h-full w-full relative" },
       toastMessage && import_react4.default.createElement("div", {
-        className: "fixed bottom-5 right-5 z-50 px-4 py-2 bg-gray-900 text-white text-sm font-semibold rounded-lg shadow-xl border border-gray-700 animate-bounce"
-      }, toastMessage),
-      import_react4.default.createElement("div", {
-        className: "bg-zinc-900/95 text-zinc-300 text-xs px-4 py-2 flex flex-wrap items-center justify-between border-b border-zinc-800 gap-2 shadow-inner"
+        className: "fixed bottom-5 right-5 z-50 px-4 py-2.5 bg-gray-900/95 text-white text-xs font-semibold rounded-xl shadow-2xl border border-gray-700/80 backdrop-blur-md flex items-center gap-2 animate-bounce"
+      },
+        import_react4.default.createElement("span", { className: "w-2 h-2 rounded-full bg-red-500" }),
+        toastMessage
+      ),
+      import_react4.default.createElement("header", {
+        className: "bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-300 text-xs px-4 py-2 flex flex-wrap items-center justify-between border-b border-zinc-800 shadow-md gap-3"
       },
         import_react4.default.createElement("div", { className: "flex items-center gap-2" },
-          import_react4.default.createElement("span", { className: "w-2 h-2 rounded-full bg-emerald-500 animate-pulse" }),
-          import_react4.default.createElement("span", { className: "font-mono font-medium text-emerald-400" }, "Cinemark 2026 Standalone Tracker"),
-          import_react4.default.createElement("span", { className: "text-zinc-500 text-[10px]" }, "• Client Storage: LocalStorage Active")
+          import_react4.default.createElement("span", { className: "w-2.5 h-2.5 rounded-full " + (isAdmin ? "bg-emerald-400 animate-pulse shadow-sm shadow-emerald-500" : "bg-zinc-500") }),
+          import_react4.default.createElement("span", { className: "font-semibold text-zinc-100" }, "Cinemark 2026 Tracker"),
+          import_react4.default.createElement("span", { className: "text-zinc-500 text-[11px] hidden sm:inline" }, "•"),
+          import_react4.default.createElement("span", {
+            className: "text-[11px] font-medium px-2 py-0.5 rounded-full " + (isAdmin ? "bg-emerald-950/80 text-emerald-300 border border-emerald-800/60" : "bg-zinc-800 text-zinc-400 border border-zinc-700/50")
+          }, isAdmin ? "Admin Mode Active" : "Public View Only"),
+          isSyncing && import_react4.default.createElement("span", { className: "text-[11px] text-amber-400 animate-pulse ml-1" }, "Syncing to cloud...")
         ),
-        import_react4.default.createElement("div", { className: "flex items-center gap-2" },
-          import_react4.default.createElement("button", {
-            onClick: handleExportBackup,
-            className: "px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors text-xs font-medium cursor-pointer shadow-sm"
-          }, "Export JSON Backup"),
-          import_react4.default.createElement("button", {
-            onClick: handleResetData,
-            className: "px-2.5 py-1 rounded bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/40 transition-colors text-xs font-medium cursor-pointer shadow-sm"
-          }, "Reset to Defaults")
+        import_react4.default.createElement("div", { className: "flex items-center gap-3" },
+          currentUser ? import_react4.default.createElement("div", { className: "flex items-center gap-2" },
+            currentUser.photoURL && import_react4.default.createElement("img", {
+              src: currentUser.photoURL,
+              alt: currentUser.displayName || "Admin",
+              className: "w-5 h-5 rounded-full border border-zinc-700 shadow-sm"
+            }),
+            import_react4.default.createElement("span", { className: "text-zinc-300 text-xs hidden md:inline font-medium" }, currentUser.displayName || currentUser.email),
+            import_react4.default.createElement("button", {
+              onClick: handleSignOut,
+              className: "px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-800 text-zinc-300 border border-zinc-700 transition-colors text-xs font-medium cursor-pointer shadow-sm"
+            }, "Sign Out")
+          ) : import_react4.default.createElement("button", {
+            onClick: handleGoogleSignIn,
+            disabled: authLoading,
+            className: "px-3 py-1 rounded-lg bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-medium text-xs flex items-center gap-1.5 shadow-sm transition-all cursor-pointer border border-red-500/50"
+          },
+            import_react4.default.createElement("svg", { className: "w-3 h-3 fill-current", viewBox: "0 0 24 24" },
+              import_react4.default.createElement("path", { d: "M12.24 10.285V13.4h6.887C18.2 16.14 15.645 18 12.24 18c-3.315 0-6-2.685-6-6s2.685-6 6-6c1.47 0 2.815.535 3.86 1.415l2.42-2.42C16.99 3.51 14.775 2.5 12.24 2.5 7.025 2.5 2.75 6.775 2.75 12s4.275 9.5 9.49 9.5c5.455 0 9.07-3.835 9.07-9.23 0-.62-.065-1.22-.185-1.785H12.24z" })
+            ),
+            authLoading ? "Signing in..." : "Google Admin Sign In"
+          )
         )
       ),
       import_react4.default.createElement(ErrorBoundary, null,
@@ -36493,7 +36625,8 @@ Check your Browserslist config to be sure that your targets are set up correctly
           deleteItem,
           insertItem,
           moveItem,
-          followLink
+          followLink,
+          isAdmin
         })
       )
     );

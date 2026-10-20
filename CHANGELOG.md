@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.225] - 2026-10-20
+
+### What's New
+- Converted Cinemark Tracker into public viewing dashboard.
+- Removed reset and export client data controls.
+- Locked visit logging behind Google admin sign-in.
+- Hid row action editing controls from public visitors.
+- Integrated cloud data synchronization with Firebase RTDB.
+
 ## [4.9.224] - 2026-10-20
 
 ### What's New
