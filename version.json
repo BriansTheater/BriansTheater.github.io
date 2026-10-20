@@ -1,9 +1,9 @@
 {
-  "version": "4.9.223",
-  "releaseDate": "2026-10-19",
-  "title": "Brian's Theater v4.9.223",
+  "version": "4.9.224",
+  "releaseDate": "2026-10-20",
+  "title": "Brian's Theater v4.9.224",
   "notes": [
-    "Wrapped Axel tombstone inscription text cleanly across two lines.",
-    "Fixed right-edge text cutoff behind central stream player."
+    "Deployed Cinemark 2026 Tracker to GitHub Pages.",
+    "Added live public URL for cinema visit logging."
   ]
 }

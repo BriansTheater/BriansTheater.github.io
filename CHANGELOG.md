@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.224] - 2026-10-20
+
+### What's New
+- Deployed Cinemark 2026 Tracker to GitHub Pages web URL.
+- Added live public access for cinema and concession logging.
+
 ## [4.9.223] - 2026-10-19
 
 ### What's New
