@@ -641,8 +641,8 @@
       "Abrahams Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
       "The Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
       "Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
-      "UnderTone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
-      "Undertone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "UnderTone": "https://image.tmdb.org/t/p/w780/4BSJVRQ3EsHMIVZSiKz1l58jDhg.jpg",
+      "Undertone": "https://image.tmdb.org/t/p/w780/4BSJVRQ3EsHMIVZSiKz1l58jDhg.jpg",
       "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
@@ -721,8 +721,19 @@
         return null;
       };
 
-      const customResult = searchDict(customMap);
-      if (customResult) return customResult;
+      let mergedCustom = Object.assign({}, customMap || {});
+      try {
+        const rawLocal = localStorage.getItem('brian_movie_posters_map');
+        if (rawLocal) {
+          const parsedLocal = JSON.parse(rawLocal);
+          if (parsedLocal && typeof parsedLocal === 'object') {
+            Object.assign(mergedCustom, parsedLocal);
+          }
+        }
+      } catch(e) {}
+
+      const customResult = searchDict(mergedCustom);
+      if (customResult && !String(customResult).includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return customResult;
 
       const verifiedResult = searchDict(verifiedMovieArtworks);
       if (verifiedResult) return verifiedResult;
@@ -1222,7 +1233,8 @@
         activeMovie.isNowPlaying = Boolean(foundNow);
         activeMovie.showtimeText = formatShowtime(target.startMs, target.date, target.time);
 
-        let resolvedPoster = target.posterUrl || getMovieArtworkUrl(activeMovie.title, merged.moviePosters);
+        let resolvedPoster = getMovieArtworkUrl(activeMovie.title, merged.moviePosters) || target.posterUrl;
+        const hasPosterChanged = Boolean(resolvedPoster && activeMovie.posterUrl !== resolvedPoster);
         if (resolvedPoster) {
           activeMovie.posterUrl = resolvedPoster;
           activeMovie.isPosterError = false;
@@ -1241,7 +1253,7 @@
         }
         activeMovie.trailerId = resolvedTrailer || '';
 
-        if (hasTitleChanged || hasTimeChanged) {
+        if (hasTitleChanged || hasTimeChanged || hasPosterChanged) {
           console.log(`[TwitchAutoProgression] Transitioned active movie to: ${activeMovie.title} (${activeMovie.showtimeText})`);
           renderMovieState();
         }
@@ -1251,7 +1263,9 @@
     // 6. Parse and apply incoming Firebase Data
     function applySyncPayload(data) {
       if (!data) return;
+      const mergedPosters = Object.assign({}, lastKnownPayload.moviePosters || {}, data.moviePosters || {});
       Object.assign(lastKnownPayload, data);
+      lastKnownPayload.moviePosters = mergedPosters;
       resolveActiveOrNextMovie(Date.now());
       renderMovieState();
     }
@@ -1298,6 +1312,12 @@
             if (event.data) {
               if (event.data.type === 'stage_update' && event.data.payload) {
                 applyStageBroadcast(event.data.payload);
+              } else if (event.data.type === 'POSTER_UPDATED' && event.data.title && event.data.imageUrl) {
+                applySyncPayload({ moviePosters: { [event.data.title]: event.data.imageUrl } });
+              } else if (event.data.type === 'BULK_MEDIA_UPDATED' && Array.isArray(event.data.titles) && event.data.imageUrl) {
+                const mapUpdate = {};
+                event.data.titles.forEach(t => { mapUpdate[t] = event.data.imageUrl; });
+                applySyncPayload({ moviePosters: mapUpdate });
               } else if (event.data.type === 'stage_trailer_update' && event.data.trailerId) {
                 activeMovie.trailerId = event.data.trailerId;
                 renderMovieState();
@@ -1383,6 +1403,12 @@
                   applySyncPayload({ officialSchedule: payload.data });
                 } else if (payload.path === '/moviePosters' && payload.data) {
                   applySyncPayload({ moviePosters: payload.data });
+                } else if (payload.path && payload.path.startsWith('/moviePosters/')) {
+                  const rawKey = payload.path.replace(/^\/moviePosters\//, '').replace(/\.json$/, '');
+                  const movieKey = decodeURIComponent(rawKey);
+                  if (movieKey && typeof payload.data === 'string') {
+                    applySyncPayload({ moviePosters: { [movieKey]: payload.data } });
+                  }
                 } else if (payload.data && typeof payload.data === 'object') {
                   applySyncPayload(payload.data);
                 }
@@ -2128,7 +2154,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.225";
+    const TWITCH_OVERLAY_VERSION = "4.9.226";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

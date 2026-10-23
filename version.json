@@ -1,9 +1,10 @@
 {
-  "version": "4.9.225",
-  "releaseDate": "2026-10-20",
-  "title": "Brian's Theater v4.9.225",
+  "version": "4.9.226",
+  "releaseDate": "2026-10-22",
+  "title": "Brian's Theater v4.9.226",
   "notes": [
-    "Converted Cinemark Tracker into public viewing dashboard.",
-    "Locked logging and editing behind Google admin sign-in."
+    "Synced custom movie posters onto Twitch stream overlay.",
+    "Fixed Google Sheets sync overwriting custom website posters.",
+    "Updated UnderTone artwork to full widescreen cinema banner."
   ]
 }

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.225 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.226 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -3943,7 +3943,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.225";
+    const APP_VERSION = "4.9.226";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4662,7 +4662,7 @@
         summary: "Set years after the events of Dracula, Abraham Van Helsing raises his sons in rural America with paranoid rules that unravel into mystery.",
         status: "SATURDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/be5SIsRGMckO8tU9lrLcIik70Dy.jpg",
+        posterUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
         trailerId: "vWs79_NK2h0"
       },
       {
@@ -4677,7 +4677,7 @@
         summary: "A hiker lost in the desert takes shelter in an isolated canyon, only to be trapped by a feral, sadistic pack.",
         status: "SUNDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/vmdt6nUXYX4mM0Ahcvh4bgHOjUt.jpg",
+        posterUrl: "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
         trailerId: "BunlosQQw-I"
       },
       {
@@ -4720,7 +4720,7 @@
         summary: "The host of a paranormal podcast moves home and encounters chilling supernatural audio recordings.",
         status: "THURSDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/mVeoqL37gzhMXQVpONi9DGOQ3tZ.jpg",
+        posterUrl: "https://image.tmdb.org/t/p/w780/4BSJVRQ3EsHMIVZSiKz1l58jDhg.jpg",
         trailerId: "wafETiDQYu8"
       },
       {
@@ -4763,7 +4763,7 @@
         summary: "A woman answers a housekeeper wanted ad in a NYC high-rise, entering a community trapped in mysterious disappearances.",
         status: "TUESDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/sfQtVlIHljToOwYjhe21KPGzZWK.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg"
       },
       {
         title: "AHS: s13 e13: Devils of a good time",
@@ -4791,7 +4791,7 @@
         summary: "Seven outcast children battle a shape-shifting demon clown, and reunite 30 years later to fulfill their childhood pledge.",
         status: "SATURDAY",
         tagColor: "bg-slate-950/95 text-purple-300 border border-purple-500/70 shadow-xl",
-        posterUrl: "https://image.tmdb.org/t/p/w780/znHT8peERZRWG1ME3r0Db0EV8k8.jpg"
+        posterUrl: "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg"
       }
     ];
     window.theaterScheduleCache = sampleSchedule;
@@ -5061,6 +5061,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.226": [
+        "Synced custom movie posters onto Twitch stream overlay.",
+        "Fixed Google Sheets sync overwriting custom website posters.",
+        "Updated UnderTone artwork to full widescreen cinema banner."
+      ],
       "4.9.225": [
         "Wrapped Axel tombstone inscription text cleanly across two lines.",
         "Fixed right-edge text cutoff behind central stream player."
@@ -5800,8 +5805,8 @@
       "Abrahams Boys": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
       "The Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
       "Seeding": "https://upload.wikimedia.org/wikipedia/en/f/f4/TheSeedingPoster.jpg",
-      "UnderTone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
-      "Undertone": "https://upload.wikimedia.org/wikipedia/en/6/64/Undertone_%282025%29_poster.jpg",
+      "UnderTone": "https://image.tmdb.org/t/p/w780/4BSJVRQ3EsHMIVZSiKz1l58jDhg.jpg",
+      "Undertone": "https://image.tmdb.org/t/p/w780/4BSJVRQ3EsHMIVZSiKz1l58jDhg.jpg",
       "they will kill you": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "They Will Kill You": "https://image.tmdb.org/t/p/w780/6oI4oQKTWMVUlr8Ivqydp28Ruu6.jpg",
       "Stephens King: It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
@@ -6160,13 +6165,13 @@
       }
 
       if (isLive) {
-        const activeImg = optimizeArtworkUrl((data && data.nowPlayingPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(activeMovie));
+        const activeImg = optimizeArtworkUrl(getMovieArtworkUrl(nextInfo.movie || activeMovie) || (data && data.nowPlayingPoster));
         if (stagePoster && stagePoster.src !== activeImg) stagePoster.src = activeImg;
         if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `LIVE ON STAGE: ${activeMovie}`;
         if (stagePosterBadgeDate) stagePosterBadgeDate.textContent = `Doors Open Now`;
       } else {
         // Auditorium closed between screenings: Dynamically display the NEXT UP movie's artwork!
-        const nextImg = optimizeArtworkUrl((data && data.nextPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(nextMovie));
+        const nextImg = optimizeArtworkUrl(getMovieArtworkUrl(nextInfo.movie || nextMovie) || (data && data.nextPoster));
         if (stagePoster && stagePoster.src !== nextImg) stagePoster.src = nextImg;
         if (stagePosterBadgeTitle) stagePosterBadgeTitle.textContent = `NEXT UP: ${nextMovie}`;
         const nextDateStr = document.getElementById('schedNextDate')?.textContent || (nextInfo.movie ? `${nextInfo.movie.date} • ${nextInfo.movie.startTime} PST` : "Sunday, Sept 6 • 7:00 PM PST");
@@ -6174,7 +6179,7 @@
       }
 
       if (schedNextPoster) {
-        const nextImg = optimizeArtworkUrl((data && data.nextPoster) || (nextInfo.movie && nextInfo.movie.posterUrl) || getMovieArtworkUrl(nextMovie));
+        const nextImg = optimizeArtworkUrl(getMovieArtworkUrl(nextInfo.movie || nextMovie) || (data && data.nextPoster));
         if (schedNextPoster.src !== nextImg) schedNextPoster.src = nextImg;
       }
     }

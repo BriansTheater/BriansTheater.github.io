@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.226] - 2026-10-22
+
+### What's New
+- Synced custom movie posters onto Twitch stream overlay.
+- Fixed Google Sheets sync overwriting custom website posters.
+- Updated UnderTone artwork to full widescreen cinema banner.
+
 ## [4.9.225] - 2026-10-20
 
 ### What's New
