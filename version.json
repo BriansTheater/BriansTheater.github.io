@@ -1,10 +1,10 @@
 {
-  "version": "4.9.226",
-  "releaseDate": "2026-10-22",
-  "title": "Brian's Theater v4.9.226",
+  "version": "4.9.227",
+  "releaseDate": "2026-10-23",
+  "title": "Brian's Theater v4.9.227",
   "notes": [
-    "Synced custom movie posters onto Twitch stream overlay.",
-    "Fixed Google Sheets sync overwriting custom website posters.",
-    "Updated UnderTone artwork to full widescreen cinema banner."
+    "Snacks now group with movie visits on Cinemark.",
+    "New visit form asks if you got snacks.",
+    "Cleaner Cinemark log with half the rows."
   ]
 }

@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.227] - 2026-10-23
+
+### What's New
+- Snacks now group with movie visits on Cinemark.
+- New visit form asks if you got snacks.
+- Cleaner Cinemark log with half the rows.
+- Edit snacks directly on any movie visit.
+
 ## [4.9.226] - 2026-10-22
 
 ### What's New

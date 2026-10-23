@@ -34068,7 +34068,9 @@ Check your Browserslist config to be sure that your targets are set up correctly
       category: "Movie",
       activity: "",
       genre: "",
-      month: ""
+      month: "",
+      gotSnacks: false,
+      snacks: ""
     });
     const [editingItem, setEditingItem] = (0, import_react4.useState)(null);
     const [itemToDelete, setItemToDelete] = (0, import_react4.useState)(null);
@@ -34204,10 +34206,34 @@ Check your Browserslist config to be sure that your targets are set up correctly
           date,
           category,
           activity,
-          genre
+          genre,
+          snacks: r[5] ? String(r[5]).trim() : "",
+          linkedSnacks: []
         });
       }
-      return entries;
+      // Fold same-visit concession rows into their parent movie visit row
+      const isVisit = (c) => {
+        const x = c.toLowerCase().trim();
+        return x === "movie" || x === "after 10pm";
+      };
+      const genericFood = ["food and beverage purchase", "web concession purchase", "food and beverage", "food and beverages", "concessions"];
+      const merged = [];
+      let lastVisit = null;
+      entries.forEach((e) => {
+        const c = e.category.toLowerCase().trim();
+        if (isVisit(e.category)) {
+          lastVisit = e;
+          merged.push(e);
+          return;
+        }
+        if ((c === "food" || c === "concessions") && lastVisit && (!e.date || e.date === lastVisit.date)) {
+          const detail = e.genre || (genericFood.includes(e.activity.toLowerCase().trim()) ? "" : e.activity);
+          lastVisit.linkedSnacks.push({ index_: e.index_, label: detail || "Snacks", detail, activity: e.activity });
+          return;
+        }
+        merged.push(e);
+      });
+      return merged;
     }, [rawRows]);
     const movieVisitsCount = (0, import_react4.useMemo)(() => {
       return activityLog.filter((e) => {
@@ -34245,25 +34271,36 @@ Check your Browserslist config to be sure that your targets are set up correctly
     const concessionStats = (0, import_react4.useMemo)(() => {
       const snackCounts = {};
       let foodVisits = 0;
+      const tally = (snackDetail) => {
+        if (!snackDetail) return;
+        const clean = snackDetail.toLowerCase().trim();
+        let normalized = snackDetail.trim();
+        if (clean.includes("milk dud"))
+          normalized = "Milk Duds";
+        else if (clean.includes("m&m"))
+          normalized = "M&M's";
+        else if (clean.includes("gummi"))
+          normalized = "Lifesaver Gummies";
+        else if (clean.includes("preztel") || clean.includes("pretzel"))
+          normalized = "Pretzel Bites";
+        else if (clean.includes("snack pack"))
+          normalized = "Snack Pack";
+        snackCounts[normalized] = (snackCounts[normalized] || 0) + 1;
+      };
+      const generic = ["food and beverage purchase", "web concession purchase", "food and beverage", "food and beverages"];
       activityLog.forEach((entry) => {
-        if (entry.category.toLowerCase() === "food") {
+        const c = entry.category.toLowerCase();
+        if (c === "food" || c === "concessions") {
           foodVisits++;
-          const snackDetail = entry.genre || (entry.activity.toLowerCase() !== "food and beverage purchase" && entry.activity.toLowerCase() !== "web concession purchase" && entry.activity.toLowerCase() !== "food and beverage" && entry.activity.toLowerCase() !== "food and beverages " ? entry.activity : "");
-          if (snackDetail) {
-            const clean = snackDetail.toLowerCase().trim();
-            let normalized = snackDetail.trim();
-            if (clean.includes("milk dud"))
-              normalized = "Milk Duds";
-            else if (clean.includes("m&m"))
-              normalized = "M&M's";
-            else if (clean.includes("gummi"))
-              normalized = "Lifesaver Gummies";
-            else if (clean.includes("preztel") || clean.includes("pretzel"))
-              normalized = "Pretzel Bites";
-            else if (clean.includes("snack pack"))
-              normalized = "Snack Pack";
-            snackCounts[normalized] = (snackCounts[normalized] || 0) + 1;
-          }
+          tally(entry.genre || (generic.includes(entry.activity.toLowerCase().trim()) ? "" : entry.activity));
+        }
+        (entry.linkedSnacks || []).forEach((s) => {
+          foodVisits++;
+          tally(s.detail);
+        });
+        if (entry.snacks) {
+          foodVisits++;
+          entry.snacks.split(",").map((s) => s.trim()).filter(Boolean).forEach(tally);
         }
       });
       const topSnacks = Object.entries(snackCounts).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
@@ -34297,10 +34334,12 @@ Check your Browserslist config to be sure that your targets are set up correctly
           const matchesGenre = item.genre.toLowerCase().includes(q);
           const matchesCat = item.category.toLowerCase().includes(q);
           const matchesDate = item.date.toLowerCase().includes(q);
-          if (!matchesTitle && !matchesGenre && !matchesCat && !matchesDate)
+          const snackText = ((item.snacks || "") + " " + (item.linkedSnacks || []).map((s) => s.label).join(" ")).toLowerCase();
+          if (!matchesTitle && !matchesGenre && !matchesCat && !matchesDate && !snackText.includes(q))
             return false;
         }
-        if (categoryFilter !== "ALL" && item.category.toLowerCase() !== categoryFilter.toLowerCase()) {
+        const hasSnacks = !!item.snacks || (item.linkedSnacks || []).length > 0;
+        if (categoryFilter !== "ALL" && item.category.toLowerCase() !== categoryFilter.toLowerCase() && !(categoryFilter.toLowerCase() === "food" && hasSnacks)) {
           return false;
         }
         if (genreFilter !== "ALL") {
@@ -34320,6 +34359,8 @@ Check your Browserslist config to be sure that your targets are set up correctly
       activityLog.forEach((a) => {
         if (a.category)
           set.add(a.category.trim());
+        if (a.snacks || (a.linkedSnacks || []).length > 0)
+          set.add("Food");
       });
       return Array.from(set);
     }, [activityLog]);
@@ -34347,12 +34388,15 @@ Check your Browserslist config to be sure that your targets are set up correctly
             autoMonth = MONTH_NAMES[mIdx];
         }
       }
+      const isVisitCat = ["movie", "after 10pm"].includes(String(newEntry.category).toLowerCase());
+      const snackStr = isVisitCat && newEntry.gotSnacks && newEntry.snacks ? newEntry.snacks.split(",").map((s) => s.trim()).filter(Boolean).join(", ") : "";
       insertItem(0, void 0, [
         autoMonth || void 0,
         newEntry.date || void 0,
         newEntry.category || void 0,
         newEntry.activity.trim(),
-        newEntry.genre ? newEntry.genre.trim() : void 0
+        newEntry.genre ? newEntry.genre.trim() : void 0,
+        snackStr || void 0
       ]);
       setIsAddModalOpen(false);
       setNewEntry({
@@ -34360,19 +34404,23 @@ Check your Browserslist config to be sure that your targets are set up correctly
         category: "Movie",
         activity: "",
         genre: "",
-        month: ""
+        month: "",
+        gotSnacks: false,
+        snacks: ""
       });
     };
     const handleEditSubmit = (e) => {
       e.preventDefault();
       if (!editingItem || !editingItem.activity.trim())
         return;
+      const editIsVisit = ["movie", "after 10pm"].includes(String(editingItem.category).toLowerCase());
       updateItem(0, editingItem.index_, [
         editingItem.month || void 0,
         editingItem.date || void 0,
         editingItem.category || void 0,
         editingItem.activity.trim(),
-        editingItem.genre ? editingItem.genre.trim() : void 0
+        editingItem.genre ? editingItem.genre.trim() : void 0,
+        editIsVisit && editingItem.snacks ? editingItem.snacks.split(",").map((s) => s.trim()).filter(Boolean).join(", ") : null
       ]);
       setEditingItem(null);
     };
@@ -34773,6 +34821,24 @@ Check your Browserslist config to be sure that your targets are set up correctly
           className: "bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium"
         },
         g.trim()
+      )), [...(entry.snacks ? entry.snacks.split(",").map((s) => s.trim()).filter(Boolean) : []), ...(entry.linkedSnacks || []).map((s) => s.label)].map((s, idx) => /* @__PURE__ */ import_react4.default.createElement(
+        "span",
+        {
+          key: "snk" + idx,
+          "data-snack-badge": "1",
+          className: "bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-[11px] font-semibold"
+        },
+        "\u{1F37F} ",
+        s
+      ))) : (entry.snacks || (entry.linkedSnacks || []).length) ? /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex flex-wrap gap-1" }, [...(entry.snacks ? entry.snacks.split(",").map((s) => s.trim()).filter(Boolean) : []), ...(entry.linkedSnacks || []).map((s) => s.label)].map((s, idx) => /* @__PURE__ */ import_react4.default.createElement(
+        "span",
+        {
+          key: "snk" + idx,
+          "data-snack-badge": "1",
+          className: "bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-[11px] font-semibold"
+        },
+        "\u{1F37F} ",
+        s
       ))) : /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-slate-400 italic" }, "\u2014")),
       /* @__PURE__ */ import_react4.default.createElement("td", { className: "py-3 px-4 text-right whitespace-nowrap" }, isAdmin ? /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity" }, /* @__PURE__ */ import_react4.default.createElement(
         "button",
@@ -34838,7 +34904,14 @@ Check your Browserslist config to be sure that your targets are set up correctly
         onChange: (e) => setNewEntry(__spreadProps(__spreadValues({}, newEntry), { genre: e.target.value })),
         className: "w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500 font-medium"
       }
-    )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
+    )), ["movie", "after 10pm"].includes(String(newEntry.category).toLowerCase()) && /* @__PURE__ */ import_react4.default.createElement("div", { id: "snack-section", className: "rounded-xl border border-amber-200 bg-amber-50/60 p-3 space-y-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center justify-between" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "text-xs font-bold text-amber-900 uppercase tracking-wider" }, "\u{1F37F} Did you get snacks?"), /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex gap-1.5" }, /* @__PURE__ */ import_react4.default.createElement("button", { type: "button", id: "snack-yes", onClick: () => setNewEntry(__spreadProps(__spreadValues({}, newEntry), { gotSnacks: true })), className: "px-3 py-1 text-xs font-bold rounded-lg border " + (newEntry.gotSnacks ? "bg-amber-500 text-white border-amber-500" : "bg-white text-amber-800 border-amber-300") }, "Yes"), /* @__PURE__ */ import_react4.default.createElement("button", { type: "button", id: "snack-no", onClick: () => setNewEntry(__spreadProps(__spreadValues({}, newEntry), { gotSnacks: false, snacks: "" })), className: "px-3 py-1 text-xs font-bold rounded-lg border " + (!newEntry.gotSnacks ? "bg-slate-700 text-white border-slate-700" : "bg-white text-slate-600 border-slate-300") }, "No"))), newEntry.gotSnacks && /* @__PURE__ */ import_react4.default.createElement("input", {
+      type: "text",
+      id: "snack-input",
+      placeholder: "e.g., Pretzel Bites, Mozz Sticks, Popcorn",
+      value: newEntry.snacks,
+      onChange: (e) => setNewEntry(__spreadProps(__spreadValues({}, newEntry), { snacks: e.target.value })),
+      className: "w-full text-sm bg-white border border-amber-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 font-medium"
+    })), /* @__PURE__ */ import_react4.default.createElement("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         type: "button",
@@ -34898,7 +34971,14 @@ Check your Browserslist config to be sure that your targets are set up correctly
         onChange: (e) => setEditingItem(__spreadProps(__spreadValues({}, editingItem), { genre: e.target.value })),
         className: "w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500 font-medium"
       }
-    )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
+    )), ["movie", "after 10pm"].includes(String(editingItem.category).toLowerCase()) && /* @__PURE__ */ import_react4.default.createElement("div", { className: "rounded-xl border border-amber-200 bg-amber-50/60 p-3 space-y-1.5" }, /* @__PURE__ */ import_react4.default.createElement("label", { className: "block text-xs font-bold text-amber-900 uppercase tracking-wider" }, "\u{1F37F} Snacks (comma separated)"), /* @__PURE__ */ import_react4.default.createElement("input", {
+      type: "text",
+      id: "edit-snack-input",
+      placeholder: "Leave blank if no snacks",
+      value: editingItem.snacks || "",
+      onChange: (e) => setEditingItem(__spreadProps(__spreadValues({}, editingItem), { snacks: e.target.value })),
+      className: "w-full text-sm bg-white border border-amber-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 font-medium"
+    }), (editingItem.linkedSnacks || []).length > 0 && /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-[11px] text-amber-800" }, "Also attached from older log: ", editingItem.linkedSnacks.map((s) => s.label).join(", "))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         type: "button",
@@ -36427,8 +36507,9 @@ Check your Browserslist config to be sure that your targets are set up correctly
         const cat = r[2] ? String(r[2]).trim().toLowerCase() : "";
         const act = r[3] ? String(r[3]).trim() : "";
         const gen = r[4] ? String(r[4]).trim() : "";
+        const snacks = r[5] ? String(r[5]).trim() : "";
         if (date || cat || act || gen) {
-          activities.push({ date, cat, act, gen });
+          activities.push({ date, cat, act, gen, snacks });
         }
       }
 
@@ -36460,6 +36541,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
           if (genres.includes("comedy")) comedyCount++;
           if (genres.includes("drama")) dramaCount++;
           if (genres.includes("horror")) horrorCount++;
+          if (a.snacks) concessionCount++;
         } else if (a.cat === "food" || a.cat === "concessions") {
           concessionCount++;
         }
@@ -36526,6 +36608,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
         target.row[2] = rowArray[2] !== undefined ? rowArray[2] : target.row[2];
         target.row[3] = rowArray[3] !== undefined ? rowArray[3] : target.row[3];
         target.row[4] = rowArray[4] !== undefined ? rowArray[4] : target.row[4];
+        if (rowArray.length > 5) target.row[5] = rowArray[5] || null;
         sheet.data = recalculateMetrics(sheet.data);
         saveState(cloned);
         showToast("Activity entry updated successfully!");
@@ -36561,7 +36644,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
           rowArray[2] || null,
           rowArray[3] || null,
           rowArray[4] || null,
-          null,
+          rowArray[5] || null,
           null,
           null
         ]
