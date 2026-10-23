@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.228] - 2026-10-23
+
+### What's New
+- Old snack entries merge into visits on edit.
+- Snacker quest never double counts merged snacks.
+
 ## [4.9.227] - 2026-10-23
 
 ### What's New

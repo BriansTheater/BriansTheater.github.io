@@ -34421,7 +34421,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
         editingItem.activity.trim(),
         editingItem.genre ? editingItem.genre.trim() : void 0,
         editIsVisit && editingItem.snacks ? editingItem.snacks.split(",").map((s) => s.trim()).filter(Boolean).join(", ") : null
-      ]);
+      ], editIsVisit ? (editingItem.linkedSnacks || []).map((s) => s.index_) : void 0);
       setEditingItem(null);
     };
     const handleDeleteConfirm = () => {
@@ -34843,7 +34843,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
       /* @__PURE__ */ import_react4.default.createElement("td", { className: "py-3 px-4 text-right whitespace-nowrap" }, isAdmin ? /* @__PURE__ */ import_react4.default.createElement("div", { className: "flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity" }, /* @__PURE__ */ import_react4.default.createElement(
         "button",
         {
-          onClick: () => setEditingItem(__spreadValues({}, entry)),
+          onClick: () => setEditingItem(__spreadProps(__spreadValues({}, entry), { snacks: [...(entry.snacks ? entry.snacks.split(",").map((s) => s.trim()).filter(Boolean) : []), ...(entry.linkedSnacks || []).map((s) => s.label)].join(", ") })),
           className: "p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors",
           title: "Edit Row"
         },
@@ -34978,7 +34978,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
       value: editingItem.snacks || "",
       onChange: (e) => setEditingItem(__spreadProps(__spreadValues({}, editingItem), { snacks: e.target.value })),
       className: "w-full text-sm bg-white border border-amber-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 font-medium"
-    }), (editingItem.linkedSnacks || []).length > 0 && /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-[11px] text-amber-800" }, "Also attached from older log: ", editingItem.linkedSnacks.map((s) => s.label).join(", "))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
+    }), (editingItem.linkedSnacks || []).length > 0 && /* @__PURE__ */ import_react4.default.createElement("p", { id: "merge-note", className: "text-[11px] text-amber-800" }, "Older snack entries will be merged into this visit on save.")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5" }, /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         type: "button",
@@ -36594,7 +36594,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
       return rows;
     };
 
-    const updateItem = (rangeIndex_, rowIndex_, rowArray) => {
+    const updateItem = (rangeIndex_, rowIndex_, rowArray, mergeDeleteIndexes) => {
       if (!isAdmin) {
         showToast("Editing locked. Please sign in with an authorized Google admin account.");
         return;
@@ -36603,6 +36603,10 @@ Check your Browserslist config to be sure that your targets are set up correctly
       const sheet = cloned[0];
       const target = sheet.data.find(d => d.index_ === rowIndex_);
       if (target) {
+        // Atomically remove legacy concession rows merged into this visit (prevents double counting)
+        if (Array.isArray(mergeDeleteIndexes) && mergeDeleteIndexes.length) {
+          sheet.data = sheet.data.filter(d => d.index_ === rowIndex_ || !mergeDeleteIndexes.includes(d.index_));
+        }
         target.row[0] = rowArray[0] !== undefined ? rowArray[0] : target.row[0];
         target.row[1] = rowArray[1] !== undefined ? rowArray[1] : target.row[1];
         target.row[2] = rowArray[2] !== undefined ? rowArray[2] : target.row[2];
