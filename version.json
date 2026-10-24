@@ -1,9 +1,10 @@
 {
-  "version": "4.9.228",
+  "version": "4.9.229",
   "releaseDate": "2026-10-23",
-  "title": "Brian's Theater v4.9.228",
+  "title": "Brian's Theater v4.9.229",
   "notes": [
-    "Old snack entries merge into visits on edit.",
-    "Snacker quest never double counts merged snacks."
+    "Added Other menu tab for TV and movie projects.",
+    "Featured Cinemark 2026 Tracker inside Other projects hub.",
+    "Added quick return link from Cinemark to Theater."
   ]
 }

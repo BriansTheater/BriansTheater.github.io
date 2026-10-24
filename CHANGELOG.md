@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.229] - 2026-10-23
+
+### What's New
+- Added Other menu tab for TV and movie projects.
+- Featured Cinemark 2026 Tracker inside Other projects hub.
+- Added quick return link from Cinemark to Theater.
+
 ## [4.9.228] - 2026-10-23
 
 ### What's New

@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.228 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.229 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -411,6 +411,11 @@
         <button onclick="switchTab('plex')" id="nav-plex" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
           <span id="navIcon-plex">🎟️</span>
           <span id="navLabel-plex">Plex VIP</span>
+        </button>
+
+        <button onclick="switchTab('other')" id="nav-other" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
+          <span id="navIcon-other">🍿</span>
+          <span id="navLabel-other">Other</span>
         </button>
       </div>
     </nav>
@@ -1298,6 +1303,90 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- TAB 5B: 🍿 OTHER TV & MOVIE PROJECTS -->
+    <div id="view-other" class="tab-view hidden flex flex-col gap-6 max-w-4xl mx-auto w-full py-2">
+      <!-- Top Header Banner -->
+      <div class="rounded-3xl bg-gradient-to-r from-red-950/90 via-slate-900 to-amber-950/80 border border-red-500/30 p-5 sm:p-7 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-red-500/10 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div class="space-y-1.5">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300 border border-amber-400/30">
+              <span>🎬</span> <span>TV &amp; Movie Side Projects</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">Other Cinema &amp; TV Projects</h2>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-2xl">
+              Explore theater trackers, movie logs, and TV companion apps built alongside Brian's Theater.
+            </p>
+          </div>
+          <span class="self-start sm:self-center text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-950/80 text-emerald-300 border border-emerald-500/30">
+            1 Active Project
+          </span>
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Project 1: Cinemark 2026 Tracker -->
+        <div id="project-card-cinemark" class="rounded-3xl bg-gradient-to-b from-slate-900/95 to-slate-950/95 border border-red-500/30 hover:border-amber-400/50 p-6 shadow-xl flex flex-col justify-between gap-5 transition-all group">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center text-2xl shadow-lg ring-2 ring-amber-400/30 shrink-0">
+                  🍿
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="text-base sm:text-lg font-black text-white">Cinemark 2026 Tracker</h3>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                      ⭐ Platinum
+                    </span>
+                  </div>
+                  <p class="text-xs text-red-300 font-medium">Movie Club &amp; Concessions Cinema Odyssey</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0">
+                Live
+              </span>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Full 2026 theater visit log tracking Movie Club Platinum progress, grouped visit snacks &amp; concessions, genre quests, and monthly attendance trends.
+            </p>
+
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-950/90 text-slate-300 border border-slate-800 font-medium">🎟️ Movie Visits</span>
+              <span class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-950/90 text-amber-300 border border-amber-500/20 font-medium">🍿 Grouped Snacks</span>
+              <span class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-950/90 text-rose-300 border border-rose-500/20 font-medium">🏆 Club Quests</span>
+              <span class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-950/90 text-sky-300 border border-sky-500/20 font-medium">📊 2026 Trends</span>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center gap-2.5">
+            <a href="cinemark/" id="btnOpenCinemarkTracker" class="flex-1 py-3 px-4 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-red-600 via-rose-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2">
+              <span>🎬 Open Cinemark Tracker</span>
+              <span>&rarr;</span>
+            </a>
+            <a href="cinemark/" target="_blank" rel="noopener noreferrer" title="Open in new tab" class="py-3 px-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold transition">
+              ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Placeholder Card for Future TV / Movie Projects -->
+        <div class="rounded-3xl bg-slate-900/40 border border-dashed border-slate-800 p-6 flex flex-col items-center justify-center text-center gap-3 min-h-[220px]">
+          <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-xl text-slate-500">
+            📺
+          </div>
+          <div class="space-y-1 max-w-xs">
+            <h3 class="text-sm font-bold text-slate-300">More TV &amp; Movie Projects Coming Soon</h3>
+            <p class="text-xs text-slate-500">
+              Future watchlists, series trackers, and interactive cinema tools will appear right here.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- TAB 6: 👑 ADMIN PORTAL -->
@@ -2428,6 +2517,11 @@
             <span id="sidebarNavIcon-plex" class="text-sm group-hover:scale-110 transition-transform">🎟️</span>
             <span id="sidebarNavLabel-plex" class="flex-1">Plex VIP</span>
             <span class="text-[10px] text-slate-500 font-mono">VIP</span>
+          </button>
+          <button id="sidebarNav-other" onclick="switchTab('other'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
+            <span id="sidebarNavIcon-other" class="text-sm group-hover:scale-110 transition-transform">🍿</span>
+            <span id="sidebarNavLabel-other" class="flex-1">Other</span>
+            <span class="text-[10px] text-slate-500 font-mono">Projects</span>
           </button>
           <button id="sidebarNavAdmin" onclick="switchTab('admin'); toggleSidebar(false);" class="hidden w-full text-left px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-2.5 group">
             <span class="text-sm group-hover:scale-110 transition-transform">👑</span>
@@ -3943,7 +4037,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.228";
+    const APP_VERSION = "4.9.229";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5061,6 +5155,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.229": [
+        "Added Other menu tab for TV and movie projects.",
+        "Featured Cinemark 2026 Tracker inside Other projects hub.",
+        "Added quick return link from Cinemark to Theater."
+      ],
       "4.9.228": [
         "Old snack entries merge into visits on edit.",
         "Snacker quest never double counts merged snacks."
@@ -5642,7 +5741,7 @@
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
-      const allViews = ['screening', 'schedule', 'vault', 'requests', 'plex', 'admin'];
+      const allViews = ['screening', 'schedule', 'vault', 'requests', 'plex', 'other', 'admin'];
       allViews.forEach(tab => {
         const view = document.getElementById(`view-${tab}`);
         const btn = document.getElementById(`nav-${tab}`);
@@ -6482,12 +6581,12 @@
 
       // 2c. Navigation Tab Buttons Icons & Clean Preserved Labels
       const navIcons = {
-        halloween: { screening: '🎃', schedule: '💀', vault: '⚰️', requests: '🍬', plex: '🎟️' },
-        christmas: { screening: '🎬', schedule: '📅', vault: '🎁', requests: '📜', plex: '🎟️' },
-        default:   { screening: '🎬', schedule: '📅', vault: '🔍', requests: '📝', plex: '🎟️' }
+        halloween: { screening: '🎃', schedule: '💀', vault: '⚰️', requests: '🍬', plex: '🎟️', other: '🍿' },
+        christmas: { screening: '🎬', schedule: '📅', vault: '🎁', requests: '📜', plex: '🎟️', other: '🍿' },
+        default:   { screening: '🎬', schedule: '📅', vault: '🔍', requests: '📝', plex: '🎟️', other: '🍿' }
       };
       const curIcons = navIcons[theme] || navIcons.default;
-      const tabKeys = ['screening', 'schedule', 'vault', 'requests', 'plex'];
+      const tabKeys = ['screening', 'schedule', 'vault', 'requests', 'plex', 'other'];
       tabKeys.forEach(k => {
         const iconEl = document.getElementById(`navIcon-${k}`);
         if (iconEl) iconEl.textContent = curIcons[k];
@@ -18074,7 +18173,7 @@ Enjoy the show! 🎬✨`;
     // Support URL parameters (?tab=plex or #plex)
     try {
       const urlTab = new URLSearchParams(window.location.search).get('tab') || window.location.hash.replace('#', '');
-      if (urlTab && ['screening', 'schedule', 'vault', 'requests', 'plex', 'admin'].includes(urlTab)) {
+      if (urlTab && ['screening', 'schedule', 'vault', 'requests', 'plex', 'other', 'admin'].includes(urlTab)) {
         switchTab(urlTab);
       }
     } catch (e) {}
