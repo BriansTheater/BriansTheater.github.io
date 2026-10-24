@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.229 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.230 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -414,7 +414,7 @@
         </button>
 
         <button onclick="switchTab('other')" id="nav-other" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition flex items-center gap-2">
-          <span id="navIcon-other">🍿</span>
+          <span id="navIcon-other">🧟‍♂️</span>
           <span id="navLabel-other">Other</span>
         </button>
       </div>
@@ -2519,7 +2519,7 @@
             <span class="text-[10px] text-slate-500 font-mono">VIP</span>
           </button>
           <button id="sidebarNav-other" onclick="switchTab('other'); toggleSidebar(false);" class="w-full text-left px-3 py-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-800/80 text-xs font-semibold transition flex items-center gap-2.5 group">
-            <span id="sidebarNavIcon-other" class="text-sm group-hover:scale-110 transition-transform">🍿</span>
+            <span id="sidebarNavIcon-other" class="text-sm group-hover:scale-110 transition-transform">🧟‍♂️</span>
             <span id="sidebarNavLabel-other" class="flex-1">Other</span>
             <span class="text-[10px] text-slate-500 font-mono">Projects</span>
           </button>
@@ -4037,7 +4037,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.229";
+    const APP_VERSION = "4.9.230";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5155,6 +5155,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.230": [
+        "Updated Other menu icon from popcorn to zombie."
+      ],
       "4.9.229": [
         "Added Other menu tab for TV and movie projects.",
         "Featured Cinemark 2026 Tracker inside Other projects hub.",
@@ -6581,9 +6584,9 @@
 
       // 2c. Navigation Tab Buttons Icons & Clean Preserved Labels
       const navIcons = {
-        halloween: { screening: '🎃', schedule: '💀', vault: '⚰️', requests: '🍬', plex: '🎟️', other: '🍿' },
-        christmas: { screening: '🎬', schedule: '📅', vault: '🎁', requests: '📜', plex: '🎟️', other: '🍿' },
-        default:   { screening: '🎬', schedule: '📅', vault: '🔍', requests: '📝', plex: '🎟️', other: '🍿' }
+        halloween: { screening: '🎃', schedule: '💀', vault: '⚰️', requests: '🍬', plex: '🎟️', other: '🧟‍♂️' },
+        christmas: { screening: '🎬', schedule: '📅', vault: '🎁', requests: '📜', plex: '🎟️', other: '🧟‍♂️' },
+        default:   { screening: '🎬', schedule: '📅', vault: '🔍', requests: '📝', plex: '🎟️', other: '🧟‍♂️' }
       };
       const curIcons = navIcons[theme] || navIcons.default;
       const tabKeys = ['screening', 'schedule', 'vault', 'requests', 'plex', 'other'];

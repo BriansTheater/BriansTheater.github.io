@@ -1,5 +1,10 @@
 # Changelog
  
+## [4.9.230] - 2026-10-23
+
+### What's New
+- Updated Other menu icon from popcorn to zombie.
+
 ## [4.9.229] - 2026-10-23
 
 ### What's New
