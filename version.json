@@ -1,11 +1,10 @@
 {
-  "version": "4.9.231",
+  "version": "4.9.232",
   "releaseDate": "2026-10-25",
-  "title": "Brian's Theater v4.9.231",
+  "title": "Brian's Theater v4.9.232",
   "notes": [
-    "Isolated past movies catalog from live schedule stream.",
-    "Reduced real-time live data bandwidth by 92 percent.",
-    "Public archive endpoint speeds up movie vault browsing.",
-    "Live schedule and requests update lighter and faster."
+    "Smart fallback polling saves bandwidth on Twitch overlay.",
+    "Twitch overlay stays connected with virtually zero idle bandwidth.",
+    "Real-time stream automatically pauses redundant background requests."
   ]
 }

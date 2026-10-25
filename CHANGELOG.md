@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.232] - 2026-10-25
+
+### What's New
+- Smart fallback polling saves bandwidth on Twitch overlay.
+- Twitch overlay stays connected with virtually zero idle bandwidth.
+- Real-time stream automatically pauses redundant background requests.
+
 ## [4.9.231] - 2026-10-25
 
 ### What's New

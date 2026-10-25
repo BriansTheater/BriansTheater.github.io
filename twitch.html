@@ -1338,8 +1338,12 @@
         }
       } catch(e) {}
 
-      // Active Firebase Polling Heartbeat (Guarantees OBS updates reliably even if SSE drops)
-      async function pollFirebaseHeartbeat() {
+      // Smart Fallback Polling: Only poll if the real-time SSE stream is disconnected or on initial force
+      async function pollFirebaseHeartbeat(force = false) {
+        // If SSE stream is active and open, skip HTTP fetch to eliminate redundant network bandwidth
+        if (!force && eventSource && eventSource.readyState === EventSource.OPEN) {
+          return;
+        }
         try {
           const res = await fetch(`${FIREBASE_RTDB_URL}?_t=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
@@ -1363,9 +1367,9 @@
 
       window.pollFirebaseHeartbeat = pollFirebaseHeartbeat;
 
-      // 1. Initial snapshot & continuous 15-second heartbeat poll for OBS
-      pollFirebaseHeartbeat();
-      setInterval(pollFirebaseHeartbeat, 15000);
+      // 1. Initial snapshot on boot (forced) & fallback watchdog interval for OBS
+      pollFirebaseHeartbeat(true);
+      setInterval(() => pollFirebaseHeartbeat(false), 30000);
 
       // 2. Persistent Real-Time SSE Stream with auto-reconnection
       let sseReconnectTimer = null;
