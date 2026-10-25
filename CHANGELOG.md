@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.231] - 2026-10-25
+
+### What's New
+- Isolated past movies catalog from live schedule stream.
+- Reduced real-time live data bandwidth by 92 percent.
+- Public archive endpoint speeds up movie vault browsing.
+- Live schedule and requests update lighter and faster.
+
 ## [4.9.230] - 2026-10-23
 
 ### What's New

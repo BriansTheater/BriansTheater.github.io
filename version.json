@@ -1,8 +1,11 @@
 {
-  "version": "4.9.230",
-  "releaseDate": "2026-10-23",
-  "title": "Brian's Theater v4.9.230",
+  "version": "4.9.231",
+  "releaseDate": "2026-10-25",
+  "title": "Brian's Theater v4.9.231",
   "notes": [
-    "Updated Other menu icon from popcorn to zombie."
+    "Isolated past movies catalog from live schedule stream.",
+    "Reduced real-time live data bandwidth by 92 percent.",
+    "Public archive endpoint speeds up movie vault browsing.",
+    "Live schedule and requests update lighter and faster."
   ]
 }

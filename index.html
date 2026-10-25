@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.230 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.231 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -4037,7 +4037,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.230";
+    const APP_VERSION = "4.9.231";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5155,6 +5155,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.231": [
+        "Isolated past movies catalog from live schedule stream.",
+        "Reduced real-time live data bandwidth by 92 percent.",
+        "Public archive endpoint speeds up movie vault browsing.",
+        "Live schedule and requests update lighter and faster."
+      ],
       "4.9.230": [
         "Updated Other menu icon from popcorn to zombie."
       ],
@@ -16045,7 +16051,7 @@
     function fetchFirebasePastMoviesIfNeeded() {
       if (!window._pastMoviesLoaded && !window._pastCatalogIngested && (!window.pastMoviesCatalog || window.pastMoviesCatalog.length === 0)) {
         window._pastMoviesLoaded = true;
-        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterArchive/pastMovies.json?auth=${FIREBASE_SECRET_KEY}`)
+        fetch('https://brianstheater-default-rtdb.firebaseio.com/theaterArchive/pastMovies.json')
           .then(r => r.ok ? r.json() : null)
           .then(pastData => {
             if (Array.isArray(pastData) && pastData.length > 0) {

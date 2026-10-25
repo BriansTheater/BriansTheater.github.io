@@ -10,6 +10,10 @@
       ".read": true,
       ".write": false
     },
+    "theaterArchive": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
+    },
     "theaterSync": {
       ".read": true,
       ".write": false,
@@ -69,10 +73,6 @@
         ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
       },
       "cinema": {
-        ".read": true,
-        ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
-      },
-      "pastMovies": {
         ".read": true,
         ".write": "auth != null && (auth.token.email == 'briandivacox@gmail.com' || auth.token.email == 'brian@brianstheater.com' || auth.token.email == 'brian.diva.cox@gmail.com')"
       }
