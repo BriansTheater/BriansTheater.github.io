@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.233] - 2026-10-26
+
+### What's New
+- Kept poster artwork visible for TV shows on Twitch.
+- Fixed unavailable trailer black screen during TV episodes.
+
 ## [4.9.232] - 2026-10-25
 
 ### What's New

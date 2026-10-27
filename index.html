@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.232 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.233 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -4037,7 +4037,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.232";
+    const APP_VERSION = "4.9.233";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5155,6 +5155,10 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.233": [
+        "Kept poster artwork visible for TV shows on Twitch.",
+        "Fixed unavailable trailer black screen during TV episodes."
+      ],
       "4.9.232": [
         "Smart fallback polling saves bandwidth on Twitch overlay.",
         "Twitch overlay stays connected with virtually zero idle bandwidth.",

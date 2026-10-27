@@ -653,6 +653,14 @@
       "It (1990)": "https://image.tmdb.org/t/p/w780/4ybQ6gopB3H3cu0seVZLznDnIKo.jpg",
       "AHS": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
       "AHS: s13": "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg",
+      "AHS: s13 e1: 13": "https://image.tmdb.org/t/p/w780/wfb7vJKwZSIlOOf2XjpsTml51yr.jpg",
+      "AHS: s13 e2: 1:13am": "https://image.tmdb.org/t/p/w780/xU7JkiSxhlAKhwUIr97UTWtTC4V.jpg",
+      "AHS: s13 e3: Rauhnacht": "https://image.tmdb.org/t/p/w780/8eB9BfAgDHEBEe9XyVMoSMRNLxs.jpg",
+      "AHS: s13 e4: Is that all there is?": "https://image.tmdb.org/t/p/w780/paVDNqH4sxnArq2lrQKZLF5i9ve.jpg",
+      "AHS: s13 e5: Date Night": "https://image.tmdb.org/t/p/w780/7Cv1mDRjd55CRZBvjOBMZs4vvIO.jpg",
+      "AHS: s13 e6: The return of devils night": "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg",
+      "AHS: s13 e7: The Baddest Witch Of Them All": "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg",
+      "AHS: s13 e8: Hell No": "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg",
       "AHS: s13 e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
       "AHS: s13e9: the devils is in the Details": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
       "American Horror Story: Season 13, Episode 9": "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
@@ -739,6 +747,14 @@
       if (verifiedResult) return verifiedResult;
 
       if (isAhsTitle) {
+        if (queryEp === 1) return "https://image.tmdb.org/t/p/w780/wfb7vJKwZSIlOOf2XjpsTml51yr.jpg";
+        if (queryEp === 2 || lower.includes('1:13')) return "https://image.tmdb.org/t/p/w780/xU7JkiSxhlAKhwUIr97UTWtTC4V.jpg";
+        if (queryEp === 3 || lower.includes('rauhnacht')) return "https://image.tmdb.org/t/p/w780/8eB9BfAgDHEBEe9XyVMoSMRNLxs.jpg";
+        if (queryEp === 4 || lower.includes('all there is')) return "https://image.tmdb.org/t/p/w780/paVDNqH4sxnArq2lrQKZLF5i9ve.jpg";
+        if (queryEp === 5 || lower.includes('date night')) return "https://image.tmdb.org/t/p/w780/7Cv1mDRjd55CRZBvjOBMZs4vvIO.jpg";
+        if (queryEp === 6 || lower.includes('devils night')) return "https://image.tmdb.org/t/p/w780/f54ILFj4vpwCHbGpMew57t3smC8.jpg";
+        if (queryEp === 7 || lower.includes('baddest witch')) return "https://image.tmdb.org/t/p/w780/iKGmB50jxr6g8IxA8PP0GqfeXWi.jpg";
+        if (queryEp === 8 || lower.includes('hell no')) return "https://image.tmdb.org/t/p/w780/yCkPLQ10qKIUgRBXmQVVMF1h96d.jpg";
         if (queryEp === 9 || lower.includes('details')) return "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg";
         if (queryEp === 10 || lower.includes('prodigal')) return "https://image.tmdb.org/t/p/w780/s8Nbz8ok2v3Uw5sRwSC6eWJLX25.jpg";
         if (queryEp === 11 || lower.includes('madison')) return "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg";
@@ -748,6 +764,18 @@
       }
 
       return '';
+    }
+
+    function isTvShowTitle(title, item) {
+      if (item && (item.type === 'tv' || item.category === 'tv' || item.isTv === true)) return true;
+      if (!title) return false;
+      const clean = String(title).replace(/^[🎬🎭🎞️🍿📽️📺\s]+/, '').trim();
+      if (!clean) return false;
+      if (/\b(?:ahs|american\s+horror\s+story)\b/i.test(clean)) return true;
+      if (/\bs\d+\s*e\d+\b/i.test(clean)) return true;
+      if (/\bseason\s*\d+/i.test(clean) || /\b(?:ep|episode)\s*\d+/i.test(clean)) return true;
+      if (/\b\d+x\d+\b/i.test(clean)) return true;
+      return false;
     }
 
     function isMovieConcluded(item, now = Date.now()) {
@@ -818,7 +846,7 @@
     };
 
     function getTrailerIdForTitle(title, customTrailers) {
-      if (!title) return '';
+      if (!title || isTvShowTitle(title)) return '';
       const clean = title.replace(/^🎬\s*/, '').trim();
       if (customTrailers && customTrailers[clean]) {
         const val = customTrailers[clean];
@@ -840,19 +868,18 @@
       if (lower.includes('kill you')) return 's0PGrtw0X1Q';
       if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
       if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
-      if (lower.includes('ahs') || lower.includes('american horror')) return '-9KfZwbvdvU';
       if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
       return '';
     }
 
     // Active state model (Initial seed synchronized with main stage)
     let activeMovie = {
-      title: "AHS: s13 e9: the devils is in the Details",
-      startMs: 1792634400000,
-      endMs: 1792636380000,
-      posterUrl: "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg",
-      trailerId: "-9KId5kYpgg",
-      showtimeText: "Wednesday, Oct 21, 2026 • 7:00 PM PST",
+      title: "AHS: s13 e11: Madison Happy Ending",
+      startMs: 1793066400000,
+      endMs: 1793068380000,
+      posterUrl: "https://image.tmdb.org/t/p/w780/8WSvZ7qd68ykH6ev0RvrBy8vb5b.jpg",
+      trailerId: "",
+      showtimeText: "Monday, Oct 26, 2026 • 7:00 PM PST",
       isNowPlaying: false,
       doorMode: "auto",
       isPosterError: false
@@ -865,6 +892,9 @@
         const cached = JSON.parse(cachedMovieStr);
         if (cached && cached.title && cached.posterUrl) {
           Object.assign(activeMovie, cached);
+          if (isTvShowTitle(activeMovie.title, activeMovie)) {
+            activeMovie.trailerId = '';
+          }
         }
       }
     } catch(e) {}
@@ -933,14 +963,23 @@
           screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-400 uppercase";
         }
 
-        // Live Cinema Trailer Replay in place of Poster
-        const trailerId = activeMovie.trailerId || getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers);
+        // Live Cinema Trailer Replay in place of Poster (Movies only — TV shows keep poster image)
+        const isTv = isTvShowTitle(activeMovie.title, activeMovie);
+        const trailerId = isTv ? '' : (activeMovie.trailerId || getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers));
         if (trailerId && heroTrailer && heroTrailerFrame) {
           heroTrailer.classList.remove('hidden');
           if (heroPoster) heroPoster.classList.add('hidden');
           const desiredSrc = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailerId)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(trailerId)}&rel=0&modestbranding=1&controls=1`;
           if (heroTrailerFrame.src !== desiredSrc) {
             heroTrailerFrame.src = desiredSrc;
+          }
+        } else {
+          if (heroTrailer && !heroTrailer.classList.contains('hidden')) {
+            heroTrailer.classList.add('hidden');
+            if (heroTrailerFrame) heroTrailerFrame.src = "";
+          }
+          if (heroPoster && heroPoster.classList.contains('hidden')) {
+            heroPoster.classList.remove('hidden');
           }
         }
         return;
@@ -1243,13 +1282,16 @@
           activeMovie.isPosterError = true;
         }
 
-        let resolvedTrailer = target.trailerId;
-        if (!resolvedTrailer && target.trailerUrl) {
-          const m = String(target.trailerUrl).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
-          if (m) resolvedTrailer = m[1];
-        }
-        if (!resolvedTrailer) {
-          resolvedTrailer = getTrailerIdForTitle(activeMovie.title, merged.movieTrailers);
+        let resolvedTrailer = '';
+        if (!isTvShowTitle(activeMovie.title, target)) {
+          resolvedTrailer = target.trailerId;
+          if (!resolvedTrailer && target.trailerUrl) {
+            const m = String(target.trailerUrl).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
+            if (m) resolvedTrailer = m[1];
+          }
+          if (!resolvedTrailer) {
+            resolvedTrailer = getTrailerIdForTitle(activeMovie.title, merged.movieTrailers);
+          }
         }
         activeMovie.trailerId = resolvedTrailer || '';
 
@@ -1291,7 +1333,9 @@
       if (payload.startMs || payload.targetMs) activeMovie.startMs = payload.startMs || payload.targetMs;
       if (payload.doorMode) activeMovie.doorMode = payload.doorMode;
       if (payload.partyUrl) activeMovie.partyUrl = payload.partyUrl;
-      if (payload.trailerId) {
+      if (isTvShowTitle(activeMovie.title, payload)) {
+        activeMovie.trailerId = '';
+      } else if (payload.trailerId) {
         activeMovie.trailerId = payload.trailerId;
       } else if (payload.trailerUrl) {
         const m = String(payload.trailerUrl).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
@@ -1319,8 +1363,10 @@
                 event.data.titles.forEach(t => { mapUpdate[t] = event.data.imageUrl; });
                 applySyncPayload({ moviePosters: mapUpdate });
               } else if (event.data.type === 'stage_trailer_update' && event.data.trailerId) {
-                activeMovie.trailerId = event.data.trailerId;
-                renderMovieState();
+                if (!isTvShowTitle(activeMovie.title, activeMovie)) {
+                  activeMovie.trailerId = event.data.trailerId;
+                  renderMovieState();
+                }
               } else if ((event.data.type === 'party_url_update' || event.data.type === 'enter_button_update') && event.data.partyUrl) {
                 activeMovie.partyUrl = event.data.partyUrl;
                 updateCountdown();
@@ -2158,7 +2204,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.230";
+    const TWITCH_OVERLAY_VERSION = "4.9.233";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

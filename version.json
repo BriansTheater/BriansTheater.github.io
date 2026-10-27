@@ -1,10 +1,9 @@
 {
-  "version": "4.9.232",
-  "releaseDate": "2026-10-25",
-  "title": "Brian's Theater v4.9.232",
+  "version": "4.9.233",
+  "releaseDate": "2026-10-26",
+  "title": "Brian's Theater v4.9.233",
   "notes": [
-    "Smart fallback polling saves bandwidth on Twitch overlay.",
-    "Twitch overlay stays connected with virtually zero idle bandwidth.",
-    "Real-time stream automatically pauses redundant background requests."
+    "Kept poster artwork visible for TV shows on Twitch.",
+    "Fixed unavailable trailer black screen during TV episodes."
   ]
 }
