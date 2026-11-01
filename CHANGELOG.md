@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.235] - 2026-11-01
+
+### What's New
+- Reconfigured VIP signup pipeline for new BDC-SERVER Plex server.
+- Updated portal setup guidance to highlight Brians Theater server.
+- Synchronized live access for all active theater patrons.
+
 ## [4.9.234] - 2026-10-31
 
 ### What's New

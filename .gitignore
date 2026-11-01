@@ -4,6 +4,7 @@ dist/
 dist-ssr/
 build/
 .cache/
+.firebase/
 
 # Environment, Secrets & Credentials
 .env

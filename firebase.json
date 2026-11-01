@@ -1,5 +1,21 @@
 {
   "database": {
     "rules": "database.rules.json"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "database.rules.json",
+      "**/.*",
+      "**/node_modules/**",
+      "backups/**",
+      "scratch/**",
+      "bot/**",
+      "sheets_backend/**",
+      "*.bat",
+      "task.md",
+      "package*.json"
+    ]
   }
 }

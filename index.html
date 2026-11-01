@@ -1238,8 +1238,8 @@
                 3
               </div>
               <div class="space-y-0.5">
-                <div class="font-bold text-white">Find <span class="text-emerald-300 font-bold">Media Server</span> &amp; Pin to Home!</div>
-                <div class="text-[12px] text-slate-400">Under <strong>Media Server</strong>, tap the <span class="text-slate-200 font-mono font-bold">...</span> menu next to <strong>Movies</strong> or <strong>VIP</strong> and tap <strong>"Pin to Sidebar"</strong>!</div>
+                <div class="font-bold text-white">Find <span class="text-emerald-300 font-bold">Brians Theater</span> &amp; Pin to Home!</div>
+                <div class="text-[12px] text-slate-400">Under <strong>Brians Theater</strong>, tap the <span class="text-slate-200 font-mono font-bold">...</span> menu next to <strong>Movies</strong>, <strong>VIP</strong>, or <strong>TV Shows</strong> and tap <strong>"Pin to Sidebar"</strong>!</div>
               </div>
             </div>
 
@@ -1581,25 +1581,66 @@
             </div>
           </div>
 
-          <!-- 2. Trailer Dispatcher -->
-          <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-4">
-            <h3 class="text-sm font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
-              <span>▶️</span> Live Trailer Dispatcher
-            </h3>
-            <p class="text-xs text-slate-400">Paste any YouTube trailer link to instantly update the theater trailer player and sync to Google Sheets (Column W).</p>
+          <!-- 2. Trailer Dispatcher & Twitch Stream Controls -->
+          <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-3.5">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="text-sm font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
+                <span>▶️</span> Live Trailer & Twitch Stream
+              </h3>
+              <span id="adminTwitchTrailerStatusBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">TRAILER ON</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">Control the Twitch live stream trailer player (ON/OFF or Poster Only) and edit/broadcast the active YouTube trailer URL.</p>
 
-            <div>
-              <label class="text-xs font-semibold text-slate-300">YouTube Trailer Link</label>
-              <input type="text" id="adminTrailerUrl" placeholder="https://www.youtube.com/watch?v=..." class="w-full mt-1 px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-red-400">
+            <!-- Twitch Stream Trailer ON/OFF & Preview Controls -->
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col gap-2">
+              <div class="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+                <span>📺 Twitch Stream Trailer Mode</span>
+                <span id="adminTwitchTrailerModeSubtext" class="text-[10px] font-mono text-emerald-400">Auto-Plays When Doors Open</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" id="btnAdminTwitchTrailerToggle" onclick="toggleAdminTwitchTrailerEnabled()" class="py-2 px-2.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/50 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                  <span id="adminTwitchTrailerToggleIcon">🎬</span>
+                  <span id="adminTwitchTrailerToggleLabel">Trailer: ON</span>
+                </button>
+                <button type="button" id="btnAdminTwitchTrailerPreview" onclick="toggleAdminTwitchTrailerPreview()" class="py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95" title="Force trailer to play immediately on Twitch stream even before doors open">
+                  <span id="adminTwitchTrailerPreviewIcon">▶</span>
+                  <span id="adminTwitchTrailerPreviewLabel">Preview Now: OFF</span>
+                </button>
+              </div>
             </div>
 
-            <button onclick="dispatchAdminTrailer()" class="w-full py-2.5 rounded-lg bg-red-500 hover:bg-red-400 text-white font-bold text-xs transition shadow-lg">
-              Broadcast Trailer Live
-            </button>
+            <!-- Active Movie & Trailer Link Editor -->
+            <div class="flex flex-col gap-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <label for="adminTrailerUrl" class="font-semibold text-slate-300">YouTube Trailer Link or Video ID</label>
+                <button type="button" onclick="loadActiveMovieTrailerIntoDispatcher()" class="text-[10px] font-mono font-bold text-sky-400 hover:text-sky-300 transition cursor-pointer">
+                  📋 Load Active Movie
+                </button>
+              </div>
+              <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 bg-slate-900/60 px-2.5 py-1 rounded border border-slate-800/80">
+                <span class="truncate pr-2">Active: <strong id="adminDispatcherActiveMovieTitle" class="text-slate-200">Loading...</strong></span>
+                <span id="adminDispatcherCurrentIdBadge" class="text-amber-300 shrink-0">ID: --</span>
+              </div>
+              <input type="text" id="adminTrailerUrl" placeholder="https://www.youtube.com/watch?v=... or 11-char ID" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-red-400 font-mono">
+            </div>
 
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+            <div class="flex flex-col gap-2">
+              <button type="button" onclick="dispatchAdminTrailer()" class="w-full py-2.5 rounded-lg bg-red-500 hover:bg-red-400 text-white font-bold text-xs transition shadow-lg cursor-pointer active:scale-95">
+                📡 Broadcast & Save Trailer Live
+              </button>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="resetAdminDispatcherTrailer()" class="py-1.5 px-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-[11px] font-semibold transition cursor-pointer active:scale-95">
+                  🔄 Reset Default
+                </button>
+                <button type="button" onclick="clearAdminDispatcherTrailer()" class="py-1.5 px-2.5 rounded-lg bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-800 text-[11px] font-semibold transition cursor-pointer active:scale-95">
+                  🗑️ Clear (Poster Only)
+                </button>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
               <span class="text-xs text-slate-400">Force Sync to Firebase:</span>
-              <button onclick="triggerForceSync()" id="btnForceSync" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+              <button onclick="triggerForceSync()" id="btnForceSync" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition cursor-pointer">
                 ⚡ Force Sync
               </button>
             </div>
@@ -2032,11 +2073,16 @@
 
             <!-- Right: Official Trailer Controls & Interactive Player Preview -->
             <div class="lg:col-span-6 flex flex-col gap-3.5 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 gap-2 flex-wrap">
                 <span class="text-xs font-bold uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
                   <span>🎬</span> Official Trailer
                 </span>
-                <span class="text-[10px] text-slate-400 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
+                <div class="flex items-center gap-2">
+                  <button type="button" id="btnStudioTwitchTrailerToggle" onclick="toggleAdminTwitchTrailerEnabled()" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition cursor-pointer">
+                    🎬 Twitch Trailer: ON
+                  </button>
+                  <span class="text-[10px] text-slate-400 font-mono" id="adminTrailerPreviewStatus">Select a movie</span>
+                </div>
               </div>
 
               <div>
@@ -5797,6 +5843,7 @@
             if (typeof applySeasonalTheme === 'function') applySeasonalTheme();
             populateAdminArtworkSelector();
             populateAdminTrailerSelector();
+            if (typeof updateAdminTwitchTrailerUI === 'function') updateAdminTwitchTrailerUI();
           }
         } else {
           view.classList.add('hidden');
@@ -7965,49 +8012,437 @@
       switchTab('screening');
     }
 
+    // ==========================================
+    // 2. LIVE TRAILER DISPATCHER & TWITCH STREAM CONTROLS
+    // ==========================================
+    let adminTwitchTrailerEnabled = true;
+    let adminTwitchTrailerPreview = false;
+    try {
+      const savedTrEnabled = localStorage.getItem('brian_twitch_trailer_enabled');
+      if (savedTrEnabled !== null) {
+        adminTwitchTrailerEnabled = (savedTrEnabled !== 'false' && savedTrEnabled !== '0');
+      }
+      const savedTrPreview = localStorage.getItem('brian_twitch_trailer_preview');
+      if (savedTrPreview !== null) {
+        adminTwitchTrailerPreview = (savedTrPreview === 'true' || savedTrPreview === '1');
+      }
+    } catch(e) {}
+    window.adminTwitchTrailerEnabled = adminTwitchTrailerEnabled;
+    window.adminTwitchTrailerPreview = adminTwitchTrailerPreview;
+
+    function getAdminDispatcherActiveMovieTitle() {
+      const now = Date.now();
+      if (typeof getActiveOrNextMovie === 'function') {
+        const nextObj = getActiveOrNextMovie(now);
+        if (nextObj && nextObj.movie && nextObj.movie.title) {
+          return String(nextObj.movie.title).replace(/^🎬\s*/, '').trim();
+        }
+        if (nextObj && nextObj.title) {
+          return String(nextObj.title).replace(/^🎬\s*/, '').trim();
+        }
+      }
+      const heading = document.getElementById('nowPlayingHeading')?.textContent || '';
+      const cleanHeading = heading.replace(/^🎬\s*/, '').replace(/^🍿\s*/, '').trim();
+      if (cleanHeading && cleanHeading !== 'No Movie Playing') return cleanHeading;
+      return "Stephens King: It (1990)";
+    }
+
+    function updateAdminTwitchTrailerUI() {
+      const badge = document.getElementById('adminTwitchTrailerStatusBadge');
+      const subtext = document.getElementById('adminTwitchTrailerModeSubtext');
+      const toggleBtn = document.getElementById('btnAdminTwitchTrailerToggle');
+      const toggleIcon = document.getElementById('adminTwitchTrailerToggleIcon');
+      const toggleLabel = document.getElementById('adminTwitchTrailerToggleLabel');
+      const previewBtn = document.getElementById('btnAdminTwitchTrailerPreview');
+      const previewIcon = document.getElementById('adminTwitchTrailerPreviewIcon');
+      const previewLabel = document.getElementById('adminTwitchTrailerPreviewLabel');
+      const studioToggleBtn = document.getElementById('btnStudioTwitchTrailerToggle');
+
+      const activeTitleEl = document.getElementById('adminDispatcherActiveMovieTitle');
+      const idBadgeEl = document.getElementById('adminDispatcherCurrentIdBadge');
+      const urlInput = document.getElementById('adminTrailerUrl');
+
+      const activeTitle = getAdminDispatcherActiveMovieTitle();
+      const currentTrailerId = (typeof getTrailerIdForMovie === 'function')
+        ? getTrailerIdForMovie({ title: activeTitle })
+        : '';
+
+      if (activeTitleEl) activeTitleEl.textContent = activeTitle;
+      if (idBadgeEl) {
+        idBadgeEl.textContent = currentTrailerId ? `ID: ${currentTrailerId}` : 'ID: None (Poster)';
+        idBadgeEl.className = currentTrailerId ? 'text-emerald-400 font-bold shrink-0' : 'text-amber-300 shrink-0';
+      }
+      if (urlInput && !urlInput.value && currentTrailerId) {
+        urlInput.value = `https://www.youtube.com/watch?v=${currentTrailerId}`;
+      }
+
+      if (adminTwitchTrailerEnabled) {
+        if (badge) {
+          badge.textContent = adminTwitchTrailerPreview ? "PREVIEW LIVE" : "TRAILER ON";
+          badge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800";
+        }
+        if (subtext) {
+          subtext.textContent = adminTwitchTrailerPreview ? "Forced Live on Twitch Now" : "Auto-Plays When Doors Open";
+          subtext.className = "text-[10px] font-mono text-emerald-400";
+        }
+        if (toggleBtn) {
+          toggleBtn.className = "py-2 px-2.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/50 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95";
+        }
+        if (toggleIcon) toggleIcon.textContent = "🎬";
+        if (toggleLabel) toggleLabel.textContent = "Trailer: ON";
+        if (studioToggleBtn) {
+          studioToggleBtn.textContent = "🎬 Twitch Trailer: ON";
+          studioToggleBtn.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition cursor-pointer";
+        }
+      } else {
+        if (badge) {
+          badge.textContent = "POSTER ONLY (OFF)";
+          badge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800";
+        }
+        if (subtext) {
+          subtext.textContent = "Trailer Disabled • Showing Poster";
+          subtext.className = "text-[10px] font-mono text-rose-400";
+        }
+        if (toggleBtn) {
+          toggleBtn.className = "py-2 px-2.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/50 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95";
+        }
+        if (toggleIcon) toggleIcon.textContent = "🖼️";
+        if (toggleLabel) toggleLabel.textContent = "Trailer: OFF (Poster)";
+        if (studioToggleBtn) {
+          studioToggleBtn.textContent = "🖼️ Twitch Trailer: OFF";
+          studioToggleBtn.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30 transition cursor-pointer";
+        }
+      }
+
+      if (previewBtn) {
+        if (adminTwitchTrailerPreview) {
+          previewBtn.className = "py-2 px-2.5 rounded-lg bg-amber-500/25 hover:bg-amber-500/35 text-amber-300 border border-amber-500/50 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95";
+          if (previewIcon) previewIcon.textContent = "⏹";
+          if (previewLabel) previewLabel.textContent = "Preview Now: ON";
+        } else {
+          previewBtn.className = "py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95";
+          if (previewIcon) previewIcon.textContent = "▶";
+          if (previewLabel) previewLabel.textContent = "Preview Now: OFF";
+        }
+      }
+    }
+
+    function toggleAdminTwitchTrailerEnabled(forceState) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      if (typeof forceState === 'boolean') {
+        adminTwitchTrailerEnabled = forceState;
+      } else {
+        adminTwitchTrailerEnabled = !adminTwitchTrailerEnabled;
+      }
+      window.adminTwitchTrailerEnabled = adminTwitchTrailerEnabled;
+      try {
+        localStorage.setItem('brian_twitch_trailer_enabled', adminTwitchTrailerEnabled ? 'true' : 'false');
+      } catch(e) {}
+
+      // Sync to local tabs via BroadcastChannel
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_ENABLED_UPDATED', enabled: adminTwitchTrailerEnabled });
+          bc.close();
+        }
+      } catch(e) {}
+
+      // Sync to Firebase RTDB for remote OBS / Twitch stream overlay
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerEnabled.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(adminTwitchTrailerEnabled)
+        }).catch(() => {});
+      } catch(e) {}
+
+      updateAdminTwitchTrailerUI();
+      showTheaterToast(adminTwitchTrailerEnabled
+        ? "🎬 Twitch Stream Trailer enabled (Auto-plays when doors open)!"
+        : "🖼️ Twitch Stream Trailer turned OFF (Showing movie poster only)!");
+    }
+
+    function toggleAdminTwitchTrailerPreview(forceState) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      if (typeof forceState === 'boolean') {
+        adminTwitchTrailerPreview = forceState;
+      } else {
+        adminTwitchTrailerPreview = !adminTwitchTrailerPreview;
+      }
+      if (adminTwitchTrailerPreview && !adminTwitchTrailerEnabled) {
+        adminTwitchTrailerEnabled = true;
+        window.adminTwitchTrailerEnabled = true;
+        try { localStorage.setItem('brian_twitch_trailer_enabled', 'true'); } catch(e) {}
+      }
+      window.adminTwitchTrailerPreview = adminTwitchTrailerPreview;
+      try {
+        localStorage.setItem('brian_twitch_trailer_preview', adminTwitchTrailerPreview ? 'true' : 'false');
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_ENABLED_UPDATED', enabled: adminTwitchTrailerEnabled });
+          bc.postMessage({ type: 'TRAILER_PREVIEW_UPDATED', preview: adminTwitchTrailerPreview });
+          bc.close();
+        }
+      } catch(e) {}
+
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerEnabled.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(adminTwitchTrailerEnabled)
+        }).catch(() => {});
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerPreviewForced.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(adminTwitchTrailerPreview)
+        }).catch(() => {});
+      } catch(e) {}
+
+      updateAdminTwitchTrailerUI();
+      showTheaterToast(adminTwitchTrailerPreview
+        ? "▶ Force Preview ON: Playing trailer live on Twitch stream now!"
+        : "⏹ Force Preview OFF: Returned to standard door-opening schedule.");
+    }
+
+    function loadActiveMovieTrailerIntoDispatcher() {
+      const activeTitle = getAdminDispatcherActiveMovieTitle();
+      const trailerId = (typeof getTrailerIdForMovie === 'function')
+        ? getTrailerIdForMovie({ title: activeTitle })
+        : '';
+      const urlInput = document.getElementById('adminTrailerUrl');
+      if (urlInput) {
+        urlInput.value = trailerId ? `https://www.youtube.com/watch?v=${trailerId}` : '';
+      }
+      updateAdminTwitchTrailerUI();
+      showTheaterToast(trailerId
+        ? `📋 Loaded trailer (${trailerId}) for "${activeTitle}".`
+        : `ℹ️ "${activeTitle}" currently has no trailer set.`);
+    }
+
     function dispatchAdminTrailer() {
       if (!isAdmin) {
         openAdminAuthModal();
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
-      const url = document.getElementById('adminTrailerUrl').value.trim();
-      if (!url) {
-        showTheaterToast("⚠️ Please enter a YouTube video URL.");
+      const rawInput = (document.getElementById('adminTrailerUrl')?.value || '').trim();
+      if (!rawInput) {
+        showTheaterToast("⚠️ Please enter a YouTube video URL or 11-character video ID.");
         return;
       }
-      setTrailer(url);
+      const videoId = extractYouTubeId(rawInput) || (/^[\w-]{11}$/.test(rawInput) ? rawInput : null);
+      if (!videoId) {
+        showTheaterToast("⚠️ Invalid YouTube URL or 11-character Video ID.");
+        return;
+      }
+      const fullUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      const activeTitle = getAdminDispatcherActiveMovieTitle();
 
-      const videoId = extractYouTubeId(url);
+      // Save to customMovieTrailers for active movie
+      if (activeTitle) {
+        customMovieTrailers[activeTitle] = fullUrl;
+        try {
+          localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+        } catch(e) {}
+      }
+
+      // Ensure Twitch trailer is enabled when broadcasting a trailer
+      if (!adminTwitchTrailerEnabled) {
+        adminTwitchTrailerEnabled = true;
+        window.adminTwitchTrailerEnabled = true;
+        try { localStorage.setItem('brian_twitch_trailer_enabled', 'true'); } catch(e) {}
+      }
+
+      setTrailer(fullUrl);
+      updateAdminTwitchTrailerUI();
+      renderSchedule();
+      renderVault();
 
       // Sync to Firebase for realtime Twitch overlay and multi-client update
       try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerEnabled.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(true)
+        }).catch(() => {});
+        if (activeTitle) {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(activeTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(fullUrl)
+          }).catch(() => {});
+        }
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            trailerUrl: url,
-            trailerId: videoId || '',
+            title: activeTitle,
+            trailerUrl: fullUrl,
+            trailerId: videoId,
             timestamp: Date.now()
           })
         }).catch(() => {});
       } catch(e) {}
 
-      // Broadcast to local tabs
+      // Broadcast to local tabs (including twitch.html)
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_ENABLED_UPDATED', enabled: true });
+          bc.postMessage({
+            type: 'TRAILER_UPDATED',
+            title: activeTitle,
+            trailerUrl: fullUrl,
+            trailerId: videoId
+          });
+          bc.postMessage({
+            type: 'stage_trailer_update',
+            title: activeTitle,
+            trailerUrl: fullUrl,
+            trailerId: videoId
+          });
+          bc.close();
+        }
+      } catch(e) {}
+
+      fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(activeTitle)}&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' }).catch(() => {});
+      fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' }).catch(() => {});
+      showTheaterToast(`🎬 Trailer (${videoId}) broadcasted live to Twitch & Theater!`);
+    }
+
+    function resetAdminDispatcherTrailer() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const activeTitle = getAdminDispatcherActiveMovieTitle();
+      if (activeTitle) {
+        delete customMovieTrailers[activeTitle];
+        try {
+          localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+        } catch(e) {}
+      }
+
+      const defaultId = (typeof getTrailerIdForMovie === 'function')
+        ? getTrailerIdForMovie({ title: activeTitle })
+        : '';
+      const defaultUrl = defaultId ? `https://www.youtube.com/watch?v=${defaultId}` : '';
+
+      const urlInput = document.getElementById('adminTrailerUrl');
+      if (urlInput) urlInput.value = defaultUrl;
+
+      updateAdminTwitchTrailerUI();
+      renderSchedule();
+      renderVault();
+
+      try {
+        if (activeTitle) {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(activeTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'DELETE'
+          }).catch(() => {});
+        }
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: activeTitle,
+            trailerUrl: defaultUrl,
+            trailerId: defaultId || '',
+            timestamp: Date.now()
+          })
+        }).catch(() => {});
+      } catch(e) {}
+
       try {
         if (typeof BroadcastChannel !== 'undefined') {
           const bc = new BroadcastChannel('brian_theater_sync');
           bc.postMessage({
-            type: 'stage_trailer_update',
-            trailerUrl: url,
-            trailerId: videoId || ''
+            type: 'TRAILER_UPDATED',
+            title: activeTitle,
+            trailerUrl: defaultUrl,
+            trailerId: defaultId || ''
           });
+          bc.close();
         }
       } catch(e) {}
 
-      fetch(`${API_BASE_URL}?action=admin_dispatch_trailer&trailerUrl=${encodeURIComponent(url)}`, { mode: 'no-cors' }).catch(() => {});
-      showTheaterToast(`🎬 Trailer broadcasted live to stage & stream!`);
-      switchTab('screening');
+      if (activeTitle) {
+        fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(activeTitle)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
+      }
+      showTheaterToast(`🔄 Reset "${activeTitle}" trailer to default (${defaultId || 'None'}).`);
+    }
+
+    function clearAdminDispatcherTrailer() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const activeTitle = getAdminDispatcherActiveMovieTitle();
+      if (activeTitle) {
+        customMovieTrailers[activeTitle] = '__NONE__';
+        try {
+          localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+        } catch(e) {}
+      }
+
+      const urlInput = document.getElementById('adminTrailerUrl');
+      if (urlInput) urlInput.value = '';
+
+      updateAdminTwitchTrailerUI();
+      renderSchedule();
+      renderVault();
+
+      try {
+        if (activeTitle) {
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(activeTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify('__NONE__')
+          }).catch(() => {});
+        }
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: activeTitle,
+            trailerUrl: '',
+            trailerId: '',
+            timestamp: Date.now()
+          })
+        }).catch(() => {});
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'TRAILER_UPDATED',
+            title: activeTitle,
+            trailerUrl: '__NONE__',
+            trailerId: ''
+          });
+          bc.close();
+        }
+      } catch(e) {}
+
+      if (activeTitle) {
+        fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(activeTitle)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
+      }
+      showTheaterToast(`🗑️ Cleared trailer for "${activeTitle}" (Poster Only).`);
     }
 
     // ==========================================
@@ -11610,6 +12045,11 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(fullUrl)
         }).catch(() => {});
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title, trailerUrl: fullUrl, trailerId: ytid, timestamp: Date.now() })
+        }).catch(() => {});
       } catch(e) {}
       try {
         if (typeof BroadcastChannel !== 'undefined') {
@@ -11624,6 +12064,7 @@
       populateAdminMediaStudio(true);
       if (select && title) select.value = title;
       onAdminSelectMediaMovie();
+      if (typeof updateAdminTwitchTrailerUI === 'function') updateAdminTwitchTrailerUI();
 
       showTheaterToast(`🎉 Success! Saved official trailer for "${title}".`);
     }
@@ -11644,11 +12085,33 @@
         localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
       } catch(e) {}
 
+      const defaultId = (typeof getTrailerIdForMovie === 'function') ? getTrailerIdForMovie({ title }) : '';
+      const defaultUrl = defaultId ? `https://www.youtube.com/watch?v=${defaultId}` : '';
+
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(title)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'DELETE'
+        }).catch(() => {});
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, trailerUrl: defaultUrl, trailerId: defaultId || '', timestamp: Date.now() })
+        }).catch(() => {});
+      } catch(e) {}
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_UPDATED', title, trailerUrl: defaultUrl, trailerId: defaultId || '' });
+          bc.close();
+        }
+      } catch(e) {}
+
       fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
 
       renderSchedule();
       renderVault();
       onAdminSelectMediaMovie();
+      if (typeof updateAdminTwitchTrailerUI === 'function') updateAdminTwitchTrailerUI();
       closeAdminMediaCandidates();
       showTheaterToast(`🔄 Reset trailer for "${title}" to default.`);
     }
@@ -11664,9 +12127,29 @@
       const title = (select?.value.trim()) || (searchInput?.value.trim()) || "";
       if (!title) return;
 
-      delete customMovieTrailers[title];
+      customMovieTrailers[title] = '__NONE__';
       try {
         localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
+      } catch(e) {}
+
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(title)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify('__NONE__')
+        }).catch(() => {});
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerUpdate.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, trailerUrl: '', trailerId: '', timestamp: Date.now() })
+        }).catch(() => {});
+      } catch(e) {}
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_UPDATED', title, trailerUrl: '__NONE__', trailerId: '' });
+          bc.close();
+        }
       } catch(e) {}
 
       fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=`, { mode: 'no-cors' }).catch(() => {});
@@ -11674,7 +12157,8 @@
       renderSchedule();
       renderVault();
       onAdminSelectMediaMovie();
-      showTheaterToast(`🗑️ Cleared custom trailer for "${title}".`);
+      if (typeof updateAdminTwitchTrailerUI === 'function') updateAdminTwitchTrailerUI();
+      showTheaterToast(`🗑️ Cleared trailer for "${title}" (Poster Only).`);
     }
 
     function previewCustomTrailerInput() {
@@ -12060,6 +12544,20 @@
 
       if (data.movieTrailers && typeof data.movieTrailers === 'object') {
         Object.assign(customMovieTrailers, data.movieTrailers);
+      }
+
+      if (typeof data.trailerEnabled !== 'undefined' && data.trailerEnabled !== null) {
+        adminTwitchTrailerEnabled = Boolean(data.trailerEnabled !== false && data.trailerEnabled !== 'false' && data.trailerEnabled !== 0 && data.trailerEnabled !== '0');
+        window.adminTwitchTrailerEnabled = adminTwitchTrailerEnabled;
+        try { localStorage.setItem('brian_twitch_trailer_enabled', adminTwitchTrailerEnabled ? 'true' : 'false'); } catch(e) {}
+      }
+      if (typeof data.trailerPreviewForced !== 'undefined' && data.trailerPreviewForced !== null) {
+        adminTwitchTrailerPreview = Boolean(data.trailerPreviewForced === true || data.trailerPreviewForced === 'true' || data.trailerPreviewForced === 1);
+        window.adminTwitchTrailerPreview = adminTwitchTrailerPreview;
+        try { localStorage.setItem('brian_twitch_trailer_preview', adminTwitchTrailerPreview ? 'true' : 'false'); } catch(e) {}
+      }
+      if (typeof updateAdminTwitchTrailerUI === 'function') {
+        updateAdminTwitchTrailerUI();
       }
 
       // Sync global door mode from Firebase in real time (protected against stale overwrite)
@@ -12521,14 +13019,18 @@
 
       // 1. Explicit admin/custom override takes highest priority
       if (typeof customMovieTrailers !== 'undefined' && customMovieTrailers) {
+        if (customMovieTrailers[cleanTitle] === '__NONE__') return "";
         if (customMovieTrailers[cleanTitle]) {
           const id = extractYouTubeId(customMovieTrailers[cleanTitle]) || customMovieTrailers[cleanTitle];
           if (id) return id;
         }
         for (const [k, v] of Object.entries(customMovieTrailers)) {
-          if (k.toLowerCase().trim() === cleanTitle.toLowerCase() && v) {
-            const id = extractYouTubeId(v) || v;
-            if (id) return id;
+          if (k.toLowerCase().trim() === cleanTitle.toLowerCase()) {
+            if (v === '__NONE__') return "";
+            if (v) {
+              const id = extractYouTubeId(v) || v;
+              if (id) return id;
+            }
           }
         }
       }
@@ -17190,7 +17692,7 @@ Your access has been granted! To start streaming our Movies, TV Shows, and VIP l
 
 1. Open Plex on your TV, phone, or computer (or launch https://app.plex.tv/desktop/).
 2. Look at the left sidebar, scroll down to the bottom, and click "MORE >".
-3. Find "Media Server" (Brian's Theater) and click the 📌 Pin icon next to Movies and TV Shows so they appear on your home screen!
+3. Find "Brians Theater" and click the 📌 Pin icon next to Movies, VIP, and TV Shows so they appear on your home screen!
 
 Enjoy the show! 🎬✨`;
 
@@ -18108,6 +18610,9 @@ Enjoy the show! 🎬✨`;
       populateAdminTrailerSelector();
     }
     updateDoorAdminButtons();
+    if (typeof updateAdminTwitchTrailerUI === 'function') {
+      updateAdminTwitchTrailerUI();
+    }
 
     // Lazy-mount Vault: only render if vault tab is active upon initial load (otherwise switchTab('vault') handles it)
     const vaultViewEl = document.getElementById('view-vault');
