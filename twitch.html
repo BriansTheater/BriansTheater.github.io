@@ -295,7 +295,26 @@
           ></iframe>
           <div class="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-full bg-red-600/90 text-white font-mono text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 shadow-lg shadow-red-950/50">
             <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-            <span>CINEMA TRAILER LIVE</span>
+            <span id="heroTrailerStatusLabel">CINEMA TRAILER LIVE</span>
+          </div>
+          <!-- Quick In-Frame Trailer Controls (Turn Off / Edit) -->
+          <div class="absolute top-3 right-3 z-20 flex items-center gap-1.5">
+            <button
+              type="button"
+              onclick="toggleTrailerDrawer(true)"
+              class="px-2.5 py-1 rounded-full bg-slate-950/85 hover:bg-slate-900 border border-amber-500/60 text-amber-300 font-mono text-[10px] font-bold tracking-wider uppercase flex items-center gap-1 shadow-lg cursor-pointer transition"
+              title="Edit Movie Trailer URL / Video ID"
+            >
+              <span>✏️</span> <span>Edit Trailer</span>
+            </button>
+            <button
+              type="button"
+              onclick="toggleTwitchTrailerEnabled(false)"
+              class="px-2.5 py-1 rounded-full bg-rose-950/90 hover:bg-rose-900 border border-rose-500/70 text-rose-200 font-mono text-[10px] font-bold tracking-wider uppercase flex items-center gap-1 shadow-lg cursor-pointer transition"
+              title="Turn off trailer and show poster image"
+            >
+              <span>🖼️</span> <span>Trailer OFF</span>
+            </button>
           </div>
         </div>
       </div>
@@ -616,6 +635,130 @@
         <span class="text-[10px] text-slate-400 group-hover:text-emerald-300 transition-colors ml-0.5">▲</span>
       </div>
 
+      <!-- Expanded Floating Trailer Editor Drawer (100% OBS-Compatible, Zero Popups) -->
+      <div id="twitchTrailerDrawer" class="hidden mt-2.5 p-3.5 rounded-2xl bg-slate-950/95 border border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.3)] backdrop-blur-xl w-80 sm:w-96 max-w-[92vw] flex-col gap-2.5 transition-all text-left">
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">🎬</span>
+            <span class="text-xs font-bold text-amber-300">Twitch Cinema Trailer Studio</span>
+          </div>
+          <button type="button" onclick="toggleTrailerDrawer(false)" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer transition">✕</button>
+        </div>
+
+        <!-- Active Movie & Current Trailer Info -->
+        <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col gap-1">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[9px] font-mono uppercase tracking-wider text-slate-400">Active Feature:</span>
+            <span id="trailerEditorCurrentIdBadge" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-300">ID: —</span>
+          </div>
+          <div id="trailerEditorMovieTitle" class="text-xs font-black text-white truncate">Stephens King: It (1990)</div>
+        </div>
+
+        <!-- ON / OFF Master Switch + Preview Now Toggle -->
+        <div class="grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            id="btnDrawerTrailerToggle"
+            onclick="toggleTwitchTrailerEnabled()"
+            class="py-1.5 px-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition"
+          >
+            <span id="drawerTrailerToggleDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span id="drawerTrailerToggleText">Trailer: ON</span>
+          </button>
+          <button
+            type="button"
+            id="btnDrawerTrailerPreview"
+            onclick="toggleTwitchTrailerPreview()"
+            class="py-1.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition"
+            title="Force play trailer right now even before doors open"
+          >
+            <span>▶</span>
+            <span id="drawerTrailerPreviewText">Preview Now: OFF</span>
+          </button>
+        </div>
+
+        <!-- YouTube URL or Video ID Input -->
+        <div class="flex flex-col gap-1">
+          <label for="twitchTrailerUrlInput" class="text-[10px] font-semibold text-slate-300">YouTube Trailer Link or 11-Char Video ID:</label>
+          <div class="flex items-center gap-1.5">
+            <input
+              type="text"
+              id="twitchTrailerUrlInput"
+              placeholder="Paste YouTube URL or ID (e.g. A4vPcP_tPQE)"
+              class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-100 text-[11px] focus:border-amber-400 outline-none font-mono placeholder:text-slate-600"
+            />
+            <button
+              type="button"
+              onclick="pasteTrailerFromClipboard()"
+              class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold border border-slate-700 cursor-pointer shrink-0 transition"
+              title="Paste from clipboard"
+            >
+              📋 Paste
+            </button>
+          </div>
+        </div>
+
+        <!-- Status / Validation Feedback -->
+        <div id="twitchTrailerStatusMsg" class="hidden text-[10px] font-semibold px-2 py-1 rounded-lg"></div>
+
+        <!-- Action Buttons Row -->
+        <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-slate-800/80">
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              onclick="resetTwitchMovieTrailer()"
+              class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-semibold cursor-pointer transition"
+              title="Reset to default curated trailer"
+            >
+              🔄 Default
+            </button>
+            <button
+              type="button"
+              onclick="clearTwitchMovieTrailer()"
+              class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-[10px] font-semibold cursor-pointer transition"
+              title="Clear trailer and show poster only"
+            >
+              🗑️ Clear
+            </button>
+          </div>
+          <button
+            type="button"
+            id="btnSaveTwitchTrailer"
+            onclick="saveTwitchMovieTrailer()"
+            class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-[10px] font-black transition cursor-pointer shadow-md flex items-center gap-1"
+          >
+            <span>💾</span> <span>Save & Play</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Compact Trailer Controls Pill Row (ON/OFF Toggle + Edit Trailer Button) -->
+      <div id="twitchTrailerControlsRow" class="mt-2 flex flex-wrap items-center justify-center gap-2">
+        <!-- 1-Click Trailer ON / OFF Toggle Pill -->
+        <button
+          type="button"
+          id="twitchTrailerTogglePill"
+          onclick="toggleTwitchTrailerEnabled()"
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-emerald-500/50 hover:border-emerald-400 text-emerald-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 text-[11px] font-mono font-bold"
+          title="Click to turn Cinema Trailer ON or OFF (shows movie poster when OFF)"
+        >
+          <span id="twitchTrailerToggleDot" class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]"></span>
+          <span id="twitchTrailerToggleLabel">🎬 TRAILER: ON</span>
+        </button>
+
+        <!-- 1-Click Open Trailer Editor Pill -->
+        <button
+          type="button"
+          id="twitchTrailerEditPill"
+          onclick="toggleTrailerDrawer()"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-amber-500/50 hover:border-amber-400 text-amber-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 text-[11px] font-mono font-bold"
+          title="Edit or replace the YouTube Trailer for this movie"
+        >
+          <span>✏️</span>
+          <span>EDIT TRAILER</span>
+        </button>
+      </div>
+
     </div>
 
   </main>
@@ -832,8 +975,12 @@
       "Undertone": "1_TRSEcMvR0",
       "they will kill you": "s0PGrtw0X1Q",
       "They Will Kill You": "s0PGrtw0X1Q",
-      "Stephen King's It": "FnCdOQsX5kc",
-      "Stephens King: It (1990)": "FnCdOQsX5kc",
+      "Stephen King's It": "A4vPcP_tPQE",
+      "Stephen King's It (1990)": "A4vPcP_tPQE",
+      "Stephens King: It (1990)": "A4vPcP_tPQE",
+      "Stephens King: It": "A4vPcP_tPQE",
+      "It (1990)": "A4vPcP_tPQE",
+      "It (2017)": "FnCdOQsX5kc",
       "NOSFERATU": "nulvWqYUM8k",
       "Nosferatu": "nulvWqYUM8k",
       "Evil Dead Rise": "smTK_AeAPHs",
@@ -845,16 +992,48 @@
       "Abrahams Boys": "vWs79_NK2h0"
     };
 
+    function extractTwitchYouTubeId(raw) {
+      if (!raw) return '';
+      const str = String(raw).trim();
+      if (!str || str === '__NONE__') return '';
+      if (/^[\w-]{11}$/.test(str)) return str;
+      const m = str.match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/|shorts\/)([\w-]{11})/i);
+      return m ? m[1] : '';
+    }
+
     function getTrailerIdForTitle(title, customTrailers) {
       if (!title || isTvShowTitle(title)) return '';
       const clean = title.replace(/^🎬\s*/, '').trim();
-      if (customTrailers && customTrailers[clean]) {
-        const val = customTrailers[clean];
-        const m = String(val).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
-        return m ? m[1] : val;
-      }
-      if (SCHEDULE_TRAILERS[clean]) return SCHEDULE_TRAILERS[clean];
       const lower = clean.toLowerCase();
+
+      // Merge Firebase/payload customTrailers with localStorage brian_movie_trailers_map
+      let mergedTrailers = Object.assign({}, customTrailers || {});
+      try {
+        const localRaw = localStorage.getItem('brian_movie_trailers_map');
+        if (localRaw) {
+          const parsed = JSON.parse(localRaw);
+          if (parsed && typeof parsed === 'object') {
+            Object.assign(mergedTrailers, parsed);
+          }
+        }
+      } catch(e) {}
+
+      if (mergedTrailers) {
+        if (mergedTrailers[clean] === '__NONE__') return '';
+        if (mergedTrailers[clean]) {
+          const id = extractTwitchYouTubeId(mergedTrailers[clean]);
+          if (id) return id;
+        }
+        for (const [k, v] of Object.entries(mergedTrailers)) {
+          if (k.toLowerCase().trim() === lower) {
+            if (v === '__NONE__') return '';
+            const id = extractTwitchYouTubeId(v);
+            if (id) return id;
+          }
+        }
+      }
+
+      if (SCHEDULE_TRAILERS[clean]) return SCHEDULE_TRAILERS[clean];
       for (const [k, v] of Object.entries(SCHEDULE_TRAILERS)) {
         if (k.toLowerCase() === lower) return v;
       }
@@ -867,10 +1046,23 @@
       if (lower.includes('undertone')) return '1_TRSEcMvR0';
       if (lower.includes('kill you')) return 's0PGrtw0X1Q';
       if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
-      if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
+      if (lower.includes('1990') && lower.includes('it')) return 'A4vPcP_tPQE';
+      if (lower.includes('stephen') && lower.includes('it')) return 'A4vPcP_tPQE';
       if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
       return '';
     }
+
+    // Trailer ON/OFF & Preview state (Persisted in localStorage & synced via Firebase / BroadcastChannel)
+    let twitchTrailerEnabled = true;
+    let twitchTrailerPreviewForced = false;
+    try {
+      const savedEnabled = localStorage.getItem('brian_twitch_trailer_enabled');
+      if (savedEnabled !== null) {
+        twitchTrailerEnabled = (savedEnabled !== 'false' && savedEnabled !== '0');
+      }
+    } catch(e) {}
+    window.twitchTrailerEnabled = twitchTrailerEnabled;
+    window.twitchTrailerPreviewForced = twitchTrailerPreviewForced;
 
     // Active state model (Initial seed synchronized with main stage)
     let activeMovie = {
@@ -894,11 +1086,58 @@
           Object.assign(activeMovie, cached);
           if (isTvShowTitle(activeMovie.title, activeMovie)) {
             activeMovie.trailerId = '';
+          } else if (activeMovie.trailerId === 'FnCdOQsX5kc' && activeMovie.title.toLowerCase().includes('1990')) {
+            activeMovie.trailerId = 'A4vPcP_tPQE';
           }
         }
       }
     } catch(e) {}
     window.activeMovie = activeMovie;
+
+    function applyHeroTrailerOrPosterDisplay(shouldPlayTrailer) {
+      const heroPoster = document.getElementById('heroPosterImg');
+      const heroTrailer = document.getElementById('heroTrailerContainer');
+      const heroTrailerFrame = document.getElementById('heroTrailerFrame');
+      const statusLabel = document.getElementById('heroTrailerStatusLabel');
+
+      const isTv = isTvShowTitle(activeMovie.title, activeMovie);
+      let trailerId = '';
+      if (!isTv) {
+        const customOverride = getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers);
+        trailerId = activeMovie.trailerId || customOverride;
+        // If user explicitly cleared trailer (__NONE__), suppress trailer
+        if (lastKnownPayload.movieTrailers && lastKnownPayload.movieTrailers[activeMovie.title] === '__NONE__') {
+          trailerId = '';
+        }
+      }
+
+      const canPlay = Boolean(twitchTrailerEnabled && (shouldPlayTrailer || twitchTrailerPreviewForced) && trailerId);
+      if (canPlay && heroTrailer && heroTrailerFrame) {
+        heroTrailer.classList.remove('hidden');
+        if (heroPoster) heroPoster.classList.add('hidden');
+        if (statusLabel) {
+          statusLabel.textContent = twitchTrailerPreviewForced && !shouldPlayTrailer ? 'TRAILER PREVIEW' : 'CINEMA TRAILER LIVE';
+        }
+        const desiredSrc = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailerId)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(trailerId)}&rel=0&modestbranding=1&controls=1`;
+        if (heroTrailerFrame.src !== desiredSrc) {
+          heroTrailerFrame.src = desiredSrc;
+        }
+      } else {
+        if (heroTrailer && !heroTrailer.classList.contains('hidden')) {
+          heroTrailer.classList.add('hidden');
+        }
+        if (heroTrailerFrame && heroTrailerFrame.getAttribute('src')) {
+          heroTrailerFrame.setAttribute('src', '');
+          heroTrailerFrame.src = '';
+        }
+        if (heroPoster && heroPoster.classList.contains('hidden')) {
+          heroPoster.classList.remove('hidden');
+        }
+      }
+      if (typeof updateTwitchTrailerControlsUI === 'function') {
+        updateTwitchTrailerControlsUI(trailerId);
+      }
+    }
 
     // 1. Digital Countdown Clock Loop (Synchronized with main theater doors opening)
     function updateCountdown() {
@@ -964,35 +1203,12 @@
         }
 
         // Live Cinema Trailer Replay in place of Poster (Movies only — TV shows keep poster image)
-        const isTv = isTvShowTitle(activeMovie.title, activeMovie);
-        const trailerId = isTv ? '' : (activeMovie.trailerId || getTrailerIdForTitle(activeMovie.title, lastKnownPayload.movieTrailers));
-        if (trailerId && heroTrailer && heroTrailerFrame) {
-          heroTrailer.classList.remove('hidden');
-          if (heroPoster) heroPoster.classList.add('hidden');
-          const desiredSrc = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailerId)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(trailerId)}&rel=0&modestbranding=1&controls=1`;
-          if (heroTrailerFrame.src !== desiredSrc) {
-            heroTrailerFrame.src = desiredSrc;
-          }
-        } else {
-          if (heroTrailer && !heroTrailer.classList.contains('hidden')) {
-            heroTrailer.classList.add('hidden');
-            if (heroTrailerFrame) heroTrailerFrame.src = "";
-          }
-          if (heroPoster && heroPoster.classList.contains('hidden')) {
-            heroPoster.classList.remove('hidden');
-          }
-        }
+        applyHeroTrailerOrPosterDisplay(true);
         return;
       }
 
-      // Revert trailer back to poster when doors closed
-      if (heroTrailer && !heroTrailer.classList.contains('hidden')) {
-        heroTrailer.classList.add('hidden');
-        if (heroTrailerFrame) heroTrailerFrame.src = "";
-      }
-      if (heroPoster && heroPoster.classList.contains('hidden')) {
-        heroPoster.classList.remove('hidden');
-      }
+      // Revert trailer back to poster when doors closed (unless Preview Now is forced on)
+      applyHeroTrailerOrPosterDisplay(false);
 
       // Doors Closed Countdown State
       if (doorsOpenBadge) doorsOpenBadge.classList.add('hidden');
@@ -1284,18 +1500,36 @@
 
         let resolvedTrailer = '';
         if (!isTvShowTitle(activeMovie.title, target)) {
-          resolvedTrailer = target.trailerId;
-          if (!resolvedTrailer && target.trailerUrl) {
-            const m = String(target.trailerUrl).match(/(?:youtu\.be\/|v\/|watch\?v=|embed\/)([\w-]{11})/i);
-            if (m) resolvedTrailer = m[1];
+          // 1. Check custom overrides (Firebase movieTrailers + localStorage brian_movie_trailers_map) first!
+          const customOrDefault = getTrailerIdForTitle(activeMovie.title, merged.movieTrailers);
+          let hasExplicitCustom = false;
+          if (merged.movieTrailers && merged.movieTrailers[activeMovie.title]) {
+            hasExplicitCustom = true;
           }
-          if (!resolvedTrailer) {
-            resolvedTrailer = getTrailerIdForTitle(activeMovie.title, merged.movieTrailers);
+          try {
+            const localRaw = localStorage.getItem('brian_movie_trailers_map');
+            if (localRaw) {
+              const parsed = JSON.parse(localRaw);
+              if (parsed && parsed[activeMovie.title]) hasExplicitCustom = true;
+            }
+          } catch(e) {}
+
+          if (hasExplicitCustom) {
+            resolvedTrailer = customOrDefault;
+          } else {
+            resolvedTrailer = target.trailerId;
+            if (!resolvedTrailer && target.trailerUrl) {
+              resolvedTrailer = extractTwitchYouTubeId(target.trailerUrl);
+            }
+            if (!resolvedTrailer) {
+              resolvedTrailer = customOrDefault;
+            }
           }
         }
+        const hasTrailerChanged = (activeMovie.trailerId !== (resolvedTrailer || ''));
         activeMovie.trailerId = resolvedTrailer || '';
 
-        if (hasTitleChanged || hasTimeChanged || hasPosterChanged) {
+        if (hasTitleChanged || hasTimeChanged || hasPosterChanged || hasTrailerChanged) {
           console.log(`[TwitchAutoProgression] Transitioned active movie to: ${activeMovie.title} (${activeMovie.showtimeText})`);
           renderMovieState();
         }
@@ -1306,8 +1540,15 @@
     function applySyncPayload(data) {
       if (!data) return;
       const mergedPosters = Object.assign({}, lastKnownPayload.moviePosters || {}, data.moviePosters || {});
+      const mergedTrailers = Object.assign({}, lastKnownPayload.movieTrailers || {}, data.movieTrailers || {});
       Object.assign(lastKnownPayload, data);
       lastKnownPayload.moviePosters = mergedPosters;
+      lastKnownPayload.movieTrailers = mergedTrailers;
+      if (typeof data.trailerEnabled === 'boolean') {
+        twitchTrailerEnabled = data.trailerEnabled;
+        window.twitchTrailerEnabled = twitchTrailerEnabled;
+        try { localStorage.setItem('brian_twitch_trailer_enabled', String(twitchTrailerEnabled)); } catch(e) {}
+      }
       resolveActiveOrNextMovie(Date.now());
       renderMovieState();
     }
@@ -1367,6 +1608,18 @@
                   activeMovie.trailerId = event.data.trailerId;
                   renderMovieState();
                 }
+              } else if (event.data.type === 'TRAILER_UPDATED' && event.data.title) {
+                const tTitle = String(event.data.title).replace(/^🎬\s*/, '').trim();
+                const tVal = event.data.trailerUrl || event.data.trailerId || '';
+                if (!tVal) {
+                  if (lastKnownPayload.movieTrailers) delete lastKnownPayload.movieTrailers[tTitle];
+                  resolveActiveOrNextMovie(Date.now());
+                  renderMovieState();
+                } else {
+                  applySyncPayload({ movieTrailers: { [tTitle]: tVal } });
+                }
+              } else if (event.data.type === 'TRAILER_ENABLED_UPDATED' && typeof event.data.enabled === 'boolean') {
+                applySyncPayload({ trailerEnabled: event.data.enabled });
               } else if ((event.data.type === 'party_url_update' || event.data.type === 'enter_button_update') && event.data.partyUrl) {
                 activeMovie.partyUrl = event.data.partyUrl;
                 updateCountdown();
@@ -1459,6 +1712,22 @@
                   if (movieKey && typeof payload.data === 'string') {
                     applySyncPayload({ moviePosters: { [movieKey]: payload.data } });
                   }
+                } else if (payload.path === '/movieTrailers' && payload.data) {
+                  applySyncPayload({ movieTrailers: payload.data });
+                } else if (payload.path && payload.path.startsWith('/movieTrailers/')) {
+                  const rawKey = payload.path.replace(/^\/movieTrailers\//, '').replace(/\.json$/, '');
+                  const movieKey = decodeURIComponent(rawKey);
+                  if (movieKey) {
+                    if (!payload.data) {
+                      if (lastKnownPayload.movieTrailers) delete lastKnownPayload.movieTrailers[movieKey];
+                      resolveActiveOrNextMovie(Date.now());
+                      renderMovieState();
+                    } else {
+                      applySyncPayload({ movieTrailers: { [movieKey]: payload.data } });
+                    }
+                  }
+                } else if (payload.path === '/trailerEnabled' && typeof payload.data === 'boolean') {
+                  applySyncPayload({ trailerEnabled: payload.data });
                 } else if (payload.data && typeof payload.data === 'object') {
                   applySyncPayload(payload.data);
                 }
@@ -2202,9 +2471,277 @@
     }
 
     // ==========================================
+    // 4.5. TWITCH CINEMA TRAILER STUDIO (ON/OFF TOGGLE & URL EDITOR)
+    // ==========================================
+    const APPS_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
+
+    function showTwitchTrailerStatus(msg, isError = false) {
+      const el = document.getElementById('twitchTrailerStatusMsg');
+      if (!el) return;
+      if (!msg) {
+        el.classList.add('hidden');
+        return;
+      }
+      el.textContent = msg;
+      el.className = isError
+        ? "text-[10px] font-semibold px-2.5 py-1.5 rounded-lg bg-rose-950/80 border border-rose-500/40 text-rose-300"
+        : "text-[10px] font-semibold px-2.5 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-300";
+      el.classList.remove('hidden');
+    }
+
+    function updateTwitchTrailerControlsUI(resolvedTrailerId) {
+      const cleanTitle = (activeMovie.title || 'Coming Soon').replace(/^🎬\s*/, '').trim();
+      const isTv = isTvShowTitle(cleanTitle, activeMovie);
+      const currentId = isTv ? '' : (resolvedTrailerId !== undefined ? resolvedTrailerId : (activeMovie.trailerId || getTrailerIdForTitle(cleanTitle, lastKnownPayload.movieTrailers)));
+
+      // 1. Update bottom ON/OFF Pill
+      const pill = document.getElementById('twitchTrailerTogglePill');
+      const dot = document.getElementById('twitchTrailerToggleDot');
+      const label = document.getElementById('twitchTrailerToggleLabel');
+      if (pill && dot && label) {
+        if (twitchTrailerEnabled) {
+          pill.className = "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-emerald-500/50 hover:border-emerald-400 text-emerald-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 text-[11px] font-mono font-bold";
+          dot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]";
+          label.textContent = twitchTrailerPreviewForced ? "🎬 TRAILER: ON (PREVIEW)" : "🎬 TRAILER: ON";
+        } else {
+          pill.className = "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-rose-500/50 hover:border-rose-400 text-rose-300 shadow-md backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 text-[11px] font-mono font-bold";
+          dot.className = "w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.8)]";
+          label.textContent = "🖼️ TRAILER: OFF";
+        }
+      }
+
+      // 2. Update Drawer ON/OFF & Preview Buttons
+      const dToggleBtn = document.getElementById('btnDrawerTrailerToggle');
+      const dToggleDot = document.getElementById('drawerTrailerToggleDot');
+      const dToggleText = document.getElementById('drawerTrailerToggleText');
+      if (dToggleBtn && dToggleDot && dToggleText) {
+        if (twitchTrailerEnabled) {
+          dToggleBtn.className = "py-1.5 px-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition";
+          dToggleDot.className = "w-2 h-2 rounded-full bg-emerald-400";
+          dToggleText.textContent = "Trailer: ON";
+        } else {
+          dToggleBtn.className = "py-1.5 px-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition";
+          dToggleDot.className = "w-2 h-2 rounded-full bg-rose-400";
+          dToggleText.textContent = "Trailer: OFF";
+        }
+      }
+
+      const dPreviewBtn = document.getElementById('btnDrawerTrailerPreview');
+      const dPreviewText = document.getElementById('drawerTrailerPreviewText');
+      if (dPreviewBtn && dPreviewText) {
+        if (twitchTrailerPreviewForced) {
+          dPreviewBtn.className = "py-1.5 px-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition";
+          dPreviewText.textContent = "Preview Now: ON";
+        } else {
+          dPreviewBtn.className = "py-1.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition";
+          dPreviewText.textContent = "Preview Now: OFF";
+        }
+      }
+
+      // 3. Update Movie Title & Current ID Badge in Drawer
+      const titleEl = document.getElementById('trailerEditorMovieTitle');
+      if (titleEl) titleEl.textContent = cleanTitle;
+      const badgeEl = document.getElementById('trailerEditorCurrentIdBadge');
+      if (badgeEl) {
+        if (isTv) {
+          badgeEl.textContent = "TV SHOW (POSTER ONLY)";
+        } else {
+          badgeEl.textContent = currentId ? `ID: ${currentId}` : "ID: NONE";
+        }
+      }
+    }
+
+    function toggleTrailerDrawer(forceState) {
+      const drawer = document.getElementById('twitchTrailerDrawer');
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden');
+      const nextOpen = (typeof forceState === 'boolean') ? forceState : isHidden;
+
+      if (nextOpen) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+        const cleanTitle = (activeMovie.title || '').replace(/^🎬\s*/, '').trim();
+        const curId = activeMovie.trailerId || getTrailerIdForTitle(cleanTitle, lastKnownPayload.movieTrailers);
+        const input = document.getElementById('twitchTrailerUrlInput');
+        if (input) {
+          input.value = curId ? `https://www.youtube.com/watch?v=${curId}` : '';
+        }
+        showTwitchTrailerStatus('');
+        updateTwitchTrailerControlsUI(curId);
+      } else {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+      }
+    }
+
+    function toggleTwitchTrailerEnabled(forceState) {
+      twitchTrailerEnabled = (typeof forceState === 'boolean') ? forceState : !twitchTrailerEnabled;
+      window.twitchTrailerEnabled = twitchTrailerEnabled;
+      try {
+        localStorage.setItem('brian_twitch_trailer_enabled', String(twitchTrailerEnabled));
+      } catch(e) {}
+
+      // Broadcast to other tabs
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_ENABLED_UPDATED', enabled: twitchTrailerEnabled });
+          bc.close();
+        }
+      } catch(e) {}
+
+      // Sync to Firebase RTDB
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/trailerEnabled.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(twitchTrailerEnabled)
+        }).catch(() => {});
+      } catch(e) {}
+
+      updateCountdown();
+      showTwitchTrailerStatus(twitchTrailerEnabled ? "✅ Cinema Trailer enabled!" : "🖼️ Trailer turned OFF — displaying movie poster.");
+    }
+
+    function toggleTwitchTrailerPreview(forceState) {
+      twitchTrailerPreviewForced = (typeof forceState === 'boolean') ? forceState : !twitchTrailerPreviewForced;
+      window.twitchTrailerPreviewForced = twitchTrailerPreviewForced;
+      if (twitchTrailerPreviewForced && !twitchTrailerEnabled) {
+        twitchTrailerEnabled = true;
+        window.twitchTrailerEnabled = true;
+        try { localStorage.setItem('brian_twitch_trailer_enabled', 'true'); } catch(e) {}
+      }
+      updateCountdown();
+      showTwitchTrailerStatus(twitchTrailerPreviewForced ? "▶ Live Trailer Preview activated!" : "⏹ Trailer Preview stopped (auto-doors mode).");
+    }
+
+    async function pasteTrailerFromClipboard() {
+      const input = document.getElementById('twitchTrailerUrlInput');
+      if (!input) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          if (text && text.trim()) {
+            input.value = text.trim();
+            showTwitchTrailerStatus("📋 Pasted from clipboard! Click Save & Play.");
+            return;
+          }
+        }
+      } catch(e) {}
+      input.focus();
+      showTwitchTrailerStatus("⌨️ Press Ctrl+V inside the box to paste your YouTube link.");
+    }
+
+    function persistAndBroadcastMovieTrailer(cleanTitle, fullUrlOrMarker, ytid) {
+      if (!cleanTitle) return;
+      if (!lastKnownPayload.movieTrailers) lastKnownPayload.movieTrailers = {};
+      if (fullUrlOrMarker) {
+        lastKnownPayload.movieTrailers[cleanTitle] = fullUrlOrMarker;
+      } else {
+        delete lastKnownPayload.movieTrailers[cleanTitle];
+      }
+
+      // 1. Update localStorage brian_movie_trailers_map
+      try {
+        const raw = localStorage.getItem('brian_movie_trailers_map');
+        const map = raw ? JSON.parse(raw) : {};
+        if (fullUrlOrMarker) {
+          map[cleanTitle] = fullUrlOrMarker;
+        } else {
+          delete map[cleanTitle];
+        }
+        localStorage.setItem('brian_movie_trailers_map', JSON.stringify(map));
+      } catch(e) {}
+
+      // 2. Update activeMovie.trailerId & localStorage brian_twitch_active_movie
+      activeMovie.trailerId = ytid || '';
+      renderMovieState();
+
+      // 3. Broadcast to index.html & other tabs
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'TRAILER_UPDATED',
+            title: cleanTitle,
+            trailerUrl: fullUrlOrMarker || '',
+            trailerId: ytid || ''
+          });
+          bc.close();
+        }
+      } catch(e) {}
+
+      // 4. Persist to Firebase RTDB theaterSync/movieTrailers/<title>.json
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(cleanTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fullUrlOrMarker || null)
+        }).catch(() => {});
+      } catch(e) {}
+
+      // 5. Sync to Google Sheets backend
+      try {
+        const sheetUrl = (fullUrlOrMarker && fullUrlOrMarker !== '__NONE__') ? fullUrlOrMarker : '';
+        fetch(`${APPS_SCRIPT_API_URL}?action=set_movie_trailer&title=${encodeURIComponent(cleanTitle)}&trailerUrl=${encodeURIComponent(sheetUrl)}`, { mode: 'no-cors' }).catch(() => {});
+      } catch(e) {}
+    }
+
+    function saveTwitchMovieTrailer() {
+      const input = document.getElementById('twitchTrailerUrlInput');
+      if (!input) return;
+      const rawVal = input.value.trim();
+      const ytid = extractTwitchYouTubeId(rawVal);
+      if (!ytid) {
+        showTwitchTrailerStatus("⚠️ Please enter a valid YouTube link or 11-character Video ID.", true);
+        return;
+      }
+      const cleanTitle = (activeMovie.title || '').replace(/^🎬\s*/, '').trim();
+      if (!cleanTitle) return;
+
+      const fullUrl = `https://www.youtube.com/watch?v=${ytid}`;
+      twitchTrailerEnabled = true;
+      window.twitchTrailerEnabled = true;
+      try { localStorage.setItem('brian_twitch_trailer_enabled', 'true'); } catch(e) {}
+
+      persistAndBroadcastMovieTrailer(cleanTitle, fullUrl, ytid);
+      input.value = fullUrl;
+      updateTwitchTrailerControlsUI(ytid);
+      showTwitchTrailerStatus(`🎉 Saved & playing trailer (${ytid}) for "${cleanTitle}"!`);
+    }
+
+    function resetTwitchMovieTrailer() {
+      const cleanTitle = (activeMovie.title || '').replace(/^🎬\s*/, '').trim();
+      if (!cleanTitle) return;
+
+      persistAndBroadcastMovieTrailer(cleanTitle, null, '');
+      const defaultId = getTrailerIdForTitle(cleanTitle, {});
+      activeMovie.trailerId = defaultId || '';
+      renderMovieState();
+
+      const input = document.getElementById('twitchTrailerUrlInput');
+      if (input) {
+        input.value = defaultId ? `https://www.youtube.com/watch?v=${defaultId}` : '';
+      }
+      updateTwitchTrailerControlsUI(defaultId);
+      showTwitchTrailerStatus(`🔄 Reset "${cleanTitle}" to default trailer (${defaultId || 'none'}).`);
+    }
+
+    function clearTwitchMovieTrailer() {
+      const cleanTitle = (activeMovie.title || '').replace(/^🎬\s*/, '').trim();
+      if (!cleanTitle) return;
+
+      persistAndBroadcastMovieTrailer(cleanTitle, '__NONE__', '');
+      const input = document.getElementById('twitchTrailerUrlInput');
+      if (input) input.value = '';
+      updateTwitchTrailerControlsUI('');
+      showTwitchTrailerStatus(`🗑️ Cleared trailer for "${cleanTitle}" — displaying poster.`);
+    }
+
+    // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.233";
+    const TWITCH_OVERLAY_VERSION = "4.9.234";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -2306,6 +2843,14 @@
       window.toggleAddPlaylistForm = toggleAddPlaylistForm;
       window.pastePlaylistFromClipboard = pastePlaylistFromClipboard;
       window.submitAddPlaylistForm = submitAddPlaylistForm;
+      window.toggleTrailerDrawer = toggleTrailerDrawer;
+      window.toggleTwitchTrailerEnabled = toggleTwitchTrailerEnabled;
+      window.toggleTwitchTrailerPreview = toggleTwitchTrailerPreview;
+      window.saveTwitchMovieTrailer = saveTwitchMovieTrailer;
+      window.resetTwitchMovieTrailer = resetTwitchMovieTrailer;
+      window.clearTwitchMovieTrailer = clearTwitchMovieTrailer;
+      window.pasteTrailerFromClipboard = pasteTrailerFromClipboard;
+      window.updateTwitchTrailerControlsUI = updateTwitchTrailerControlsUI;
 
       renderMovieState();
       setInterval(updateCountdown, 1000);

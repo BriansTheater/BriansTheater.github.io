@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.234] - 2026-10-31
+
+### What's New
+- Added Twitch trailer ON/OFF switch and URL editor.
+- Fixed Stephen King's It 1990 trailer on Twitch.
+- Fixed Widescreen Poster Studio loading for all scheduled movies.
+
 ## [4.9.233] - 2026-10-26
 
 ### What's New

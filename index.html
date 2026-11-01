@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.233 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.234 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -4037,7 +4037,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.233";
+    const APP_VERSION = "4.9.234";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5155,6 +5155,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.234": [
+        "Added Twitch trailer ON/OFF switch and URL editor.",
+        "Fixed Stephen King's It 1990 trailer on Twitch.",
+        "Fixed Widescreen Poster Studio loading for all scheduled movies."
+      ],
       "4.9.233": [
         "Kept poster artwork visible for TV shows on Twitch.",
         "Fixed unavailable trailer black screen during TV episodes."
@@ -7139,7 +7144,8 @@
           if (lower.includes('undertone')) return '1_TRSEcMvR0';
           if (lower.includes('kill you')) return 's0PGrtw0X1Q';
           if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
-          if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
+          if (lower.includes('1990') && lower.includes('it')) return 'A4vPcP_tPQE';
+          if (lower.includes('stephen') && lower.includes('it')) return 'A4vPcP_tPQE';
           if (lower.includes('ahs') || lower.includes('american horror')) return '-9KfZwbvdvU';
           if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
         }
@@ -10667,6 +10673,20 @@
           const ytid = extractYouTubeId(trailerUrl) || (/^[\w-]{11}$/.test(trailerUrl) ? trailerUrl : null);
           const fullTrailerUrl = ytid ? `https://www.youtube.com/watch?v=${ytid}` : trailerUrl;
           customMovieTrailers[cleanTitle] = fullTrailerUrl;
+          try {
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(cleanTitle)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(fullTrailerUrl)
+            }).catch(() => {});
+          } catch(e) {}
+          try {
+            if (typeof BroadcastChannel !== 'undefined') {
+              const bc = new BroadcastChannel('brian_theater_sync');
+              bc.postMessage({ type: 'TRAILER_UPDATED', title: cleanTitle, trailerUrl: fullTrailerUrl, trailerId: ytid || '' });
+              bc.close();
+            }
+          } catch(e) {}
           fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(cleanTitle)}&trailerUrl=${encodeURIComponent(fullTrailerUrl)}`, { mode: 'no-cors' }).catch(() => {});
           trailersUpdated++;
         }
@@ -11582,8 +11602,22 @@
         localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers));
       } catch(e) {}
 
-      // Sync to Google Apps Script and Firebase
+      // Sync to Google Apps Script, Firebase RTDB, and BroadcastChannel
       fetch(`${API_BASE_URL}?action=set_movie_trailer&title=${encodeURIComponent(title)}&trailerUrl=${encodeURIComponent(fullUrl)}`, { mode: 'no-cors' }).catch(() => {});
+      try {
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/movieTrailers/${encodeURIComponent(title)}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fullUrl)
+        }).catch(() => {});
+      } catch(e) {}
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'TRAILER_UPDATED', title: title, trailerUrl: fullUrl, trailerId: ytid });
+          bc.close();
+        }
+      } catch(e) {}
 
       renderSchedule();
       renderVault();
@@ -12470,7 +12504,14 @@
       "The Seeding": "BunlosQQw-I",
       "Seeding": "BunlosQQw-I",
       "UnderTone": "wafETiDQYu8",
-      "Undertone": "wafETiDQYu8"
+      "Undertone": "wafETiDQYu8",
+      "they will kill you": "s0PGrtw0X1Q",
+      "They Will Kill You": "s0PGrtw0X1Q",
+      "Stephens King: It (1990)": "A4vPcP_tPQE",
+      "Stephen King's It (1990)": "A4vPcP_tPQE",
+      "Stephen King's It": "A4vPcP_tPQE",
+      "It (1990)": "A4vPcP_tPQE",
+      "It (2017)": "FnCdOQsX5kc"
     };
 
     function getTrailerIdForMovie(movie) {
@@ -12530,7 +12571,8 @@
         if (lower.includes('undertone')) return '1_TRSEcMvR0';
         if (lower.includes('kill you')) return 's0PGrtw0X1Q';
         if (lower.includes('abraham') || lower.includes('dracula')) return 'vWs79_NK2h0';
-        if (lower.includes('stephen') && lower.includes('it')) return 'FnCdOQsX5kc';
+        if (lower.includes('1990') && lower.includes('it')) return 'A4vPcP_tPQE';
+        if (lower.includes('stephen') && lower.includes('it')) return 'A4vPcP_tPQE';
         if (lower.includes('ahs') || lower.includes('american horror')) return '-9KfZwbvdvU';
         if (lower.includes('scary movie')) return 'cGgWAHXuTKc';
       }
