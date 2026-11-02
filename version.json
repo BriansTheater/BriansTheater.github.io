@@ -1,10 +1,10 @@
 {
-  "version": "4.9.249",
+  "version": "4.9.250",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.249",
+  "title": "Brian's Theater v4.9.250",
   "notes": [
-    "Reserved creepy horror leprechaun exclusively for rainbow jump-scares.",
-    "Restored friendly 3D Pixar mascot as default for standard peeks.",
-    "Enhanced comedic contrast between innocent peeks and horror trap."
+    "Removed icon prefix from movie title heading across all themes.",
+    "Added procedural Web Audio synthesizer for St. Patrick's Leprechaun.",
+    "Added synchronized sound effects for peeks and horror jump-scare."
   ]
 }

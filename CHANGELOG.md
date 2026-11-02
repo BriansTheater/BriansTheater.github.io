@@ -1,5 +1,18 @@
 # Changelog
  
+## [4.9.250] - 2026-11-02
+
+### What's New
+- Removed icon prefix from movie title heading across all themes.
+- Added procedural Web Audio synthesizer for St. Patrick's Leprechaun.
+- Added coin flip metallic ping for standard Pixar peeks.
+- Added celestial harp and chime glissando for rainbow arc.
+- Added heavy cauldron thud and brass coin clatter.
+- Added electric voltage zap and sub-bass drop rumble.
+- Added explosive horror stinger crash and goblin cackle.
+- Added interactive sound toggle button to Demo Studio.
+- Exposed volume control and audio mute for overlay.
+
 ## [4.9.249] - 2026-11-02
 
 ### What's New

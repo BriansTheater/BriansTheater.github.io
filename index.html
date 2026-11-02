@@ -560,7 +560,7 @@
               const sd = document.getElementById('schedNextDate');
               const sp = document.getElementById('schedNextPoster');
               if (h && s.title) {
-                h.textContent = s.title;
+                h.textContent = s.title.replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
                 if (typeof applySmartStageTitleSizing === 'function') applySmartStageTitleSizing(s.title);
               }
               if (d && s.date) d.textContent = s.date;
@@ -779,7 +779,7 @@
 
           <!-- 2. TITLE -->
           <h2 id="nowPlayingHeading" class="text-2xl sm:text-3xl md:text-4xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]">
-            🎬 Borderlands
+            Borderlands
           </h2>
 
           <!-- 3. DATE AND TIME (Matches Schedule Date Display) -->
@@ -904,7 +904,7 @@
         <div id="schedActiveAlertBox" class="hidden" style="display: none !important;"></div>
         <span id="schedActiveMovieTitle" class="hidden" style="display: none !important;"></span>
         <span id="schedActiveTimeLeft" class="hidden" style="display: none !important;"></span>
-        <span id="schedNextTitle">🎬 Borderlands</span>
+        <span id="schedNextTitle">Borderlands</span>
         <span id="schedNextDate">Saturday, Sept 19, 2026 • 7:00 PM PST</span>
         <div id="schedNextPosterContainer">
           <img id="schedNextPoster" src="https://image.tmdb.org/t/p/w780/mKOBdgaEFguADkJhfFslY7TYxIh.jpg" alt="" referrerpolicy="no-referrer" />
@@ -8033,7 +8033,7 @@
       const sPoster = document.getElementById('schedNextPoster');
       if (movieItem && !isLiveBySchedule) {
         if (sTitle && movieItem.title) {
-          const formatted = movieItem.title.startsWith('🎬') ? movieItem.title : `🎬 ${movieItem.title}`;
+          const formatted = (movieItem.title || '').replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
           if (sTitle.textContent !== formatted) sTitle.textContent = formatted;
         }
         if (sDate && movieItem.date && movieItem.startTime) {
@@ -8186,7 +8186,7 @@
           }
         }
         if (headingEl) {
-          headingEl.textContent = `🎬 ${currentMovieTitle}`;
+          headingEl.textContent = currentMovieTitle.replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
           applySmartStageTitleSizing(currentMovieTitle, curTheme, 3);
         }
         if (nowPlayingDate) {
@@ -8226,7 +8226,7 @@
           stageCategoryLabel.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Seating Now';
         }
         if (headingEl) {
-          headingEl.textContent = `🎬 ${currentMovieTitle}`;
+          headingEl.textContent = currentMovieTitle.replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
           applySmartStageTitleSizing(currentMovieTitle, curTheme, 2);
         }
         if (nowPlayingDate) {
@@ -8339,7 +8339,7 @@
           stageCategoryLabel.textContent = "Next Scheduled Screening";
         }
         if (headingEl) {
-          headingEl.textContent = `🎬 ${currentMovieTitle}`;
+          headingEl.textContent = currentMovieTitle.replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
           applySmartStageTitleSizing(currentMovieTitle, curTheme, 1);
         }
         if (nowPlayingDate) nowPlayingDate.textContent = currentDateStr;
@@ -10876,7 +10876,7 @@
           const adminPosterInput = document.getElementById('adminPosterUrl');
 
           if (stageHeading) {
-            stageHeading.textContent = newTitle;
+            stageHeading.textContent = (newTitle || '').replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
             if (typeof applySmartStageTitleSizing === 'function') applySmartStageTitleSizing(newTitle);
           }
           if (stagePoster) stagePoster.src = meta.posterUrl;
@@ -13172,7 +13172,7 @@
       const headingEl = document.getElementById('nowPlayingHeading');
       if (effectiveNowPlaying && isLive) {
         if (headingEl) {
-          headingEl.textContent = effectiveNowPlaying.startsWith('🎬') ? effectiveNowPlaying : `🎬 ${effectiveNowPlaying}`;
+          headingEl.textContent = (effectiveNowPlaying || '').replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
           headingEl.setAttribute('data-live', 'true');
           if (typeof applySmartStageTitleSizing === 'function') applySmartStageTitleSizing(effectiveNowPlaying);
         }
@@ -13193,7 +13193,7 @@
         const effectiveNextTitle = cinemaObj.nextTitle || data.nextTitle;
         if (effectiveNextTitle) {
           const sTitle = document.getElementById('schedNextTitle');
-          if (sTitle) sTitle.textContent = effectiveNextTitle.startsWith('🎬') ? effectiveNextTitle : `🎬 ${effectiveNextTitle}`;
+          if (sTitle) sTitle.textContent = (effectiveNextTitle || '').replace(/^[🎬🎭🎞️🍿📽️📺🍀🎃🎄💖✨\s]+/, '').trim();
         }
         const effectiveNextTime = cinemaObj.nextTime || data.nextTime;
         if (effectiveNextTime) {

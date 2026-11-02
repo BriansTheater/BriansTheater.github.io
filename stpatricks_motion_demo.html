@@ -66,6 +66,10 @@
           <span>🌈</span> <span>Rainbow Jump-Scare!</span>
         </button>
 
+        <button id="btnToggleSound" onclick="toggleDemoSound()" class="demo-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1 cursor-pointer bg-emerald-950/70 text-emerald-300 hover:brightness-125 border border-emerald-500/50">
+          <span id="soundIcon">🔊</span> <span id="soundLabel">Sound: ON</span>
+        </button>
+
         <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Spot:</span>
         <button id="spotBtn-random" onclick="selectSpot('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
         <button id="spotBtn-0" onclick="selectSpot(0)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Left</button>
@@ -145,6 +149,311 @@
     const potImg = new Image();
     potImg.src = 'images/pot_of_gold_cutout.png';
 
+    // ==========================================
+    // PROCEDURAL WEB AUDIO SYNTHESIZER ENGINE
+    // Zero dependencies, 0ms latency, pure Web Audio API
+    // ==========================================
+    class LeprechaunAudioEngine {
+      constructor(options = {}) {
+        this.enabled = options.enabled !== undefined ? options.enabled : true;
+        this.volume = options.volume !== undefined ? options.volume : 0.75;
+        this.ctx = null;
+      }
+
+      ensureContext() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) {
+            this.ctx = new AudioCtx();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+        return this.ctx;
+      }
+
+      setVolume(vol) {
+        this.volume = Math.max(0, Math.min(1, vol));
+      }
+
+      toggleSound() {
+        this.enabled = !this.enabled;
+        if (this.enabled) this.ensureContext();
+        return this.enabled;
+      }
+
+      // 1. Friendly Coin Flip Ting & Shimmer (Standard Pixar Peek)
+      playCoinFlip() {
+        if (!this.enabled) return;
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1760, now);
+        osc1.frequency.exponentialRampToValueAtTime(3520, now + 0.12);
+
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(2637, now);
+        osc2.frequency.exponentialRampToValueAtTime(5274, now + 0.15);
+
+        gain.gain.setValueAtTime(0.24 * this.volume, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.5);
+        osc2.stop(now + 0.5);
+      }
+
+      // 2. Celestial Harp & Chime Glissando for Rainbow Arc
+      playRainbowChime() {
+        if (!this.enabled) return;
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const freqs = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1318.51];
+        freqs.forEach((f, idx) => {
+          const noteTime = now + (idx * 0.13);
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, noteTime);
+
+          gain.gain.setValueAtTime(0.0001, noteTime);
+          gain.gain.linearRampToValueAtTime(0.18 * this.volume, noteTime + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 0.55);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(noteTime);
+          osc.stop(noteTime + 0.6);
+        });
+      }
+
+      // 3. Heavy Iron Cauldron Thud & Brass Coin Clatter (Pot of Gold Landing)
+      playPotOfGoldLand() {
+        if (!this.enabled) return;
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const osc = ctx.createOscillator();
+        const thudGain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(125, now);
+        osc.frequency.exponentialRampToValueAtTime(32, now + 0.28);
+
+        thudGain.gain.setValueAtTime(0.6 * this.volume, now);
+        thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        osc.connect(thudGain);
+        thudGain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+
+        for (let i = 0; i < 4; i++) {
+          const cTime = now + 0.04 + (i * 0.06);
+          const cOsc = ctx.createOscillator();
+          const cGain = ctx.createGain();
+
+          cOsc.type = 'square';
+          cOsc.frequency.setValueAtTime(2400 + (Math.random() * 800), cTime);
+
+          cGain.gain.setValueAtTime(0.12 * this.volume, cTime);
+          cGain.gain.exponentialRampToValueAtTime(0.0001, cTime + 0.08);
+
+          cOsc.connect(cGain);
+          cGain.connect(ctx.destination);
+          cOsc.start(cTime);
+          cOsc.stop(cTime + 0.1);
+        }
+      }
+
+      // 4. Electric Voltage Zap & Sub-Bass Drop Rumble (Glitch Trap)
+      playCrackleTrap() {
+        if (!this.enabled) return;
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const subOsc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        subOsc.type = 'sawtooth';
+        subOsc.frequency.setValueAtTime(80, now);
+        subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.9);
+
+        subGain.gain.setValueAtTime(0.45 * this.volume, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(140, now);
+
+        subOsc.connect(filter);
+        filter.connect(subGain);
+        subGain.connect(ctx.destination);
+        subOsc.start(now);
+        subOsc.stop(now + 1.0);
+
+        for (let i = 0; i < 6; i++) {
+          const zTime = now + 0.05 + (i * 0.12);
+          const zOsc = ctx.createOscillator();
+          const zGain = ctx.createGain();
+
+          zOsc.type = 'sawtooth';
+          zOsc.frequency.setValueAtTime(450 + (Math.random() * 600), zTime);
+          zOsc.frequency.linearRampToValueAtTime(120, zTime + 0.07);
+
+          zGain.gain.setValueAtTime(0.16 * this.volume, zTime);
+          zGain.gain.exponentialRampToValueAtTime(0.001, zTime + 0.07);
+
+          zOsc.connect(zGain);
+          zGain.connect(ctx.destination);
+          zOsc.start(zTime);
+          zOsc.stop(zTime + 0.08);
+        }
+      }
+
+      // 5. Explosive Horror Stinger Crash & Wicked Goblin Cackle (1993 Jump-Scare)
+      playHorrorJumpScare() {
+        if (!this.enabled) return;
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const bufferSize = Math.floor(ctx.sampleRate * 0.6);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.14));
+        }
+        const noiseNode = ctx.createBufferSource();
+        noiseNode.buffer = buffer;
+
+        const noiseFilter = ctx.createBiquadFilter();
+        noiseFilter.type = 'bandpass';
+        noiseFilter.frequency.setValueAtTime(1100, now);
+        noiseFilter.Q.setValueAtTime(2, now);
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.75 * this.volume, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+        noiseNode.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(ctx.destination);
+        noiseNode.start(now);
+
+        [440, 466, 880, 932].forEach((f, idx) => {
+          const sOsc = ctx.createOscillator();
+          const sGain = ctx.createGain();
+          sOsc.type = 'sawtooth';
+          sOsc.frequency.setValueAtTime(f, now);
+          sOsc.frequency.exponentialRampToValueAtTime(f * 1.5, now + 0.35);
+
+          sGain.gain.setValueAtTime((0.15 / (idx + 1)) * this.volume, now);
+          sGain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+
+          sOsc.connect(sGain);
+          sGain.connect(ctx.destination);
+          sOsc.start(now);
+          sOsc.stop(now + 0.75);
+        });
+
+        // Wicked Goblin FM Tremolo Cackle
+        const carrier = ctx.createOscillator();
+        const modulator = ctx.createOscillator();
+        const modGain = ctx.createGain();
+        const cackleGain = ctx.createGain();
+
+        carrier.type = 'triangle';
+        carrier.frequency.setValueAtTime(620, now + 0.1);
+        carrier.frequency.exponentialRampToValueAtTime(980, now + 0.45);
+        carrier.frequency.exponentialRampToValueAtTime(400, now + 0.85);
+
+        modulator.type = 'sawtooth';
+        modulator.frequency.setValueAtTime(18, now + 0.1);
+        modGain.gain.setValueAtTime(250, now + 0.1);
+
+        modulator.connect(modGain);
+        modGain.connect(carrier.frequency);
+
+        cackleGain.gain.setValueAtTime(0.001, now);
+        cackleGain.gain.linearRampToValueAtTime(0.35 * this.volume, now + 0.15);
+        cackleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+        carrier.connect(cackleGain);
+        cackleGain.connect(ctx.destination);
+
+        modulator.start(now + 0.1);
+        carrier.start(now + 0.1);
+        modulator.stop(now + 0.95);
+        carrier.stop(now + 0.95);
+      }
+
+      // 6. Snatch & Vanish Whoosh
+      playSnatchVanish() {
+        if (!this.enabled) return;
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(700, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.25);
+
+        gain.gain.setValueAtTime(0.35 * this.volume, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      }
+    }
+
+    const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75 });
+    window.lepAudio = lepAudio;
+
+    function toggleDemoSound() {
+      const enabled = lepAudio.toggleSound();
+      const icon = document.getElementById('soundIcon');
+      const label = document.getElementById('soundLabel');
+      const btn = document.getElementById('btnToggleSound');
+      if (enabled) {
+        if (icon) icon.textContent = '🔊';
+        if (label) label.textContent = 'Sound: ON';
+        if (btn) {
+          btn.classList.remove('bg-rose-950/70', 'text-rose-300', 'border-rose-500/50');
+          btn.classList.add('bg-emerald-950/70', 'text-emerald-300', 'border-emerald-500/50');
+        }
+        lepAudio.playCoinFlip();
+      } else {
+        if (icon) icon.textContent = '🔇';
+        if (label) label.textContent = 'Sound: OFF';
+        if (btn) {
+          btn.classList.remove('bg-emerald-950/70', 'text-emerald-300', 'border-emerald-500/50');
+          btn.classList.add('bg-rose-950/70', 'text-rose-300', 'border-rose-500/50');
+        }
+      }
+    }
+    window.toggleDemoSound = toggleDemoSound;
+
     let selectedSpotMode = 'random'; // 'random' or index 0, 1, 2
     let selectedSkinMode = 'pixar'; // standard peeks default to friendly 3D Pixar
     let currentSkinKey = 'pixar';
@@ -218,6 +527,7 @@
     }
 
     function triggerPeekNow() {
+      lepAudio.ensureContext();
       leprechaun.state = 'hidden';
       startLeprechaunPeek();
     }
@@ -264,6 +574,8 @@
     }
 
     function triggerRainbowJumpScareNow(forcedSpot) {
+      lepAudio.ensureContext();
+      lepAudio.playRainbowChime();
       const spots = getSpots();
       let chosen = (typeof forcedSpot === 'number') ? forcedSpot : (selectedSpotMode === 'random' ? Math.floor(Math.random() * spots.length) : parseInt(selectedSpotMode, 10));
       if (isNaN(chosen) || chosen < 0 || chosen >= spots.length) chosen = 0;
@@ -508,6 +820,7 @@
             leprechaun.coinFlipping = true;
             leprechaun.coinY = 0;
             spawnCoinBurst(curSpot.x, currentY - 60, leprechaun.skinKey);
+            lepAudio.playCoinFlip();
           }
         } else if (leprechaun.state === 'peeking') {
           const peekDuration = now - leprechaun.holdTimer;
@@ -523,6 +836,7 @@
           if (peekDuration > 2600) {
             leprechaun.state = 'hiding';
             leprechaun.progress = 0;
+            lepAudio.playSnatchVanish();
           }
         } else if (leprechaun.state === 'hiding') {
           leprechaun.progress += 0.045;
@@ -626,6 +940,7 @@
             rainbowScare.timer = now;
             rainbowScare.potScale = 0;
             spawnCoinBurst(targetX, targetY - 40, 'pixar');
+            lepAudio.playPotOfGoldLand();
           }
 
         } else if (rainbowScare.phase === 'pot') {
@@ -641,6 +956,7 @@
           if (elapsed > 1100) {
             rainbowScare.phase = 'crackle';
             rainbowScare.timer = now;
+            lepAudio.playCrackleTrap();
           }
 
         } else if (rainbowScare.phase === 'crackle') {
@@ -655,6 +971,7 @@
             rainbowScare.timer = now;
             rainbowScare.jumpProgress = 0;
             spawnCoinBurst(targetX, targetY - 80, 'creepy');
+            lepAudio.playHorrorJumpScare();
           }
 
         } else if (rainbowScare.phase === 'jumpscare') {
@@ -679,6 +996,7 @@
             rainbowScare.phase = 'retreat';
             rainbowScare.timer = now;
             rainbowScare.progress = 0;
+            lepAudio.playSnatchVanish();
           }
 
         } else if (rainbowScare.phase === 'retreat') {
