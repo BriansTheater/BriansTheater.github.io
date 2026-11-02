@@ -1,10 +1,10 @@
 {
-  "version": "4.9.247",
+  "version": "4.9.248",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.247",
+  "title": "Brian's Theater v4.9.248",
   "notes": [
-    "Added 1993 Horror Creepy Leprechaun character skin variant.",
-    "Built multi-variant character selector into Demo Studio.",
-    "Integrated surprise creepy Easter egg peeks into Twitch overlay."
+    "Added animated Rainbow and Pot of Gold jump-scare sequence.",
+    "Integrated procedural Bezier rainbow arc and golden cauldron lure.",
+    "Added emerald lightning crackle and screen shake jump-scare."
   ]
 }

@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.248] - 2026-11-02
+
+### What's New
+- Added animated Rainbow and Pot of Gold jump-scare sequence.
+- Rendered 7-band procedural Bezier rainbow arc and star dust.
+- Materialized overflowing 3D Pot of Gold with warm bloom.
+- Added crackling emerald lightning flash and visceral screen shake.
+- Integrated dedicated rainbow jump-scare button into Demo Studio.
+- Added automated surprise rainbow jump-scare event to Twitch overlay.
+
 ## [4.9.247] - 2026-11-02
 
 ### What's New

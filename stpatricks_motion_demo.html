@@ -58,8 +58,12 @@
 
       <!-- Controls: Manual Peek Trigger, Hiding Spot & Mascot Skin Selection -->
       <div class="flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-emerald-500/40 shadow-2xl">
-        <button id="btnTriggerPeek" onclick="triggerPeekNow()" class="demo-pill active px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1.5 cursor-pointer hover:brightness-110">
-          <span>✨</span> <span>Trigger Peek Now!</span>
+        <button id="btnTriggerPeek" onclick="triggerPeekNow()" class="demo-pill active px-3 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1 cursor-pointer hover:brightness-110">
+          <span>✨</span> <span>Peek</span>
+        </button>
+
+        <button id="btnRainbowJumpScare" onclick="triggerRainbowJumpScareNow()" class="demo-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1 cursor-pointer bg-gradient-to-r from-red-500/80 via-yellow-500/80 to-emerald-500/80 text-white hover:brightness-125 border border-amber-300/60 shadow-lg">
+          <span>🌈</span> <span>Rainbow Jump-Scare!</span>
         </button>
 
         <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Spot:</span>
@@ -139,6 +143,9 @@
       lepImages[key] = img;
     }
 
+    const potImg = new Image();
+    potImg.src = 'images/pot_of_gold_cutout.png';
+
     let selectedSpotMode = 'random'; // 'random' or index 0, 1, 2
     let selectedSkinMode = 'random'; // 'random', 'pixar', 'creepy'
     let currentSkinKey = 'pixar';
@@ -155,6 +162,20 @@
       coinRot: 0,
       wink: false
     };
+
+    let rainbowScare = {
+      active: false,
+      phase: 'idle', // 'arc', 'pot', 'crackle', 'jumpscare', 'retreat'
+      progress: 0,
+      spotIndex: 0,
+      potScale: 0,
+      potAlpha: 0,
+      shakeX: 0,
+      shakeY: 0,
+      timer: 0,
+      jumpProgress: 0
+    };
+    let rainbowStars = [];
 
     let lastAutoPeekTime = Date.now();
     let clovers = [];
@@ -242,6 +263,117 @@
       leprechaun.coinFlipping = false;
       leprechaun.wink = false;
       leprechaun.holdTimer = 0;
+    }
+
+    function triggerRainbowJumpScareNow(forcedSpot) {
+      const spots = getSpots();
+      let chosen = (typeof forcedSpot === 'number') ? forcedSpot : (selectedSpotMode === 'random' ? Math.floor(Math.random() * spots.length) : parseInt(selectedSpotMode, 10));
+      if (isNaN(chosen) || chosen < 0 || chosen >= spots.length) chosen = 0;
+
+      // Deactivate standard peek while rainbow jump-scare takes the spotlight
+      leprechaun.active = false;
+      leprechaun.state = 'hidden';
+
+      rainbowScare.active = true;
+      rainbowScare.phase = 'arc';
+      rainbowScare.progress = 0;
+      rainbowScare.spotIndex = chosen;
+      rainbowScare.potScale = 0;
+      rainbowScare.potAlpha = 0;
+      rainbowScare.shakeX = 0;
+      rainbowScare.shakeY = 0;
+      rainbowScare.timer = Date.now();
+      rainbowScare.jumpProgress = 0;
+      rainbowStars = [];
+    }
+    window.triggerRainbowJumpScare = triggerRainbowJumpScareNow;
+    window.getRainbowJumpScareState = () => rainbowScare;
+
+    // Drawing the Parabolic Rainbow Arc
+    function drawRainbowArc(c, startX, startY, endX, endY, progress, isCrackle) {
+      if (progress <= 0) return;
+      const colors = isCrackle ? [
+        'rgba(34, 197, 94, 0.95)',
+        'rgba(74, 222, 128, 0.95)',
+        'rgba(16, 185, 129, 0.95)',
+        'rgba(240, 253, 244, 1)',
+        'rgba(34, 197, 94, 0.95)'
+      ] : [
+        'rgba(239, 68, 68, 0.85)',   // Red
+        'rgba(249, 115, 22, 0.85)',  // Orange
+        'rgba(234, 179, 8, 0.85)',   // Yellow
+        'rgba(34, 197, 94, 0.85)',   // Green
+        'rgba(59, 130, 246, 0.85)',  // Blue
+        'rgba(99, 102, 241, 0.85)',  // Indigo
+        'rgba(168, 85, 247, 0.85)'   // Violet
+      ];
+
+      const ctrlX = (startX + endX) / 2 + (startX < endX ? -50 : 50);
+      const ctrlY = Math.min(startY, endY) - canvas.height * 0.38;
+
+      c.save();
+      c.lineCap = 'round';
+      const bandWidth = isCrackle ? 8 : 6;
+      const totalWidth = colors.length * bandWidth;
+
+      for (let i = 0; i < colors.length; i++) {
+        const offset = (i - colors.length / 2) * bandWidth;
+        c.beginPath();
+        c.strokeStyle = colors[i];
+        c.lineWidth = bandWidth;
+        c.shadowColor = isCrackle ? '#22c55e' : colors[i];
+        c.shadowBlur = isCrackle ? 24 : 12;
+
+        const steps = Math.max(8, Math.floor(55 * progress));
+        for (let s = 0; s <= steps; s++) {
+          const t = Math.min(progress, s / 55);
+          const bx = Math.pow(1 - t, 2) * startX + 2 * (1 - t) * t * ctrlX + Math.pow(t, 2) * endX;
+          const by = Math.pow(1 - t, 2) * startY + 2 * (1 - t) * t * ctrlY + Math.pow(t, 2) * endY;
+          const dx = 2 * (1 - t) * (ctrlX - startX) + 2 * t * (endX - ctrlX);
+          const dy = 2 * (1 - t) * (ctrlY - startY) + 2 * t * (endY - ctrlY);
+          const len = Math.hypot(dx, dy) || 1;
+          const px = bx - (dy / len) * offset;
+          const py = by + (dx / len) * offset;
+
+          if (s === 0) c.moveTo(px, py);
+          else c.lineTo(px, py);
+        }
+        c.stroke();
+      }
+      c.restore();
+
+      // Emit star dust particles along leading edge
+      if (progress < 1 && Math.random() < 0.65) {
+        const t = progress;
+        const bx = Math.pow(1 - t, 2) * startX + 2 * (1 - t) * t * ctrlX + Math.pow(t, 2) * endX;
+        const by = Math.pow(1 - t, 2) * startY + 2 * (1 - t) * t * ctrlY + Math.pow(t, 2) * endY;
+        rainbowStars.push({
+          x: bx + (Math.random() - 0.5) * totalWidth,
+          y: by + (Math.random() - 0.5) * totalWidth,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: Math.random() * 2 + 0.8,
+          size: Math.random() * 3 + 2,
+          alpha: 1,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+    }
+
+    // Drawing the Pot of Gold Cutout
+    function drawPotOfGold(c, x, y, scale, alpha, glowColor) {
+      if (!potImg.complete || potImg.naturalWidth === 0 || alpha <= 0) return;
+      c.save();
+      c.globalAlpha = Math.min(1, Math.max(0, alpha));
+      c.translate(x, y);
+      c.scale(scale, scale);
+
+      c.shadowColor = glowColor || 'rgba(251, 191, 36, 0.85)';
+      c.shadowBlur = 24;
+
+      const pw = potImg.naturalWidth;
+      const ph = potImg.naturalHeight;
+      c.drawImage(potImg, -pw / 2, -ph, pw, ph);
+      c.restore();
     }
 
     // 2. Ambient Floating 4-Leaf Clovers
@@ -464,6 +596,131 @@
         ctx.shadowBlur = 8;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // ==========================================
+      // 5. St. Patrick's Rainbow & Pot of Gold Jump-Scare Event
+      // ==========================================
+      if (rainbowScare.active) {
+        const spots = getSpots();
+        const curSpot = spots[rainbowScare.spotIndex] || spots[0];
+        const elapsed = now - rainbowScare.timer;
+
+        // Origin of Rainbow Arc (opposite tavern side)
+        const startX = (curSpot.x < canvas.width / 2) ? canvas.width * 0.92 : canvas.width * 0.08;
+        const startY = canvas.height * 0.08;
+        const targetX = curSpot.x;
+        const targetY = curSpot.baseY;
+
+        ctx.save();
+        if (rainbowScare.shakeX !== 0 || rainbowScare.shakeY !== 0) {
+          ctx.translate(rainbowScare.shakeX, rainbowScare.shakeY);
+        }
+
+        if (rainbowScare.phase === 'arc') {
+          rainbowScare.progress += 0.024;
+          drawRainbowArc(ctx, startX, startY, targetX, targetY, Math.min(1, rainbowScare.progress), false);
+
+          if (rainbowScare.progress >= 1) {
+            rainbowScare.phase = 'pot';
+            rainbowScare.timer = now;
+            rainbowScare.potScale = 0;
+            spawnCoinBurst(targetX, targetY - 40, 'pixar');
+          }
+
+        } else if (rainbowScare.phase === 'pot') {
+          drawRainbowArc(ctx, startX, startY, targetX, targetY, 1, false);
+
+          const t = Math.min(1, elapsed / 350);
+          rainbowScare.potScale = (curSpot.scale * 0.95) * (1 - Math.pow(1 - t, 3));
+          rainbowScare.potAlpha = Math.min(1, elapsed / 200);
+
+          const bob = Math.sin(elapsed * 0.005) * 3;
+          drawPotOfGold(ctx, targetX, targetY - 25 + bob, rainbowScare.potScale, rainbowScare.potAlpha);
+
+          if (elapsed > 1100) {
+            rainbowScare.phase = 'crackle';
+            rainbowScare.timer = now;
+          }
+
+        } else if (rainbowScare.phase === 'crackle') {
+          rainbowScare.shakeX = (Math.random() - 0.5) * 14;
+          rainbowScare.shakeY = (Math.random() - 0.5) * 14;
+          drawRainbowArc(ctx, startX, startY, targetX, targetY, 1, true);
+
+          drawPotOfGold(ctx, targetX, targetY - 25, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.9)');
+
+          if (elapsed > 240) {
+            rainbowScare.phase = 'jumpscare';
+            rainbowScare.timer = now;
+            rainbowScare.jumpProgress = 0;
+            spawnCoinBurst(targetX, targetY - 80, 'creepy');
+          }
+
+        } else if (rainbowScare.phase === 'jumpscare') {
+          rainbowScare.jumpProgress += 0.085;
+          const ease = Math.min(1, rainbowScare.jumpProgress);
+
+          if (elapsed < 380) {
+            rainbowScare.shakeX = (Math.random() - 0.5) * 10;
+            rainbowScare.shakeY = (Math.random() - 0.5) * 10;
+          } else {
+            rainbowScare.shakeX = 0;
+            rainbowScare.shakeY = 0;
+          }
+
+          const lungeY = targetY + (curSpot.peekOffset * 1.35) * ease;
+          const scareScale = curSpot.scale * 1.38;
+
+          drawLeprechaun(ctx, targetX, lungeY, scareScale, curSpot.angle, false, false, curSpot.flip, 'creepy');
+          drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.85)');
+
+          if (elapsed > 2200) {
+            rainbowScare.phase = 'retreat';
+            rainbowScare.timer = now;
+            rainbowScare.progress = 0;
+          }
+
+        } else if (rainbowScare.phase === 'retreat') {
+          rainbowScare.progress += 0.04;
+          const ease = Math.sin((rainbowScare.progress * Math.PI) / 2);
+          const retreatY = targetY + (curSpot.peekOffset * 1.35) * (1 - ease);
+          const fadeAlpha = 1 - ease;
+
+          drawLeprechaun(ctx, targetX, retreatY, curSpot.scale * (1.38 - ease * 0.4), curSpot.angle, false, false, curSpot.flip, 'creepy');
+          drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95 * (1 - ease * 0.5), fadeAlpha);
+
+          if (rainbowScare.progress >= 1) {
+            rainbowScare.active = false;
+            rainbowScare.phase = 'idle';
+            rainbowScare.shakeX = 0;
+            rainbowScare.shakeY = 0;
+            lastAutoPeekTime = now;
+          }
+        }
+
+        ctx.restore();
+      }
+
+      // 6. Draw Rainbow Falling Stars
+      for (let sIdx = rainbowStars.length - 1; sIdx >= 0; sIdx--) {
+        const star = rainbowStars[sIdx];
+        star.x += star.vx;
+        star.y += star.vy;
+        star.alpha -= 0.025;
+        if (star.alpha <= 0) {
+          rainbowStars.splice(sIdx, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.globalAlpha = star.alpha;
+        ctx.fillStyle = star.color;
+        ctx.shadowColor = star.color;
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }

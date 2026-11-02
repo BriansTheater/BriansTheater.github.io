@@ -1283,6 +1283,125 @@
       }
       window.triggerLeprechaunPeek = triggerLepPeek;
 
+      const potImg = new Image();
+      potImg.src = 'images/pot_of_gold_cutout.png';
+
+      let activeRainbowScare = {
+        active: false,
+        phase: 'idle',
+        progress: 0,
+        spot: null,
+        potScale: 0,
+        potAlpha: 0,
+        shakeX: 0,
+        shakeY: 0,
+        timer: 0,
+        jumpProgress: 0
+      };
+      let rainbowStars = [];
+      let lastRainbowEventTime = Date.now() - 30000;
+
+      function triggerRainbowJumpScare(forcedSpotId) {
+        const spots = getLeprechaunSpots();
+        const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
+        if (activeLep) activeLep.state = 'hidden';
+        activeRainbowScare.active = true;
+        activeRainbowScare.phase = 'arc';
+        activeRainbowScare.progress = 0;
+        activeRainbowScare.spot = spot;
+        activeRainbowScare.potScale = 0;
+        activeRainbowScare.potAlpha = 0;
+        activeRainbowScare.shakeX = 0;
+        activeRainbowScare.shakeY = 0;
+        activeRainbowScare.timer = Date.now();
+        activeRainbowScare.jumpProgress = 0;
+        rainbowStars = [];
+      }
+      window.triggerRainbowJumpScare = triggerRainbowJumpScare;
+      window.getActiveRainbowScareState = () => activeRainbowScare;
+
+      function drawRainbowArc(c, startX, startY, endX, endY, progress, isCrackle) {
+        if (progress <= 0) return;
+        const colors = isCrackle ? [
+          'rgba(34, 197, 94, 0.95)',
+          'rgba(74, 222, 128, 0.95)',
+          'rgba(16, 185, 129, 0.95)',
+          'rgba(240, 253, 244, 1)',
+          'rgba(34, 197, 94, 0.95)'
+        ] : [
+          'rgba(239, 68, 68, 0.85)',
+          'rgba(249, 115, 22, 0.85)',
+          'rgba(234, 179, 8, 0.85)',
+          'rgba(34, 197, 94, 0.85)',
+          'rgba(59, 130, 246, 0.85)',
+          'rgba(99, 102, 241, 0.85)',
+          'rgba(168, 85, 247, 0.85)'
+        ];
+
+        const ctrlX = (startX + endX) / 2 + (startX < endX ? -50 : 50);
+        const ctrlY = Math.min(startY, endY) - canvas.height * 0.38;
+
+        c.save();
+        c.lineCap = 'round';
+        const bandWidth = isCrackle ? 8 : 6;
+        const totalWidth = colors.length * bandWidth;
+
+        for (let i = 0; i < colors.length; i++) {
+          const offset = (i - colors.length / 2) * bandWidth;
+          c.beginPath();
+          c.strokeStyle = colors[i];
+          c.lineWidth = bandWidth;
+          c.shadowColor = isCrackle ? '#22c55e' : colors[i];
+          c.shadowBlur = isCrackle ? 24 : 12;
+
+          const steps = Math.max(8, Math.floor(55 * progress));
+          for (let s = 0; s <= steps; s++) {
+            const t = Math.min(progress, s / 55);
+            const bx = Math.pow(1 - t, 2) * startX + 2 * (1 - t) * t * ctrlX + Math.pow(t, 2) * endX;
+            const by = Math.pow(1 - t, 2) * startY + 2 * (1 - t) * t * ctrlY + Math.pow(t, 2) * endY;
+            const dx = 2 * (1 - t) * (ctrlX - startX) + 2 * t * (endX - ctrlX);
+            const dy = 2 * (1 - t) * (ctrlY - startY) + 2 * t * (endY - ctrlY);
+            const len = Math.hypot(dx, dy) || 1;
+            const px = bx - (dy / len) * offset;
+            const py = by + (dx / len) * offset;
+
+            if (s === 0) c.moveTo(px, py);
+            else c.lineTo(px, py);
+          }
+          c.stroke();
+        }
+        c.restore();
+
+        if (progress < 1 && Math.random() < 0.65) {
+          const t = progress;
+          const bx = Math.pow(1 - t, 2) * startX + 2 * (1 - t) * t * ctrlX + Math.pow(t, 2) * endX;
+          const by = Math.pow(1 - t, 2) * startY + 2 * (1 - t) * t * ctrlY + Math.pow(t, 2) * endY;
+          rainbowStars.push({
+            x: bx + (Math.random() - 0.5) * totalWidth,
+            y: by + (Math.random() - 0.5) * totalWidth,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: Math.random() * 2 + 0.8,
+            size: Math.random() * 3 + 2,
+            alpha: 1,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      }
+
+      function drawPotOfGold(c, x, y, scale, alpha, glowColor) {
+        if (!potImg.complete || potImg.naturalWidth === 0 || alpha <= 0) return;
+        c.save();
+        c.globalAlpha = Math.min(1, Math.max(0, alpha));
+        c.translate(x, y);
+        c.scale(scale, scale);
+        c.shadowColor = glowColor || 'rgba(251, 191, 36, 0.85)';
+        c.shadowBlur = 24;
+        const pw = potImg.naturalWidth;
+        const ph = potImg.naturalHeight;
+        c.drawImage(potImg, -pw / 2, -ph, pw, ph);
+        c.restore();
+      }
+
       const count = type === 'fireworks' ? 24 : 45;
 
       for (let i = 0; i < count; i++) {
@@ -1683,6 +1802,191 @@
             ctx.restore();
 
             if (spk.alpha <= 0) activeGoldSparks.splice(sIdx, 1);
+          }
+
+          // Auto-trigger rare Rainbow Jump-Scare event every ~70s if idle
+          if (!activeRainbowScare.active && (!activeLep || activeLep.state === 'hidden') && (now - lastRainbowEventTime > 70000)) {
+            triggerRainbowJumpScare();
+            lastRainbowEventTime = now;
+          }
+
+          // ==========================================
+          // 4. St. Patrick's Rainbow & Pot of Gold Jump-Scare Event
+          // ==========================================
+          if (activeRainbowScare.active) {
+            const curSpot = activeRainbowScare.spot || getLeprechaunSpots()[0];
+            const elapsed = now - activeRainbowScare.timer;
+
+            const startX = (curSpot.x < canvas.width / 2) ? canvas.width * 0.92 : canvas.width * 0.08;
+            const startY = canvas.height * 0.08;
+            const targetX = curSpot.x;
+            const targetY = curSpot.baseY;
+
+            ctx.save();
+            if (activeRainbowScare.shakeX !== 0 || activeRainbowScare.shakeY !== 0) {
+              ctx.translate(activeRainbowScare.shakeX, activeRainbowScare.shakeY);
+            }
+
+            if (activeRainbowScare.phase === 'arc') {
+              activeRainbowScare.progress += 0.024;
+              drawRainbowArc(ctx, startX, startY, targetX, targetY, Math.min(1, activeRainbowScare.progress), false);
+
+              if (activeRainbowScare.progress >= 1) {
+                activeRainbowScare.phase = 'pot';
+                activeRainbowScare.timer = now;
+                activeRainbowScare.potScale = 0;
+                for (let k = 0; k < 18; k++) {
+                  const angle = Math.random() * Math.PI * 2;
+                  const spd = Math.random() * 4 + 1.5;
+                  activeGoldSparks.push({
+                    x: targetX,
+                    y: targetY - 40,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd - 1,
+                    size: Math.random() * 3 + 2,
+                    alpha: 1,
+                    color: (k % 2 === 0) ? '#fbbf24' : '#fef08a'
+                  });
+                }
+              }
+
+            } else if (activeRainbowScare.phase === 'pot') {
+              drawRainbowArc(ctx, startX, startY, targetX, targetY, 1, false);
+
+              const t = Math.min(1, elapsed / 350);
+              activeRainbowScare.potScale = (curSpot.scale * 0.95) * (1 - Math.pow(1 - t, 3));
+              activeRainbowScare.potAlpha = Math.min(1, elapsed / 200);
+
+              const bob = Math.sin(elapsed * 0.005) * 3;
+              drawPotOfGold(ctx, targetX, targetY - 25 + bob, activeRainbowScare.potScale, activeRainbowScare.potAlpha);
+
+              if (elapsed > 1100) {
+                activeRainbowScare.phase = 'crackle';
+                activeRainbowScare.timer = now;
+              }
+
+            } else if (activeRainbowScare.phase === 'crackle') {
+              activeRainbowScare.shakeX = (Math.random() - 0.5) * 14;
+              activeRainbowScare.shakeY = (Math.random() - 0.5) * 14;
+              drawRainbowArc(ctx, startX, startY, targetX, targetY, 1, true);
+
+              drawPotOfGold(ctx, targetX, targetY - 25, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.9)');
+
+              if (elapsed > 240) {
+                activeRainbowScare.phase = 'jumpscare';
+                activeRainbowScare.timer = now;
+                activeRainbowScare.jumpProgress = 0;
+                for (let k = 0; k < 22; k++) {
+                  const angle = Math.random() * Math.PI * 2;
+                  const spd = Math.random() * 5 + 1.5;
+                  activeGoldSparks.push({
+                    x: targetX,
+                    y: targetY - 80,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd - 1,
+                    size: Math.random() * 3 + 2,
+                    alpha: 1,
+                    color: (k % 2 === 0) ? '#22c55e' : '#ef4444'
+                  });
+                }
+              }
+
+            } else if (activeRainbowScare.phase === 'jumpscare') {
+              activeRainbowScare.jumpProgress += 0.085;
+              const ease = Math.min(1, activeRainbowScare.jumpProgress);
+
+              if (elapsed < 380) {
+                activeRainbowScare.shakeX = (Math.random() - 0.5) * 10;
+                activeRainbowScare.shakeY = (Math.random() - 0.5) * 10;
+              } else {
+                activeRainbowScare.shakeX = 0;
+                activeRainbowScare.shakeY = 0;
+              }
+
+              const lungeY = targetY + (curSpot.peekOffset * 1.35) * ease;
+              const scareScale = curSpot.scale * 1.38;
+
+              // Draw Warwick Davis Horror Leprechaun
+              const creepySkin = LEP_SKINS.creepy;
+              const creepyImg = lepImages.creepy;
+              if (creepyImg && creepyImg.complete && creepyImg.naturalWidth > 0) {
+                ctx.save();
+                ctx.translate(targetX, lungeY);
+                ctx.rotate(curSpot.angle);
+                const effScale = scareScale * (creepySkin.scaleMul || 1.0);
+                ctx.scale(effScale * (curSpot.flip ? -1 : 1), effScale);
+                ctx.shadowColor = 'rgba(34, 197, 94, 0.95)';
+                ctx.shadowBlur = 35;
+                const iw = creepyImg.naturalWidth;
+                const ih = creepyImg.naturalHeight;
+                ctx.drawImage(creepyImg, -iw / 2, -ih, iw, ih);
+                ctx.restore();
+              }
+
+              // Draw Pot of Gold in front of his torso
+              drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.85)');
+
+              if (elapsed > 2200) {
+                activeRainbowScare.phase = 'retreat';
+                activeRainbowScare.timer = now;
+                activeRainbowScare.progress = 0;
+              }
+
+            } else if (activeRainbowScare.phase === 'retreat') {
+              activeRainbowScare.progress += 0.04;
+              const ease = Math.sin((activeRainbowScare.progress * Math.PI) / 2);
+              const retreatY = targetY + (curSpot.peekOffset * 1.35) * (1 - ease);
+              const fadeAlpha = 1 - ease;
+
+              const creepySkin = LEP_SKINS.creepy;
+              const creepyImg = lepImages.creepy;
+              if (creepyImg && creepyImg.complete && creepyImg.naturalWidth > 0) {
+                ctx.save();
+                ctx.translate(targetX, retreatY);
+                ctx.rotate(curSpot.angle);
+                const effScale = curSpot.scale * (1.38 - ease * 0.4) * (creepySkin.scaleMul || 1.0);
+                ctx.scale(effScale * (curSpot.flip ? -1 : 1), effScale);
+                ctx.shadowColor = 'rgba(34, 197, 94, 0.6)';
+                ctx.shadowBlur = 20;
+                const iw = creepyImg.naturalWidth;
+                const ih = creepyImg.naturalHeight;
+                ctx.drawImage(creepyImg, -iw / 2, -ih, iw, ih);
+                ctx.restore();
+              }
+
+              drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95 * (1 - ease * 0.5), fadeAlpha);
+
+              if (activeRainbowScare.progress >= 1) {
+                activeRainbowScare.active = false;
+                activeRainbowScare.phase = 'idle';
+                activeRainbowScare.shakeX = 0;
+                activeRainbowScare.shakeY = 0;
+                lastLepPeekTime = now;
+              }
+            }
+
+            ctx.restore();
+          }
+
+          // Draw Rainbow Falling Stars
+          for (let sIdx = rainbowStars.length - 1; sIdx >= 0; sIdx--) {
+            const star = rainbowStars[sIdx];
+            star.x += star.vx;
+            star.y += star.vy;
+            star.alpha -= 0.025;
+            if (star.alpha <= 0) {
+              rainbowStars.splice(sIdx, 1);
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = star.alpha;
+            ctx.fillStyle = star.color;
+            ctx.shadowColor = star.color;
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
           }
         }
 
@@ -3455,7 +3759,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.247";
+    const TWITCH_OVERLAY_VERSION = "4.9.248";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
