@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎃 Brian's Haunted Theater • Twitch Stream Overlay (1080p)</title>
+  <title>🎬 Brian's Theater • Twitch Stream Overlay (1080p)</title>
   <link rel="icon" type="image/png" href="icons/icon-192.png">
 
   <link rel="preconnect" href="https://brianstheater-default-rtdb.firebaseio.com" crossorigin>
@@ -719,6 +719,15 @@
       // Update body classes
       document.body.classList.remove('theme-normal', 'theme-christmas', 'theme-halloween');
       document.body.classList.add(`theme-${effective}`);
+
+      // Dynamic browser tab title
+      if (effective === 'christmas') {
+        document.title = "🎄 Brian's Winter Wonderland • Twitch Stream Overlay (1080p)";
+      } else if (effective === 'normal') {
+        document.title = "🎬 Brian's Theater • Twitch Stream Overlay (1080p)";
+      } else {
+        document.title = "🎃 Brian's Haunted Theater • Twitch Stream Overlay (1080p)";
+      }
 
       // 1. Background, Flanks & Atmosphere
       const backdropEl = document.getElementById('themeBackdropImg');
@@ -2670,7 +2679,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.238";
+    const TWITCH_OVERLAY_VERSION = "4.9.239";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

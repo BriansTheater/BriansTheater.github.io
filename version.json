@@ -1,9 +1,8 @@
 {
-  "version": "4.9.238",
+  "version": "4.9.239",
   "releaseDate": "2026-11-01",
-  "title": "Brian's Theater v4.9.238",
+  "title": "Brian's Theater v4.9.239",
   "notes": [
-    "Deployed balanced Christmas stream artwork with wide center clearance.",
-    "Enhanced ground twilight vignette for better stream card contrast."
+    "Synchronized dynamic browser tab titles across all themes."
   ]
 }

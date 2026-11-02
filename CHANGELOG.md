@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.239] - 2026-11-01
+
+### What's New
+- Synchronized dynamic browser tab titles across all themes.
+- Fixed tab title staying stuck on Haunted Theater.
+
 ## [4.9.238] - 2026-11-01
 
 ### What's New
