@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valentine's Motion Effects Demo — Brian's Theater</title>
+  <title>Valentine's Motion & Pole Design Demo — Brian's Theater</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -44,29 +44,54 @@
       box-shadow: 0 0 20px rgba(225, 29, 72, 0.6);
       transform: translateY(-2px);
     }
+    .pole-pill {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      transition: all 0.25s ease;
+    }
+    .pole-pill.active {
+      background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+      border-color: #f472b6;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.55);
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
   <div id="stageContainer">
     <!-- Top Interactive Mode Switcher -->
-    <header class="absolute top-6 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3">
-      <div class="px-5 py-2 rounded-full bg-slate-950/80 backdrop-blur-md border border-rose-500/40 shadow-xl flex items-center gap-2">
-        <span class="text-rose-400 text-lg">💖</span>
-        <span class="text-xs uppercase tracking-widest font-bold text-rose-200">Valentine's Motion FX Studio Demo</span>
+    <header class="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2.5 max-w-4xl w-full px-4">
+      <!-- Title Badge -->
+      <div class="px-5 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-rose-500/40 shadow-xl flex items-center gap-2">
+        <span class="text-rose-400 text-base">💖</span>
+        <span class="text-xs uppercase tracking-widest font-black text-rose-200">Valentine's Motion & Pole Design Studio</span>
       </div>
 
-      <nav class="flex items-center gap-2 p-1.5 rounded-2xl bg-black/70 backdrop-blur-md border border-slate-800 shadow-2xl">
-        <button id="btnOpt1" onclick="switchMode('cupid')" class="demo-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer">
-          <span>💘</span> <span>1. Cupid's Arrow</span>
+      <!-- Row 1: Pole Design Switcher (Option A vs Option B) -->
+      <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-purple-500/40 shadow-2xl">
+        <span class="text-[11px] font-mono font-bold text-purple-300 px-2 uppercase tracking-wider">Left Set Piece:</span>
+        <button id="btnPoleA" onclick="setPoleDesign('pole')" class="pole-pill active px-4 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer">
+          <span>💈</span> <span>Option A: Keep Pole (Electric Neon & Fairy Lights)</span>
         </button>
-        <button id="btnOpt2" onclick="switchMode('petals')" class="demo-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer">
-          <span>🌹</span> <span>2. Tumbling Rose Petals</span>
+        <button id="btnPoleB" onclick="setPoleDesign('candy')" class="pole-pill px-4 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer">
+          <span>🍬</span> <span>Option B: Conversation Candy Hearts (No Pole)</span>
         </button>
-        <button id="btnOpt3" onclick="switchMode('neon')" class="demo-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer">
-          <span>💖</span> <span>3. Neon Heart Lanterns</span>
+      </div>
+
+      <!-- Row 2: Motion FX Switcher -->
+      <nav class="flex items-center gap-2 p-1 rounded-2xl bg-black/70 backdrop-blur-md border border-slate-800 shadow-xl">
+        <span class="text-[11px] font-mono font-bold text-slate-400 px-2 uppercase tracking-wider">Atmospheric FX:</span>
+        <button id="btnOpt1" onclick="switchMode('cupid')" class="demo-pill px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+          <span>💘</span> <span>Cupid's Arrow</span>
         </button>
-        <button id="btnOpt4" onclick="switchMode('deluxe')" class="demo-pill active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer">
-          <span>✨</span> <span>4. Deluxe Combo</span>
+        <button id="btnOpt2" onclick="switchMode('petals')" class="demo-pill px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+          <span>🌹</span> <span>Rose Petals</span>
+        </button>
+        <button id="btnOpt3" onclick="switchMode('neon')" class="demo-pill px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+          <span>💖</span> <span>Neon Lanterns</span>
+        </button>
+        <button id="btnOpt4" onclick="switchMode('deluxe')" class="demo-pill active px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+          <span>✨</span> <span>Deluxe Combo</span>
         </button>
       </nav>
     </header>
@@ -87,6 +112,7 @@
     const canvas = document.getElementById('effectCanvas');
     const ctx = canvas.getContext('2d');
 
+    let poleDesign = 'pole'; // 'pole' or 'candy'
     let currentMode = 'deluxe'; // 'cupid', 'petals', 'neon', 'deluxe'
     let animId = null;
 
@@ -103,10 +129,9 @@
     let lastArrowTime = 0;
 
     function spawnCupidArrow() {
-      // Launch from upper left sky towards center-right sky
       cupidArrows.push({
         x: -50,
-        y: Math.random() * (canvas.height * 0.25) + 60,
+        y: Math.random() * (canvas.height * 0.22) + 60,
         vx: Math.random() * 4 + 7,
         vy: (Math.random() - 0.2) * 1.5,
         targetX: canvas.width * 0.72 + Math.random() * 100,
@@ -145,7 +170,7 @@
           y: Math.random() * canvas.height,
           size: Math.random() * 12 + 10,
           speedY: Math.random() * 1.2 + 0.6,
-          speedX: Math.random() * 1.5 + 0.5, // gentle rightward breeze
+          speedX: Math.random() * 1.5 + 0.5,
           rotX: Math.random() * Math.PI,
           rotY: Math.random() * Math.PI,
           rotZ: Math.random() * Math.PI,
@@ -154,7 +179,7 @@
           rotSpeedZ: (Math.random() - 0.5) * 0.025,
           swayPhase: Math.random() * Math.PI * 2,
           alpha: Math.random() * 0.4 + 0.6,
-          shade: i % 3 // 0: crimson, 1: deep rose, 2: blush pink
+          shade: i % 3
         });
       }
     }
@@ -190,10 +215,192 @@
       c.closePath();
     }
 
+    // 4. Conversation Candy Heart Renderer (Option B)
+    function drawCandyHeart(c, x, y, size, text, baseColor, angle, timeOffset) {
+      const floatY = Math.sin((Date.now() / 1000) * 1.5 + timeOffset) * 6;
+      c.save();
+      c.translate(x, y + floatY);
+      c.rotate(angle);
+
+      // Heart Soft Drop Shadow & Ambient Glow
+      c.shadowColor = baseColor;
+      c.shadowBlur = 24;
+
+      // 3D Extrusion Side/Thickness
+      c.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      drawHeartShape(c, 0, 6, size);
+      c.fill();
+
+      // Front Face
+      const grad = c.createLinearGradient(-size/2, -size/2, size/2, size/2);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.3, baseColor);
+      grad.addColorStop(1, adjustColorBrightness(baseColor, -25));
+      c.fillStyle = grad;
+      drawHeartShape(c, 0, 0, size);
+      c.fill();
+
+      // Delicate Bevel Highlight
+      c.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+      c.lineWidth = 2.5;
+      c.shadowBlur = 0;
+      drawHeartShape(c, 0, 0, size);
+      c.stroke();
+
+      // Stamped Red Typography (Authentic Sweethearts Look)
+      c.fillStyle = '#be123c';
+      c.font = `900 ${Math.floor(size * 0.22)}px "Arial Black", Impact, sans-serif`;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.letterSpacing = '1px';
+      c.shadowColor = 'rgba(255, 255, 255, 0.4)';
+      c.shadowBlur = 2;
+      c.fillText(text, 0, size * 0.48);
+
+      c.restore();
+    }
+
+    function adjustColorBrightness(hex, percent) {
+      let num = parseInt(hex.replace('#',''), 16),
+      amt = Math.round(2.55 * percent),
+      R = (num >> 16) + amt,
+      G = (num >> 8 & 0x00FF) + amt,
+      B = (num & 0x0000FF) + amt;
+      return '#' + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
+    }
+
     // Main 60fps Animation Loop
     function loop(now) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // ==========================================
+      // 1. POLE DESIGN LAYER (OPTION A VS OPTION B)
+      // ==========================================
+      if (poleDesign === 'pole') {
+        // --- OPTION A: ELECTRIC NEON PULSE ON SPEAKER POLE ---
+        const timeSec = now / 1000;
+        const poleX = canvas.width * 0.088;
+        const topHeartY = canvas.height * 0.28;
+        const btmHeartY = canvas.height * 0.79;
+        const heartRadius = canvas.height * 0.085;
+
+        // Dynamic electric pulse (organic breathing + subtle flicker)
+        const pulseTop = Math.sin(timeSec * 2.8) * 0.18 + 0.88;
+        const flicker = (Math.random() > 0.985) ? 0.35 : 1; // occasional vintage neon flicker
+
+        // Glow layer for Top Neon Heart on Pole
+        ctx.save();
+        ctx.strokeStyle = '#f43f5e';
+        ctx.shadowColor = '#fb7185';
+        ctx.shadowBlur = 30 * pulseTop * flicker;
+        ctx.lineWidth = 3.5;
+        ctx.globalAlpha = 0.85 * flicker;
+        drawHeartShape(ctx, poleX, topHeartY - heartRadius * 0.5, heartRadius);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.8;
+        ctx.shadowBlur = 10;
+        drawHeartShape(ctx, poleX, topHeartY - heartRadius * 0.5, heartRadius);
+        ctx.stroke();
+        ctx.restore();
+
+        // Glow layer for Bottom Neon Heart on Pole
+        const pulseBtm = Math.cos(timeSec * 2.4) * 0.18 + 0.88;
+        ctx.save();
+        ctx.strokeStyle = '#f43f5e';
+        ctx.shadowColor = '#fb7185';
+        ctx.shadowBlur = 32 * pulseBtm * flicker;
+        ctx.lineWidth = 3.5;
+        ctx.globalAlpha = 0.85 * flicker;
+        drawHeartShape(ctx, poleX + 2, btmHeartY - heartRadius * 0.5, heartRadius * 0.92);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.8;
+        ctx.shadowBlur = 10;
+        drawHeartShape(ctx, poleX + 2, btmHeartY - heartRadius * 0.5, heartRadius * 0.92);
+        ctx.stroke();
+        ctx.restore();
+
+        // Twinkling Golden Fairy Lights Spiraling the Pole
+        const fairyY = [0.12, 0.18, 0.23, 0.35, 0.39, 0.49, 0.53, 0.61, 0.67, 0.73, 0.85, 0.92];
+        for (let i = 0; i < fairyY.length; i++) {
+          const fx = poleX + Math.sin(timeSec * 1.5 + i) * (canvas.width * 0.015);
+          const fy = canvas.height * fairyY[i];
+          const twinkle = Math.sin(timeSec * 4 + i * 1.2) * 0.35 + 0.65;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(fx, fy, 2.5 * twinkle, 0, Math.PI * 2);
+          ctx.fillStyle = '#fef08a';
+          ctx.shadowColor = '#fbbf24';
+          ctx.shadowBlur = 14 * twinkle;
+          ctx.globalAlpha = twinkle;
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Ambient Sign Backlight for DWARF, SOUL, AXEL
+        const signY = [canvas.height * 0.45, canvas.height * 0.54, canvas.height * 0.63];
+        for (let i = 0; i < signY.length; i++) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(244, 63, 94, 0.04)';
+          ctx.shadowColor = '#f43f5e';
+          ctx.shadowBlur = 20;
+          ctx.fillRect(poleX - 55, signY[i] - 18, 110, 36);
+          ctx.restore();
+        }
+
+      } else {
+        // --- OPTION B: CONVERSATION CANDY HEARTS (NO POLE) ---
+        // 1. Soft dark twilight mask over the left pole
+        ctx.save();
+        const maskGrad = ctx.createLinearGradient(0, 0, canvas.width * 0.22, 0);
+        maskGrad.addColorStop(0, 'rgba(12, 2, 13, 0.96)');
+        maskGrad.addColorStop(0.7, 'rgba(12, 2, 13, 0.85)');
+        maskGrad.addColorStop(1, 'rgba(12, 2, 13, 0)');
+        ctx.fillStyle = maskGrad;
+        ctx.fillRect(0, 0, canvas.width * 0.22, canvas.height);
+        ctx.restore();
+
+        // 2. Cluster of Oversized Glowing Conversation Candy Hearts
+        const heartSize = canvas.height * 0.12;
+        const baseX = canvas.width * 0.095;
+
+        // Heart 1: "DWARF" (Candy Pink)
+        drawCandyHeart(ctx, baseX - 15, canvas.height * 0.35, heartSize, 'DWARF', '#f472b6', -0.12, 0);
+
+        // Heart 2: "SOUL" (Pastel Lavender)
+        drawCandyHeart(ctx, baseX + 25, canvas.height * 0.48, heartSize * 0.95, 'SOUL', '#c084fc', 0.15, 1.2);
+
+        // Heart 3: "AXEL" (Mint Green)
+        drawCandyHeart(ctx, baseX - 20, canvas.height * 0.62, heartSize * 0.92, 'AXEL', '#6ee7b7', -0.08, 2.4);
+
+        // Heart 4: "BE MINE" (Rose Coral)
+        drawCandyHeart(ctx, baseX + 18, canvas.height * 0.75, heartSize * 1.05, 'BE MINE', '#fb7185', 0.18, 3.6);
+
+        // Decorative Fairy Lights around the Hearts
+        for (let i = 0; i < 8; i++) {
+          const fx = baseX + (Math.sin(i * 1.4) * 60);
+          const fy = canvas.height * (0.32 + i * 0.06);
+          const twinkle = Math.sin((now / 1000) * 3 + i) * 0.3 + 0.7;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(fx, fy, 2.2 * twinkle, 0, Math.PI * 2);
+          ctx.fillStyle = '#fef08a';
+          ctx.shadowColor = '#fbbf24';
+          ctx.shadowBlur = 12 * twinkle;
+          ctx.globalAlpha = twinkle * 0.85;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // ==========================================
+      // 2. ATMOSPHERIC MOTION EFFECTS LAYER
+      // ==========================================
       const showCupid = currentMode === 'cupid' || currentMode === 'deluxe';
       const showPetals = currentMode === 'petals' || currentMode === 'deluxe';
       const showNeon = currentMode === 'neon' || currentMode === 'deluxe';
@@ -206,7 +413,6 @@
           nh.x += nh.speedX;
           nh.pulse += 0.04;
 
-          // Wrap edges
           if (nh.y < -30) { nh.y = canvas.height + 30; nh.x = Math.random() * canvas.width; }
           if (nh.x < -30) nh.x = canvas.width + 30;
           if (nh.x > canvas.width + 30) nh.x = -30;
@@ -222,7 +428,6 @@
           drawHeartShape(ctx, nh.x, nh.y, nh.size * currentPulse);
           ctx.stroke();
 
-          // Soft inner glow
           ctx.fillStyle = nh.glowColor;
           ctx.globalAlpha = 0.08 * currentPulse;
           ctx.fill();
@@ -252,7 +457,6 @@
           ctx.rotate(p.rotZ);
           ctx.scale(Math.max(0.2, Math.abs(scaleX)), Math.max(0.2, Math.abs(scaleY)));
 
-          // Petal Color Gradients
           const grad = ctx.createRadialGradient(0, 0, 1, 0, 0, p.size);
           if (p.shade === 0) {
             grad.addColorStop(0, '#f43f5e');
@@ -273,7 +477,6 @@
           ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
           ctx.shadowBlur = 6;
 
-          // Organic Curving Petal Shape
           ctx.beginPath();
           ctx.moveTo(0, -p.size * 0.9);
           ctx.bezierCurveTo(p.size * 0.7, -p.size * 0.6, p.size * 0.8, p.size * 0.6, 0, p.size * 0.9);
@@ -291,14 +494,12 @@
           lastArrowTime = now;
         }
 
-        // Draw Arrows
         for (let i = cupidArrows.length - 1; i >= 0; i--) {
           const arr = cupidArrows[i];
           arr.x += arr.vx;
           arr.y += arr.vy;
           arr.trail.push({ x: arr.x, y: arr.y, alpha: 1 });
 
-          // Render shimmering comet trail
           for (let t = arr.trail.length - 1; t >= 0; t--) {
             const tr = arr.trail[t];
             tr.alpha -= 0.035;
@@ -317,7 +518,6 @@
             ctx.restore();
           }
 
-          // Render Golden Arrow Head & Glowing Shaft
           ctx.save();
           ctx.translate(arr.x, arr.y);
           const angle = Math.atan2(arr.vy, arr.vx);
@@ -355,19 +555,18 @@
 
           ctx.restore();
 
-          // Detonation into Heart Stardust
           if (arr.x >= arr.targetX) {
             burstCupidStardust(arr.x, arr.y);
             cupidArrows.splice(i, 1);
           }
         }
 
-        // Draw Sparks
+        // Sparks
         for (let i = cupidSparks.length - 1; i >= 0; i--) {
           const s = cupidSparks[i];
           s.x += s.vx;
           s.y += s.vy;
-          s.vy += 0.04; // gravity
+          s.vy += 0.04;
           s.alpha -= 0.016;
 
           if (s.alpha <= 0) {
@@ -394,6 +593,16 @@
       }
 
       animId = requestAnimationFrame(loop);
+    }
+
+    function setPoleDesign(design) {
+      poleDesign = design;
+      document.querySelectorAll('.pole-pill').forEach(b => b.classList.remove('active'));
+      if (design === 'pole') {
+        document.getElementById('btnPoleA').classList.add('active');
+      } else {
+        document.getElementById('btnPoleB').classList.add('active');
+      }
     }
 
     function switchMode(mode) {
