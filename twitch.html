@@ -175,9 +175,19 @@
     body.theme-normal {
       background-color: #030408;
     }
+    body.theme-normal .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 4, 8, 0.80) 0%, rgba(2, 4, 8, 0.45) 45%, rgba(2, 4, 8, 0) 75%),
+                  linear-gradient(to top, rgba(2, 4, 8, 0.85) 0%, rgba(2, 4, 8, 0.40) 20%, transparent 40%);
+    }
+
     body.theme-christmas {
       background-color: #020b12;
     }
+    body.theme-christmas .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 6, 14, 0.82) 0%, rgba(2, 6, 14, 0.50) 45%, rgba(2, 6, 14, 0) 75%),
+                  linear-gradient(to top, rgba(2, 6, 14, 0.88) 0%, rgba(2, 6, 14, 0.45) 20%, transparent 42%);
+    }
+
     body.theme-halloween {
       background-color: #050209;
     }
@@ -2660,7 +2670,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.237";
+    const TWITCH_OVERLAY_VERSION = "4.9.238";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

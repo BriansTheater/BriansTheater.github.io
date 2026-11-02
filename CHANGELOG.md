@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.238] - 2026-11-01
+
+### What's New
+- Deployed balanced Christmas stream artwork with wide center clearance.
+- Enhanced ground twilight vignette for better stream card contrast.
+- Eliminated flank crowding around 16:9 widescreen movie poster.
+
 ## [4.9.237] - 2026-11-01
 
 ### What's New
