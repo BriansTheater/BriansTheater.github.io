@@ -1076,6 +1076,10 @@
     // Dynamic Multi-Particle Engine (Snow, Sparkles, Hearts, Clovers, Fireworks, Leaves)
     let activeRockets = [];
     let activeFireworkSparks = [];
+    let activeGoldSparks = [];
+    let activeLep = null;
+    let lepImg = null;
+    let lastLepPeekTime = 0;
 
     const FONT_5X7 = {
       'A': [0x1C, 0x22, 0x22, 0x3E, 0x22, 0x22, 0x22],
@@ -1145,6 +1149,89 @@
       activeParticles = [];
       activeRockets = [];
       activeFireworkSparks = [];
+      activeGoldSparks = [];
+
+      if (type === 'clovers') {
+        if (!lepImg) {
+          lepImg = new Image();
+          lepImg.src = 'images/realistic_leprechaun_cutout.png';
+        }
+        activeLep = {
+          state: 'hidden',
+          progress: 0,
+          currentSpot: null,
+          x: 0,
+          y: 0,
+          baseY: 0,
+          targetY: 0,
+          scale: 0.35,
+          angle: 0,
+          flip: false,
+          holdTimer: 0,
+          coinTossed: false,
+          coinY: 0,
+          coinVy: 0,
+          coinRot: 0
+        };
+        lastLepPeekTime = Date.now() - 10000;
+      }
+
+      function getLeprechaunSpots() {
+        return [
+          {
+            id: 'left_barrel',
+            name: 'Left Ale Barrel',
+            x: canvas.width * 0.24,
+            baseY: canvas.height * 0.68,
+            peekOffset: -canvas.height * 0.175,
+            scale: 0.35,
+            angle: -0.02,
+            flip: false
+          },
+          {
+            id: 'upper_window',
+            name: 'Upper Tavern Window',
+            x: canvas.width * 0.612,
+            baseY: canvas.height * 0.38,
+            peekOffset: -canvas.height * 0.08,
+            scale: 0.18,
+            angle: 0.01,
+            flip: false
+          },
+          {
+            id: 'right_barrels',
+            name: 'Right Beer Barrels',
+            x: canvas.width * 0.805,
+            baseY: canvas.height * 0.80,
+            peekOffset: -canvas.height * 0.17,
+            scale: 0.33,
+            angle: 0.02,
+            flip: true
+          }
+        ];
+      }
+
+      function triggerLepPeek(forcedSpotId) {
+        if (!activeLep) return;
+        const spots = getLeprechaunSpots();
+        const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
+        activeLep.currentSpot = spot;
+        activeLep.x = spot.x;
+        activeLep.baseY = spot.baseY;
+        activeLep.targetY = spot.baseY + spot.peekOffset;
+        activeLep.y = spot.baseY;
+        activeLep.scale = spot.scale;
+        activeLep.angle = spot.angle;
+        activeLep.flip = spot.flip;
+        activeLep.state = 'peek_in';
+        activeLep.progress = 0;
+        activeLep.holdTimer = 0;
+        activeLep.coinTossed = false;
+        activeLep.coinY = 0;
+        activeLep.coinVy = 0;
+        activeLep.coinRot = 0;
+      }
+      window.triggerLeprechaunPeek = triggerLepPeek;
 
       const count = type === 'fireworks' ? 24 : 45;
 
@@ -1426,6 +1513,124 @@
           }
         }
 
+        // 3. St. Patrick's Dynamic Peek-a-Boo Leprechaun
+        if (type === 'clovers' && activeLep) {
+          const now = Date.now();
+          if (activeLep.state === 'hidden' && now - lastLepPeekTime > 22000) {
+            triggerLepPeek();
+            lastLepPeekTime = now;
+          }
+
+          if (activeLep.state !== 'hidden') {
+            if (activeLep.state === 'peek_in') {
+              activeLep.progress += 0.025;
+              const ease = 1 - Math.pow(1 - Math.min(1, activeLep.progress), 3);
+              activeLep.y = activeLep.baseY + (activeLep.targetY - activeLep.baseY) * ease;
+              if (activeLep.progress >= 1) {
+                activeLep.state = 'hold';
+                activeLep.holdTimer = 0;
+                activeLep.coinTossed = true;
+                activeLep.coinY = activeLep.targetY - (activeLep.scale * 180);
+                activeLep.coinVy = -8;
+                // Burst of gold sparks
+                for (let k = 0; k < 20; k++) {
+                  const angle = Math.random() * Math.PI * 2;
+                  const spd = Math.random() * 4 + 1.5;
+                  activeGoldSparks.push({
+                    x: activeLep.x,
+                    y: activeLep.coinY,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd - 1,
+                    size: Math.random() * 3 + 2,
+                    alpha: 1,
+                    color: (k % 2 === 0) ? '#fbbf24' : '#34d399'
+                  });
+                }
+              }
+            } else if (activeLep.state === 'hold') {
+              activeLep.holdTimer++;
+              if (activeLep.coinTossed) {
+                activeLep.coinY += activeLep.coinVy;
+                activeLep.coinVy += 0.4;
+                activeLep.coinRot += 0.18;
+                if (activeLep.coinY > activeLep.targetY) {
+                  activeLep.coinTossed = false;
+                }
+              }
+              if (activeLep.holdTimer > 180) {
+                activeLep.state = 'peek_out';
+                activeLep.progress = 0;
+              }
+            } else if (activeLep.state === 'peek_out') {
+              activeLep.progress += 0.022;
+              const ease = Math.pow(Math.min(1, activeLep.progress), 3);
+              activeLep.y = activeLep.targetY + (activeLep.baseY - activeLep.targetY) * ease;
+              if (activeLep.progress >= 1) {
+                activeLep.state = 'hidden';
+                lastLepPeekTime = Date.now();
+              }
+            }
+
+            // Draw Leprechaun Cutout Sprite
+            if (lepImg && lepImg.complete && lepImg.naturalWidth > 0) {
+              ctx.save();
+              ctx.translate(activeLep.x, activeLep.y);
+              ctx.rotate(activeLep.angle);
+              ctx.scale(activeLep.scale * (activeLep.flip ? -1 : 1), activeLep.scale);
+              ctx.shadowColor = 'rgba(245, 158, 11, 0.45)';
+              ctx.shadowBlur = 20;
+              const iw = lepImg.naturalWidth;
+              const ih = lepImg.naturalHeight;
+              ctx.drawImage(lepImg, -iw / 2, -ih, iw, ih);
+              ctx.restore();
+            }
+
+            // Draw Spinning 3D Gold Celtic Coin
+            if (activeLep.coinTossed) {
+              ctx.save();
+              ctx.translate(activeLep.x, activeLep.coinY);
+              const spinScale = Math.cos(activeLep.coinRot);
+              ctx.scale(spinScale, 1);
+              ctx.shadowColor = '#f59e0b';
+              ctx.shadowBlur = 15;
+              ctx.beginPath();
+              ctx.arc(0, 0, 14, 0, Math.PI * 2);
+              ctx.fillStyle = '#fbbf24';
+              ctx.fill();
+              ctx.strokeStyle = '#d97706';
+              ctx.lineWidth = 2.5;
+              ctx.stroke();
+              ctx.fillStyle = '#b45309';
+              ctx.font = 'bold 11px sans-serif';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('☘', 0, 0);
+              ctx.restore();
+            }
+          }
+
+          // Update & Draw Gold Sparks
+          for (let sIdx = activeGoldSparks.length - 1; sIdx >= 0; sIdx--) {
+            const spk = activeGoldSparks[sIdx];
+            spk.x += spk.vx;
+            spk.y += spk.vy;
+            spk.vy += 0.1;
+            spk.alpha -= 0.022;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(spk.x, spk.y, spk.size, 0, Math.PI * 2);
+            ctx.fillStyle = spk.color;
+            ctx.globalAlpha = Math.max(0, spk.alpha);
+            ctx.shadowColor = spk.color;
+            ctx.shadowBlur = 6;
+            ctx.fill();
+            ctx.restore();
+
+            if (spk.alpha <= 0) activeGoldSparks.splice(sIdx, 1);
+          }
+        }
+
         particleAnimId = requestAnimationFrame(draw);
       }
 
@@ -1439,6 +1644,8 @@
       }
       activeRockets = [];
       activeFireworkSparks = [];
+      activeGoldSparks = [];
+      activeLep = null;
       const canvas = document.getElementById('themeParticleCanvas') || document.getElementById('themeSnowCanvas');
       if (canvas) {
         canvas.classList.add('hidden');
@@ -3193,7 +3400,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.241";
+    const TWITCH_OVERLAY_VERSION = "4.9.245";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -3288,6 +3495,7 @@
       window.resolveSeasonalTheme = resolveSeasonalTheme;
       window.getActiveThemeName = getActiveThemeName;
       window.getActiveFireworkStats = () => ({ rockets: activeRockets.length, sparks: activeFireworkSparks.length });
+      window.getActiveLeprechaunState = () => activeLep;
       window.setSpotifyLiveState = setSpotifyLiveState;
       window.setSpotifyPlaylist = setSpotifyPlaylist;
       window.toggleTwitchSpotifyPlayback = toggleTwitchSpotifyPlayback;

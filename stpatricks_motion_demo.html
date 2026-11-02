@@ -94,6 +94,9 @@
     resize();
 
     // 1. Leprechaun State & Mechanics
+    const lepImg = new Image();
+    lepImg.src = 'images/realistic_leprechaun_cutout.png';
+
     let selectedSpotMode = 'random'; // 'random' or index 0, 1, 2
     let leprechaun = {
       active: false,
@@ -118,29 +121,32 @@
         {
           id: 'left_barrel',
           name: 'Left Ale Barrel',
-          x: canvas.width * 0.235,
-          baseY: canvas.height * 0.435,
-          peekOffset: -canvas.height * 0.088,
-          scale: 0.95,
-          angle: -0.04
+          x: canvas.width * 0.24,
+          baseY: canvas.height * 0.68,
+          peekOffset: -canvas.height * 0.175,
+          scale: 0.35,
+          angle: -0.02,
+          flip: false
         },
         {
           id: 'upper_window',
           name: 'Upper Tavern Window',
-          x: canvas.width * 0.61,
-          baseY: canvas.height * 0.25,
-          peekOffset: -canvas.height * 0.075,
-          scale: 0.8,
-          angle: 0.03
+          x: canvas.width * 0.612,
+          baseY: canvas.height * 0.38,
+          peekOffset: -canvas.height * 0.08,
+          scale: 0.18,
+          angle: 0.01,
+          flip: false
         },
         {
           id: 'right_barrels',
           name: 'Right Beer Barrels',
-          x: canvas.width * 0.815,
-          baseY: canvas.height * 0.62,
-          peekOffset: -canvas.height * 0.092,
-          scale: 1.05,
-          angle: 0.05
+          x: canvas.width * 0.805,
+          baseY: canvas.height * 0.80,
+          peekOffset: -canvas.height * 0.17,
+          scale: 0.33,
+          angle: 0.02,
+          flip: true
         }
       ];
     }
@@ -194,166 +200,23 @@
     }
     initClovers();
 
-    // 3. Drawing the Leprechaun on Canvas
-    function drawLeprechaun(c, x, y, scale, angle, wink, tipHat) {
+    // 3. Drawing the Photorealistic Leprechaun on Canvas
+    function drawLeprechaun(c, x, y, scale, angle, wink, tipHat, flip) {
+      if (!lepImg.complete || lepImg.naturalWidth === 0) return;
       c.save();
       c.translate(x, y);
       c.rotate(angle);
-      c.scale(scale, scale);
+      c.scale(scale * (flip ? -1 : 1), scale);
 
-      // --- A. Shoulders & Irish Green Coat ---
-      c.fillStyle = '#065f46'; // deep emerald coat
-      c.beginPath();
-      c.ellipse(0, 52, 42, 28, 0, 0, Math.PI * 2);
-      c.fill();
+      // Subtle tavern warm lantern ambient glow around character
+      c.shadowColor = 'rgba(245, 158, 11, 0.45)';
+      c.shadowBlur = 20;
 
-      // Golden Coat Buttons
-      c.fillStyle = '#fbbf24';
-      c.beginPath();
-      c.arc(0, 42, 3.5, 0, Math.PI * 2);
-      c.arc(0, 56, 3.5, 0, Math.PI * 2);
-      c.fill();
+      const iw = lepImg.naturalWidth;
+      const ih = lepImg.naturalHeight;
 
-      // White Collar
-      c.fillStyle = '#ffffff';
-      c.beginPath();
-      c.moveTo(-16, 26);
-      c.lineTo(0, 36);
-      c.lineTo(16, 26);
-      c.lineTo(0, 29);
-      c.fill();
-
-      // --- B. Fluffy Ginger/Orange Beard ---
-      c.fillStyle = '#ea580c'; // vibrant orange beard
-      c.beginPath();
-      c.moveTo(-32, 2);
-      c.bezierCurveTo(-38, 22, -34, 46, 0, 52);
-      c.bezierCurveTo(34, 46, 38, 22, 32, 2);
-      c.fill();
-
-      // --- C. Rosy Cheerful Face ---
-      c.fillStyle = '#fed7aa'; // warm peach skin
-      c.beginPath();
-      c.arc(0, 2, 28, 0, Math.PI * 2);
-      c.fill();
-
-      // Rosy Cheeks
-      c.fillStyle = 'rgba(244, 63, 94, 0.45)';
-      c.beginPath();
-      c.arc(-16, 8, 6, 0, Math.PI * 2);
-      c.arc(16, 8, 6, 0, Math.PI * 2);
-      c.fill();
-
-      // Button Nose
-      c.fillStyle = '#fbcfe8';
-      c.beginPath();
-      c.arc(0, 4, 4.5, 0, Math.PI * 2);
-      c.fill();
-
-      // Mischievous Smile
-      c.strokeStyle = '#9a3412';
-      c.lineWidth = 2.5;
-      c.beginPath();
-      c.arc(0, 8, 12, 0.15 * Math.PI, 0.85 * Math.PI);
-      c.stroke();
-
-      // --- D. Twinkling Eyes (with Winking!) ---
-      if (wink) {
-        // Left Eye: Winking Curving Arc
-        c.strokeStyle = '#431407';
-        c.lineWidth = 3;
-        c.beginPath();
-        c.arc(-11, -2, 7, 1.1 * Math.PI, 1.9 * Math.PI);
-        c.stroke();
-      } else {
-        // Left Eye: Open & Twinkling
-        c.fillStyle = '#1e293b';
-        c.beginPath();
-        c.arc(-11, -2, 4.5, 0, Math.PI * 2);
-        c.fill();
-        c.fillStyle = '#ffffff';
-        c.beginPath();
-        c.arc(-12.5, -3.5, 1.8, 0, Math.PI * 2);
-        c.fill();
-      }
-
-      // Right Eye: Always Open & Twinkling
-      c.fillStyle = '#1e293b';
-      c.beginPath();
-      c.arc(11, -2, 4.5, 0, Math.PI * 2);
-      c.fill();
-      c.fillStyle = '#ffffff';
-      c.beginPath();
-      c.arc(9.5, -3.5, 1.8, 0, Math.PI * 2);
-      c.fill();
-
-      // Bushy Orange Eyebrows
-      c.fillStyle = '#c2410c';
-      c.beginPath();
-      c.ellipse(-11, -11, 8, 3.5, -0.2, 0, Math.PI * 2);
-      c.ellipse(11, -11, 8, 3.5, 0.2, 0, Math.PI * 2);
-      c.fill();
-
-      // --- E. The Legendary Green Top Hat (with Hat-Tip Animation!) ---
-      c.save();
-      const hatTilt = tipHat ? -0.22 : 0;
-      const hatYOffset = tipHat ? -8 : 0;
-      c.translate(0, hatYOffset);
-      c.rotate(hatTilt);
-
-      // Hat Brim
-      c.fillStyle = '#047857'; // emerald green
-      c.beginPath();
-      c.ellipse(0, -22, 44, 9, 0, 0, Math.PI * 2);
-      c.fill();
-
-      // Hat Crown
-      c.fillStyle = '#059669';
-      c.beginPath();
-      c.moveTo(-28, -22);
-      c.lineTo(-24, -68);
-      c.lineTo(24, -68);
-      c.lineTo(28, -22);
-      c.closePath();
-      c.fill();
-
-      // Hat Top Ellipse
-      c.fillStyle = '#10b981';
-      c.beginPath();
-      c.ellipse(0, -68, 24, 6, 0, 0, Math.PI * 2);
-      c.fill();
-
-      // Black Leather Hat Band
-      c.fillStyle = '#0f172a';
-      c.fillRect(-27, -35, 54, 13);
-
-      // Shining Golden Buckle
-      c.fillStyle = '#fbbf24';
-      c.shadowColor = '#f59e0b';
-      c.shadowBlur = 10;
-      c.fillRect(-11, -38, 22, 19);
-
-      // Inner Buckle Cutout
-      c.fillStyle = '#0f172a';
-      c.shadowBlur = 0;
-      c.fillRect(-6, -33, 12, 9);
-
-      // Lucky 4-Leaf Clover Tucked in Hat Band
-      c.fillStyle = '#34d399';
-      c.beginPath();
-      c.arc(14, -36, 4, 0, Math.PI * 2);
-      c.arc(20, -36, 4, 0, Math.PI * 2);
-      c.arc(17, -42, 4, 0, Math.PI * 2);
-      c.arc(17, -30, 4, 0, Math.PI * 2);
-      c.fill();
-
-      c.restore();
-
-      // --- F. White Glove Hand (Waving / Tipping Hat) ---
-      c.fillStyle = '#f8fafc';
-      c.beginPath();
-      c.ellipse(-32, tipHat ? -18 : 12, 9, 8, 0, 0, Math.PI * 2);
-      c.fill();
+      // Draw sprite anchored at bottom center of character's visible chest
+      c.drawImage(lepImg, -iw / 2, -ih, iw, ih);
 
       c.restore();
     }
@@ -449,21 +312,17 @@
             spawnCoinBurst(curSpot.x, currentY - 60);
           }
         } else if (leprechaun.state === 'peeking') {
-          currentY = curSpot.baseY + curSpot.peekOffset;
           const peekDuration = now - leprechaun.holdTimer;
-
-          // Winks halfway through peek
-          leprechaun.wink = (peekDuration > 700 && peekDuration < 1600);
-          // Tips his hat as he winks!
-          tipHat = (peekDuration > 600 && peekDuration < 1800);
+          const bob = Math.sin(peekDuration * 0.004) * 3;
+          currentY = curSpot.baseY + curSpot.peekOffset + bob;
 
           // Coin Flip Animation in Air!
           if (leprechaun.coinFlipping) {
-            leprechaun.coinY = Math.sin((peekDuration / 2000) * Math.PI) * -55;
-            leprechaun.coinRot += 0.18;
+            leprechaun.coinY = Math.sin((peekDuration / 2000) * Math.PI) * -65;
+            leprechaun.coinRot += 0.22;
           }
 
-          if (peekDuration > 2400) {
+          if (peekDuration > 2600) {
             leprechaun.state = 'hiding';
             leprechaun.progress = 0;
           }
@@ -480,13 +339,14 @@
         }
 
         // Draw Leprechaun at calculated spot
-        drawLeprechaun(ctx, curSpot.x, currentY, curSpot.scale, curSpot.angle, leprechaun.wink, tipHat);
+        drawLeprechaun(ctx, curSpot.x, currentY, curSpot.scale, curSpot.angle, leprechaun.wink, tipHat, curSpot.flip);
 
-        // Draw Spinning Gold Coin if flipping
+        // Draw Spinning Celtic Gold Coin if flipping
         if (leprechaun.coinFlipping && leprechaun.state === 'peeking') {
           ctx.save();
-          const coinX = curSpot.x + 35;
-          const coinY = currentY - 30 + leprechaun.coinY;
+          const spriteH = lepImg.naturalHeight * curSpot.scale;
+          const coinX = curSpot.x + (curSpot.flip ? -45 : 45);
+          const coinY = currentY - (spriteH * 0.55) + leprechaun.coinY;
           ctx.translate(coinX, coinY);
           ctx.scale(Math.cos(leprechaun.coinRot), 1);
 

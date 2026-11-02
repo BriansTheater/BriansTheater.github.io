@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.245] - 2026-11-02
+
+### What's New
+- Upgraded St. Patrick's leprechaun to photorealistic live-action character cutout.
+- Isolated authentic Irish leprechaun silhouette with neural segmentation.
+- Calibrated 3 tavern hiding spots behind barrels and window.
+- Animated 3D Celtic spinning gold coin toss and physics.
+- Added warm tavern lantern ambient lighting and spark bursts.
+- Integrated dynamic peek-a-boo leprechaun into Twitch stream overlay.
+
 ## [4.9.244] - 2026-11-02
 
 ### What's New
