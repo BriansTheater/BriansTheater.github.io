@@ -1257,12 +1257,8 @@
         
         let skinChoice = forcedSkinId;
         if (!skinChoice) {
-          if (activeLep.skinPref === 'pixar') skinChoice = 'pixar';
-          else if (activeLep.skinPref === 'creepy') skinChoice = 'creepy';
-          else {
-            // 70% chance friendly Pixar, 30% chance creepy horror Easter egg
-            skinChoice = (Math.random() < 0.35) ? 'creepy' : 'pixar';
-          }
+          if (activeLep.skinPref === 'creepy') skinChoice = 'creepy';
+          else skinChoice = 'pixar'; // Standard peeks are 100% friendly Pixar; creepy horror is reserved exclusively for rainbow jump-scares!
         }
         activeLep.skinKey = skinChoice;
         activeLep.currentSpot = spot;
@@ -3759,7 +3755,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.248";
+    const TWITCH_OVERLAY_VERSION = "4.9.249";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

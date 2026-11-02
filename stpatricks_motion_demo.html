@@ -74,10 +74,9 @@
 
         <span class="text-slate-600 hidden sm:inline">|</span>
 
-        <span class="text-[11px] font-mono font-bold text-amber-300 px-1 uppercase tracking-wider">Skin:</span>
-        <button id="skinBtn-random" onclick="selectSkin('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Shuffle</button>
-        <button id="skinBtn-pixar" onclick="selectSkin('pixar')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎩 3D Pixar</button>
-        <button id="skinBtn-creepy" onclick="selectSkin('creepy')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🧟 1993 Horror</button>
+        <span class="text-[11px] font-mono font-bold text-amber-300 px-1 uppercase tracking-wider">Peek Mascot:</span>
+        <button id="skinBtn-pixar" onclick="selectSkin('pixar')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎩 Friendly Pixar</button>
+        <button id="skinBtn-creepy" onclick="selectSkin('creepy')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🧟 1993 Horror (Preview)</button>
       </div>
     </header>
 
@@ -147,7 +146,7 @@
     potImg.src = 'images/pot_of_gold_cutout.png';
 
     let selectedSpotMode = 'random'; // 'random' or index 0, 1, 2
-    let selectedSkinMode = 'random'; // 'random', 'pixar', 'creepy'
+    let selectedSkinMode = 'pixar'; // standard peeks default to friendly 3D Pixar
     let currentSkinKey = 'pixar';
 
     let leprechaun = {
@@ -248,11 +247,10 @@
         chosenIdx = parseInt(selectedSpotMode, 10);
       }
 
-      if (selectedSkinMode === 'random') {
-        const skins = Object.keys(LEP_SKINS);
-        currentSkinKey = skins[Math.floor(Math.random() * skins.length)];
+      if (selectedSkinMode === 'creepy') {
+        currentSkinKey = 'creepy';
       } else {
-        currentSkinKey = selectedSkinMode;
+        currentSkinKey = 'pixar'; // standard peeks are 100% friendly Pixar!
       }
 
       leprechaun.active = true;

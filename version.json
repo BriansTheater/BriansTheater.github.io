@@ -1,10 +1,10 @@
 {
-  "version": "4.9.248",
+  "version": "4.9.249",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.248",
+  "title": "Brian's Theater v4.9.249",
   "notes": [
-    "Added animated Rainbow and Pot of Gold jump-scare sequence.",
-    "Integrated procedural Bezier rainbow arc and golden cauldron lure.",
-    "Added emerald lightning crackle and screen shake jump-scare."
+    "Reserved creepy horror leprechaun exclusively for rainbow jump-scares.",
+    "Restored friendly 3D Pixar mascot as default for standard peeks.",
+    "Enhanced comedic contrast between innocent peeks and horror trap."
   ]
 }

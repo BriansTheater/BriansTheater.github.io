@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.249] - 2026-11-02
+
+### What's New
+- Reserved 1993 Horror Creepy Leprechaun exclusively for rainbow jump-scares.
+- Restored friendly 3D Pixar mascot as default standard peek.
+- Maximized surprise comedic contrast between peaceful peeks and scare.
+- Updated Demo Studio controls to highlight friendly vs scare.
+
 ## [4.9.248] - 2026-11-02
 
 ### What's New
