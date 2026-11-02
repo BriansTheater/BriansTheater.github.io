@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.242] - 2026-11-02
+
+### What's New
+- Added ambient background radial gradients for all holiday themes.
+- Added living animated stage flairs for each celebration.
+- Lightweight pure CSS effects optimized for mobile smartphones.
+- Dynamically themed stage ambient glows and countdown tiles.
+
 ## [4.9.241] - 2026-11-02
 
 ### What's New

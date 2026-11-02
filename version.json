@@ -1,9 +1,9 @@
 {
-  "version": "4.9.241",
+  "version": "4.9.242",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.241",
+  "title": "Brian's Theater v4.9.242",
   "notes": [
-    "Added live animated firework name-burst engine for July 4th.",
-    "Upgraded July 4th backdrop with pure open drive-in sky."
+    "Added ambient background radial gradients for all holiday themes.",
+    "Added living animated stage flairs for each celebration."
   ]
 }
