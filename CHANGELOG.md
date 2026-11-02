@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.246] - 2026-11-02
+
+### What's New
+- Upgraded St. Patrick's mascot to 3D Pixar animated character.
+- Rendered expressive cheerful smile with emerald top hat.
+- Calibrated 3 tavern scenery hiding spots with custom scaling.
+- Enhanced coin toss physics and glowing amber tavern illumination.
+- Synchronized 3D Pixar leprechaun with Twitch stream overlay.
+
 ## [4.9.245] - 2026-11-02
 
 ### What's New

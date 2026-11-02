@@ -1,10 +1,10 @@
 {
-  "version": "4.9.245",
+  "version": "4.9.246",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.245",
+  "title": "Brian's Theater v4.9.246",
   "notes": [
-    "Upgraded St. Patrick's peek-a-boo leprechaun to photorealistic live-action character.",
-    "Integrated live-action leprechaun cutout sprite into Twitch stream overlay.",
-    "Added animated 3D Celtic spinning gold coin toss and tavern lighting."
+    "Upgraded St. Patrick's mascot to 3D Pixar animated character.",
+    "Integrated 3D CGI leprechaun cutout sprite into Twitch stream overlay.",
+    "Enhanced coin toss physics and glowing amber tavern illumination."
   ]
 }

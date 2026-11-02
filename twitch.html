@@ -1154,7 +1154,7 @@
       if (type === 'clovers') {
         if (!lepImg) {
           lepImg = new Image();
-          lepImg.src = 'images/realistic_leprechaun_cutout.png';
+          lepImg.src = 'images/pixar_leprechaun_cutout.png';
         }
         activeLep = {
           state: 'hidden',
@@ -1164,7 +1164,7 @@
           y: 0,
           baseY: 0,
           targetY: 0,
-          scale: 0.35,
+          scale: 0.38,
           angle: 0,
           flip: false,
           holdTimer: 0,
@@ -1184,7 +1184,7 @@
             x: canvas.width * 0.24,
             baseY: canvas.height * 0.68,
             peekOffset: -canvas.height * 0.175,
-            scale: 0.35,
+            scale: 0.38,
             angle: -0.02,
             flip: false
           },
@@ -1194,7 +1194,7 @@
             x: canvas.width * 0.612,
             baseY: canvas.height * 0.38,
             peekOffset: -canvas.height * 0.08,
-            scale: 0.18,
+            scale: 0.20,
             angle: 0.01,
             flip: false
           },
@@ -1204,7 +1204,7 @@
             x: canvas.width * 0.805,
             baseY: canvas.height * 0.80,
             peekOffset: -canvas.height * 0.17,
-            scale: 0.33,
+            scale: 0.38,
             angle: 0.02,
             flip: true
           }
@@ -3400,7 +3400,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.245";
+    const TWITCH_OVERLAY_VERSION = "4.9.246";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
