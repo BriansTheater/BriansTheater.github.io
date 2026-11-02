@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.236] - 2026-11-01
+
+### What's New
+- Fixed endless "update available" prompt loop.
+- Moved Twitch trailer controls into Admin Menu.
+- Removed viewer-visible trailer buttons from Twitch overlay.
+
 ## [4.9.235] - 2026-11-01
 
 ### What's New

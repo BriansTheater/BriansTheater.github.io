@@ -1,10 +1,9 @@
 {
-  "version": "4.9.235",
+  "version": "4.9.236",
   "releaseDate": "2026-11-01",
-  "title": "Brian's Theater v4.9.235",
+  "title": "Brian's Theater v4.9.236",
   "notes": [
-    "Reconfigured VIP signup pipeline for new BDC-SERVER Plex server.",
-    "Updated portal setup guidance to highlight Brians Theater server.",
-    "Synchronized live access for all active theater patrons."
+    "Fixed endless update prompt loop.",
+    "Moved Twitch trailer controls into Admin Menu."
   ]
 }
