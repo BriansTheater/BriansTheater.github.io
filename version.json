@@ -1,10 +1,10 @@
 {
-  "version": "4.9.246",
+  "version": "4.9.247",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.246",
+  "title": "Brian's Theater v4.9.247",
   "notes": [
-    "Upgraded St. Patrick's mascot to 3D Pixar animated character.",
-    "Integrated 3D CGI leprechaun cutout sprite into Twitch stream overlay.",
-    "Enhanced coin toss physics and glowing amber tavern illumination."
+    "Added 1993 Horror Creepy Leprechaun character skin variant.",
+    "Built multi-variant character selector into Demo Studio.",
+    "Integrated surprise creepy Easter egg peeks into Twitch overlay."
   ]
 }

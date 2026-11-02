@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.247] - 2026-11-02
+
+### What's New
+- Added 1993 Horror Creepy Leprechaun character skin variant.
+- Built multi-character skin selector into Leprechaun Demo Studio.
+- Integrated spooky Easter egg jump-peeks into Twitch stream overlay.
+- Added cursed tarnished gold coin and spectral emerald sparks.
+- Supported custom skin selection via leprechaun URL query parameter.
+
 ## [4.9.246] - 2026-11-02
 
 ### What's New

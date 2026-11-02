@@ -1151,15 +1151,54 @@
       activeFireworkSparks = [];
       activeGoldSparks = [];
 
-      if (type === 'clovers') {
-        if (!lepImg) {
-          lepImg = new Image();
-          lepImg.src = 'images/pixar_leprechaun_cutout.png';
+      const LEP_SKINS = {
+        pixar: {
+          id: 'pixar',
+          name: '3D Pixar Mascot',
+          src: 'images/pixar_leprechaun_cutout.png',
+          shadowColor: 'rgba(245, 158, 11, 0.45)',
+          shadowBlur: 20,
+          coinFill: '#fbbf24',
+          coinStroke: '#d97706',
+          coinShadow: '#f59e0b',
+          coinStamp: '☘',
+          coinStampColor: '#b45309',
+          scaleMul: 1.0,
+          sparkColors: ['#fbbf24', '#34d399', '#fef08a']
+        },
+        creepy: {
+          id: 'creepy',
+          name: '1993 Horror Creepy Leprechaun',
+          src: 'images/creepy_leprechaun_cutout.png',
+          shadowColor: 'rgba(34, 197, 94, 0.65)',
+          shadowBlur: 28,
+          coinFill: '#b45309',
+          coinStroke: '#22c55e',
+          coinShadow: '#15803d',
+          coinStamp: '☠',
+          coinStampColor: '#fef08a',
+          scaleMul: 0.95,
+          sparkColors: ['#22c55e', '#16a34a', '#fbbf24', '#ef4444']
         }
+      };
+
+      const lepImages = {};
+      for (const [key, skin] of Object.entries(LEP_SKINS)) {
+        const img = new Image();
+        img.src = skin.src;
+        lepImages[key] = img;
+      }
+
+      if (type === 'clovers') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlSkinPref = (urlParams.get('leprechaun') || 'all').toLowerCase();
+
         activeLep = {
           state: 'hidden',
           progress: 0,
           currentSpot: null,
+          skinKey: 'pixar',
+          skinPref: urlSkinPref,
           x: 0,
           y: 0,
           baseY: 0,
@@ -1211,10 +1250,21 @@
         ];
       }
 
-      function triggerLepPeek(forcedSpotId) {
+      function triggerLepPeek(forcedSpotId, forcedSkinId) {
         if (!activeLep) return;
         const spots = getLeprechaunSpots();
         const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
+        
+        let skinChoice = forcedSkinId;
+        if (!skinChoice) {
+          if (activeLep.skinPref === 'pixar') skinChoice = 'pixar';
+          else if (activeLep.skinPref === 'creepy') skinChoice = 'creepy';
+          else {
+            // 70% chance friendly Pixar, 30% chance creepy horror Easter egg
+            skinChoice = (Math.random() < 0.35) ? 'creepy' : 'pixar';
+          }
+        }
+        activeLep.skinKey = skinChoice;
         activeLep.currentSpot = spot;
         activeLep.x = spot.x;
         activeLep.baseY = spot.baseY;
@@ -1522,6 +1572,9 @@
           }
 
           if (activeLep.state !== 'hidden') {
+            const skinObj = LEP_SKINS[activeLep.skinKey] || LEP_SKINS.pixar;
+            const skinImg = lepImages[skinObj.id] || lepImages.pixar;
+
             if (activeLep.state === 'peek_in') {
               activeLep.progress += 0.025;
               const ease = 1 - Math.pow(1 - Math.min(1, activeLep.progress), 3);
@@ -1532,7 +1585,8 @@
                 activeLep.coinTossed = true;
                 activeLep.coinY = activeLep.targetY - (activeLep.scale * 180);
                 activeLep.coinVy = -8;
-                // Burst of gold sparks
+                // Burst of sparks tailored to skin
+                const colors = skinObj.sparkColors;
                 for (let k = 0; k < 20; k++) {
                   const angle = Math.random() * Math.PI * 2;
                   const spd = Math.random() * 4 + 1.5;
@@ -1543,7 +1597,7 @@
                     vy: Math.sin(angle) * spd - 1,
                     size: Math.random() * 3 + 2,
                     alpha: 1,
-                    color: (k % 2 === 0) ? '#fbbf24' : '#34d399'
+                    color: colors[k % colors.length]
                   });
                 }
               }
@@ -1572,39 +1626,40 @@
             }
 
             // Draw Leprechaun Cutout Sprite
-            if (lepImg && lepImg.complete && lepImg.naturalWidth > 0) {
+            if (skinImg && skinImg.complete && skinImg.naturalWidth > 0) {
               ctx.save();
               ctx.translate(activeLep.x, activeLep.y);
               ctx.rotate(activeLep.angle);
-              ctx.scale(activeLep.scale * (activeLep.flip ? -1 : 1), activeLep.scale);
-              ctx.shadowColor = 'rgba(245, 158, 11, 0.45)';
-              ctx.shadowBlur = 20;
-              const iw = lepImg.naturalWidth;
-              const ih = lepImg.naturalHeight;
-              ctx.drawImage(lepImg, -iw / 2, -ih, iw, ih);
+              const effScale = activeLep.scale * (skinObj.scaleMul || 1.0);
+              ctx.scale(effScale * (activeLep.flip ? -1 : 1), effScale);
+              ctx.shadowColor = skinObj.shadowColor;
+              ctx.shadowBlur = skinObj.shadowBlur;
+              const iw = skinImg.naturalWidth;
+              const ih = skinImg.naturalHeight;
+              ctx.drawImage(skinImg, -iw / 2, -ih, iw, ih);
               ctx.restore();
             }
 
-            // Draw Spinning 3D Gold Celtic Coin
+            // Draw Spinning 3D Celtic Coin
             if (activeLep.coinTossed) {
               ctx.save();
               ctx.translate(activeLep.x, activeLep.coinY);
               const spinScale = Math.cos(activeLep.coinRot);
               ctx.scale(spinScale, 1);
-              ctx.shadowColor = '#f59e0b';
+              ctx.shadowColor = skinObj.coinShadow;
               ctx.shadowBlur = 15;
               ctx.beginPath();
               ctx.arc(0, 0, 14, 0, Math.PI * 2);
-              ctx.fillStyle = '#fbbf24';
+              ctx.fillStyle = skinObj.coinFill;
               ctx.fill();
-              ctx.strokeStyle = '#d97706';
+              ctx.strokeStyle = skinObj.coinStroke;
               ctx.lineWidth = 2.5;
               ctx.stroke();
-              ctx.fillStyle = '#b45309';
+              ctx.fillStyle = skinObj.coinStampColor;
               ctx.font = 'bold 11px sans-serif';
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
-              ctx.fillText('☘', 0, 0);
+              ctx.fillText(skinObj.coinStamp, 0, 0);
               ctx.restore();
             }
           }
@@ -3400,7 +3455,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.246";
+    const TWITCH_OVERLAY_VERSION = "4.9.247";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
