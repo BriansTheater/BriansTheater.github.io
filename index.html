@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.236 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.237 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -1512,9 +1512,9 @@
               </div>
               <select id="adminSeasonalThemeSelect" onchange="setSeasonalThemeOverride(this.value)" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400 cursor-pointer">
                 <option value="auto">✨ Smart Auto-Switch (Seasonal Calendar)</option>
-                <option value="halloween">🎃 Shocktoberfest Cinema (Halloween)</option>
+                <option value="default">🎬 Midnight Cinema Palace (Normal / Default)</option>
                 <option value="christmas">🎄 Holiday Winter Wonderland (Christmas)</option>
-                <option value="default">🎬 Midnight Cinema (Default Classic)</option>
+                <option value="halloween">🎃 Shocktoberfest Cinema (Halloween)</option>
               </select>
               <div class="flex items-center justify-between text-[10px] text-slate-400 leading-normal">
                 <span>Smart Auto detects month: Oct is Shocktoberfest, Dec is Christmas, otherwise Default.</span>
@@ -4083,7 +4083,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.236";
+    const APP_VERSION = "4.9.237";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5201,6 +5201,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.237": [
+        "Added multi-theme support to Twitch stream overlay.",
+        "Integrated admin-locked seasonal cloud sync across tabs.",
+        "Added falling snow canvas to Christmas stream theme."
+      ],
       "4.9.236": [
         "Fixed endless update prompt loop.",
         "Moved Twitch trailer controls into Admin Menu."
@@ -6107,6 +6112,10 @@
             applySinglePosterUpdate(msg.title, msg.imageUrl, false);
           } else if (msg && msg.type === 'BULK_MEDIA_UPDATED' && Array.isArray(msg.titles) && msg.imageUrl) {
             msg.titles.forEach(t => applySinglePosterUpdate(t, msg.imageUrl, false));
+          } else if (msg && msg.type === 'SEASONAL_THEME_UPDATED' && msg.theme) {
+            if (typeof applyIncomingSeasonalTheme === 'function') {
+              applyIncomingSeasonalTheme(msg.theme);
+            }
           }
         } catch(e) {}
       };
@@ -6961,6 +6970,15 @@
       } catch(err) {
         console.warn("Error syncing seasonal theme to Firebase:", err);
       }
+
+      // Cross-tab broadcast for immediate local zero-latency update (e.g. OBS/Twitch overlay)
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'SEASONAL_THEME_UPDATED', theme: themeVal, updatedAt: ts });
+          bc.close();
+        }
+      } catch(e) {}
 
       // Notify Google Apps Script backend as backup
       fetch(`${API_BASE_URL}?action=admin_set_seasonal_theme&theme=${encodeURIComponent(themeVal)}`, { mode: 'no-cors' }).catch(() => {});

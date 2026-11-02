@@ -1,9 +1,9 @@
 {
-  "version": "4.9.236",
+  "version": "4.9.237",
   "releaseDate": "2026-11-01",
-  "title": "Brian's Theater v4.9.236",
+  "title": "Brian's Theater v4.9.237",
   "notes": [
-    "Fixed endless update prompt loop.",
-    "Moved Twitch trailer controls into Admin Menu."
+    "Added multi-theme support to Twitch stream overlay.",
+    "Integrated admin-locked real-time seasonal cloud sync."
   ]
 }

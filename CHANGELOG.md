@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.237] - 2026-11-01
+
+### What's New
+- Added multi-theme support to Twitch stream overlay.
+- Added Cinema Palace and Winter Wonderland holiday themes.
+- Integrated admin-locked real-time seasonal cloud sync.
+- Added falling snow canvas to Christmas stream theme.
+- Preserved live 1080p framing and community flank names.
+
 ## [4.9.236] - 2026-11-01
 
 ### What's New

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exact Twitch Overlay Layout Matching Live Stream</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #030408;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* Exact 1080p Stream Canvas (1280 x 720) */
+    .stream-canvas-1080p {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 35px 90px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.12);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .center-vignette-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 52%, rgba(2, 3, 5, 0.72) 0%, rgba(2, 3, 5, 0.40) 42%, rgba(2, 3, 5, 0) 70%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Equalizer */
+    @keyframes eqBarPulse {
+      0%, 100% { height: 4px; opacity: 0.6; }
+      50% { height: 16px; opacity: 1; }
+    }
+    .eq-bar-1 { animation: eqBarPulse 0.85s ease-in-out infinite; }
+    .eq-bar-2 { animation: eqBarPulse 0.65s ease-in-out infinite 0.2s; }
+    .eq-bar-3 { animation: eqBarPulse 0.95s ease-in-out infinite 0.4s; }
+    .eq-bar-4 { animation: eqBarPulse 0.75s ease-in-out infinite 0.1s; }
+
+    .snowflake {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.9);
+      user-select: none;
+      pointer-events: none;
+      z-index: 15;
+    }
+  </style>
+</head>
+<body class="p-8">
+
+  <!-- ============================================================ -->
+  <!-- 1. NORMAL THEME: MIDNIGHT CINEMA PALACE                      -->
+  <!-- ============================================================ -->
+  <div id="mockupNormal" class="mb-16">
+    <div class="max-w-7xl mx-auto mb-4 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-mono font-bold tracking-wider text-amber-400 uppercase">THEME 1: NORMAL / CLASSIC CINEMA</span>
+        <h2 class="text-2xl font-black text-white flex items-center gap-2">
+          <span>🎬</span> "Midnight Cinema Palace" — Exact Live Framing
+        </h2>
+        <p class="text-xs text-slate-400">
+          Open center for Movie Title, 16:9 Poster, Countdown & Join Banner. Left wing: <strong>DWARF, SOUL, AXEL</strong>. Right wing: <strong>RED, ORLAANDO, SHANEDEW</strong>.
+        </p>
+      </div>
+      <span class="text-xs font-mono text-amber-300 font-bold bg-slate-900 border border-amber-500/40 px-3 py-1.5 rounded-xl">
+        Exact Live Stream Layout
+      </span>
+    </div>
+
+    <div class="stream-canvas-1080p">
+      <!-- 16:9 Cinema Unified Background -->
+      <img src="file:///C:/Users/Brian/Documents/antigravity/brian_theater/images/cinema_stream_background.jpg" alt="Cinema Background" class="bg-layer">
+      <div class="center-vignette-overlay"></div>
+
+      <!-- Live Center Stage (Identical to your Halloween screenshot) -->
+      <main class="relative z-20 w-full max-w-4xl mx-auto px-4 flex flex-col items-center justify-center text-center">
+        
+        <!-- Header Pill -->
+        <header class="mb-2">
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-2xl bg-slate-950/90 border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] backdrop-blur-md">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 via-amber-400 to-amber-500 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-base shrink-0">
+              <span>🎬</span>
+            </div>
+            <div class="flex flex-col text-left">
+              <div class="flex items-center gap-1">
+                <h1 class="text-sm font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-300 to-amber-400 leading-tight">
+                  Brian's Theater
+                </h1>
+                <span class="inline-block text-sm select-none">🍿</span>
+              </div>
+              <span class="text-[8px] text-slate-400 font-mono tracking-wider uppercase font-semibold">
+                Virtual Cinema Edition
+              </span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Title Block -->
+        <section class="flex flex-col items-center gap-0.5 mb-2.5 w-full text-center">
+          <span class="text-[10px] font-mono font-bold tracking-[0.26em] text-sky-400/90 uppercase">
+            NEXT SCHEDULED SCREENING
+          </span>
+          <h2 class="text-4xl md:text-5xl font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-300 to-amber-400 filter drop-shadow-[0_0_25px_rgba(245,158,11,0.5)] transition-all max-w-full">
+            Abraham's Boys: A Dracula Story
+          </h2>
+          <p class="text-xs text-slate-300 font-medium tracking-wide">
+            Sunday, Nov 1, 2026 • 7:00 PM PST
+          </p>
+        </section>
+
+        <!-- Show Poster Frame (16:9 Widescreen) -->
+        <section class="relative w-full max-w-lg mb-3 flex items-center justify-center">
+          <div class="relative z-10 w-full overflow-hidden rounded-2xl border border-amber-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(245,158,11,0.4)] aspect-[16/9] max-h-[32vh] flex items-center justify-center">
+            <img src="https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg" alt="Poster" class="w-full h-full object-cover object-center">
+          </div>
+        </section>
+
+        <!-- Countdown Box -->
+        <section class="w-full max-w-md">
+          <div class="w-full bg-slate-950/90 backdrop-blur-md rounded-2xl p-3 border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] flex flex-col items-center gap-2">
+            <div class="text-[10px] font-mono font-bold tracking-[0.25em] text-amber-300 uppercase flex items-center justify-center gap-1.5">
+              <span>THEATER DOORS OPEN IN</span>
+            </div>
+
+            <!-- Mins & Secs Digit Cards -->
+            <div class="grid grid-cols-2 gap-3 w-48 font-mono">
+              <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl py-2 px-3 shadow-md">
+                <span class="text-3xl font-black text-amber-400 tracking-tight leading-none">37</span>
+                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">MINS</span>
+              </div>
+              <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-amber-500/30 rounded-xl py-2 px-3 shadow-md">
+                <span class="text-3xl font-black text-amber-300 tracking-tight leading-none">32</span>
+                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">SECS</span>
+              </div>
+            </div>
+
+            <!-- Join Theater Link Banner -->
+            <div class="w-full pt-1">
+              <div class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500/20 via-sky-500/20 to-amber-500/20 border-2 border-amber-400/80 shadow-[0_0_25px_rgba(245,158,11,0.35)] flex items-center justify-between gap-3">
+                <span class="text-xl filter drop-shadow select-none">🎬</span>
+                <div class="flex flex-col items-center justify-center text-center flex-1 min-w-0">
+                  <span class="text-[9px] font-mono font-black tracking-[0.25em] text-amber-300 uppercase">JOIN THEATER:</span>
+                  <span class="text-sm font-mono font-black text-white uppercase underline underline-offset-2 decoration-amber-400 truncate">TINY.CC/BRIANSTHEATER</span>
+                </div>
+                <span class="text-xl filter drop-shadow select-none">🍿</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Spotify Pill -->
+        <div class="relative z-30 mt-2.5 flex flex-col items-center justify-center select-none font-sans w-full max-w-md">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-slate-700 text-slate-300 shadow-md backdrop-blur-md">
+            <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 font-bold text-xs">▶</div>
+            <div class="flex items-end gap-0.5 h-3 px-0.5">
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-4"></span>
+            </div>
+            <div class="flex flex-col text-left leading-none max-w-[200px] overflow-hidden">
+              <span class="text-[8px] font-mono font-bold text-slate-400 uppercase">THEATER SOUNDTRACK</span>
+              <span class="text-[11px] font-semibold text-slate-200 truncate mt-0.5">🍿 Iconic Cinema Scores</span>
+            </div>
+            <span class="text-[10px] text-slate-400 ml-0.5">▲</span>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- 2. CHRISTMAS THEME: HOLIDAY WINTER WONDERLAND                -->
+  <!-- ============================================================ -->
+  <div id="mockupChristmas" class="mb-16">
+    <div class="max-w-7xl mx-auto mb-4 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">THEME 2: CHRISTMAS / HOLIDAY SEASON</span>
+        <h2 class="text-2xl font-black text-white flex items-center gap-2">
+          <span>🎄</span> "Holiday Winter Wonderland" — Exact Live Framing
+        </h2>
+        <p class="text-xs text-slate-400">
+          Open center for Movie Title, 16:9 Poster, Countdown & Join Banner. Left wing: <strong>DWARF, SOUL, AXEL</strong>. Right wing: <strong>RED, ORLAANDO, SHANEDEW</strong> with snowman and gifts.
+        </p>
+      </div>
+      <span class="text-xs font-mono text-emerald-300 font-bold bg-slate-900 border border-emerald-500/40 px-3 py-1.5 rounded-xl">
+        Exact Live Stream Layout
+      </span>
+    </div>
+
+    <div class="stream-canvas-1080p">
+      <!-- 16:9 Christmas Unified Background -->
+      <img src="file:///C:/Users/Brian/Documents/antigravity/brian_theater/images/christmas_stream_background.jpg" alt="Christmas Background" class="bg-layer">
+      <div class="center-vignette-overlay"></div>
+
+      <!-- Falling Snowflakes -->
+      <div class="snowflake text-sm top-6 left-20 opacity-85">❄</div>
+      <div class="snowflake text-xs top-24 left-56 opacity-60">❅</div>
+      <div class="snowflake text-base top-10 left-96 opacity-80">❄</div>
+      <div class="snowflake text-xs top-32 right-40 opacity-70">❅</div>
+      <div class="snowflake text-base top-14 right-96 opacity-90">❄</div>
+      <div class="snowflake text-xs top-48 left-36 opacity-60">❅</div>
+      <div class="snowflake text-sm bottom-20 left-28 opacity-80">❄</div>
+      <div class="snowflake text-sm bottom-24 right-36 opacity-85">❄</div>
+
+      <!-- Live Center Stage (Identical to your Halloween screenshot) -->
+      <main class="relative z-20 w-full max-w-4xl mx-auto px-4 flex flex-col items-center justify-center text-center">
+        
+        <!-- Header Pill -->
+        <header class="mb-2">
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-2xl bg-slate-950/90 border border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.35)] backdrop-blur-md">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-300 to-amber-300 p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-base shrink-0">
+              <span>🎄</span>
+            </div>
+            <div class="flex flex-col text-left">
+              <div class="flex items-center gap-1">
+                <h1 class="text-sm font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 leading-tight">
+                  Brian's Winter Wonderland
+                </h1>
+                <span class="inline-block text-sm select-none">✨</span>
+              </div>
+              <span class="text-[8px] text-emerald-300 font-mono tracking-wider uppercase font-semibold">
+                Holiday Cinema Edition
+              </span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Title Block -->
+        <section class="flex flex-col items-center gap-0.5 mb-2.5 w-full text-center">
+          <span class="text-[10px] font-mono font-bold tracking-[0.26em] text-emerald-300/90 uppercase flex items-center gap-1">
+            <span>❄️</span> NEXT HOLIDAY SCREENING <span>❄️</span>
+          </span>
+          <h2 class="text-4xl md:text-5xl font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 filter drop-shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all max-w-full">
+            National Lampoon's Christmas Vacation
+          </h2>
+          <p class="text-xs text-emerald-200 font-medium tracking-wide">
+            Saturday, Dec 5, 2026 • 7:00 PM PST
+          </p>
+        </section>
+
+        <!-- Show Poster Frame (16:9 Widescreen) -->
+        <section class="relative w-full max-w-lg mb-3 flex items-center justify-center">
+          <div class="relative z-10 w-full overflow-hidden rounded-2xl border border-emerald-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(16,185,129,0.4)] aspect-[16/9] max-h-[32vh] flex items-center justify-center">
+            <img src="https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg" alt="Poster" class="w-full h-full object-cover object-center">
+          </div>
+        </section>
+
+        <!-- Countdown Box -->
+        <section class="w-full max-w-md">
+          <div class="w-full bg-slate-950/90 backdrop-blur-md rounded-2xl p-3 border border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center gap-2">
+            <div class="text-[10px] font-mono font-bold tracking-[0.25em] text-emerald-300 uppercase flex items-center justify-center gap-1.5">
+              <span>🎁 THEATER DOORS OPEN IN 🎁</span>
+            </div>
+
+            <!-- Mins & Secs Digit Cards -->
+            <div class="grid grid-cols-2 gap-3 w-48 font-mono">
+              <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-emerald-500/30 rounded-xl py-2 px-3 shadow-md">
+                <span class="text-3xl font-black text-emerald-400 tracking-tight leading-none">37</span>
+                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">MINS</span>
+              </div>
+              <div class="flex flex-col items-center justify-center bg-slate-900/90 border border-emerald-500/30 rounded-xl py-2 px-3 shadow-md">
+                <span class="text-3xl font-black text-rose-400 tracking-tight leading-none">32</span>
+                <span class="text-[8px] font-bold text-rose-400/90 uppercase tracking-widest mt-1">SECS</span>
+              </div>
+            </div>
+
+            <!-- Join Theater Link Banner -->
+            <div class="w-full pt-1">
+              <div class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500/20 via-rose-500/20 to-emerald-500/20 border-2 border-emerald-400/80 shadow-[0_0_25px_rgba(16,185,129,0.35)] flex items-center justify-between gap-3">
+                <span class="text-xl filter drop-shadow select-none">🎄</span>
+                <div class="flex flex-col items-center justify-center text-center flex-1 min-w-0">
+                  <span class="text-[9px] font-mono font-black tracking-[0.25em] text-emerald-300 uppercase">JOIN THEATER:</span>
+                  <span class="text-sm font-mono font-black text-white uppercase underline underline-offset-2 decoration-emerald-400 truncate">TINY.CC/BRIANSTHEATER</span>
+                </div>
+                <span class="text-xl filter drop-shadow select-none">✨</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Spotify Pill -->
+        <div class="relative z-30 mt-2.5 flex flex-col items-center justify-center select-none font-sans w-full max-w-md">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-emerald-500/50 text-slate-300 shadow-[0_0_20px_rgba(16,185,129,0.25)] backdrop-blur-md">
+            <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 shrink-0 font-bold text-xs">▶</div>
+            <div class="flex items-end gap-0.5 h-3 px-0.5">
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-1"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-2"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-3"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full eq-bar-4"></span>
+            </div>
+            <div class="flex flex-col text-left leading-none max-w-[200px] overflow-hidden">
+              <span class="text-[8px] font-mono font-bold text-emerald-400 uppercase">HOLIDAY SOUNDTRACK</span>
+              <span class="text-[11px] font-semibold text-slate-200 truncate mt-0.5">☕ Cozy Holiday Lofi & Carols</span>
+            </div>
+            <span class="text-[10px] text-emerald-400 ml-0.5">▲</span>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>
