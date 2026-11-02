@@ -1074,6 +1074,56 @@
     }
 
     // Dynamic Multi-Particle Engine (Snow, Sparkles, Hearts, Clovers, Fireworks, Leaves)
+    let activeRockets = [];
+    let activeFireworkSparks = [];
+
+    const FONT_5X7 = {
+      'A': [0x1C, 0x22, 0x22, 0x3E, 0x22, 0x22, 0x22],
+      'B': [0x3C, 0x22, 0x22, 0x3C, 0x22, 0x22, 0x3C],
+      'C': [0x1E, 0x20, 0x20, 0x20, 0x20, 0x20, 0x1E],
+      'D': [0x3C, 0x22, 0x22, 0x22, 0x22, 0x22, 0x3C],
+      'E': [0x3E, 0x20, 0x20, 0x3C, 0x20, 0x20, 0x3E],
+      'F': [0x3E, 0x20, 0x20, 0x3C, 0x20, 0x20, 0x20],
+      'G': [0x1E, 0x20, 0x20, 0x2E, 0x22, 0x22, 0x1E],
+      'H': [0x22, 0x22, 0x22, 0x3E, 0x22, 0x22, 0x22],
+      'I': [0x1C, 0x08, 0x08, 0x08, 0x08, 0x08, 0x1C],
+      'L': [0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x3E],
+      'N': [0x22, 0x32, 0x2A, 0x26, 0x22, 0x22, 0x22],
+      'O': [0x1C, 0x22, 0x22, 0x22, 0x22, 0x22, 0x1C],
+      'R': [0x3C, 0x22, 0x22, 0x3C, 0x28, 0x24, 0x22],
+      'S': [0x1E, 0x20, 0x20, 0x1C, 0x02, 0x02, 0x3C],
+      'U': [0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x1C],
+      'W': [0x22, 0x22, 0x22, 0x2A, 0x2A, 0x36, 0x22],
+      'X': [0x22, 0x22, 0x14, 0x08, 0x14, 0x22, 0x22]
+    };
+
+    function getWordDots(word, dotSpacing = 4.2) {
+      const dots = [];
+      const letterSpacing = dotSpacing * 7;
+      const totalWidth = word.length * letterSpacing;
+      const startX = -totalWidth / 2;
+      const startY = -(7 * dotSpacing) / 2;
+
+      for (let cIdx = 0; cIdx < word.length; cIdx++) {
+        const char = word[cIdx].toUpperCase();
+        const charMatrix = FONT_5X7[char] || FONT_5X7['O'];
+        const charOriginX = startX + (cIdx * letterSpacing);
+
+        for (let row = 0; row < 7; row++) {
+          const byte = charMatrix[row] || 0;
+          for (let col = 0; col < 6; col++) {
+            if (byte & (1 << (5 - col))) {
+              dots.push({
+                relX: charOriginX + (col * dotSpacing),
+                relY: startY + (row * dotSpacing)
+              });
+            }
+          }
+        }
+      }
+      return dots;
+    }
+
     function startThemeParticleAnimation(type) {
       stopThemeParticleAnimation();
       if (!type) return;
@@ -1093,7 +1143,10 @@
       window.addEventListener('resize', resize);
 
       activeParticles = [];
-      const count = type === 'fireworks' ? 30 : 45;
+      activeRockets = [];
+      activeFireworkSparks = [];
+
+      const count = type === 'fireworks' ? 24 : 45;
 
       for (let i = 0; i < count; i++) {
         activeParticles.push({
@@ -1109,9 +1162,91 @@
         });
       }
 
+      // July 4th Community Firework Name Queue
+      const leftNames = ['DWARF', 'SOUL', 'AXEL'];
+      const rightNames = ['RED', 'ORLAANDO', 'SHANEDEW'];
+      let leftIdx = 0;
+      let rightIdx = 0;
+      let nextSide = 'left';
+      let lastRocketTime = Date.now() - 1500;
+
+      function spawnFireworkRocket() {
+        const isLeft = nextSide === 'left';
+        nextSide = isLeft ? 'right' : 'left';
+
+        const word = isLeft ? leftNames[leftIdx++ % leftNames.length] : rightNames[rightIdx++ % rightNames.length];
+        const targetX = isLeft 
+          ? canvas.width * (0.08 + Math.random() * 0.06) 
+          : canvas.width * (0.86 + Math.random() * 0.06);
+        const targetY = canvas.height * (0.16 + Math.random() * 0.09);
+        const startX = targetX + (Math.random() - 0.5) * 40;
+        const startY = canvas.height + 25;
+
+        const distanceY = startY - targetY;
+        const flightTime = 55 + Math.random() * 10;
+        const vy = -distanceY / flightTime;
+        const vx = (targetX - startX) / flightTime;
+
+        activeRockets.push({
+          x: startX,
+          y: startY,
+          vx,
+          vy,
+          targetY,
+          word,
+          targetX,
+          color: isLeft ? '#f59e0b' : '#38bdf8'
+        });
+      }
+
+      function explodeRocket(r) {
+        const dots = getWordDots(r.word, Math.max(3.8, Math.min(5.2, canvas.width / 400)));
+        const colors = ['#fde047', '#f43f5e', '#38bdf8', '#ffffff'];
+        const burstColor = colors[Math.floor(Math.random() * colors.length)];
+
+        // 1. Radial explosion flash sparks
+        for (let j = 0; j < 32; j++) {
+          const angle = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 5 + 1.5;
+          activeFireworkSparks.push({
+            x: r.x,
+            y: r.y,
+            vx: Math.cos(angle) * spd,
+            vy: Math.sin(angle) * spd,
+            phase: 'radial',
+            alpha: 1,
+            size: Math.random() * 2.5 + 1.5,
+            color: colors[j % colors.length],
+            life: 30 + Math.random() * 20
+          });
+        }
+
+        // 2. Coordinated Word Spark Matrix (spells out DWARF, SOUL, AXEL, RED, ORLAANDO, SHANEDEW)
+        dots.forEach(d => {
+          activeFireworkSparks.push({
+            x: r.x,
+            y: r.y,
+            startX: r.x,
+            startY: r.y,
+            destX: r.targetX + d.relX,
+            destY: r.targetY + d.relY,
+            phase: 'assemble', // 'assemble' -> 'hold' -> 'fall'
+            frame: 0,
+            assembleFrames: 16,
+            holdFrames: 65 + Math.random() * 15,
+            fallFrames: 40 + Math.random() * 15,
+            alpha: 1,
+            size: Math.random() * 1.8 + 2.2,
+            color: burstColor,
+            sparkleOffset: Math.random() * 10
+          });
+        });
+      }
+
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // 1. Ambient Background Particles (twinkles/snow/leaves/etc.)
         for (let i = 0; i < activeParticles.length; i++) {
           const p = activeParticles[i];
           ctx.save();
@@ -1158,6 +1293,139 @@
           if (p.x < -10) p.x = canvas.width + 10;
         }
 
+        // 2. July 4th Dynamic Firework Rockets & Aerial Name Bursts
+        if (type === 'fireworks') {
+          const now = Date.now();
+          if (now - lastRocketTime > 3200) {
+            spawnFireworkRocket();
+            lastRocketTime = now;
+          }
+
+          // Update & Draw Rockets
+          for (let i = activeRockets.length - 1; i >= 0; i--) {
+            const r = activeRockets[i];
+            r.x += r.vx;
+            r.y += r.vy;
+
+            // Draw rocket head & glowing spark tail
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = r.color;
+            ctx.shadowBlur = 10;
+            ctx.fill();
+
+            // Tail trail sparks
+            ctx.beginPath();
+            ctx.moveTo(r.x, r.y);
+            ctx.lineTo(r.x - r.vx * 3.5, r.y - r.vy * 3.5);
+            ctx.strokeStyle = r.color;
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+            ctx.restore();
+
+            // Detonate when reaching sky apex
+            if (r.y <= r.targetY) {
+              explodeRocket(r);
+              activeRockets.splice(i, 1);
+            }
+          }
+
+          // Update & Draw Firework Sparks
+          for (let i = activeFireworkSparks.length - 1; i >= 0; i--) {
+            const s = activeFireworkSparks[i];
+
+            if (s.phase === 'radial') {
+              s.x += s.vx;
+              s.y += s.vy;
+              s.vy += 0.06; // gravity
+              s.alpha -= 0.025;
+
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+              ctx.fillStyle = s.color;
+              ctx.globalAlpha = Math.max(0, s.alpha);
+              ctx.shadowColor = s.color;
+              ctx.shadowBlur = 8;
+              ctx.fill();
+              ctx.restore();
+
+              if (s.alpha <= 0) activeFireworkSparks.splice(i, 1);
+
+            } else if (s.phase === 'assemble') {
+              s.frame++;
+              const t = Math.min(1, s.frame / s.assembleFrames);
+              // Ease-out cubic
+              const ease = 1 - Math.pow(1 - t, 3);
+              s.x = s.startX + (s.destX - s.startX) * ease;
+              s.y = s.startY + (s.destY - s.startY) * ease;
+
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+              ctx.fillStyle = '#ffffff';
+              ctx.shadowColor = s.color;
+              ctx.shadowBlur = 12;
+              ctx.fill();
+              ctx.restore();
+
+              if (t >= 1) {
+                s.phase = 'hold';
+                s.frame = 0;
+              }
+
+            } else if (s.phase === 'hold') {
+              s.frame++;
+              // Shimmer & sparkle in place
+              const jitterX = (Math.random() - 0.5) * 0.8;
+              const jitterY = (Math.random() - 0.5) * 0.8;
+              const flickerAlpha = 0.75 + Math.sin((s.frame + s.sparkleOffset) * 0.35) * 0.25;
+
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(s.destX + jitterX, s.destY + jitterY, s.size, 0, Math.PI * 2);
+              ctx.fillStyle = s.color;
+              ctx.globalAlpha = flickerAlpha;
+              ctx.shadowColor = s.color;
+              ctx.shadowBlur = 14;
+              ctx.fill();
+              ctx.restore();
+
+              if (s.frame >= s.holdFrames) {
+                s.phase = 'fall';
+                s.frame = 0;
+                s.x = s.destX;
+                s.y = s.destY;
+                s.vx = (Math.random() - 0.5) * 0.6;
+                s.vy = Math.random() * 0.4 + 0.3;
+              }
+
+            } else if (s.phase === 'fall') {
+              s.frame++;
+              s.x += s.vx;
+              s.y += s.vy;
+              s.vy += 0.05; // gravity fall
+              s.alpha -= 0.022;
+
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(s.x, s.y, s.size * 0.8, 0, Math.PI * 2);
+              ctx.fillStyle = s.color;
+              ctx.globalAlpha = Math.max(0, s.alpha);
+              ctx.shadowColor = s.color;
+              ctx.shadowBlur = 6;
+              ctx.fill();
+              ctx.restore();
+
+              if (s.alpha <= 0 || s.frame >= s.fallFrames) {
+                activeFireworkSparks.splice(i, 1);
+              }
+            }
+          }
+        }
+
         particleAnimId = requestAnimationFrame(draw);
       }
 
@@ -1169,6 +1437,8 @@
         cancelAnimationFrame(particleAnimId);
         particleAnimId = null;
       }
+      activeRockets = [];
+      activeFireworkSparks = [];
       const canvas = document.getElementById('themeParticleCanvas') || document.getElementById('themeSnowCanvas');
       if (canvas) {
         canvas.classList.add('hidden');
@@ -2923,7 +3193,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.240";
+    const TWITCH_OVERLAY_VERSION = "4.9.241";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -3017,6 +3287,7 @@
       window.applySeasonalTheme = applySeasonalTheme;
       window.resolveSeasonalTheme = resolveSeasonalTheme;
       window.getActiveThemeName = getActiveThemeName;
+      window.getActiveFireworkStats = () => ({ rockets: activeRockets.length, sparks: activeFireworkSparks.length });
       window.setSpotifyLiveState = setSpotifyLiveState;
       window.setSpotifyPlaylist = setSpotifyPlaylist;
       window.toggleTwitchSpotifyPlayback = toggleTwitchSpotifyPlayback;

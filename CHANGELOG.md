@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.241] - 2026-11-02
+
+### What's New
+- Added live animated firework name-burst engine for July 4th.
+- Fireworks burst into community names in the night sky.
+- Upgraded July 4th backdrop with pure open drive-in sky.
+- Removed redundant signposts for unique holiday set pieces.
+
 ## [4.9.240] - 2026-11-02
 
 ### What's New
