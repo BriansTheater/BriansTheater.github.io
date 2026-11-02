@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.243] - 2026-11-02
+
+### What's New
+- Upgraded New Year's brand logo to deep midnight contrast.
+- Eliminated yellow-on-yellow washout on champagne glass icons.
+- Styled New Year's active buttons with gold velvet trim.
+
 ## [4.9.242] - 2026-11-02
 
 ### What's New

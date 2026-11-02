@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian's Theater v4.9.242 — Virtual Cinema</title>
+  <title>Brian's Theater v4.9.243 — Virtual Cinema</title>
   
   <!-- High-Priority Resource Preconnects for Accelerated Network Delivery -->
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
@@ -214,9 +214,10 @@
       box-shadow: 0 4px 30px rgba(245, 158, 11, 0.12) !important;
     }
     body.theme-newyears .tab-btn.bg-sky-500 {
-      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
-      color: #020617 !important;
-      box-shadow: 0 0 16px rgba(245, 158, 11, 0.45) !important;
+      background: linear-gradient(135deg, #1e1b38 0%, #0d0f1d 100%) !important;
+      color: #fbbf24 !important;
+      border: 1px solid rgba(245, 158, 11, 0.75) !important;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.35) !important;
     }
     body.theme-newyears .gold-marquee {
       text-shadow: 0 0 12px #fbbf24, 0 0 24px rgba(245, 158, 11, 0.6) !important;
@@ -226,16 +227,18 @@
       box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
     }
     body.theme-newyears .vault-pill-btn.bg-sky-500 {
-      background: #f59e0b !important;
-      color: #020617 !important;
+      background: linear-gradient(135deg, #1e1b38 0%, #0d0f1d 100%) !important;
+      color: #fbbf24 !important;
+      border: 1px solid rgba(245, 158, 11, 0.7) !important;
     }
     body.theme-newyears #sidebarDrawer {
       border-left-color: rgba(245, 158, 11, 0.35) !important;
       background: linear-gradient(180deg, #161208 0%, #070913 100%) !important;
     }
     body.theme-newyears #scheduleFilterPills button.bg-sky-500 {
-      background: #f59e0b !important;
-      color: #020617 !important;
+      background: linear-gradient(135deg, #1e1b38 0%, #0d0f1d 100%) !important;
+      color: #fbbf24 !important;
+      border: 1px solid rgba(245, 158, 11, 0.7) !important;
     }
 
     /* 4. Valentine's Day Romance Site-Wide Styling */
@@ -4395,7 +4398,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.242";
+    const APP_VERSION = "4.9.243";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -5513,6 +5516,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.9.243": [
+        "Upgraded New Year's brand logo to deep midnight contrast.",
+        "Eliminated yellow-on-yellow washout on champagne glass icons.",
+        "Styled New Year's active buttons with gold velvet trim."
+      ],
       "4.9.242": [
         "Added ambient background radial gradients for all holiday themes.",
         "Added living animated stage flairs for each celebration.",
@@ -6973,7 +6981,7 @@
           title: "Brian's Theater",
           sub: 'Golden Midnight Gala',
           tabTitle: "🥂 Brian's Theater — Golden Midnight Gala",
-          logoGrad: 'from-amber-400 via-yellow-200 to-amber-600 shadow-amber-950/50',
+          logoGrad: 'from-slate-950 via-slate-900 to-indigo-950 border border-amber-400/80 shadow-[0_0_15px_rgba(245,158,11,0.4)]',
           titleGrad: 'from-yellow-200 via-amber-300 to-yellow-500',
           flair: '<span class="anim-sparkle inline-block" title="Golden Gala">✨</span>'
         },
