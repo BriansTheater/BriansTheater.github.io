@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.240] - 2026-11-02
+
+### What's New
+- Shipped all 8 custom holiday stream overlay backgrounds.
+- Added full seasonal calendar auto-rotation across the year.
+- Added 8-holiday live studio selector in Admin Menu.
+- Upgraded community flank clearance and high-contrast ground vignettes.
+
 ## [4.9.239] - 2026-11-01
 
 ### What's New

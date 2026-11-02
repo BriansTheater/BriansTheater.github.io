@@ -171,29 +171,48 @@
       opacity: 0.4 !important;
     }
 
-    /* Seasonal Multi-Themes (Normal, Christmas, Halloween) */
-    body.theme-normal {
-      background-color: #030408;
-    }
+    /* Seasonal Multi-Themes (8-Holiday Suite) */
+    body.theme-normal { background-color: #030408; }
+    body.theme-newyears { background-color: #03040a; }
+    body.theme-valentines { background-color: #0c020d; }
+    body.theme-stpatricks { background-color: #020d08; }
+    body.theme-july4th { background-color: #020712; }
+    body.theme-halloween { background-color: #050209; }
+    body.theme-thanksgiving { background-color: #0a0502; }
+    body.theme-christmas { background-color: #020b12; }
+
+    /* Themed Center Stage Vignettes */
     body.theme-normal .center-readability-vignette {
       background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 4, 8, 0.80) 0%, rgba(2, 4, 8, 0.45) 45%, rgba(2, 4, 8, 0) 75%),
                   linear-gradient(to top, rgba(2, 4, 8, 0.85) 0%, rgba(2, 4, 8, 0.40) 20%, transparent 40%);
     }
-
-    body.theme-christmas {
-      background-color: #020b12;
+    body.theme-newyears .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 3, 8, 0.82) 0%, rgba(2, 3, 8, 0.48) 45%, rgba(2, 3, 8, 0) 75%),
+                  linear-gradient(to top, rgba(2, 3, 8, 0.88) 0%, rgba(2, 3, 8, 0.45) 20%, transparent 40%);
+    }
+    body.theme-valentines .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(10, 2, 12, 0.82) 0%, rgba(10, 2, 12, 0.48) 45%, rgba(10, 2, 12, 0) 75%),
+                  linear-gradient(to top, rgba(10, 2, 12, 0.88) 0%, rgba(10, 2, 12, 0.45) 20%, transparent 40%);
+    }
+    body.theme-stpatricks .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 10, 6, 0.82) 0%, rgba(2, 10, 6, 0.48) 45%, rgba(2, 10, 6, 0) 75%),
+                  linear-gradient(to top, rgba(2, 10, 6, 0.88) 0%, rgba(2, 10, 6, 0.45) 20%, transparent 40%);
+    }
+    body.theme-july4th .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 6, 15, 0.82) 0%, rgba(2, 6, 15, 0.48) 45%, rgba(2, 6, 15, 0) 75%),
+                  linear-gradient(to top, rgba(2, 6, 15, 0.88) 0%, rgba(2, 6, 15, 0.45) 20%, transparent 40%);
+    }
+    body.theme-thanksgiving .center-readability-vignette {
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(12, 5, 2, 0.82) 0%, rgba(12, 5, 2, 0.48) 45%, rgba(12, 5, 2, 0) 75%),
+                  linear-gradient(to top, rgba(12, 5, 2, 0.88) 0%, rgba(12, 5, 2, 0.45) 20%, transparent 40%);
     }
     body.theme-christmas .center-readability-vignette {
       background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 6, 14, 0.82) 0%, rgba(2, 6, 14, 0.50) 45%, rgba(2, 6, 14, 0) 75%),
                   linear-gradient(to top, rgba(2, 6, 14, 0.88) 0%, rgba(2, 6, 14, 0.45) 20%, transparent 42%);
     }
 
-    body.theme-halloween {
-      background-color: #050209;
-    }
-
-    /* Falling Snow canvas for Christmas Theme */
-    #themeSnowCanvas {
+    /* Multi-Particle canvas for Holiday Themes */
+    #themeParticleCanvas, #themeSnowCanvas {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -671,32 +690,284 @@
     const DEFAULT_FALLBACK_POSTER = "https://image.tmdb.org/t/p/w780/x6rHcQFiYcczLQPrmxXPAicm54E.jpg";
 
     // ==========================================
-    // SEASONAL MULTI-THEME ENGINE & AUTO DETECT
+    // COMPLETE 8-HOLIDAY SEASONAL SUITE CONFIG
     // ==========================================
-    let currentThemeMode = 'auto'; // 'auto' | 'normal' | 'default' | 'christmas' | 'halloween'
+    let currentThemeMode = 'auto';
     let activeEffectiveTheme = 'normal';
-    let snowAnimId = null;
-    let snowflakes = [];
+    let particleAnimId = null;
+    let activeParticles = [];
+
+    const THEME_CONFIG = {
+      normal: {
+        title: "Brian's Theater",
+        edition: "Virtual Cinema Edition",
+        tabTitle: "🎬 Brian's Theater • Twitch Stream Overlay (1080p)",
+        bg: "images/cinema_stream_background.jpg",
+        icon: "🎬",
+        secondaryIcon: "🍿",
+        joinIcons: ["🎬", "🍿"],
+        doorsIcons: ["🎬", "🍿"],
+        pillGrad: "border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)]",
+        iconBoxGrad: "bg-gradient-to-tr from-sky-500 via-amber-400 to-amber-500 shadow-amber-950/60",
+        titleGrad: "from-sky-400 via-amber-300 to-amber-400",
+        editionColor: "text-slate-400",
+        movieGrad: "from-sky-400 via-amber-300 to-amber-400 filter drop-shadow-[0_0_25px_rgba(245,158,11,0.5)]",
+        statusText: "NEXT SCHEDULED SCREENING",
+        statusColor: "text-sky-400/90",
+        posterBorder: "border-amber-500/50 shadow-[0_0_40px_rgba(245,158,11,0.4)]",
+        countdownBorder: "border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)]",
+        countdownHeader: "THEATER DOORS OPEN IN",
+        countdownHeaderColor: "text-amber-300",
+        digitCard: "border-amber-500/30",
+        digitText: "text-amber-400",
+        digitSecsText: "text-amber-300",
+        joinBanner: "from-amber-500/20 via-sky-500/20 to-amber-500/20 border-2 border-amber-400/80 shadow-[0_0_25px_rgba(245,158,11,0.35)]",
+        doorsBanner: "from-amber-500 via-sky-600 to-amber-500 border-2 border-amber-400/80 shadow-[0_0_40px_rgba(245,158,11,0.6)]",
+        showFlanks: false,
+        showMist: false,
+        particles: null
+      },
+      newyears: {
+        title: "Brian's Golden Gala",
+        edition: "New Year's Edition",
+        tabTitle: "🥂 Brian's Golden Gala • Twitch Stream Overlay (1080p)",
+        bg: "images/newyears_stream_background.jpg",
+        fallbackBg: "images/cinema_stream_background.jpg",
+        icon: "🥂",
+        secondaryIcon: "✨",
+        joinIcons: ["🥂", "✨"],
+        doorsIcons: ["🥂", "✨"],
+        pillGrad: "border-amber-400/50 shadow-[0_0_30px_rgba(251,191,36,0.35)]",
+        iconBoxGrad: "bg-gradient-to-tr from-amber-300 via-yellow-500 to-amber-600 shadow-amber-950/70",
+        titleGrad: "from-amber-200 via-yellow-400 to-amber-300",
+        editionColor: "text-amber-300",
+        movieGrad: "from-amber-200 via-yellow-400 to-amber-300 filter drop-shadow-[0_0_25px_rgba(251,191,36,0.6)]",
+        statusText: "🥂 NEXT GALA SCREENING 🥂",
+        statusColor: "text-amber-300/90",
+        posterBorder: "border-amber-400/60 shadow-[0_0_40px_rgba(251,191,36,0.45)]",
+        countdownBorder: "border-amber-400/50 shadow-[0_0_30px_rgba(251,191,36,0.3)]",
+        countdownHeader: "✨ DOORS OPEN FOR THE NEW YEAR IN ✨",
+        countdownHeaderColor: "text-amber-200",
+        digitCard: "border-amber-400/40",
+        digitText: "text-amber-300",
+        digitSecsText: "text-yellow-200",
+        joinBanner: "from-amber-400/25 via-yellow-500/20 to-amber-400/25 border-2 border-amber-300/90 shadow-[0_0_30px_rgba(251,191,36,0.4)]",
+        doorsBanner: "from-amber-400 via-yellow-500 to-amber-400 border-2 border-amber-300 shadow-[0_0_45px_rgba(251,191,36,0.7)] text-slate-950",
+        showFlanks: false,
+        showMist: false,
+        particles: "sparkles"
+      },
+      valentines: {
+        title: "Brian's Moonlight Drive-In",
+        edition: "Valentine's Edition",
+        tabTitle: "💘 Brian's Moonlight Drive-In • Twitch Stream Overlay (1080p)",
+        bg: "images/valentines_stream_background.jpg",
+        fallbackBg: "images/cinema_stream_background.jpg",
+        icon: "💘",
+        secondaryIcon: "💖",
+        joinIcons: ["💘", "💖"],
+        doorsIcons: ["💘", "💖"],
+        pillGrad: "border-pink-500/50 shadow-[0_0_30px_rgba(236,72,153,0.35)]",
+        iconBoxGrad: "bg-gradient-to-tr from-pink-500 via-rose-400 to-purple-600 shadow-pink-950/60",
+        titleGrad: "from-pink-400 via-rose-300 to-purple-400",
+        editionColor: "text-pink-300",
+        movieGrad: "from-pink-400 via-rose-300 to-purple-400 filter drop-shadow-[0_0_25px_rgba(236,72,153,0.5)]",
+        statusText: "💖 NEXT ROMANTIC SCREENING 💖",
+        statusColor: "text-pink-300/90",
+        posterBorder: "border-pink-500/50 shadow-[0_0_40px_rgba(236,72,153,0.4)]",
+        countdownBorder: "border-pink-500/40 shadow-[0_0_25px_rgba(236,72,153,0.25)]",
+        countdownHeader: "💘 DRIVE-IN OPENS IN 💘",
+        countdownHeaderColor: "text-pink-300",
+        digitCard: "border-pink-500/30",
+        digitText: "text-pink-400",
+        digitSecsText: "text-rose-400",
+        joinBanner: "from-pink-500/20 via-rose-500/20 to-purple-500/20 border-2 border-pink-400/80 shadow-[0_0_25px_rgba(236,72,153,0.35)]",
+        doorsBanner: "from-pink-500 via-rose-600 to-purple-600 border-2 border-pink-400/80 shadow-[0_0_40px_rgba(236,72,153,0.6)]",
+        showFlanks: false,
+        showMist: false,
+        particles: "hearts"
+      },
+      stpatricks: {
+        title: "Brian's Celtic Tavern",
+        edition: "St. Patrick's Edition",
+        tabTitle: "🍀 Brian's Celtic Tavern • Twitch Stream Overlay (1080p)",
+        bg: "images/stpatricks_stream_background.jpg",
+        fallbackBg: "images/cinema_stream_background.jpg",
+        icon: "🍀",
+        secondaryIcon: "🍻",
+        joinIcons: ["🍀", "🍻"],
+        doorsIcons: ["🍀", "🍻"],
+        pillGrad: "border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.35)]",
+        iconBoxGrad: "bg-gradient-to-tr from-emerald-500 via-teal-400 to-amber-400 shadow-emerald-950/60",
+        titleGrad: "from-emerald-400 via-teal-300 to-amber-300",
+        editionColor: "text-emerald-300",
+        movieGrad: "from-emerald-400 via-teal-300 to-amber-300 filter drop-shadow-[0_0_25px_rgba(16,185,129,0.5)]",
+        statusText: "🍀 NEXT PUB SCREENING 🍀",
+        statusColor: "text-emerald-300/90",
+        posterBorder: "border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.4)]",
+        countdownBorder: "border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)]",
+        countdownHeader: "🍻 TAVERN DOORS OPEN IN 🍻",
+        countdownHeaderColor: "text-emerald-300",
+        digitCard: "border-emerald-500/30",
+        digitText: "text-emerald-400",
+        digitSecsText: "text-amber-400",
+        joinBanner: "from-emerald-500/20 via-teal-500/20 to-amber-500/20 border-2 border-emerald-400/80 shadow-[0_0_25px_rgba(16,185,129,0.35)]",
+        doorsBanner: "from-emerald-500 via-teal-600 to-amber-500 border-2 border-emerald-400/80 shadow-[0_0_40px_rgba(16,185,129,0.6)]",
+        showFlanks: false,
+        showMist: false,
+        particles: "clovers"
+      },
+      july4th: {
+        title: "Brian's Summer Blockbuster",
+        edition: "Independence Day Edition",
+        tabTitle: "🎆 Brian's Summer Blockbuster • Twitch Stream Overlay (1080p)",
+        bg: "images/july4th_stream_background.jpg",
+        fallbackBg: "images/cinema_stream_background.jpg",
+        icon: "🎆",
+        secondaryIcon: "⭐",
+        joinIcons: ["🎆", "⭐"],
+        doorsIcons: ["🎆", "⭐"],
+        pillGrad: "border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.35)]",
+        iconBoxGrad: "bg-gradient-to-tr from-red-500 via-white to-blue-600 shadow-blue-950/60",
+        titleGrad: "from-red-400 via-white to-blue-400",
+        editionColor: "text-blue-300",
+        movieGrad: "from-red-400 via-slate-100 to-blue-400 filter drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]",
+        statusText: "🎆 NEXT SUMMER BLOCKBUSTER 🎆",
+        statusColor: "text-sky-300/90",
+        posterBorder: "border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.4)]",
+        countdownBorder: "border-blue-500/40 shadow-[0_0_25px_rgba(59,130,246,0.25)]",
+        countdownHeader: "⭐ BLOCKBUSTER SCREENING IN ⭐",
+        countdownHeaderColor: "text-sky-300",
+        digitCard: "border-blue-500/30",
+        digitText: "text-red-400",
+        digitSecsText: "text-blue-400",
+        joinBanner: "from-red-500/20 via-blue-500/20 to-red-500/20 border-2 border-blue-400/80 shadow-[0_0_25px_rgba(59,130,246,0.35)]",
+        doorsBanner: "from-red-500 via-blue-600 to-red-500 border-2 border-blue-400/80 shadow-[0_0_40px_rgba(59,130,246,0.6)]",
+        showFlanks: false,
+        showMist: false,
+        particles: "fireworks"
+      },
+      halloween: {
+        title: "Brian's Haunted Theater",
+        edition: "Shocktoberfest Edition",
+        tabTitle: "🎃 Brian's Haunted Theater • Twitch Stream Overlay (1080p)",
+        bg: "images/halloween_stream_background.jpg",
+        icon: "🎃",
+        secondaryIcon: "🕯️",
+        joinIcons: ["🎃", "🦇"],
+        doorsIcons: ["🎃", "🦇"],
+        pillGrad: "border-orange-500/40 shadow-[0_0_25px_rgba(249,115,22,0.25)]",
+        iconBoxGrad: "bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 shadow-orange-950/60",
+        titleGrad: "from-orange-400 via-amber-300 to-purple-400",
+        editionColor: "text-slate-400",
+        movieGrad: "from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]",
+        statusText: "NEXT SCHEDULED SCREENING",
+        statusColor: "text-purple-300/90",
+        posterBorder: "border-amber-500/50 shadow-[0_0_40px_rgba(245,158,11,0.35)]",
+        countdownBorder: "border-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.25)]",
+        countdownHeader: "THEATER DOORS OPEN IN",
+        countdownHeaderColor: "text-amber-300",
+        digitCard: "border-amber-500/30",
+        digitText: "text-amber-400",
+        digitSecsText: "text-amber-300",
+        joinBanner: "from-amber-500/15 via-orange-500/20 to-purple-500/15 border-2 border-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.4)]",
+        doorsBanner: "from-orange-500 via-purple-600 to-emerald-500 border-2 border-orange-400/80 shadow-[0_0_40px_rgba(249,115,22,0.6)]",
+        showFlanks: true,
+        showMist: true,
+        particles: null
+      },
+      thanksgiving: {
+        title: "Brian's Harvest Lodge",
+        edition: "Thanksgiving Edition",
+        tabTitle: "🍂 Brian's Harvest Lodge • Twitch Stream Overlay (1080p)",
+        bg: "images/thanksgiving_stream_background.jpg",
+        fallbackBg: "images/cinema_stream_background.jpg",
+        icon: "🍂",
+        secondaryIcon: "🦃",
+        joinIcons: ["🍂", "🦃"],
+        doorsIcons: ["🍂", "🦃"],
+        pillGrad: "border-amber-600/50 shadow-[0_0_30px_rgba(217,119,6,0.35)]",
+        iconBoxGrad: "bg-gradient-to-tr from-amber-600 via-orange-500 to-yellow-600 shadow-amber-950/70",
+        titleGrad: "from-amber-400 via-orange-300 to-yellow-400",
+        editionColor: "text-amber-300",
+        movieGrad: "from-amber-400 via-orange-300 to-yellow-400 filter drop-shadow-[0_0_25px_rgba(217,119,6,0.5)]",
+        statusText: "🍂 NEXT HARVEST SCREENING 🍂",
+        statusColor: "text-amber-300/90",
+        posterBorder: "border-amber-600/50 shadow-[0_0_40px_rgba(217,119,6,0.4)]",
+        countdownBorder: "border-amber-600/40 shadow-[0_0_25px_rgba(217,119,6,0.25)]",
+        countdownHeader: "🦃 HARVEST DOORS OPEN IN 🦃",
+        countdownHeaderColor: "text-amber-300",
+        digitCard: "border-amber-600/30",
+        digitText: "text-amber-400",
+        digitSecsText: "text-orange-400",
+        joinBanner: "from-amber-600/20 via-orange-500/20 to-yellow-600/20 border-2 border-amber-500/80 shadow-[0_0_25px_rgba(217,119,6,0.35)]",
+        doorsBanner: "from-amber-600 via-orange-600 to-yellow-600 border-2 border-amber-500/80 shadow-[0_0_40px_rgba(217,119,6,0.6)]",
+        showFlanks: false,
+        showMist: false,
+        particles: "leaves"
+      },
+      christmas: {
+        title: "Brian's Winter Wonderland",
+        edition: "Holiday Cinema Edition",
+        tabTitle: "🎄 Brian's Winter Wonderland • Twitch Stream Overlay (1080p)",
+        bg: "images/christmas_stream_background.jpg",
+        icon: "🎄",
+        secondaryIcon: "✨",
+        joinIcons: ["🎄", "✨"],
+        doorsIcons: ["🎄", "✨"],
+        pillGrad: "border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.35)]",
+        iconBoxGrad: "bg-gradient-to-tr from-emerald-500 via-teal-300 to-amber-300 shadow-emerald-950/60",
+        titleGrad: "from-emerald-400 via-teal-300 to-amber-300",
+        editionColor: "text-emerald-300",
+        movieGrad: "from-emerald-400 via-teal-300 to-amber-300 filter drop-shadow-[0_0_25px_rgba(16,185,129,0.5)]",
+        statusText: "❄️ NEXT HOLIDAY SCREENING ❄️",
+        statusColor: "text-emerald-300/90",
+        posterBorder: "border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.4)]",
+        countdownBorder: "border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)]",
+        countdownHeader: "🎁 THEATER DOORS OPEN IN 🎁",
+        countdownHeaderColor: "text-emerald-300",
+        digitCard: "border-emerald-500/30",
+        digitText: "text-emerald-400",
+        digitSecsText: "text-rose-400",
+        joinBanner: "from-emerald-500/20 via-rose-500/20 to-emerald-500/20 border-2 border-emerald-400/80 shadow-[0_0_25px_rgba(16,185,129,0.35)]",
+        doorsBanner: "from-emerald-500 via-rose-600 to-teal-500 border-2 border-emerald-400/80 shadow-[0_0_40px_rgba(16,185,129,0.6)]",
+        showFlanks: false,
+        showMist: false,
+        particles: "snow"
+      }
+    };
 
     function resolveSeasonalTheme(mode) {
       const clean = String(mode || 'auto').toLowerCase().trim();
-      if (clean === 'normal' || clean === 'default') return 'normal';
-      if (clean === 'christmas' || clean === 'xmas') return 'christmas';
-      if (clean === 'halloween' || clean === 'spooky') return 'halloween';
+      if (clean === 'normal' || clean === 'default' || clean === 'cinema') return 'normal';
+      if (clean === 'newyears' || clean === 'newyear' || clean === 'nye') return 'newyears';
+      if (clean === 'valentines' || clean === 'valentine') return 'valentines';
+      if (clean === 'stpatricks' || clean === 'stpaddys' || clean === 'stpatrick') return 'stpatricks';
+      if (clean === 'july4th' || clean === 'fourthofjuly' || clean === 'independence') return 'july4th';
+      if (clean === 'halloween' || clean === 'spooky' || clean === 'shocktober') return 'halloween';
+      if (clean === 'thanksgiving' || clean === 'harvest') return 'thanksgiving';
+      if (clean === 'christmas' || clean === 'xmas' || clean === 'holiday') return 'christmas';
 
       // Smart Auto-Switch (Seasonal Calendar)
       const now = new Date();
-      const month = now.getMonth(); // 0 = Jan ... 9 = Oct, 10 = Nov, 11 = Dec
+      const month = now.getMonth(); // 0 = Jan ... 11 = Dec
       const day = now.getDate();
 
-      // October 1 through November 2: Shocktoberfest Halloween
-      if (month === 9 || (month === 10 && day <= 2)) {
-        return 'halloween';
-      }
-      // December 1 through January 5: Holiday Winter Wonderland
-      if (month === 11 || (month === 0 && day <= 5)) {
-        return 'christmas';
-      }
+      // Jan 1 - Jan 7: New Year's Golden Gala
+      if (month === 0 && day <= 7) return 'newyears';
+      // Feb 7 - Feb 16: Valentine's Moonlight Drive-In
+      if (month === 1 && day >= 7 && day <= 16) return 'valentines';
+      // Mar 12 - Mar 19: St. Patrick's Emerald Tavern
+      if (month === 2 && day >= 12 && day <= 19) return 'stpatricks';
+      // Jul 1 - Jul 7: 4th of July Summer Blockbuster
+      if (month === 6 && day <= 7) return 'july4th';
+      // Oct 1 - Nov 2: Shocktoberfest Halloween
+      if (month === 9 || (month === 10 && day <= 2)) return 'halloween';
+      // Nov 20 - Nov 30: Thanksgiving Harvest Lodge
+      if (month === 10 && day >= 20) return 'thanksgiving';
+      // Dec 1 - Dec 31: Holiday Winter Wonderland
+      if (month === 11) return 'christmas';
+
       return 'normal';
     }
 
@@ -716,50 +987,43 @@
       activeEffectiveTheme = effective;
       window.activeSeasonalTheme = effective;
 
+      const conf = THEME_CONFIG[effective] || THEME_CONFIG.normal;
+
       // Update body classes
-      document.body.classList.remove('theme-normal', 'theme-christmas', 'theme-halloween');
-      document.body.classList.add(`theme-${effective}`);
+      document.body.className = `w-full h-full relative flex items-center justify-center theme-${effective}`;
 
       // Dynamic browser tab title
-      if (effective === 'christmas') {
-        document.title = "🎄 Brian's Winter Wonderland • Twitch Stream Overlay (1080p)";
-      } else if (effective === 'normal') {
-        document.title = "🎬 Brian's Theater • Twitch Stream Overlay (1080p)";
-      } else {
-        document.title = "🎃 Brian's Haunted Theater • Twitch Stream Overlay (1080p)";
-      }
+      document.title = conf.tabTitle;
 
-      // 1. Background, Flanks & Atmosphere
+      // 1. Background Image & Flanks
       const backdropEl = document.getElementById('themeBackdropImg');
       const flanksEl = document.getElementById('themeFlanksContainer');
       const mistEl = document.getElementById('themeMistContainer');
       const spotlightLeft = document.getElementById('themeSpotlightLeft');
       const spotlightRight = document.getElementById('themeSpotlightRight');
 
-      if (effective === 'christmas') {
-        if (backdropEl) backdropEl.src = 'images/christmas_stream_background.jpg';
-        if (flanksEl) flanksEl.style.display = 'none';
-        if (mistEl) mistEl.style.display = 'none';
-        if (spotlightLeft) spotlightLeft.style.display = 'none';
-        if (spotlightRight) spotlightRight.style.display = 'none';
-        startThemeSnowAnimation();
-      } else if (effective === 'normal') {
-        if (backdropEl) backdropEl.src = 'images/cinema_stream_background.jpg';
-        if (flanksEl) flanksEl.style.display = 'none';
-        if (mistEl) mistEl.style.display = 'none';
-        if (spotlightLeft) spotlightLeft.style.display = 'none';
-        if (spotlightRight) spotlightRight.style.display = 'none';
-        stopThemeSnowAnimation();
-      } else { // halloween
-        if (backdropEl) backdropEl.src = 'images/graveyard_sky_panoramic.jpg';
-        if (flanksEl) flanksEl.style.display = '';
-        if (mistEl) mistEl.style.display = '';
-        if (spotlightLeft) spotlightLeft.style.display = '';
-        if (spotlightRight) spotlightRight.style.display = '';
-        stopThemeSnowAnimation();
+      if (backdropEl) {
+        // Safe fallback image test
+        const targetBg = conf.bg;
+        const testImg = new Image();
+        testImg.onload = () => { backdropEl.src = targetBg; };
+        testImg.onerror = () => { backdropEl.src = conf.fallbackBg || "images/cinema_stream_background.jpg"; };
+        testImg.src = targetBg;
       }
 
-      // 2. Header Branding Pill
+      if (flanksEl) flanksEl.style.display = conf.showFlanks ? '' : 'none';
+      if (mistEl) mistEl.style.display = conf.showMist ? '' : 'none';
+      if (spotlightLeft) spotlightLeft.style.display = conf.showFlanks ? '' : 'none';
+      if (spotlightRight) spotlightRight.style.display = conf.showFlanks ? '' : 'none';
+
+      // 2. Dynamic Atmosphere Particles
+      if (conf.particles) {
+        startThemeParticleAnimation(conf.particles);
+      } else {
+        stopThemeParticleAnimation();
+      }
+
+      // 3. Header Branding Pill
       const headerPill = document.getElementById('themeHeaderPill');
       const headerIconBox = document.getElementById('themeHeaderIconBox');
       const headerIcon = document.getElementById('themeHeaderIcon');
@@ -767,48 +1031,20 @@
       const headerSecondary = document.getElementById('themeHeaderSecondaryIcon');
       const headerEdition = document.getElementById('themeHeaderEdition');
 
-      if (effective === 'christmas') {
-        if (headerPill) headerPill.className = "inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-950/90 border border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.35)] backdrop-blur-md transition-all duration-500";
-        if (headerIconBox) headerIconBox.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-300 to-amber-300 p-0.5 shadow-lg shadow-emerald-950/60 flex items-center justify-center text-slate-950 font-black text-lg sm:text-2xl shrink-0 transition-all duration-500";
-        if (headerIcon) headerIcon.textContent = "🎄";
-        if (headerTitle) {
-          headerTitle.textContent = "Brian's Winter Wonderland";
-          headerTitle.className = "text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 leading-tight transition-all duration-500";
-        }
-        if (headerSecondary) headerSecondary.textContent = "✨";
-        if (headerEdition) {
-          headerEdition.textContent = "Holiday Cinema Edition";
-          headerEdition.className = "text-[9px] sm:text-[10px] text-emerald-300 font-mono tracking-wider uppercase font-semibold transition-all duration-500";
-        }
-      } else if (effective === 'normal') {
-        if (headerPill) headerPill.className = "inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-950/90 border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] backdrop-blur-md transition-all duration-500";
-        if (headerIconBox) headerIconBox.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-sky-500 via-amber-400 to-amber-500 p-0.5 shadow-lg shadow-amber-950/60 flex items-center justify-center text-slate-950 font-black text-lg sm:text-2xl shrink-0 transition-all duration-500";
-        if (headerIcon) headerIcon.textContent = "🎬";
-        if (headerTitle) {
-          headerTitle.textContent = "Brian's Theater";
-          headerTitle.className = "text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-300 to-amber-400 leading-tight transition-all duration-500";
-        }
-        if (headerSecondary) headerSecondary.textContent = "🍿";
-        if (headerEdition) {
-          headerEdition.textContent = "Virtual Cinema Edition";
-          headerEdition.className = "text-[9px] sm:text-[10px] text-slate-400 font-mono tracking-wider uppercase font-semibold transition-all duration-500";
-        }
-      } else { // halloween
-        if (headerPill) headerPill.className = "inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-950/90 border border-orange-500/40 shadow-[0_0_25px_rgba(249,115,22,0.25)] backdrop-blur-md transition-all duration-500";
-        if (headerIconBox) headerIconBox.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-400 to-purple-600 p-0.5 shadow-lg shadow-orange-950/60 flex items-center justify-center text-slate-950 font-black text-lg sm:text-2xl shrink-0 transition-all duration-500";
-        if (headerIcon) headerIcon.textContent = "🎃";
-        if (headerTitle) {
-          headerTitle.textContent = "Brian's Haunted Theater";
-          headerTitle.className = "text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-400 leading-tight anim-flicker transition-all duration-500";
-        }
-        if (headerSecondary) headerSecondary.textContent = "🕯️";
-        if (headerEdition) {
-          headerEdition.textContent = "Shocktoberfest Edition";
-          headerEdition.className = "text-[9px] sm:text-[10px] text-slate-400 font-mono tracking-wider uppercase font-semibold transition-all duration-500";
-        }
+      if (headerPill) headerPill.className = `inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-950/90 border ${conf.pillGrad} backdrop-blur-md transition-all duration-500`;
+      if (headerIconBox) headerIconBox.className = `w-9 h-9 sm:w-11 sm:h-11 rounded-xl ${conf.iconBoxGrad} p-0.5 shadow-lg flex items-center justify-center text-slate-950 font-black text-lg sm:text-2xl shrink-0 transition-all duration-500`;
+      if (headerIcon) headerIcon.textContent = conf.icon;
+      if (headerTitle) {
+        headerTitle.textContent = conf.title;
+        headerTitle.className = `text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r ${conf.titleGrad} leading-tight transition-all duration-500`;
+      }
+      if (headerSecondary) headerSecondary.textContent = conf.secondaryIcon;
+      if (headerEdition) {
+        headerEdition.textContent = conf.edition;
+        headerEdition.className = `text-[9px] sm:text-[10px] ${conf.editionColor} font-mono tracking-wider uppercase font-semibold transition-all duration-500`;
       }
 
-      // 3. Center Poster Frame & Countdown Box Styling
+      // 4. Center Poster Frame & Countdown Box Styling
       const posterFrame = document.getElementById('posterFrame');
       const countdownBox = document.getElementById('countdownBox');
       const joinBanner = document.getElementById('countdownUrlLink');
@@ -818,36 +1054,16 @@
       const doorsOpenLeftIcon = document.getElementById('doorsOpenLeftIcon');
       const doorsOpenRightIcon = document.getElementById('doorsOpenRightIcon');
 
-      if (effective === 'christmas') {
-        if (posterFrame) posterFrame.className = "relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-emerald-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(16,185,129,0.4)] aspect-[16/9] max-h-[42vh] flex items-center justify-center";
-        if (countdownBox) countdownBox.className = "w-full bg-slate-950/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center gap-3";
-        if (joinBanner) joinBanner.className = "w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-rose-500/20 to-emerald-500/20 hover:from-emerald-500/30 hover:via-rose-500/30 hover:to-emerald-500/30 border-2 border-emerald-400/80 hover:border-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden";
-        if (joinLeftIcon) joinLeftIcon.textContent = "🎄";
-        if (joinRightIcon) joinRightIcon.textContent = "✨";
-        if (doorsOpenLink) doorsOpenLink.className = "theater-btn w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-rose-600 to-teal-500 hover:from-emerald-400 hover:via-rose-500 hover:to-teal-400 text-white font-black shadow-[0_0_40px_rgba(16,185,129,0.6)] border-2 border-emerald-400/80 transition transform active:scale-95 flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden";
-        if (doorsOpenLeftIcon) doorsOpenLeftIcon.textContent = "🎄";
-        if (doorsOpenRightIcon) doorsOpenRightIcon.textContent = "✨";
-      } else if (effective === 'normal') {
-        if (posterFrame) posterFrame.className = "relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(245,158,11,0.4)] aspect-[16/9] max-h-[42vh] flex items-center justify-center";
-        if (countdownBox) countdownBox.className = "w-full bg-slate-950/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] flex flex-col items-center gap-3";
-        if (joinBanner) joinBanner.className = "w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500/20 via-sky-500/20 to-amber-500/20 hover:from-amber-500/30 hover:via-sky-500/30 hover:to-amber-500/30 border-2 border-amber-400/80 hover:border-amber-300 shadow-[0_0_25px_rgba(245,158,11,0.35)] transition-all flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden";
-        if (joinLeftIcon) joinLeftIcon.textContent = "🎬";
-        if (joinRightIcon) joinRightIcon.textContent = "🍿";
-        if (doorsOpenLink) doorsOpenLink.className = "theater-btn w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-sky-600 to-amber-500 hover:from-amber-400 hover:via-sky-500 hover:to-amber-400 text-white font-black shadow-[0_0_40px_rgba(245,158,11,0.6)] border-2 border-amber-400/80 transition transform active:scale-95 flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden";
-        if (doorsOpenLeftIcon) doorsOpenLeftIcon.textContent = "🎬";
-        if (doorsOpenRightIcon) doorsOpenRightIcon.textContent = "🍿";
-      } else { // halloween
-        if (posterFrame) posterFrame.className = "relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(245,158,11,0.35)] aspect-[16/9] max-h-[42vh] flex items-center justify-center";
-        if (countdownBox) countdownBox.className = "w-full bg-slate-950/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.25)] flex flex-col items-center gap-3";
-        if (joinBanner) joinBanner.className = "w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/20 to-purple-500/15 hover:from-amber-500/25 hover:via-orange-500/30 hover:to-purple-500/25 border-2 border-amber-400/80 hover:border-amber-300 shadow-[0_0_30px_rgba(245,158,11,0.4)] transition-all flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden";
-        if (joinLeftIcon) joinLeftIcon.textContent = "🎃";
-        if (joinRightIcon) joinRightIcon.textContent = "🦇";
-        if (doorsOpenLink) doorsOpenLink.className = "theater-btn w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-emerald-500 hover:from-orange-400 hover:via-purple-500 hover:to-emerald-400 text-white font-black shadow-[0_0_40px_rgba(249,115,22,0.6)] hover:shadow-[0_0_55px_rgba(168,85,247,0.85)] border-2 border-orange-400/80 transition transform active:scale-95 flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden";
-        if (doorsOpenLeftIcon) doorsOpenLeftIcon.textContent = "🎃";
-        if (doorsOpenRightIcon) doorsOpenRightIcon.textContent = "🦇";
-      }
+      if (posterFrame) posterFrame.className = `relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border ${conf.posterBorder} bg-slate-950/95 aspect-[16/9] max-h-[42vh] flex items-center justify-center transition-all duration-500`;
+      if (countdownBox) countdownBox.className = `w-full bg-slate-950/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border ${conf.countdownBorder} flex flex-col items-center gap-3 transition-all duration-500`;
+      if (joinBanner) joinBanner.className = `w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r ${conf.joinBanner} transition-all flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden`;
+      if (joinLeftIcon) joinLeftIcon.textContent = conf.joinIcons[0];
+      if (joinRightIcon) joinRightIcon.textContent = conf.joinIcons[1];
+      if (doorsOpenLink) doorsOpenLink.className = `theater-btn w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r ${conf.doorsBanner} transition transform active:scale-95 flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden`;
+      if (doorsOpenLeftIcon) doorsOpenLeftIcon.textContent = conf.doorsIcons[0];
+      if (doorsOpenRightIcon) doorsOpenRightIcon.textContent = conf.doorsIcons[1];
 
-      // Re-render Title and Countdown to reflect the new theme styling
+      // 5. Re-render Title and Countdown to reflect new styling
       if (typeof applySmartMovieTitleSizing === 'function') {
         const cleanTitle = (activeMovie && activeMovie.title) ? activeMovie.title : 'Coming Soon';
         applySmartMovieTitleSizing(cleanTitle);
@@ -857,8 +1073,12 @@
       }
     }
 
-    function startThemeSnowAnimation() {
-      const canvas = document.getElementById('themeSnowCanvas');
+    // Dynamic Multi-Particle Engine (Snow, Sparkles, Hearts, Clovers, Fireworks, Leaves)
+    function startThemeParticleAnimation(type) {
+      stopThemeParticleAnimation();
+      if (!type) return;
+
+      const canvas = document.getElementById('themeParticleCanvas') || document.getElementById('themeSnowCanvas');
       if (!canvas) return;
       canvas.classList.remove('hidden');
       const ctx = canvas.getContext('2d');
@@ -869,61 +1089,97 @@
         canvas.height = window.innerHeight;
       };
       resize();
+      window.removeEventListener('resize', resize);
       window.addEventListener('resize', resize);
 
-      if (snowflakes.length === 0) {
-        const count = 48;
-        for (let i = 0; i < count; i++) {
-          snowflakes.push({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            radius: Math.random() * 2.8 + 1,
-            density: Math.random() * 1.2 + 0.4,
-            speedY: Math.random() * 1.1 + 0.5,
-            speedX: (Math.random() - 0.5) * 0.6,
-            opacity: Math.random() * 0.6 + 0.35
-          });
-        }
+      activeParticles = [];
+      const count = type === 'fireworks' ? 30 : 45;
+
+      for (let i = 0; i < count; i++) {
+        activeParticles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          size: Math.random() * 3 + 1.5,
+          speedY: (type === 'hearts' || type === 'sparkles') ? -(Math.random() * 0.8 + 0.3) : (Math.random() * 1.2 + 0.4),
+          speedX: (Math.random() - 0.5) * 0.8,
+          opacity: Math.random() * 0.6 + 0.35,
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.04,
+          type
+        });
       }
 
-      function drawSnow() {
+      function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < snowflakes.length; i++) {
-          const f = snowflakes[i];
-          ctx.beginPath();
-          ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2, false);
-          ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
-          ctx.fill();
 
-          f.y += f.speedY;
-          f.x += f.speedX;
+        for (let i = 0; i < activeParticles.length; i++) {
+          const p = activeParticles[i];
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
 
-          if (f.y > canvas.height + 5) {
-            f.y = -5;
-            f.x = Math.random() * canvas.width;
+          if (p.type === 'snow') {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            ctx.fill();
+          } else if (p.type === 'sparkles') {
+            ctx.fillStyle = `rgba(251, 191, 36, ${p.opacity})`;
+            ctx.font = `${Math.floor(p.size * 3.5)}px sans-serif`;
+            ctx.fillText('✦', 0, 0);
+          } else if (p.type === 'hearts') {
+            ctx.fillStyle = `rgba(244, 114, 182, ${p.opacity})`;
+            ctx.font = `${Math.floor(p.size * 3.5)}px sans-serif`;
+            ctx.fillText('♥', 0, 0);
+          } else if (p.type === 'clovers') {
+            ctx.fillStyle = `rgba(52, 211, 153, ${p.opacity})`;
+            ctx.font = `${Math.floor(p.size * 3.5)}px sans-serif`;
+            ctx.fillText('☘', 0, 0);
+          } else if (p.type === 'leaves') {
+            ctx.fillStyle = `rgba(245, 158, 11, ${p.opacity})`;
+            ctx.font = `${Math.floor(p.size * 4)}px sans-serif`;
+            ctx.fillText('🍁', 0, 0);
+          } else if (p.type === 'fireworks') {
+            ctx.fillStyle = (i % 3 === 0) ? `rgba(239, 68, 68, ${p.opacity})` : (i % 3 === 1 ? `rgba(59, 130, 246, ${p.opacity})` : `rgba(255, 255, 255, ${p.opacity})`);
+            ctx.font = `${Math.floor(p.size * 4)}px sans-serif`;
+            ctx.fillText('✧', 0, 0);
           }
-          if (f.x > canvas.width + 5) f.x = -5;
-          if (f.x < -5) f.x = canvas.width + 5;
+
+          ctx.restore();
+
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rotation += p.rotSpeed;
+
+          // Wrap edges
+          if (p.speedY > 0 && p.y > canvas.height + 10) { p.y = -10; p.x = Math.random() * canvas.width; }
+          if (p.speedY < 0 && p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+          if (p.x > canvas.width + 10) p.x = -10;
+          if (p.x < -10) p.x = canvas.width + 10;
         }
-        snowAnimId = requestAnimationFrame(drawSnow);
+
+        particleAnimId = requestAnimationFrame(draw);
       }
 
-      if (snowAnimId) cancelAnimationFrame(snowAnimId);
-      snowAnimId = requestAnimationFrame(drawSnow);
+      particleAnimId = requestAnimationFrame(draw);
     }
 
-    function stopThemeSnowAnimation() {
-      if (snowAnimId) {
-        cancelAnimationFrame(snowAnimId);
-        snowAnimId = null;
+    function stopThemeParticleAnimation() {
+      if (particleAnimId) {
+        cancelAnimationFrame(particleAnimId);
+        particleAnimId = null;
       }
-      const canvas = document.getElementById('themeSnowCanvas');
+      const canvas = document.getElementById('themeParticleCanvas') || document.getElementById('themeSnowCanvas');
       if (canvas) {
         canvas.classList.add('hidden');
         const ctx = canvas.getContext('2d');
         if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
+
+    // Backwards-compatible aliases
+    function startThemeSnowAnimation() { startThemeParticleAnimation('snow'); }
+    function stopThemeSnowAnimation() { stopThemeParticleAnimation(); }
 
     // Curated High-Res Movie Artwork Map (Matches main theater stage)
     const verifiedMovieArtworks = {
@@ -1367,20 +1623,14 @@
       if (countdownUrlBadge) countdownUrlBadge.classList.remove('hidden');
       if (countdownGrid) countdownGrid.classList.remove('hidden');
       const currentTheme = (typeof getActiveThemeName === 'function') ? getActiveThemeName() : 'normal';
+      const conf = (typeof THEME_CONFIG !== 'undefined' && THEME_CONFIG[currentTheme]) ? THEME_CONFIG[currentTheme] : THEME_CONFIG.normal;
       if (screeningSubtitle) {
-        if (currentTheme === 'christmas') {
-          screeningSubtitle.textContent = "❄️ NEXT HOLIDAY SCREENING ❄️";
-          screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-300/90 uppercase";
-        } else if (currentTheme === 'normal') {
-          screeningSubtitle.textContent = "NEXT SCHEDULED SCREENING";
-          screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-sky-400/90 uppercase";
-        } else {
-          screeningSubtitle.textContent = "NEXT SCHEDULED SCREENING";
-          screeningSubtitle.className = "text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-purple-300/90 uppercase";
-        }
+        screeningSubtitle.textContent = conf.statusText;
+        screeningSubtitle.className = `text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] ${conf.statusColor} uppercase`;
       }
       if (countdownHeader) {
-        countdownHeader.textContent = currentTheme === 'christmas' ? "🎁 THEATER DOORS OPEN IN 🎁" : "THEATER DOORS OPEN IN";
+        countdownHeader.textContent = conf.countdownHeader;
+        countdownHeader.className = `text-xs sm:text-sm font-mono font-bold tracking-[0.25em] ${conf.countdownHeaderColor} uppercase flex items-center justify-center gap-2`;
       }
 
       // Target countdown to doors opening (10 min before show)
@@ -1405,17 +1655,15 @@
       if (countMins) countMins.textContent = String(mins).padStart(2, '0');
       if (countSecs) countSecs.textContent = String(secs).padStart(2, '0');
 
-      if (currentTheme === 'christmas') {
-        if (countDays) countDays.className = "text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight leading-none";
-        if (countHours) countHours.className = "text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight leading-none";
-        if (countMins) countMins.className = "text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight leading-none";
-        if (countSecs) countSecs.className = "text-2xl sm:text-4xl font-black text-rose-400 tracking-tight leading-none";
-      } else {
-        if (countDays) countDays.className = "text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none";
-        if (countHours) countHours.className = "text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none";
-        if (countMins) countMins.className = "text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none";
-        if (countSecs) countSecs.className = "text-2xl sm:text-4xl font-black text-amber-300 tracking-tight leading-none";
-      }
+      if (countDays) countDays.className = `text-2xl sm:text-4xl font-black ${conf.digitText} tracking-tight leading-none`;
+      if (countHours) countHours.className = `text-2xl sm:text-4xl font-black ${conf.digitText} tracking-tight leading-none`;
+      if (countMins) countMins.className = `text-2xl sm:text-4xl font-black ${conf.digitText} tracking-tight leading-none`;
+      if (countSecs) countSecs.className = `text-2xl sm:text-4xl font-black ${conf.digitSecsText} tracking-tight leading-none`;
+
+      if (colDays) colDays.className = `flex flex-col items-center justify-center bg-slate-900/90 border ${conf.digitCard} rounded-xl p-2 sm:p-2.5 shadow-md`;
+      if (colHours) colHours.className = `flex flex-col items-center justify-center bg-slate-900/90 border ${conf.digitCard} rounded-xl p-2 sm:p-2.5 shadow-md`;
+      if (colMins) colMins.className = `flex flex-col items-center justify-center bg-slate-900/90 border ${conf.digitCard} rounded-xl p-2 sm:p-2.5 shadow-md`;
+      if (colSecs) colSecs.className = `flex flex-col items-center justify-center bg-slate-900/90 border ${conf.digitCard} rounded-xl p-2 sm:p-2.5 shadow-md`;
 
       // Dynamic unit box hiding: omit 0 Days, 0 Hours, and 0 Mins
       if (days > 0) {
@@ -1498,12 +1746,8 @@
       const len = cleanTitle.length;
 
       const theme = (typeof getActiveThemeName === 'function') ? getActiveThemeName() : 'normal';
-      let themeGrad = "from-emerald-400 via-purple-500 to-fuchsia-400 filter drop-shadow-[0_0_20px_rgba(52,211,153,0.35)] drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] drop-shadow-[0_0_55px_rgba(192,132,252,0.5)]";
-      if (theme === 'christmas') {
-        themeGrad = "from-emerald-400 via-teal-300 to-amber-300 filter drop-shadow-[0_0_25px_rgba(16,185,129,0.5)]";
-      } else if (theme === 'normal') {
-        themeGrad = "from-sky-400 via-amber-300 to-amber-400 filter drop-shadow-[0_0_25px_rgba(245,158,11,0.5)]";
-      }
+      const conf = (typeof THEME_CONFIG !== 'undefined' && THEME_CONFIG[theme]) ? THEME_CONFIG[theme] : THEME_CONFIG.normal;
+      const themeGrad = conf.movieGrad;
 
       const baseClasses = `font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r ${themeGrad} transition-all duration-300 max-w-full`;
 
@@ -2679,7 +2923,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.239";
+    const TWITCH_OVERLAY_VERSION = "4.9.240";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

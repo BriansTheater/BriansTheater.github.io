@@ -1,8 +1,9 @@
 {
-  "version": "4.9.239",
-  "releaseDate": "2026-11-01",
-  "title": "Brian's Theater v4.9.239",
+  "version": "4.9.240",
+  "releaseDate": "2026-11-02",
+  "title": "Brian's Theater v4.9.240",
   "notes": [
-    "Synchronized dynamic browser tab titles across all themes."
+    "Delivered full 8-holiday theatrical suite with custom backdrops.",
+    "Integrated live seasonal admin controls and automatic calendar rotation."
   ]
 }
