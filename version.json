@@ -1,9 +1,9 @@
 {
-  "version": "4.9.243",
+  "version": "4.9.244",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.243",
+  "title": "Brian's Theater v4.9.244",
   "notes": [
-    "Upgraded New Year's brand logo to deep midnight contrast.",
-    "Eliminated yellow-on-yellow washout on champagne glass icons."
+    "Added St. Patrick's peek-a-boo leprechaun motion demo studio.",
+    "Features animated hat tip, winking eye, and gold coin toss."
   ]
 }

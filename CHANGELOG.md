@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.244] - 2026-11-02
+
+### What's New
+- Added St. Patrick's peek-a-boo leprechaun motion demo studio.
+- Features animated hat tip, winking eye, and gold coin toss.
+- Supports three tavern hiding spots and automatic randomized peeking.
+- Includes full mobile and desktop controls with live physics.
+
 ## [4.9.243] - 2026-11-02
 
 ### What's New
