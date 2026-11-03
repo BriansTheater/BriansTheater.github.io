@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.251] - 2026-11-02
+
+### What's New
+- Added iconic 'I want my gold' voice line scream.
+- Engineered DSP demonic raspy goblin vocal audio track.
+- Added vibrating horror comic dialogue bubble above leprechaun.
+- Synchronized voice scream with Warwick Davis jump-scare lunge.
+- Integrated voice line into Demo Studio and Twitch overlay.
+
 ## [4.9.250] - 2026-11-02
 
 ### What's New

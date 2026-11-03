@@ -681,6 +681,7 @@
   <!-- ========================================== -->
   <!-- 3. REALTIME JAVASCRIPT LOGIC               -->
   <!-- ========================================== -->
+  <script src="audio/leprechaun_voice_data.js"></script>
   <script>
     const FIREBASE_RTDB_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
@@ -1536,9 +1537,33 @@
           carrier.start(now + 0.1);
           modulator.stop(now + 0.95);
           carrier.stop(now + 0.95);
+
+          // Demonic "I WANT MY GOLD!" Voice Scream
+          this.playVoiceLine();
         }
 
-        // 6. Snatch & Vanish Whoosh
+        // 6. Demonic Leprechaun Voice Scream ("I want my gold!")
+        playVoiceLine() {
+          if (!this.enabled) return;
+          if (typeof window !== 'undefined' && window.LEPRECHAUN_VOICE_DATA) {
+            try {
+              const snd = new Audio(window.LEPRECHAUN_VOICE_DATA);
+              snd.volume = Math.min(1.0, this.volume * 1.35);
+              snd.play().catch(() => {});
+            } catch(e) {}
+          }
+          if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            try {
+              const utter = new SpeechSynthesisUtterance("I want my gold!");
+              utter.pitch = 0.55;
+              utter.rate = 1.15;
+              utter.volume = Math.min(1.0, this.volume);
+              window.speechSynthesis.speak(utter);
+            } catch(e) {}
+          }
+        }
+
+        // 7. Snatch & Vanish Whoosh
         playSnatchVanish() {
           if (!this.enabled) return;
           const ctx = this.ensureContext();
@@ -2196,11 +2221,11 @@
               // Draw Warwick Davis Horror Leprechaun
               const creepySkin = LEP_SKINS.creepy;
               const creepyImg = lepImages.creepy;
+              const effScale = scareScale * ((creepySkin && creepySkin.scaleMul) || 1.0);
               if (creepyImg && creepyImg.complete && creepyImg.naturalWidth > 0) {
                 ctx.save();
                 ctx.translate(targetX, lungeY);
                 ctx.rotate(curSpot.angle);
-                const effScale = scareScale * (creepySkin.scaleMul || 1.0);
                 ctx.scale(effScale * (curSpot.flip ? -1 : 1), effScale);
                 ctx.shadowColor = 'rgba(34, 197, 94, 0.95)';
                 ctx.shadowBlur = 35;
@@ -2212,6 +2237,59 @@
 
               // Draw Pot of Gold in front of his torso
               drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.85)');
+
+              // Shaking "I WANT MY GOLD!" Horror Comic Dialogue Bubble
+              if (elapsed > 160 && elapsed < 2150) {
+                ctx.save();
+                const bubbleAlpha = Math.min(1, (elapsed - 160) / 120);
+                const textShakeX = (Math.random() - 0.5) * 6;
+                const textShakeY = (Math.random() - 0.5) * 6;
+                const spriteH = (creepyImg && creepyImg.naturalHeight ? creepyImg.naturalHeight : 660) * effScale;
+                const bubbleY = lungeY - spriteH - 18;
+
+                ctx.translate(targetX + textShakeX, bubbleY + textShakeY);
+                ctx.globalAlpha = bubbleAlpha;
+
+                const textStr = "I WANT MY GOLD!";
+                ctx.font = '900 24px Impact, "Arial Black", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const m = ctx.measureText(textStr);
+                const pw = m.width + 36;
+                const ph = 44;
+
+                ctx.fillStyle = 'rgba(10, 10, 10, 0.94)';
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 3;
+                ctx.shadowColor = 'rgba(239, 68, 68, 0.95)';
+                ctx.shadowBlur = 20;
+
+                ctx.beginPath();
+                if (typeof ctx.roundRect === 'function') {
+                  ctx.roundRect(-pw / 2, -ph / 2, pw, ph, 12);
+                } else {
+                  ctx.rect(-pw / 2, -ph / 2, pw, ph);
+                }
+                ctx.fill();
+                ctx.stroke();
+
+                // Downward pointer spike pointing towards his mouth
+                ctx.beginPath();
+                ctx.moveTo(-10, ph / 2 - 1);
+                ctx.lineTo(0, ph / 2 + 14);
+                ctx.lineTo(10, ph / 2 - 1);
+                ctx.fillStyle = '#ef4444';
+                ctx.fill();
+
+                // Shouted Celtic Gold Text
+                ctx.shadowColor = '#fbbf24';
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillText(textStr, 0, 0);
+
+                ctx.restore();
+              }
 
               if (elapsed > 2200) {
                 activeRainbowScare.phase = 'retreat';
@@ -4047,7 +4125,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.250";
+    const TWITCH_OVERLAY_VERSION = "4.9.251";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

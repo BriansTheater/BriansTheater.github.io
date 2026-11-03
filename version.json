@@ -1,10 +1,10 @@
 {
-  "version": "4.9.250",
+  "version": "4.9.251",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.250",
+  "title": "Brian's Theater v4.9.251",
   "notes": [
-    "Removed icon prefix from movie title heading across all themes.",
-    "Added procedural Web Audio synthesizer for St. Patrick's Leprechaun.",
-    "Added synchronized sound effects for peeks and horror jump-scare."
+    "Added iconic 'I want my gold!' voice scream to jump-scare.",
+    "Added vibrating horror comic dialogue bubble above leprechaun.",
+    "Integrated demonic raspy voice audio across Demo and Twitch."
   ]
 }
