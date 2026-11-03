@@ -1286,6 +1286,41 @@
       potImg.src = 'images/pot_of_gold_cutout.png';
 
       // ==========================================
+      // AMBIENT BACKGROUND SOUNDSCAPES
+      // ==========================================
+      const BGM_TRACKS = {
+        jig: {
+          id: 'jig',
+          name: 'Tavern Jig',
+          icon: '🎻',
+          src: 'audio/celtic_tavern_jig.mp3',
+          description: 'Lively fiddle, guitar & tin whistle'
+        },
+        pub: {
+          id: 'pub',
+          name: 'Irish Pub',
+          icon: '🍺',
+          src: 'audio/irish_pub_ambience.mp3',
+          description: 'Dublin crowd chatter, clinking pints & hearth'
+        },
+        harp: {
+          id: 'harp',
+          name: 'Celtic Harp',
+          icon: '🪕',
+          src: 'audio/celtic_harp_forest.mp3',
+          description: 'Serene acoustic harp & woodland breeze'
+        },
+        reel: {
+          id: 'reel',
+          name: 'Bodhrán Reel',
+          icon: '🥁',
+          src: 'audio/celtic_bodhran_reel.mp3',
+          description: 'Fast traditional tin whistle & bodhrán'
+        }
+      };
+      window.BGM_TRACKS = BGM_TRACKS;
+
+      // ==========================================
       // PROCEDURAL WEB AUDIO SYNTHESIZER ENGINE
       // Zero external assets, 0ms latency, pure Web Audio API
       // ==========================================
@@ -1295,17 +1330,41 @@
           this.volume = options.volume !== undefined ? options.volume : 0.75;
           this.bgmEnabled = options.bgmEnabled !== undefined ? options.bgmEnabled : true;
           this.bgmVolume = options.bgmVolume !== undefined ? options.bgmVolume : 0.40;
+          this.currentTrackId = options.trackId || 'jig';
           this.bgmAudio = null;
           this.ctx = null;
         }
 
         initBgm() {
           if (typeof Audio === 'undefined') return;
+          const track = BGM_TRACKS[this.currentTrackId] || BGM_TRACKS.jig;
           if (!this.bgmAudio) {
-            this.bgmAudio = new Audio('audio/celtic_tavern_jig.mp3');
+            this.bgmAudio = new Audio(track.src);
             this.bgmAudio.loop = true;
             this.bgmAudio.volume = this.bgmEnabled ? this.bgmVolume : 0;
           }
+        }
+
+        setBgmTrack(trackId) {
+          if (!BGM_TRACKS[trackId]) return this.currentTrackId;
+          this.currentTrackId = trackId;
+          const track = BGM_TRACKS[trackId];
+          const wasPlaying = this.bgmAudio && !this.bgmAudio.paused;
+
+          if (this.bgmAudio) {
+            this.bgmAudio.pause();
+            this.bgmAudio.src = track.src;
+            this.bgmAudio.load();
+          } else {
+            this.initBgm();
+          }
+
+          if (this.bgmAudio && this.bgmEnabled && (wasPlaying || this.bgmEnabled)) {
+            this.bgmAudio.playbackRate = 1.0;
+            this.bgmAudio.volume = this.bgmVolume;
+            this.bgmAudio.play().catch(() => {});
+          }
+          return this.currentTrackId;
         }
 
         startBgm() {
@@ -1672,12 +1731,15 @@
         }
       }
 
-      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75 });
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlBgm = urlParams.get('bgm');
+      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75, trackId: urlBgm || 'jig' });
       window.lepAudio = lepAudio;
       window.setLeprechaunVolume = vol => lepAudio.setVolume(vol);
       window.toggleLeprechaunSound = () => lepAudio.toggleSound();
       window.setLeprechaunBgmVolume = vol => lepAudio.setBgmVolume(vol);
       window.toggleLeprechaunBgm = () => lepAudio.toggleBgm();
+      window.setLeprechaunBgmTrack = trackId => lepAudio.setBgmTrack(trackId);
 
       // Start joyful tavern BGM upon first user interaction
       ['click', 'keydown', 'touchstart'].forEach(evt => {
@@ -4221,7 +4283,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.252";
+    const TWITCH_OVERLAY_VERSION = "4.9.253";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.253] - 2026-11-02
+
+### What's New
+- Added 4-track ambient soundscape switcher to Demo Studio.
+- Added authentic Dublin pub crowd chatter and clinking pints.
+- Added serene acoustic Celtic harp and woodland breeze audio.
+- Added traditional high-tempo bodhrán hand drum and whistle reel.
+- Added instant track preview switching buttons to studio header.
+- Added URL parameter track selection support to Twitch overlay.
+
 ## [4.9.252] - 2026-11-02
 
 ### What's New

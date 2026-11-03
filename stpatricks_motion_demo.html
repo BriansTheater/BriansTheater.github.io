@@ -74,6 +74,14 @@
           <span id="musicIcon">🎵</span> <span id="musicLabel">Music: ON</span>
         </button>
 
+        <div class="flex items-center gap-1 bg-emerald-950/60 p-1 rounded-xl border border-emerald-500/30">
+          <span class="text-[11px] font-mono font-bold text-amber-300 px-1 uppercase tracking-wider">Ambient:</span>
+          <button id="bgmBtn-jig" onclick="selectDemoBgmTrack('jig')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Lively fiddle, guitar & tin whistle">🎻 Tavern Jig</button>
+          <button id="bgmBtn-pub" onclick="selectDemoBgmTrack('pub')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Dublin crowd chatter, clinking pints & hearth">🍺 Irish Pub</button>
+          <button id="bgmBtn-harp" onclick="selectDemoBgmTrack('harp')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Serene acoustic harp & woodland breeze">🪕 Celtic Harp</button>
+          <button id="bgmBtn-reel" onclick="selectDemoBgmTrack('reel')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Fast traditional tin whistle & bodhrán">🥁 Bodhrán Reel</button>
+        </div>
+
         <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Spot:</span>
         <button id="spotBtn-random" onclick="selectSpot('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
         <button id="spotBtn-0" onclick="selectSpot(0)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Left</button>
@@ -155,6 +163,41 @@
     potImg.src = 'images/pot_of_gold_cutout.png';
 
     // ==========================================
+    // AMBIENT BACKGROUND SOUNDSCAPES
+    // ==========================================
+    const BGM_TRACKS = {
+      jig: {
+        id: 'jig',
+        name: 'Tavern Jig',
+        icon: '🎻',
+        src: 'audio/celtic_tavern_jig.mp3',
+        description: 'Lively fiddle, guitar & tin whistle'
+      },
+      pub: {
+        id: 'pub',
+        name: 'Irish Pub',
+        icon: '🍺',
+        src: 'audio/irish_pub_ambience.mp3',
+        description: 'Dublin crowd chatter, clinking pints & hearth'
+      },
+      harp: {
+        id: 'harp',
+        name: 'Celtic Harp',
+        icon: '🪕',
+        src: 'audio/celtic_harp_forest.mp3',
+        description: 'Serene acoustic harp & woodland breeze'
+      },
+      reel: {
+        id: 'reel',
+        name: 'Bodhrán Reel',
+        icon: '🥁',
+        src: 'audio/celtic_bodhran_reel.mp3',
+        description: 'Fast traditional tin whistle & bodhrán'
+      }
+    };
+    window.BGM_TRACKS = BGM_TRACKS;
+
+    // ==========================================
     // PROCEDURAL WEB AUDIO SYNTHESIZER ENGINE
     // Zero dependencies, 0ms latency, pure Web Audio API
     // ==========================================
@@ -164,17 +207,41 @@
         this.volume = options.volume !== undefined ? options.volume : 0.75;
         this.bgmEnabled = options.bgmEnabled !== undefined ? options.bgmEnabled : true;
         this.bgmVolume = options.bgmVolume !== undefined ? options.bgmVolume : 0.40;
+        this.currentTrackId = options.trackId || 'jig';
         this.bgmAudio = null;
         this.ctx = null;
       }
 
       initBgm() {
         if (typeof Audio === 'undefined') return;
+        const track = BGM_TRACKS[this.currentTrackId] || BGM_TRACKS.jig;
         if (!this.bgmAudio) {
-          this.bgmAudio = new Audio('audio/celtic_tavern_jig.mp3');
+          this.bgmAudio = new Audio(track.src);
           this.bgmAudio.loop = true;
           this.bgmAudio.volume = this.bgmEnabled ? this.bgmVolume : 0;
         }
+      }
+
+      setBgmTrack(trackId) {
+        if (!BGM_TRACKS[trackId]) return this.currentTrackId;
+        this.currentTrackId = trackId;
+        const track = BGM_TRACKS[trackId];
+        const wasPlaying = this.bgmAudio && !this.bgmAudio.paused;
+
+        if (this.bgmAudio) {
+          this.bgmAudio.pause();
+          this.bgmAudio.src = track.src;
+          this.bgmAudio.load();
+        } else {
+          this.initBgm();
+        }
+
+        if (this.bgmAudio && this.bgmEnabled && (wasPlaying || this.bgmEnabled)) {
+          this.bgmAudio.playbackRate = 1.0;
+          this.bgmAudio.volume = this.bgmVolume;
+          this.bgmAudio.play().catch(() => {});
+        }
+        return this.currentTrackId;
       }
 
       startBgm() {
@@ -590,6 +657,22 @@
       }
     }
     window.toggleDemoMusic = toggleDemoMusic;
+
+    function selectDemoBgmTrack(trackId) {
+      if (!BGM_TRACKS[trackId]) return;
+      lepAudio.setBgmTrack(trackId);
+      Object.keys(BGM_TRACKS).forEach(tId => {
+        const btn = document.getElementById(`bgmBtn-${tId}`);
+        if (btn) {
+          if (tId === trackId) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        }
+      });
+    }
+    window.selectDemoBgmTrack = selectDemoBgmTrack;
 
     // Start joyful tavern BGM upon first user interaction
     ['click', 'keydown', 'touchstart'].forEach(evt => {
