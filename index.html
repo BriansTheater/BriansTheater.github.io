@@ -1831,6 +1831,31 @@
                 <option value="thanksgiving">🦃 Harvest Hearth Lodge (Thanksgiving)</option>
                 <option value="christmas">🎄 Holiday Winter Wonderland (Christmas)</option>
               </select>
+
+              <!-- St. Patrick's Celtic Tavern Sub-Settings (Visible when St. Patrick's Theme is Active) -->
+              <div id="adminStPatricksSettingsPanel" class="hidden mt-1 p-3 rounded-xl bg-emerald-950/50 border border-emerald-500/40 flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-emerald-300 flex items-center gap-1.5">
+                    <span>🍀</span> <span>St. Patrick's Stream & Tavern Controls</span>
+                  </span>
+                  <a href="stpatricks_motion_demo.html" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500/30 transition">
+                    🍀 Open Motion Studio ↗
+                  </a>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider">Ambient Background Soundscape:</span>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1">
+                    <button type="button" id="adminStpBgm-jig" onclick="setAdminStPatricksBgm('jig')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-emerald-600 text-white border border-emerald-300 cursor-pointer transition">🎻 Tavern Jig</button>
+                    <button type="button" id="adminStpBgm-pub" onclick="setAdminStPatricksBgm('pub')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition">🍺 Irish Pub</button>
+                    <button type="button" id="adminStpBgm-harp" onclick="setAdminStPatricksBgm('harp')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition">🪕 Celtic Harp</button>
+                    <button type="button" id="adminStpBgm-reel" onclick="setAdminStPatricksBgm('reel')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition">🥁 Bodhrán Reel</button>
+                  </div>
+                </div>
+                <div class="text-[10px] text-emerald-200/80 font-mono leading-snug">
+                  ✨ 5 Friendly Mascot Faces • 🕺 Pop-Up Jig & Coin Toss • 🌈 3.5-Min Jump-Scare
+                </div>
+              </div>
+
               <div class="flex items-center justify-between text-[10px] text-slate-400 leading-normal">
                 <span>Smart Auto rotates 8 holiday themes by calendar date, or select an instant override.</span>
                 <a href="halloween-icons.html" target="_blank" rel="noopener noreferrer" class="text-orange-400 hover:text-orange-300 underline font-semibold shrink-0 ml-2">Browse All Icons & Badges ↗</a>
@@ -7130,6 +7155,11 @@
         }
       }
 
+      const stpSettingsPanel = document.getElementById('adminStPatricksSettingsPanel');
+      if (stpSettingsPanel) {
+        stpSettingsPanel.classList.toggle('hidden', theme !== 'stpatricks');
+      }
+
       // Countdown Box & Tile Elements
       const cdBox = document.getElementById('stageCountdownBox');
       const cdLabel = document.getElementById('stageCountdownLabel');
@@ -7612,12 +7642,14 @@
       applySeasonalTheme(themeVal);
 
       // Instant global sync via Firebase RTDB PUT so PC and all devices update in real time!
+      const savedBgm = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
       try {
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonalTheme.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             theme: themeVal,
+            bgmTrack: savedBgm,
             updatedAt: ts
           })
         });
@@ -7629,7 +7661,7 @@
       try {
         if (typeof BroadcastChannel !== 'undefined') {
           const bc = new BroadcastChannel('brian_theater_sync');
-          bc.postMessage({ type: 'SEASONAL_THEME_UPDATED', theme: themeVal, updatedAt: ts });
+          bc.postMessage({ type: 'SEASONAL_THEME_UPDATED', theme: themeVal, bgmTrack: savedBgm, updatedAt: ts });
           bc.close();
         }
       } catch(e) {}
@@ -7639,14 +7671,68 @@
 
       const msgs = {
         'auto': '✨ Smart Auto-Switch enabled (Seasonal calendar).',
+        'default': '🎬 Midnight Cinema default theme activated site-wide.',
+        'newyears': "🥂 Golden Midnight Gala (New Year's) theme activated site-wide.",
+        'valentines': "💖 Moonlight Drive-In (Valentine's) theme activated site-wide.",
+        'stpatricks': "🍀 Celtic Tavern (St. Patrick's) theme activated site-wide.",
+        'july4th': '🎆 Summer Blockbuster (4th of July) theme activated site-wide.',
         'halloween': '🎃 Shocktoberfest Halloween theme activated site-wide.',
-        'christmas': '🎄 Holiday Winter Wonderland theme activated site-wide.',
-        'default': '🎬 Midnight Cinema default theme activated site-wide.'
+        'thanksgiving': '🦃 Harvest Hearth Lodge (Thanksgiving) theme activated site-wide.',
+        'christmas': '🎄 Holiday Winter Wonderland theme activated site-wide.'
       };
       if (typeof showTheaterToast === 'function') {
         showTheaterToast(msgs[themeVal] || `Seasonal theme set to ${themeVal}`);
       }
     }
+
+    async function setAdminStPatricksBgm(trackId) {
+      try {
+        localStorage.setItem('brian_stpatricks_bgm_track', trackId);
+      } catch(e) {}
+      ['jig', 'pub', 'harp', 'reel'].forEach(id => {
+        const btn = document.getElementById(`adminStpBgm-${id}`);
+        if (btn) {
+          if (id === trackId) {
+            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-emerald-600 text-white border border-emerald-300 cursor-pointer transition';
+          } else {
+            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition';
+          }
+        }
+      });
+
+      const curTheme = localStorage.getItem('brian_theater_seasonal_theme') || 'stpatricks';
+      const ts = Date.now();
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonalTheme.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            theme: curTheme,
+            bgmTrack: trackId,
+            updatedAt: ts
+          })
+        });
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'STPATRICKS_BGM_UPDATED', bgmTrack: trackId, updatedAt: ts });
+          bc.close();
+        }
+      } catch(e) {}
+
+      const trackNames = {
+        jig: '🎻 Tavern Jig',
+        pub: '🍺 Irish Pub',
+        harp: '🪕 Celtic Harp',
+        reel: '🥁 Bodhrán Reel'
+      };
+      if (typeof showTheaterToast === 'function') {
+        showTheaterToast(`🍀 St. Patrick's Stream BGM set to ${trackNames[trackId] || trackId}`);
+      }
+    }
+    window.setAdminStPatricksBgm = setAdminStPatricksBgm;
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => applySeasonalTheme());

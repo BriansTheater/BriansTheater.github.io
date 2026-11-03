@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.258] - 2026-11-02
+
+### What's New
+- Added St. Patrick's controls to Admin Theme Settings.
+- Synced ambient tavern music switcher with Twitch overlay.
+- Synced calibrated mascot hiding spots to live stream.
+- Added URL theme parameter priority on Twitch boot.
+
 ## [4.9.257] - 2026-11-02
 
 ### What's New

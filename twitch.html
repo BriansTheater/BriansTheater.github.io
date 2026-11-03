@@ -1279,9 +1279,9 @@
             id: 'left_barrel',
             name: 'Left Ale Barrel',
             x: canvas.width * 0.24,
-            baseY: canvas.height * 0.68,
-            peekOffset: -canvas.height * 0.175,
-            scale: 0.38,
+            baseY: canvas.height * 0.72,
+            peekOffset: -canvas.height * 0.145,
+            scale: 0.34,
             angle: -0.02,
             flip: false
           },
@@ -1289,7 +1289,7 @@
             id: 'upper_window',
             name: 'Upper Tavern Window',
             x: canvas.width * 0.612,
-            baseY: canvas.height * 0.38,
+            baseY: canvas.height * 0.44,
             peekOffset: -canvas.height * 0.08,
             scale: 0.20,
             angle: 0.01,
@@ -1301,7 +1301,7 @@
             x: canvas.width * 0.805,
             baseY: canvas.height * 0.80,
             peekOffset: -canvas.height * 0.17,
-            scale: 0.38,
+            scale: 0.36,
             angle: 0.02,
             flip: true
           },
@@ -1309,9 +1309,9 @@
             id: 'schedule_card',
             name: 'Movie Schedule Card Top',
             x: canvas.width * 0.50,
-            baseY: canvas.height * 0.42,
-            peekOffset: -canvas.height * 0.13,
-            scale: 0.30,
+            baseY: canvas.height * 0.44,
+            peekOffset: -canvas.height * 0.11,
+            scale: 0.23,
             angle: 0.0,
             flip: false
           },
@@ -1319,9 +1319,9 @@
             id: 'header_sign',
             name: 'Tavern Arch Header',
             x: canvas.width * 0.36,
-            baseY: canvas.height * 0.22,
+            baseY: canvas.height * 0.25,
             peekOffset: -canvas.height * 0.08,
-            scale: 0.22,
+            scale: 0.21,
             angle: -0.03,
             flip: true
           }
@@ -1822,8 +1822,8 @@
       }
 
       const urlParams = new URLSearchParams(window.location.search);
-      const urlBgm = urlParams.get('bgm');
-      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75, trackId: urlBgm || 'jig' });
+      const urlBgm = urlParams.get('bgm') || localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
+      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75, trackId: urlBgm });
       window.lepAudio = lepAudio;
       window.setLeprechaunVolume = vol => lepAudio.setVolume(vol);
       window.toggleLeprechaunSound = () => lepAudio.toggleSound();
@@ -3469,7 +3469,14 @@
         try { localStorage.setItem('brian_twitch_trailer_preview', String(twitchTrailerPreviewForced)); } catch(e) {}
       }
       if (data.seasonalTheme) {
-        applySeasonalTheme(data.seasonalTheme);
+        const urlThemeLock = new URLSearchParams(window.location.search).get('theme');
+        if (!urlThemeLock) {
+          applySeasonalTheme(data.seasonalTheme);
+        }
+        if (typeof data.seasonalTheme === 'object' && data.seasonalTheme.bgmTrack && typeof window.setLeprechaunBgmTrack === 'function') {
+          try { localStorage.setItem('brian_stpatricks_bgm_track', data.seasonalTheme.bgmTrack); } catch(e) {}
+          window.setLeprechaunBgmTrack(data.seasonalTheme.bgmTrack);
+        }
       }
       resolveActiveOrNextMovie(Date.now());
       if (data.trailerUpdate && data.trailerUpdate.trailerId && !isTvShowTitle(activeMovie.title, activeMovie)) {
@@ -3559,6 +3566,15 @@
                 setSpotifyPlaylist(event.data.payload.resource, event.data.payload.name);
               } else if (event.data.type === 'SEASONAL_THEME_UPDATED' && event.data.theme) {
                 applySeasonalTheme(event.data.theme);
+                if (event.data.bgmTrack && typeof window.setLeprechaunBgmTrack === 'function') {
+                  try { localStorage.setItem('brian_stpatricks_bgm_track', event.data.bgmTrack); } catch(e) {}
+                  window.setLeprechaunBgmTrack(event.data.bgmTrack);
+                }
+              } else if (event.data.type === 'STPATRICKS_BGM_UPDATED' && event.data.bgmTrack) {
+                try { localStorage.setItem('brian_stpatricks_bgm_track', event.data.bgmTrack); } catch(e) {}
+                if (typeof window.setLeprechaunBgmTrack === 'function') {
+                  window.setLeprechaunBgmTrack(event.data.bgmTrack);
+                }
               } else if (event.data.type === 'saved_playlists_update' && event.data.playlists) {
                 if (typeof savePlaylistsToStorage === 'function') savePlaylistsToStorage(event.data.playlists, false);
               } else if (event.data.firebasePayload) {
@@ -4411,7 +4427,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.257";
+    const TWITCH_OVERLAY_VERSION = "4.9.258";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -4492,9 +4508,10 @@
       renderSavedPlaylistButtons();
       updateSpotifyDrawerDisplay();
 
-      // 4. Hydrate Seasonal Theme preference
+      // 4. Hydrate Seasonal Theme preference (URL ?theme= parameter takes priority)
       try {
-        const savedTheme = localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
+        const urlThemeParam = new URLSearchParams(window.location.search).get('theme');
+        const savedTheme = urlThemeParam || localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
         applySeasonalTheme(savedTheme);
       } catch(e) {}
 

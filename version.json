@@ -1,10 +1,10 @@
 {
-  "version": "4.9.257",
+  "version": "4.9.258",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.257",
+  "title": "Brian's Theater v4.9.258",
   "notes": [
-    "Set Rainbow Jump-Scare cadence to 3.5 minutes.",
-    "Guaranteed 2 to 3 jump-scares per 10-minute lobby.",
-    "Synced automatic jump-scare timer in Demo Studio."
+    "Added St. Patrick's controls to Admin Theme Settings.",
+    "Synced ambient tavern music switcher with Twitch overlay.",
+    "Synced calibrated mascot hiding spots to live stream."
   ]
 }
