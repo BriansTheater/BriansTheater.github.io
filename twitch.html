@@ -258,8 +258,8 @@
   <!-- Center Card Readability Vignette (Leaves top sky bright) -->
   <div id="themeVignetteOverlay" class="center-readability-vignette"></div>
 
-  <!-- Falling Snow Particle Canvas (Active during Christmas theme) -->
-  <canvas id="themeSnowCanvas" class="hidden"></canvas>
+  <!-- Falling Snow / Mascot Particle Canvas (z-25 so Jump-Scare & Mascots never clip under center card) -->
+  <canvas id="themeSnowCanvas" class="hidden" style="z-index: 25;"></canvas>
 
   <!-- Diagonal Theatrical Light Beams -->
   <div id="themeSpotlightLeft" class="spotlight-left"></div>
@@ -908,6 +908,7 @@
   <!-- 3. REALTIME JAVASCRIPT LOGIC               -->
   <!-- ========================================== -->
   <script src="audio/leprechaun_voice_data.js"></script>
+  <script src="audio/turkey_scream_data.js"></script>
   <script>
     const FIREBASE_RTDB_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
@@ -2174,10 +2175,79 @@
           }
         }
 
-        // 8. Thanksgiving Turkey Gobble & Brass Fanfare
+        // 8. Thanksgiving Screaming Turkey Jump-Scare & Friendly Gobble
         playTurkeyGobble(isPanic = false) {
           if (!this.enabled) return;
           const ctx = this.ensureContext();
+
+          // If Jump-Scare (isPanic === true), fire the authentic Screaming Turkey audio clip + explosive oven blast & horror shriek!
+          if (isPanic) {
+            if (typeof window !== 'undefined' && window.TURKEY_SCREAM_VOICE_DATA) {
+              try {
+                const screamAudio = new Audio(window.TURKEY_SCREAM_VOICE_DATA);
+                screamAudio.volume = Math.min(1.0, this.volume * 1.35);
+                screamAudio.play().catch(() => {});
+              } catch(e) {}
+            } else {
+              try {
+                const screamAudio = new Audio('audio/turkey_scream_jumpscare.mp3');
+                screamAudio.volume = Math.min(1.0, this.volume * 1.35);
+                screamAudio.play().catch(() => {});
+              } catch(e) {}
+            }
+
+            if (ctx) {
+              const now = ctx.currentTime;
+              // 1. Sub-Bass Oven Door Blast Impact
+              const subOsc = ctx.createOscillator();
+              const subGain = ctx.createGain();
+              subOsc.type = 'sawtooth';
+              subOsc.frequency.setValueAtTime(115, now);
+              subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.55);
+              subGain.gain.setValueAtTime(0.65 * this.volume, now);
+              subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+              subOsc.connect(subGain);
+              subGain.connect(ctx.destination);
+              subOsc.start(now);
+              subOsc.stop(now + 0.62);
+
+              // 2. High-Pitch Piercing Turkey Shriek-Gobble Warble
+              [740, 1080, 1480].forEach((freq, idx) => {
+                const carrier = ctx.createOscillator();
+                const mod = ctx.createOscillator();
+                const modGain = ctx.createGain();
+                const outGain = ctx.createGain();
+
+                carrier.type = 'sawtooth';
+                carrier.frequency.setValueAtTime(freq, now);
+                carrier.frequency.exponentialRampToValueAtTime(freq * 1.48, now + 0.16);
+                carrier.frequency.exponentialRampToValueAtTime(freq * 0.85, now + 0.52);
+                carrier.frequency.exponentialRampToValueAtTime(freq * 1.35, now + 0.85);
+                carrier.frequency.exponentialRampToValueAtTime(freq * 0.60, now + 1.35);
+
+                mod.type = 'sine';
+                mod.frequency.setValueAtTime(30 + idx * 4, now);
+                modGain.gain.setValueAtTime(240, now);
+
+                mod.connect(modGain);
+                modGain.connect(carrier.frequency);
+
+                outGain.gain.setValueAtTime(0.001, now);
+                outGain.gain.linearRampToValueAtTime((0.32 / (idx + 1)) * this.volume, now + 0.04);
+                outGain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+
+                carrier.connect(outGain);
+                outGain.connect(ctx.destination);
+
+                mod.start(now);
+                carrier.start(now);
+                mod.stop(now + 1.45);
+                carrier.stop(now + 1.45);
+              });
+            }
+            return;
+          }
+
           if (!ctx) return;
           const now = ctx.currentTime;
 
@@ -2186,15 +2256,15 @@
           const modGain = ctx.createGain();
           const outGain = ctx.createGain();
 
-          carrier.type = isPanic ? 'sawtooth' : 'triangle';
-          const baseFreq = isPanic ? 540 : 410;
+          carrier.type = 'triangle';
+          const baseFreq = 410;
           carrier.frequency.setValueAtTime(baseFreq, now);
           carrier.frequency.exponentialRampToValueAtTime(baseFreq * 1.45, now + 0.18);
           carrier.frequency.exponentialRampToValueAtTime(baseFreq * 0.72, now + 0.55);
 
           mod.type = 'sine';
-          mod.frequency.setValueAtTime(isPanic ? 24 : 16, now);
-          modGain.gain.setValueAtTime(isPanic ? 180 : 110, now);
+          mod.frequency.setValueAtTime(16, now);
+          modGain.gain.setValueAtTime(110, now);
 
           mod.connect(modGain);
           modGain.connect(carrier.frequency);
@@ -2210,16 +2280,6 @@
           carrier.start(now);
           mod.stop(now + 0.62);
           carrier.stop(now + 0.62);
-
-          if (isPanic && typeof window !== 'undefined' && 'speechSynthesis' in window) {
-            try {
-              const utter = new SpeechSynthesisUtterance("Eat mor popcorn! Gobble gobble!");
-              utter.pitch = 1.45;
-              utter.rate = 1.25;
-              utter.volume = Math.min(1.0, this.volume);
-              window.speechSynthesis.speak(utter);
-            } catch(e) {}
-          }
         }
 
         // 7. Snatch & Vanish Whoosh
@@ -3046,25 +3106,45 @@
               activeRainbowScare.jumpProgress += 0.085;
               const ease = Math.min(1, activeRainbowScare.jumpProgress);
 
-              if (elapsed < 380) {
-                activeRainbowScare.shakeX = (Math.random() - 0.5) * 10;
-                activeRainbowScare.shakeY = (Math.random() - 0.5) * 10;
+              if (elapsed < 550) {
+                activeRainbowScare.shakeX = (Math.random() - 0.5) * (isTG ? 15 : 10);
+                activeRainbowScare.shakeY = (Math.random() - 0.5) * (isTG ? 15 : 10);
               } else {
                 activeRainbowScare.shakeX = 0;
                 activeRainbowScare.shakeY = 0;
               }
 
-              const lungeY = targetY + (curSpot.peekOffset * 1.35) * ease;
-              const scareScale = curSpot.scale * 1.38;
+              const lungeY = targetY + (curSpot.peekOffset * (isTG ? 1.48 : 1.35)) * ease;
+              const scareScale = curSpot.scale * (isTG ? 1.56 : 1.38);
 
               const effScale = scareScale * ((scareSkin && scareSkin.scaleMul) || 1.0);
+
+              // Screaming Turkey Sonic Shockwave Rings
+              if (isTG && elapsed < 1600) {
+                ctx.save();
+                for (let rIdx = 0; rIdx < 3; rIdx++) {
+                  const ringProg = ((elapsed * 0.0022) + rIdx * 0.33) % 1;
+                  const ringRad = 35 + ringProg * 165;
+                  ctx.beginPath();
+                  ctx.arc(targetX, lungeY - 120 * effScale, ringRad, 0, Math.PI * 2);
+                  ctx.strokeStyle = rIdx % 2 === 0
+                    ? `rgba(239, 68, 68, ${(1 - ringProg) * 0.75})`
+                    : `rgba(251, 191, 36, ${(1 - ringProg) * 0.75})`;
+                  ctx.lineWidth = 4 * (1 - ringProg) + 1;
+                  ctx.stroke();
+                }
+                ctx.restore();
+              }
+
               if (scareImg && scareImg.complete && scareImg.naturalWidth > 0) {
                 ctx.save();
                 ctx.translate(targetX, lungeY);
-                ctx.rotate(curSpot.angle);
-                ctx.scale(effScale * (curSpot.flip ? -1 : 1), effScale);
-                ctx.shadowColor = isTG ? 'rgba(239, 68, 68, 0.95)' : 'rgba(34, 197, 94, 0.95)';
-                ctx.shadowBlur = 35;
+                const panicThrash = isTG ? Math.sin(elapsed * 0.045) * 0.09 : 0;
+                ctx.rotate(curSpot.angle + panicThrash);
+                const pulseMul = isTG ? (1 + Math.sin(elapsed * 0.035) * 0.06) : 1;
+                ctx.scale(effScale * pulseMul * (curSpot.flip ? -1 : 1), effScale * pulseMul);
+                ctx.shadowColor = isTG ? 'rgba(239, 68, 68, 0.98)' : 'rgba(34, 197, 94, 0.95)';
+                ctx.shadowBlur = isTG ? 42 : 35;
                 const iw = scareImg.naturalWidth;
                 const ih = scareImg.naturalHeight;
                 ctx.drawImage(scareImg, -iw / 2, -ih, iw, ih);
@@ -3075,19 +3155,19 @@
               drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95, 1, isTG ? 'rgba(239, 68, 68, 0.85)' : 'rgba(34, 197, 94, 0.85)');
 
               // Shaking Comic Dialogue Bubble
-              if (elapsed > 160 && elapsed < 2150) {
+              if (elapsed > 140 && elapsed < 2200) {
                 ctx.save();
-                const bubbleAlpha = Math.min(1, (elapsed - 160) / 120);
-                const textShakeX = (Math.random() - 0.5) * 6;
-                const textShakeY = (Math.random() - 0.5) * 6;
+                const bubbleAlpha = Math.min(1, (elapsed - 140) / 110);
+                const textShakeX = (Math.random() - 0.5) * (isTG ? 10 : 6);
+                const textShakeY = (Math.random() - 0.5) * (isTG ? 10 : 6);
                 const spriteH = (scareImg && scareImg.naturalHeight ? scareImg.naturalHeight : 520) * effScale;
                 const bubbleY = lungeY - spriteH - 18;
 
                 ctx.translate(targetX + textShakeX, bubbleY + textShakeY);
                 ctx.globalAlpha = bubbleAlpha;
 
-                const textStr = isTG ? "EAT MOR POPCORN! GOBBLE!" : "I WANT ME GOLD!";
-                ctx.font = '900 22px Impact, "Arial Black", sans-serif';
+                const textStr = isTG ? "🦃 GOBBLE-AAAHHH!! NOT THE OVEN!" : "I WANT ME GOLD!";
+                ctx.font = '900 18px Impact, "Arial Black", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
@@ -5353,7 +5433,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.261";
+    const TWITCH_OVERLAY_VERSION = "4.9.262";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

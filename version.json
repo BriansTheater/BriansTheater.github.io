@@ -1,10 +1,10 @@
 {
-  "version": "4.9.261",
+  "version": "4.9.262",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.261",
+  "title": "Brian's Theater v4.9.262",
   "notes": [
-    "Added explicit Sound Off button to stream music selectors.",
-    "Replaced Thanksgiving rainbow with swirling autumn leaf oven steam.",
-    "Added kitchen oven timer ding for Harvest Lodge jump-scare."
+    "Added screaming wild turkey audio to Thanksgiving jump-scare.",
+    "Added sonic shockwave rings and thrashing turkey lunge.",
+    "Layered jump-scare canvas above poster so banners never clip."
   ]
 }

@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.262] - 2026-11-02
+
+### What's New
+- Added screaming wild turkey audio to Thanksgiving jump-scare.
+- Added sonic shockwave rings and thrashing turkey lunge.
+- Layered jump-scare canvas above poster so banners never clip.
+
 ## [4.9.261] - 2026-11-02
 
 ### What's New
