@@ -1542,7 +1542,7 @@
           this.playVoiceLine();
         }
 
-        // 6. Demonic Leprechaun Voice Scream ("I want my gold!")
+        // 6. Authentic Warwick Davis Movie Voice Scream ("I want me gold! Give it to me!")
         playVoiceLine() {
           if (!this.enabled) return;
           if (typeof window !== 'undefined' && window.LEPRECHAUN_VOICE_DATA) {
@@ -1550,11 +1550,12 @@
               const snd = new Audio(window.LEPRECHAUN_VOICE_DATA);
               snd.volume = Math.min(1.0, this.volume * 1.35);
               snd.play().catch(() => {});
+              return;
             } catch(e) {}
           }
           if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
             try {
-              const utter = new SpeechSynthesisUtterance("I want my gold!");
+              const utter = new SpeechSynthesisUtterance("I want me gold!");
               utter.pitch = 0.55;
               utter.rate = 1.15;
               utter.volume = Math.min(1.0, this.volume);
@@ -2250,7 +2251,7 @@
                 ctx.translate(targetX + textShakeX, bubbleY + textShakeY);
                 ctx.globalAlpha = bubbleAlpha;
 
-                const textStr = "I WANT MY GOLD!";
+                const textStr = "I WANT ME GOLD!";
                 ctx.font = '900 24px Impact, "Arial Black", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
