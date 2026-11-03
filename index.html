@@ -1859,8 +1859,32 @@
                 </div>
               </div>
 
+              <!-- Thanksgiving Harvest Lodge Sub-Settings (Visible when Thanksgiving Theme is Active) -->
+              <div id="adminThanksgivingSettingsPanel" class="hidden mt-1 p-3 rounded-xl bg-amber-950/50 border border-amber-500/40 flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
+                    <span>🍂</span> <span>Thanksgiving Harvest Lodge Stream Controls</span>
+                  </span>
+                  <a href="twitch_studio.html" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 transition">
+                    🎨 Open Layout Studio ↗
+                  </a>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider">Harvest Lodge Background Music (4 Instrumental Tracks):</span>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1">
+                    <button type="button" id="adminTgBgm-tg_acoustic" onclick="setAdminThanksgivingBgm('tg_acoustic')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-amber-600 text-white border border-amber-300 cursor-pointer transition">🎸 Acoustic Harvest</button>
+                    <button type="button" id="adminTgBgm-tg_jazz" onclick="setAdminThanksgivingBgm('tg_jazz')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition">🎷 Thanksgiving Jazz</button>
+                    <button type="button" id="adminTgBgm-tg_fiddle" onclick="setAdminThanksgivingBgm('tg_fiddle')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition">🎻 Autumn Bluegrass</button>
+                    <button type="button" id="adminTgBgm-tg_piano" onclick="setAdminThanksgivingBgm('tg_piano')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition">🎹 Cozy Hearth Piano</button>
+                  </div>
+                </div>
+                <div class="text-[10px] text-amber-200/80 font-mono leading-snug">
+                  🦃 4 Harvest Mascot Peeks • 🥧 Pie & Acorn Toss • 🔥 3.5-Min Oven Escape Jump-Scare
+                </div>
+              </div>
+
               <div class="flex items-center justify-between text-[10px] text-slate-400 leading-normal">
-                <span>Smart Auto rotates 8 holiday themes by calendar date, or select an instant override.</span>
+                <span>Smart Auto switches holiday themes by calendar month (Jan, Feb, Mar, Jul, Oct, Nov, Dec), or select an instant override.</span>
                 <a href="halloween-icons.html" target="_blank" rel="noopener noreferrer" class="text-orange-400 hover:text-orange-300 underline font-semibold shrink-0 ml-2">Browse All Icons & Badges ↗</a>
               </div>
             </div>
@@ -6874,22 +6898,21 @@
       // Smart Auto Calendar Detection (matches Twitch stream overlay calendar)
       const now = new Date();
       const month = now.getMonth(); // 0 = Jan ... 11 = Dec
-      const day = now.getDate();
 
-      // Jan 1 - Jan 7: Golden Midnight Gala
-      if (month === 0 && day <= 7) return { theme: 'newyears', mode: 'auto' };
-      // Feb 7 - Feb 16: Moonlight Drive-In
-      if (month === 1 && day >= 7 && day <= 16) return { theme: 'valentines', mode: 'auto' };
-      // Mar 12 - Mar 19: Celtic Tavern Cinema
-      if (month === 2 && day >= 12 && day <= 19) return { theme: 'stpatricks', mode: 'auto' };
-      // Jul 1 - Jul 7: Summer Blockbuster Drive-In
-      if (month === 6 && day <= 7) return { theme: 'july4th', mode: 'auto' };
-      // Oct 1 - Nov 2: Shocktoberfest Halloween
-      if (month === 9 || (month === 10 && day <= 2)) return { theme: 'halloween', mode: 'auto' };
-      // Nov 20 - Nov 30: Harvest Hearth Lodge
-      if (month === 10 && day >= 20 && day <= 30) return { theme: 'thanksgiving', mode: 'auto' };
-      // Dec 1 - Jan 5: Holiday Winter Wonderland
-      if (month === 11 || (month === 0 && day <= 5)) return { theme: 'christmas', mode: 'auto' };
+      // January (Month 0): Golden Midnight Gala
+      if (month === 0) return { theme: 'newyears', mode: 'auto' };
+      // February (Month 1): Moonlight Drive-In
+      if (month === 1) return { theme: 'valentines', mode: 'auto' };
+      // March (Month 2): Celtic Tavern Cinema
+      if (month === 2) return { theme: 'stpatricks', mode: 'auto' };
+      // July (Month 6): Summer Blockbuster Drive-In
+      if (month === 6) return { theme: 'july4th', mode: 'auto' };
+      // October (Month 9): Shocktoberfest Halloween
+      if (month === 9) return { theme: 'halloween', mode: 'auto' };
+      // November (Month 10): Harvest Hearth Lodge (Thanksgiving)
+      if (month === 10) return { theme: 'thanksgiving', mode: 'auto' };
+      // December (Month 11): Holiday Winter Wonderland
+      if (month === 11) return { theme: 'christmas', mode: 'auto' };
 
       return { theme: 'default', mode: 'auto' };
     }
@@ -7161,6 +7184,10 @@
       const stpSettingsPanel = document.getElementById('adminStPatricksSettingsPanel');
       if (stpSettingsPanel) {
         stpSettingsPanel.classList.toggle('hidden', theme !== 'stpatricks');
+      }
+      const tgSettingsPanel = document.getElementById('adminThanksgivingSettingsPanel');
+      if (tgSettingsPanel) {
+        tgSettingsPanel.classList.toggle('hidden', theme !== 'thanksgiving');
       }
 
       // Countdown Box & Tile Elements
@@ -7736,6 +7763,55 @@
       }
     }
     window.setAdminStPatricksBgm = setAdminStPatricksBgm;
+
+    async function setAdminThanksgivingBgm(trackId) {
+      try {
+        localStorage.setItem('brian_thanksgiving_bgm_track', trackId);
+      } catch(e) {}
+      ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano'].forEach(id => {
+        const btn = document.getElementById(`adminTgBgm-${id}`);
+        if (btn) {
+          if (id === trackId) {
+            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-amber-600 text-white border border-amber-300 cursor-pointer transition';
+          } else {
+            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition';
+          }
+        }
+      });
+
+      const curTheme = localStorage.getItem('brian_theater_seasonal_theme') || 'thanksgiving';
+      const ts = Date.now();
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonalTheme.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            theme: curTheme,
+            bgmTrack: trackId,
+            updatedAt: ts
+          })
+        });
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({ type: 'THANKSGIVING_BGM_UPDATED', bgmTrack: trackId, updatedAt: ts });
+          bc.close();
+        }
+      } catch(e) {}
+
+      const trackNames = {
+        tg_acoustic: '🎸 Acoustic Harvest',
+        tg_jazz: '🎷 Thanksgiving Jazz',
+        tg_fiddle: '🎻 Autumn Bluegrass',
+        tg_piano: '🎹 Cozy Hearth Piano'
+      };
+      if (typeof showTheaterToast === 'function') {
+        showTheaterToast(`🍂 Thanksgiving Stream BGM set to ${trackNames[trackId] || trackId}`);
+      }
+    }
+    window.setAdminThanksgivingBgm = setAdminThanksgivingBgm;
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => applySeasonalTheme());

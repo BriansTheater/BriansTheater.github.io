@@ -698,13 +698,14 @@
 
   <!-- ===================================================== -->
   <!-- TOP-RIGHT SETTINGS ICON & TWITCH LAYOUT STUDIO DRAWER -->
+  <!-- (Hidden on live stream by default; visible in ?studio=1 / twitch_studio.html or Shift+S) -->
   <!-- ===================================================== -->
   <button
     type="button"
     id="btnToggleStudioDrawer"
     onclick="toggleTwitchStudioDrawer()"
-    title="Open Twitch Layout & Theme Design Studio"
-    class="fixed top-4 right-4 z-50 w-11 h-11 rounded-2xl bg-slate-950/90 hover:bg-slate-900 border-2 border-amber-500/60 shadow-[0_0_25px_rgba(245,158,11,0.45)] backdrop-blur-md flex items-center justify-center text-xl cursor-pointer transition-all hover:scale-105 active:scale-95"
+    title="Open Twitch Layout & Theme Design Studio (Shift+S)"
+    class="hidden fixed top-4 right-4 z-50 w-11 h-11 rounded-2xl bg-slate-950/90 hover:bg-slate-900 border-2 border-amber-500/60 shadow-[0_0_25px_rgba(245,158,11,0.45)] backdrop-blur-md items-center justify-center text-xl cursor-pointer transition-all hover:scale-105 active:scale-95"
   >
     <span id="studioGearIcon">⚙️</span>
   </button>
@@ -834,7 +835,9 @@
       </div>
       <div class="flex flex-wrap gap-1.5">
         <button type="button" id="studioBtnTgPeek" onclick="if(window.triggerLeprechaunPeek) window.triggerLeprechaunPeek()" class="studio-pill active px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer">🦃 Mascot Peek</button>
-        <button type="button" id="studioBtnTgScare" onclick="if(window.triggerOvenEscapeJumpScare) window.triggerOvenEscapeJumpScare()" class="px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white border border-amber-300/70 shadow">🔥 Oven Escape Jump-Scare!</button>
+        <button type="button" id="studioBtnTgScare" onclick="if(window.triggerOvenEscapeJumpScare) window.triggerOvenEscapeJumpScare()" class="px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white border border-amber-300/70 shadow">🔥 Oven Escape!</button>
+        <button type="button" id="studioBtnTgSound" onclick="studioToggleAudioSound()" class="studio-pill px-2 py-1 rounded-xl text-[10px] font-bold cursor-pointer">🔊 SFX: ON</button>
+        <button type="button" id="studioBtnTgMusic" onclick="studioToggleAudioBgm()" class="studio-pill px-2 py-1 rounded-xl text-[10px] font-bold cursor-pointer">🎵 BGM: ON</button>
       </div>
       <span class="text-[9px] font-mono text-slate-400">Thanksgiving Mascot Character:</span>
       <div class="flex flex-wrap gap-1">
@@ -844,6 +847,13 @@
         <button type="button" id="studioTgSkin-football" onclick="studioSelectMascotSkin('football')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🏈 Football Turkey</button>
         <button type="button" id="studioTgSkin-chipmunk" onclick="studioSelectMascotSkin('chipmunk')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🐿️ Acorn Chipmunk</button>
         <button type="button" id="studioTgSkin-roast" onclick="studioSelectMascotSkin('roast')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🔥 Roast Turkey</button>
+      </div>
+      <span class="text-[9px] font-mono text-amber-300">Thanksgiving Harvest Lodge Music:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioTgBgm-tg_acoustic" onclick="studioSelectBgmTrack('tg_acoustic')" class="studio-pill active px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎸 Acoustic Harvest</button>
+        <button type="button" id="studioTgBgm-tg_jazz" onclick="studioSelectBgmTrack('tg_jazz')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎷 Thanksgiving Jazz</button>
+        <button type="button" id="studioTgBgm-tg_fiddle" onclick="studioSelectBgmTrack('tg_fiddle')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎻 Autumn Bluegrass</button>
+        <button type="button" id="studioTgBgm-tg_piano" onclick="studioSelectBgmTrack('tg_piano')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎹 Cozy Hearth Piano</button>
       </div>
     </div>
 
@@ -1163,24 +1173,23 @@
       if (clean === 'thanksgiving' || clean === 'harvest') return 'thanksgiving';
       if (clean === 'christmas' || clean === 'xmas' || clean === 'holiday') return 'christmas';
 
-      // Smart Auto-Switch (Seasonal Calendar)
+      // Smart Auto-Switch (Full-Month Seasonal Holiday Calendar)
       const now = new Date();
       const month = now.getMonth(); // 0 = Jan ... 11 = Dec
-      const day = now.getDate();
 
-      // Jan 1 - Jan 7: New Year's Golden Gala
-      if (month === 0 && day <= 7) return 'newyears';
-      // Feb 7 - Feb 16: Valentine's Moonlight Drive-In
-      if (month === 1 && day >= 7 && day <= 16) return 'valentines';
-      // Mar 12 - Mar 19: St. Patrick's Emerald Tavern
-      if (month === 2 && day >= 12 && day <= 19) return 'stpatricks';
-      // Jul 1 - Jul 7: 4th of July Summer Blockbuster
-      if (month === 6 && day <= 7) return 'july4th';
-      // Oct 1 - Nov 2: Shocktoberfest Halloween
-      if (month === 9 || (month === 10 && day <= 2)) return 'halloween';
-      // Nov 20 - Nov 30: Thanksgiving Harvest Lodge
-      if (month === 10 && day >= 20) return 'thanksgiving';
-      // Dec 1 - Dec 31: Holiday Winter Wonderland
+      // January (Month 0): New Year's Golden Gala
+      if (month === 0) return 'newyears';
+      // February (Month 1): Valentine's Moonlight Drive-In
+      if (month === 1) return 'valentines';
+      // March (Month 2): St. Patrick's Emerald Tavern
+      if (month === 2) return 'stpatricks';
+      // July (Month 6): 4th of July Summer Blockbuster
+      if (month === 6) return 'july4th';
+      // October (Month 9): Shocktoberfest Halloween
+      if (month === 9) return 'halloween';
+      // November (Month 10): Thanksgiving Harvest Lodge
+      if (month === 10) return 'thanksgiving';
+      // December (Month 11): Holiday Winter Wonderland
       if (month === 11) return 'christmas';
 
       return 'normal';
@@ -1622,7 +1631,7 @@
       function triggerLepPeek(forcedSpotId, forcedSkinId, forcedAction) {
         if (!activeLep) return;
         lepAudio.ensureContext();
-        if (type === 'clovers') lepAudio.startBgm();
+        if (type === 'clovers' || type === 'leaves') lepAudio.startBgm();
         const spots = getLeprechaunSpots();
         let resolvedSpotId = forcedSpotId;
         if (!resolvedSpotId && activeLep.spotPref && activeLep.spotPref !== 'random') {
@@ -1708,6 +1717,34 @@
           icon: '🥁',
           src: 'audio/celtic_bodhran_reel.mp3',
           description: 'Fast traditional tin whistle & bodhrán'
+        },
+        tg_acoustic: {
+          id: 'tg_acoustic',
+          name: 'Acoustic Harvest',
+          icon: '🎸',
+          src: 'audio/tg_harvest_acoustic.mp3',
+          description: 'Warm fingerpicked porch guitar & autumn chords'
+        },
+        tg_jazz: {
+          id: 'tg_jazz',
+          name: 'Thanksgiving Jazz',
+          icon: '🎷',
+          src: 'audio/tg_jazz_trio.mp3',
+          description: 'Smooth Charlie Brown style jazz piano & upright bass'
+        },
+        tg_fiddle: {
+          id: 'tg_fiddle',
+          name: 'Autumn Bluegrass',
+          icon: '🎻',
+          src: 'audio/tg_autumn_fiddle.mp3',
+          description: 'Cheerful rustic country fiddle & acoustic strum'
+        },
+        tg_piano: {
+          id: 'tg_piano',
+          name: 'Cozy Hearth Piano',
+          icon: '🎹',
+          src: 'audio/tg_hearth_piano.mp3',
+          description: 'Gentle lodge piano & serene autumn warmth'
         }
       };
       window.BGM_TRACKS = BGM_TRACKS;
@@ -2172,8 +2209,10 @@
       }
 
       const urlParams = new URLSearchParams(window.location.search);
-      const urlBgm = urlParams.get('bgm') || localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
-      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75, trackId: urlBgm });
+      const defaultThemeTrack = (type === 'leaves')
+        ? (urlParams.get('bgm') || localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic')
+        : (urlParams.get('bgm') || localStorage.getItem('brian_stpatricks_bgm_track') || 'jig');
+      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75, trackId: defaultThemeTrack });
       window.lepAudio = lepAudio;
       window.setLeprechaunVolume = vol => lepAudio.setVolume(vol);
       window.toggleLeprechaunSound = () => lepAudio.toggleSound();
@@ -2181,10 +2220,14 @@
       window.toggleLeprechaunBgm = () => lepAudio.toggleBgm();
       window.setLeprechaunBgmTrack = trackId => lepAudio.setBgmTrack(trackId);
 
-      // Start joyful tavern BGM upon first user interaction
-      ['click', 'keydown', 'touchstart'].forEach(evt => {
-        window.addEventListener(evt, () => lepAudio.startBgm(), { once: true });
-      });
+      // Start joyful tavern / harvest BGM upon first user interaction
+      if (type === 'clovers' || type === 'leaves') {
+        ['click', 'keydown', 'touchstart'].forEach(evt => {
+          window.addEventListener(evt, () => {
+            if (window.lepAudio === lepAudio) lepAudio.startBgm();
+          }, { once: true });
+        });
+      }
 
       let activeRainbowScare = {
         active: false,
@@ -2205,7 +2248,7 @@
 
       function triggerRainbowJumpScare(forcedSpotId) {
         lepAudio.ensureContext();
-        if (type === 'clovers') lepAudio.startBgm();
+        if (type === 'clovers' || type === 'leaves') lepAudio.startBgm();
         lepAudio.playRainbowChime();
         const spots = getLeprechaunSpots();
         let resolvedSpotId = forcedSpotId;
@@ -3049,6 +3092,9 @@
         cancelAnimationFrame(particleAnimId);
         particleAnimId = null;
       }
+      if (window.lepAudio && typeof window.lepAudio.pauseBgm === 'function') {
+        window.lepAudio.pauseBgm();
+      }
       activeRockets = [];
       activeFireworkSparks = [];
       activeGoldSparks = [];
@@ -3870,7 +3916,8 @@
           applySeasonalTheme(data.seasonalTheme);
         }
         if (typeof data.seasonalTheme === 'object' && data.seasonalTheme.bgmTrack && typeof window.setLeprechaunBgmTrack === 'function') {
-          try { localStorage.setItem('brian_stpatricks_bgm_track', data.seasonalTheme.bgmTrack); } catch(e) {}
+          const storageKey = String(data.seasonalTheme.bgmTrack).startsWith('tg_') ? 'brian_thanksgiving_bgm_track' : 'brian_stpatricks_bgm_track';
+          try { localStorage.setItem(storageKey, data.seasonalTheme.bgmTrack); } catch(e) {}
           window.setLeprechaunBgmTrack(data.seasonalTheme.bgmTrack);
         }
       }
@@ -3963,11 +4010,13 @@
               } else if (event.data.type === 'SEASONAL_THEME_UPDATED' && event.data.theme) {
                 applySeasonalTheme(event.data.theme);
                 if (event.data.bgmTrack && typeof window.setLeprechaunBgmTrack === 'function') {
-                  try { localStorage.setItem('brian_stpatricks_bgm_track', event.data.bgmTrack); } catch(e) {}
+                  const storageKey = String(event.data.bgmTrack).startsWith('tg_') ? 'brian_thanksgiving_bgm_track' : 'brian_stpatricks_bgm_track';
+                  try { localStorage.setItem(storageKey, event.data.bgmTrack); } catch(e) {}
                   window.setLeprechaunBgmTrack(event.data.bgmTrack);
                 }
-              } else if (event.data.type === 'STPATRICKS_BGM_UPDATED' && event.data.bgmTrack) {
-                try { localStorage.setItem('brian_stpatricks_bgm_track', event.data.bgmTrack); } catch(e) {}
+              } else if ((event.data.type === 'STPATRICKS_BGM_UPDATED' || event.data.type === 'THANKSGIVING_BGM_UPDATED') && event.data.bgmTrack) {
+                const storageKey = String(event.data.bgmTrack).startsWith('tg_') ? 'brian_thanksgiving_bgm_track' : 'brian_stpatricks_bgm_track';
+                try { localStorage.setItem(storageKey, event.data.bgmTrack); } catch(e) {}
                 if (typeof window.setLeprechaunBgmTrack === 'function') {
                   window.setLeprechaunBgmTrack(event.data.bgmTrack);
                 }
@@ -4829,9 +4878,14 @@
 
     function toggleTwitchStudioDrawer(forceState) {
       const drawer = document.getElementById('twitchStudioDrawer');
+      const gearBtn = document.getElementById('btnToggleStudioDrawer');
       if (!drawer) return;
       const shouldShow = (forceState !== undefined) ? Boolean(forceState) : drawer.classList.contains('hidden');
       if (shouldShow) {
+        if (gearBtn) {
+          gearBtn.classList.remove('hidden');
+          gearBtn.classList.add('flex');
+        }
         drawer.classList.remove('hidden');
         syncStudioDrawerActiveState();
       } else {
@@ -4839,6 +4893,14 @@
       }
     }
     window.toggleTwitchStudioDrawer = toggleTwitchStudioDrawer;
+
+    // Secret Broadcaster Shortcut: Shift + S toggles the Studio Drawer even on live twitch.html
+    document.addEventListener('keydown', (e) => {
+      if (e.shiftKey && (e.key === 'S' || e.key === 's') && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target && e.target.tagName) || '')) {
+        e.preventDefault();
+        toggleTwitchStudioDrawer();
+      }
+    });
 
     function syncStudioDrawerActiveState() {
       const effective = getActiveThemeName();
@@ -4876,6 +4938,18 @@
         julyPanel.classList.toggle('flex', effective === 'july4th');
       }
 
+      // Sync St. Patrick's & Thanksgiving BGM button states
+      const stpTrack = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
+      ['jig', 'pub', 'harp', 'reel'].forEach(t => {
+        const b = document.getElementById(`studioStpBgm-${t}`);
+        if (b) b.classList.toggle('active', t === stpTrack);
+      });
+      const tgTrack = localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic';
+      ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano'].forEach(t => {
+        const b = document.getElementById(`studioTgBgm-${t}`);
+        if (b) b.classList.toggle('active', t === tgTrack);
+      });
+
       // Sync Flanks & Mist layer buttons
       const flanksEl = document.getElementById('themeFlanksContainer');
       const mistEl = document.getElementById('themeMistContainer');
@@ -4890,6 +4964,17 @@
       studioThemeLocked = true;
       applySeasonalTheme(themeKey);
       syncStudioDrawerActiveState();
+      const eff = getActiveThemeName();
+      if ((eff === 'stpatricks' || eff === 'thanksgiving') && window.lepAudio && typeof window.lepAudio.startBgm === 'function') {
+        const defaultTrack = eff === 'thanksgiving'
+          ? (localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic')
+          : (localStorage.getItem('brian_stpatricks_bgm_track') || 'jig');
+        if (typeof window.setLeprechaunBgmTrack === 'function') {
+          window.setLeprechaunBgmTrack(defaultTrack);
+        } else {
+          window.lepAudio.startBgm();
+        }
+      }
       // Reset particle override buttons to Theme Default
       ['default', 'snow', 'sparkles', 'hearts', 'clovers', 'fireworks', 'leaves', 'off'].forEach(p => {
         const b = document.getElementById(`studioPartBtn-${p}`);
@@ -5064,11 +5149,20 @@
     window.studioSelectAction = studioSelectAction;
 
     function studioSelectBgmTrack(trackId) {
-      ['jig', 'pub', 'harp', 'reel'].forEach(t => {
-        const b = document.getElementById(`studioStpBgm-${t}`);
-        if (b) b.classList.toggle('active', t === trackId);
-      });
-      try { localStorage.setItem('brian_stpatricks_bgm_track', trackId); } catch(e) {}
+      const isTg = String(trackId).startsWith('tg_');
+      if (isTg) {
+        ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano'].forEach(t => {
+          const b = document.getElementById(`studioTgBgm-${t}`);
+          if (b) b.classList.toggle('active', t === trackId);
+        });
+        try { localStorage.setItem('brian_thanksgiving_bgm_track', trackId); } catch(e) {}
+      } else {
+        ['jig', 'pub', 'harp', 'reel'].forEach(t => {
+          const b = document.getElementById(`studioStpBgm-${t}`);
+          if (b) b.classList.toggle('active', t === trackId);
+        });
+        try { localStorage.setItem('brian_stpatricks_bgm_track', trackId); } catch(e) {}
+      }
       if (typeof window.setLeprechaunBgmTrack === 'function') {
         window.setLeprechaunBgmTrack(trackId);
       }
@@ -5078,8 +5172,10 @@
     function studioToggleAudioSound() {
       if (typeof window.toggleLeprechaunSound === 'function') {
         const isOn = window.toggleLeprechaunSound();
-        const btn = document.getElementById('studioBtnStpSound');
-        if (btn) btn.textContent = isOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+        ['studioBtnStpSound', 'studioBtnTgSound'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) btn.textContent = isOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+        });
       }
     }
     window.studioToggleAudioSound = studioToggleAudioSound;
@@ -5087,15 +5183,19 @@
     function studioToggleAudioBgm() {
       if (typeof window.toggleLeprechaunBgm === 'function') {
         const isOn = window.toggleLeprechaunBgm();
-        const btn = document.getElementById('studioBtnStpMusic');
-        if (btn) btn.textContent = isOn ? '🎵 BGM: ON' : '🔕 BGM: OFF';
+        ['studioBtnStpMusic', 'studioBtnTgMusic'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) btn.textContent = isOn ? '🎵 BGM: ON' : '🔕 BGM: OFF';
+        });
       }
     }
     window.studioToggleAudioBgm = studioToggleAudioBgm;
 
     async function broadcastStudioThemeToLive() {
       const themeToSave = getActiveThemeName();
-      const bgmTrack = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
+      const bgmTrack = themeToSave === 'thanksgiving'
+        ? (localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic')
+        : (localStorage.getItem('brian_stpatricks_bgm_track') || 'jig');
       const btnLabel = document.getElementById('broadcastStudioBtnLabel');
       if (btnLabel) btnLabel.textContent = 'Broadcasting to Stream...';
 
@@ -5139,7 +5239,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.259";
+    const TWITCH_OVERLAY_VERSION = "4.9.260";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -5226,9 +5326,19 @@
         const urlThemeParam = searchParams.get('theme');
         const savedTheme = urlThemeParam || localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
         applySeasonalTheme(savedTheme);
-        if (searchParams.get('studio') === '1' || searchParams.get('studio') === 'true') {
+        const isStudioMode = searchParams.get('studio') === '1' || searchParams.get('studio') === 'true';
+        const gearBtn = document.getElementById('btnToggleStudioDrawer');
+        if (isStudioMode) {
+          if (gearBtn) {
+            gearBtn.classList.remove('hidden');
+            gearBtn.classList.add('flex');
+          }
           toggleTwitchStudioDrawer(true);
         } else {
+          if (gearBtn) {
+            gearBtn.classList.add('hidden');
+            gearBtn.classList.remove('flex');
+          }
           syncStudioDrawerActiveState();
         }
       } catch(e) {}

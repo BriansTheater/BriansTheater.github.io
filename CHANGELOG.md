@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.260] - 2026-11-02
+
+### What's New
+- Added four cozy instrumental Thanksgiving Harvest Lodge music tracks.
+- Updated Smart Auto-Switch to display themes by full month.
+- Hid settings gear icon on live Twitch stream overlay.
+- Added Thanksgiving music controls to Admin Theme Settings.
+
 ## [4.9.259] - 2026-11-02
 
 ### What's New
