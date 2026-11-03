@@ -220,6 +220,25 @@
       pointer-events: none;
       z-index: 15;
     }
+
+    /* Twitch Layout Studio Pill Buttons */
+    .studio-pill {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+    .studio-pill:hover {
+      border-color: rgba(251, 191, 36, 0.6);
+      color: #ffffff;
+    }
+    .studio-pill.active {
+      background: linear-gradient(135deg, #10b981, #f59e0b);
+      color: #020617;
+      border-color: #fde047;
+      font-weight: 900;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+    }
   </style>
 </head>
 <body class="w-full h-full relative flex items-center justify-center">
@@ -677,6 +696,201 @@
 
   </main>
 
+  <!-- ===================================================== -->
+  <!-- TOP-RIGHT SETTINGS ICON & TWITCH LAYOUT STUDIO DRAWER -->
+  <!-- ===================================================== -->
+  <button
+    type="button"
+    id="btnToggleStudioDrawer"
+    onclick="toggleTwitchStudioDrawer()"
+    title="Open Twitch Layout & Theme Design Studio"
+    class="fixed top-4 right-4 z-50 w-11 h-11 rounded-2xl bg-slate-950/90 hover:bg-slate-900 border-2 border-amber-500/60 shadow-[0_0_25px_rgba(245,158,11,0.45)] backdrop-blur-md flex items-center justify-center text-xl cursor-pointer transition-all hover:scale-105 active:scale-95"
+  >
+    <span id="studioGearIcon">⚙️</span>
+  </button>
+
+  <aside
+    id="twitchStudioDrawer"
+    class="hidden fixed top-16 right-4 z-50 w-80 sm:w-96 max-h-[82vh] overflow-y-auto p-4 rounded-2xl bg-slate-950/95 backdrop-blur-xl border-2 border-amber-500/50 shadow-[0_15px_50px_rgba(0,0,0,0.95)] flex flex-col gap-3 text-left font-sans"
+  >
+    <div class="flex items-center justify-between border-b border-amber-500/30 pb-2">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🎨</span>
+        <div class="flex flex-col">
+          <span class="text-xs font-mono font-black text-amber-300 uppercase tracking-wider">Twitch Layout Studio</span>
+          <span class="text-[9px] font-mono text-slate-400">Switch & Design All 8 Stream Overlays</span>
+        </div>
+      </div>
+      <button type="button" onclick="toggleTwitchStudioDrawer(false)" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-700 cursor-pointer">✕</button>
+    </div>
+
+    <!-- 1. ALL 8 SEASONAL THEME OVERLAY SWITCHER GRID -->
+    <div class="flex flex-col gap-1.5">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">1. Select Seasonal Overlay:</span>
+        <span id="studioActiveThemeLabel" class="text-[9px] font-mono text-emerald-400 font-bold uppercase">ACTIVE</span>
+      </div>
+      <div class="grid grid-cols-2 gap-1.5">
+        <button type="button" id="studioThemeBtn-normal" onclick="studioSelectTheme('normal')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🎬</span> <span class="truncate">Normal Cinema</span>
+        </button>
+        <button type="button" id="studioThemeBtn-newyears" onclick="studioSelectTheme('newyears')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🥂</span> <span class="truncate">New Year's Gala</span>
+        </button>
+        <button type="button" id="studioThemeBtn-valentines" onclick="studioSelectTheme('valentines')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>💘</span> <span class="truncate">Valentine's</span>
+        </button>
+        <button type="button" id="studioThemeBtn-stpatricks" onclick="studioSelectTheme('stpatricks')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🍀</span> <span class="truncate">St. Patrick's</span>
+        </button>
+        <button type="button" id="studioThemeBtn-july4th" onclick="studioSelectTheme('july4th')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🎆</span> <span class="truncate">4th of July</span>
+        </button>
+        <button type="button" id="studioThemeBtn-halloween" onclick="studioSelectTheme('halloween')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🎃</span> <span class="truncate">Halloween</span>
+        </button>
+        <button type="button" id="studioThemeBtn-thanksgiving" onclick="studioSelectTheme('thanksgiving')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🍂</span> <span class="truncate">Thanksgiving</span>
+        </button>
+        <button type="button" id="studioThemeBtn-christmas" onclick="studioSelectTheme('christmas')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 cursor-pointer text-left">
+          <span>🎄</span> <span class="truncate">Christmas</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. SCREEN STATE & SAMPLE POSTER SIMULATOR -->
+    <div class="flex flex-col gap-1.5 pt-2 border-t border-slate-800">
+      <span class="text-[10px] font-mono font-bold text-sky-300 uppercase tracking-wider">2. Screen State & Layout Preview:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioDoorBtn-closed" onclick="studioSetDoorState('force_closed')" class="studio-pill active px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">⏳ Countdown</button>
+        <button type="button" id="studioDoorBtn-open" onclick="studioSetDoorState('force_open')" class="studio-pill px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">🚪 Doors Open</button>
+        <button type="button" id="studioDoorBtn-trailer" onclick="studioSetDoorState('trailer')" class="studio-pill px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">🎬 Trailer Mode</button>
+      </div>
+
+      <span class="text-[9px] font-mono font-semibold text-slate-400 mt-1">Sample Movie Poster & Title Length:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioSampleBtn-live" onclick="studioSelectSampleMovie('live')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">📡 Live Schedule</button>
+        <button type="button" id="studioSampleBtn-moana" onclick="studioSelectSampleMovie('moana')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🌺 Moana</button>
+        <button type="button" id="studioSampleBtn-ahs" onclick="studioSelectSampleMovie('ahs')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🦇 AHS: s13</button>
+        <button type="button" id="studioSampleBtn-nosferatu" onclick="studioSelectSampleMovie('nosferatu')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🧛 Nosferatu</button>
+      </div>
+
+      <span class="text-[9px] font-mono font-semibold text-slate-400 mt-1">Atmosphere & Layer Overrides:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioLayerBtn-flanks" onclick="studioToggleLayer('flanks')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🖼️ Side Flanks</button>
+        <button type="button" id="studioLayerBtn-mist" onclick="studioToggleLayer('mist')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🌫️ Ground Mist</button>
+        <button type="button" id="studioLayerBtn-vignette" onclick="studioCycleVignette()" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🌓 Vignette: Default</button>
+      </div>
+
+      <span class="text-[9px] font-mono font-semibold text-slate-400 mt-1">Particle Effect Override:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioPartBtn-default" onclick="studioSetParticles('default')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">✨ Theme Default</button>
+        <button type="button" id="studioPartBtn-snow" onclick="studioSetParticles('snow')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">❄️ Snow</button>
+        <button type="button" id="studioPartBtn-sparkles" onclick="studioSetParticles('sparkles')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🥂 Sparkles</button>
+        <button type="button" id="studioPartBtn-hearts" onclick="studioSetParticles('hearts')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">💘 Hearts</button>
+        <button type="button" id="studioPartBtn-clovers" onclick="studioSetParticles('clovers')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🍀 Clovers</button>
+        <button type="button" id="studioPartBtn-fireworks" onclick="studioSetParticles('fireworks')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🎆 Fireworks</button>
+        <button type="button" id="studioPartBtn-leaves" onclick="studioSetParticles('leaves')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🍁 Leaves</button>
+        <button type="button" id="studioPartBtn-off" onclick="studioSetParticles('off')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">🚫 Off</button>
+      </div>
+    </div>
+
+    <!-- 3A. CONTEXTUAL ST. PATRICK'S TAVERN CONTROLS -->
+    <div id="studioContextStPatricks" class="hidden flex-col gap-2 pt-2 border-t border-emerald-500/30">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-black text-emerald-300 uppercase tracking-wider">🍀 St. Patrick's Mascot & Jump-Scare:</span>
+        <span class="text-[9px] font-mono text-amber-300">Auto: 3.5m</span>
+      </div>
+      <div class="flex flex-wrap gap-1.5">
+        <button type="button" id="studioBtnStpPeek" onclick="if(window.triggerLeprechaunPeek) window.triggerLeprechaunPeek()" class="studio-pill active px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer">✨ Peek Now</button>
+        <button type="button" id="studioBtnStpScare" onclick="if(window.triggerRainbowJumpScare) window.triggerRainbowJumpScare()" class="px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer bg-gradient-to-r from-red-500/80 via-yellow-500/80 to-emerald-500/80 text-white border border-amber-300/60 shadow">🌈 Jump-Scare!</button>
+        <button type="button" id="studioBtnStpSound" onclick="studioToggleAudioSound()" class="studio-pill px-2 py-1 rounded-xl text-[10px] font-bold cursor-pointer">🔊 SFX: ON</button>
+        <button type="button" id="studioBtnStpMusic" onclick="studioToggleAudioBgm()" class="studio-pill px-2 py-1 rounded-xl text-[10px] font-bold cursor-pointer">🎵 BGM: ON</button>
+      </div>
+      <span class="text-[9px] font-mono text-slate-400">Leprechaun Face:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioStpSkin-random" onclick="studioSelectMascotSkin('random')" class="studio-pill active px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎲 Random</button>
+        <button type="button" id="studioStpSkin-pixar" onclick="studioSelectMascotSkin('pixar')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎩 Pixar</button>
+        <button type="button" id="studioStpSkin-pint" onclick="studioSelectMascotSkin('pint')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🍺 Pint</button>
+        <button type="button" id="studioStpSkin-piper" onclick="studioSelectMascotSkin('piper')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🪕 Piper</button>
+        <button type="button" id="studioStpSkin-cheerful" onclick="studioSelectMascotSkin('cheerful')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">😊 Cheerful</button>
+        <button type="button" id="studioStpSkin-dancer" onclick="studioSelectMascotSkin('dancer')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🕺 Dancer</button>
+        <button type="button" id="studioStpSkin-creepy" onclick="studioSelectMascotSkin('creepy')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🧟 1993 Horror</button>
+      </div>
+      <span class="text-[9px] font-mono text-slate-400">Tavern Soundscape BGM:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioStpBgm-jig" onclick="studioSelectBgmTrack('jig')" class="studio-pill active px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎻 Tavern Jig</button>
+        <button type="button" id="studioStpBgm-pub" onclick="studioSelectBgmTrack('pub')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🍺 Irish Pub</button>
+        <button type="button" id="studioStpBgm-harp" onclick="studioSelectBgmTrack('harp')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🪕 Celtic Harp</button>
+        <button type="button" id="studioStpBgm-reel" onclick="studioSelectBgmTrack('reel')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🥁 Bodhrán Reel</button>
+      </div>
+    </div>
+
+    <!-- 3B. CONTEXTUAL THANKSGIVING HARVEST LODGE CONTROLS -->
+    <div id="studioContextThanksgiving" class="hidden flex-col gap-2 pt-2 border-t border-amber-500/30">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-black text-amber-300 uppercase tracking-wider">🍂 Harvest Mascots & Oven Escape:</span>
+        <span class="text-[9px] font-mono text-orange-300">Auto: 3.5m</span>
+      </div>
+      <div class="flex flex-wrap gap-1.5">
+        <button type="button" id="studioBtnTgPeek" onclick="if(window.triggerLeprechaunPeek) window.triggerLeprechaunPeek()" class="studio-pill active px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer">🦃 Mascot Peek</button>
+        <button type="button" id="studioBtnTgScare" onclick="if(window.triggerOvenEscapeJumpScare) window.triggerOvenEscapeJumpScare()" class="px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white border border-amber-300/70 shadow">🔥 Oven Escape Jump-Scare!</button>
+      </div>
+      <span class="text-[9px] font-mono text-slate-400">Thanksgiving Mascot Character:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioTgSkin-random" onclick="studioSelectMascotSkin('random')" class="studio-pill active px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎲 Random</button>
+        <button type="button" id="studioTgSkin-pilgrim" onclick="studioSelectMascotSkin('pilgrim')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎩 Pilgrim Turkey</button>
+        <button type="button" id="studioTgSkin-chef" onclick="studioSelectMascotSkin('chef')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🥧 Chef Turkey</button>
+        <button type="button" id="studioTgSkin-football" onclick="studioSelectMascotSkin('football')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🏈 Football Turkey</button>
+        <button type="button" id="studioTgSkin-chipmunk" onclick="studioSelectMascotSkin('chipmunk')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🐿️ Acorn Chipmunk</button>
+        <button type="button" id="studioTgSkin-roast" onclick="studioSelectMascotSkin('roast')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🔥 Roast Turkey</button>
+      </div>
+    </div>
+
+    <!-- 3C. CONTEXTUAL HALLOWEEN & 4TH OF JULY CONTROLS -->
+    <div id="studioContext MascotSpots" class="hidden flex-col gap-1.5 pt-1">
+      <span class="text-[9px] font-mono text-slate-400">Peek Hiding Spot & Action:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioSpot-random" onclick="studioSelectSpot('random')" class="studio-pill active px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎲 Random</button>
+        <button type="button" id="studioSpot-left_barrel" onclick="studioSelectSpot('left_barrel')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">⬅️ Left</button>
+        <button type="button" id="studioSpot-upper_window" onclick="studioSelectSpot('upper_window')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🪟 Window</button>
+        <button type="button" id="studioSpot-right_barrels" onclick="studioSelectSpot('right_barrels')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">➡️ Right</button>
+        <button type="button" id="studioSpot-schedule_card" onclick="studioSelectSpot('schedule_card')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎬 Poster</button>
+        <button type="button" id="studioSpot-header_sign" onclick="studioSelectSpot('header_sign')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">📜 Header</button>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioAction-random" onclick="studioSelectAction('random')" class="studio-pill active px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎲 Both Actions</button>
+        <button type="button" id="studioAction-coin_toss" onclick="studioSelectAction('coin_toss')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🪙 Toss</button>
+        <button type="button" id="studioAction-jig" onclick="studioSelectAction('jig')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🕺 Dance / Trot</button>
+      </div>
+    </div>
+
+    <div id="studioContextJuly4th" class="hidden flex-col gap-1.5 pt-2 border-t border-sky-500/30">
+      <span class="text-[10px] font-mono font-black text-sky-300 uppercase tracking-wider">🎆 4th of July Aerial Name Fireworks:</span>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket()" class="studio-pill active px-2.5 py-1 rounded-xl text-[10px] font-black cursor-pointer">🚀 Launch Next</button>
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket('DWARF')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">DWARF</button>
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket('SOUL')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">SOUL</button>
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket('AXEL')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">AXEL</button>
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket('RED')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">RED</button>
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket('ORLAANDO')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">ORLAANDO</button>
+        <button type="button" onclick="if(window.spawnFireworkRocket) window.spawnFireworkRocket('SHANEDEW')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">SHANEDEW</button>
+      </div>
+    </div>
+
+    <!-- 4. APPLY & BROADCAST TO LIVE STREAM (FIREBASE + OBS) -->
+    <div class="pt-2 border-t border-slate-800 flex flex-col gap-1.5">
+      <button
+        type="button"
+        id="btnBroadcastStudioTheme"
+        onclick="broadcastStudioThemeToLive()"
+        class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-amber-500 hover:from-emerald-400 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(16,185,129,0.4)] cursor-pointer transition active:scale-95 flex items-center justify-center gap-2"
+      >
+        <span>📡</span> <span id="broadcastStudioBtnLabel">Save & Broadcast Theme Live</span>
+      </button>
+    </div>
+  </aside>
+
 
   <!-- ========================================== -->
   <!-- 3. REALTIME JAVASCRIPT LOGIC               -->
@@ -1069,8 +1283,11 @@
         const cleanTitle = (activeMovie && activeMovie.title) ? activeMovie.title : 'Coming Soon';
         applySmartMovieTitleSizing(cleanTitle);
       }
-      if (typeof renderCountdown === 'function') {
-        renderCountdown();
+      if (typeof updateCountdown === 'function') {
+        updateCountdown();
+      }
+      if (typeof syncStudioDrawerActiveState === 'function') {
+        syncStudioDrawerActiveState();
       }
     }
 
@@ -1236,6 +1453,77 @@
           coinStampColor: '#fef08a',
           scaleMul: 0.95,
           sparkColors: ['#22c55e', '#16a34a', '#fbbf24', '#ef4444']
+        },
+        pilgrim: {
+          id: 'pilgrim',
+          name: 'Pilgrim Popcorn Turkey',
+          src: 'images/tg_mascot_pilgrim.png',
+          noFlip: true,
+          shadowColor: 'rgba(245, 158, 11, 0.55)',
+          shadowBlur: 24,
+          coinFill: '#fbbf24',
+          coinStroke: '#92400e',
+          coinShadow: '#f59e0b',
+          coinStamp: '🍿',
+          coinStampColor: '#78350f',
+          scaleMul: 0.92,
+          sparkColors: ['#fbbf24', '#f59e0b', '#ea580c', '#fef08a']
+        },
+        chef: {
+          id: 'chef',
+          name: 'Pumpkin Pie Chef Turkey',
+          src: 'images/tg_mascot_chef.png',
+          shadowColor: 'rgba(234, 88, 12, 0.55)',
+          shadowBlur: 24,
+          coinFill: '#f97316',
+          coinStroke: '#7c2d12',
+          coinShadow: '#ea580c',
+          coinStamp: '🥧',
+          coinStampColor: '#fffbeb',
+          scaleMul: 0.90,
+          sparkColors: ['#f97316', '#fbbf24', '#fde047', '#fed7aa']
+        },
+        football: {
+          id: 'football',
+          name: 'Touchdown Football Turkey',
+          src: 'images/tg_mascot_football.png',
+          shadowColor: 'rgba(217, 119, 6, 0.55)',
+          shadowBlur: 24,
+          coinFill: '#b45309',
+          coinStroke: '#fef3c7',
+          coinShadow: '#d97706',
+          coinStamp: '🏈',
+          coinStampColor: '#ffffff',
+          scaleMul: 0.95,
+          sparkColors: ['#d97706', '#fbbf24', '#ef4444', '#fef08a']
+        },
+        chipmunk: {
+          id: 'chipmunk',
+          name: 'Harvest Acorn Chipmunk',
+          src: 'images/tg_mascot_chipmunk.png',
+          shadowColor: 'rgba(251, 191, 36, 0.65)',
+          shadowBlur: 24,
+          coinFill: '#fbbf24',
+          coinStroke: '#78350f',
+          coinShadow: '#f59e0b',
+          coinStamp: '🌰',
+          coinStampColor: '#451a03',
+          scaleMul: 1.05,
+          sparkColors: ['#fbbf24', '#fde047', '#f59e0b', '#fef9c3']
+        },
+        roast: {
+          id: 'roast',
+          name: 'Roast Turkey Oven Escape',
+          src: 'images/tg_roast_turkey_cutout.png',
+          shadowColor: 'rgba(239, 68, 68, 0.85)',
+          shadowBlur: 32,
+          coinFill: '#ea580c',
+          coinStroke: '#fef08a',
+          coinShadow: '#dc2626',
+          coinStamp: '🔥',
+          coinStampColor: '#fef08a',
+          scaleMul: 0.95,
+          sparkColors: ['#ef4444', '#f97316', '#fbbf24', '#fef08a']
         }
       };
       window.LEP_SKINS = LEP_SKINS;
@@ -1247,16 +1535,18 @@
         lepImages[key] = img;
       }
 
-      if (type === 'clovers') {
+      if (type === 'clovers' || type === 'leaves') {
         const urlParams = new URLSearchParams(window.location.search);
-        const urlSkinPref = (urlParams.get('leprechaun') || 'all').toLowerCase();
+        const urlSkinPref = (urlParams.get('leprechaun') || urlParams.get('mascot') || 'all').toLowerCase();
 
         activeLep = {
           state: 'hidden',
           progress: 0,
           currentSpot: null,
-          skinKey: 'pixar',
+          skinKey: type === 'leaves' ? 'pilgrim' : 'pixar',
           skinPref: urlSkinPref,
+          actionPref: 'random',
+          spotPref: 'random',
           x: 0,
           y: 0,
           baseY: 0,
@@ -1329,26 +1619,38 @@
       }
       window.getLeprechaunSpots = getLeprechaunSpots;
 
-      function triggerLepPeek(forcedSpotId, forcedSkinId) {
+      function triggerLepPeek(forcedSpotId, forcedSkinId, forcedAction) {
         if (!activeLep) return;
         lepAudio.ensureContext();
-        lepAudio.startBgm();
+        if (type === 'clovers') lepAudio.startBgm();
         const spots = getLeprechaunSpots();
-        const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
+        let resolvedSpotId = forcedSpotId;
+        if (!resolvedSpotId && activeLep.spotPref && activeLep.spotPref !== 'random') {
+          resolvedSpotId = activeLep.spotPref;
+        }
+        const spot = (resolvedSpotId ? spots.find((s, idx) => s.id === resolvedSpotId || String(idx) === String(resolvedSpotId)) : null) || spots[Math.floor(Math.random() * spots.length)];
         
         let skinChoice = forcedSkinId;
         if (!skinChoice) {
-          if (activeLep.skinPref === 'creepy') {
-            skinChoice = 'creepy';
-          } else if (activeLep.skinPref && LEP_SKINS[activeLep.skinPref]) {
+          if (activeLep.skinPref && activeLep.skinPref !== 'all' && activeLep.skinPref !== 'random' && LEP_SKINS[activeLep.skinPref]) {
             skinChoice = activeLep.skinPref;
+          } else if (type === 'leaves') {
+            const tgSkins = ['pilgrim', 'chef', 'football', 'chipmunk'];
+            skinChoice = tgSkins[Math.floor(Math.random() * tgSkins.length)];
           } else {
             const friendlySkins = ['pixar', 'pint', 'piper', 'cheerful', 'dancer'];
             skinChoice = friendlySkins[Math.floor(Math.random() * friendlySkins.length)];
           }
         }
 
-        const actionChoice = (skinChoice === 'dancer') ? 'jig' : (Math.random() < 0.5 ? 'jig' : 'coin_toss');
+        let actionChoice = forcedAction || (activeLep.actionPref && activeLep.actionPref !== 'random' ? activeLep.actionPref : null);
+        if (!actionChoice) {
+          actionChoice = (skinChoice === 'dancer') ? 'jig' : (Math.random() < 0.5 ? 'jig' : 'coin_toss');
+        }
+
+        if (type === 'leaves') {
+          lepAudio.playTurkeyGobble(false);
+        }
 
         activeLep.skinKey = skinChoice;
         activeLep.action = actionChoice;
@@ -1798,6 +2100,54 @@
           }
         }
 
+        // 8. Thanksgiving Turkey Gobble & Brass Fanfare
+        playTurkeyGobble(isPanic = false) {
+          if (!this.enabled) return;
+          const ctx = this.ensureContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+
+          const carrier = ctx.createOscillator();
+          const mod = ctx.createOscillator();
+          const modGain = ctx.createGain();
+          const outGain = ctx.createGain();
+
+          carrier.type = isPanic ? 'sawtooth' : 'triangle';
+          const baseFreq = isPanic ? 540 : 410;
+          carrier.frequency.setValueAtTime(baseFreq, now);
+          carrier.frequency.exponentialRampToValueAtTime(baseFreq * 1.45, now + 0.18);
+          carrier.frequency.exponentialRampToValueAtTime(baseFreq * 0.72, now + 0.55);
+
+          mod.type = 'sine';
+          mod.frequency.setValueAtTime(isPanic ? 24 : 16, now);
+          modGain.gain.setValueAtTime(isPanic ? 180 : 110, now);
+
+          mod.connect(modGain);
+          modGain.connect(carrier.frequency);
+
+          outGain.gain.setValueAtTime(0.001, now);
+          outGain.gain.linearRampToValueAtTime(0.38 * this.volume, now + 0.05);
+          outGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+          carrier.connect(outGain);
+          outGain.connect(ctx.destination);
+
+          mod.start(now);
+          carrier.start(now);
+          mod.stop(now + 0.62);
+          carrier.stop(now + 0.62);
+
+          if (isPanic && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            try {
+              const utter = new SpeechSynthesisUtterance("Eat mor popcorn! Gobble gobble!");
+              utter.pitch = 1.45;
+              utter.rate = 1.25;
+              utter.volume = Math.min(1.0, this.volume);
+              window.speechSynthesis.speak(utter);
+            } catch(e) {}
+          }
+        }
+
         // 7. Snatch & Vanish Whoosh
         playSnatchVanish() {
           if (!this.enabled) return;
@@ -1855,12 +2205,17 @@
 
       function triggerRainbowJumpScare(forcedSpotId) {
         lepAudio.ensureContext();
-        lepAudio.startBgm();
+        if (type === 'clovers') lepAudio.startBgm();
         lepAudio.playRainbowChime();
         const spots = getLeprechaunSpots();
-        const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
+        let resolvedSpotId = forcedSpotId;
+        if (!resolvedSpotId && activeLep && activeLep.spotPref && activeLep.spotPref !== 'random') {
+          resolvedSpotId = activeLep.spotPref;
+        }
+        const spot = (resolvedSpotId ? spots.find((s, idx) => s.id === resolvedSpotId || String(idx) === String(resolvedSpotId)) : null) || spots[Math.floor(Math.random() * spots.length)];
         if (activeLep) activeLep.state = 'hidden';
         activeRainbowScare.active = true;
+        activeRainbowScare.isThanksgiving = (type === 'leaves');
         activeRainbowScare.phase = 'arc';
         activeRainbowScare.progress = 0;
         activeRainbowScare.spot = spot;
@@ -1873,6 +2228,7 @@
         rainbowStars = [];
       }
       window.triggerRainbowJumpScare = triggerRainbowJumpScare;
+      window.triggerOvenEscapeJumpScare = triggerRainbowJumpScare;
       window.getActiveRainbowScareState = () => activeRainbowScare;
 
       // Bottom Dancing Leprechaun
@@ -1961,7 +2317,43 @@
       }
 
       function drawPotOfGold(c, x, y, scale, alpha, glowColor) {
-        if (!potImg.complete || potImg.naturalWidth === 0 || alpha <= 0) return;
+        if (alpha <= 0) return;
+        if (activeRainbowScare && activeRainbowScare.isThanksgiving) {
+          c.save();
+          c.globalAlpha = Math.min(1, Math.max(0, alpha));
+          c.translate(x, y);
+          c.scale(scale * 1.15, scale * 1.15);
+          c.shadowColor = glowColor || 'rgba(234, 88, 12, 0.9)';
+          c.shadowBlur = 26;
+          // Draw Cast-Iron Harvest Roaster Base
+          c.fillStyle = '#1c1917';
+          c.strokeStyle = '#d97706';
+          c.lineWidth = 5;
+          c.beginPath();
+          if (typeof c.roundRect === 'function') {
+            c.roundRect(-95, -80, 190, 75, 22);
+          } else {
+            c.rect(-95, -80, 190, 75);
+          }
+          c.fill();
+          c.stroke();
+          // Brass Handles
+          c.beginPath();
+          c.arc(-102, -45, 12, Math.PI * 0.5, Math.PI * 1.5);
+          c.stroke();
+          c.beginPath();
+          c.arc(102, -45, 12, -Math.PI * 0.5, Math.PI * 0.5);
+          c.stroke();
+          // Glowing Amber Label Plate
+          c.fillStyle = '#fbbf24';
+          c.font = '900 18px monospace';
+          c.textAlign = 'center';
+          c.textBaseline = 'middle';
+          c.fillText('🔥 ROASTER 🔥', 0, -42);
+          c.restore();
+          return;
+        }
+        if (!potImg.complete || potImg.naturalWidth === 0) return;
         c.save();
         c.globalAlpha = Math.min(1, Math.max(0, alpha));
         c.translate(x, y);
@@ -1998,11 +2390,11 @@
       let nextSide = 'left';
       let lastRocketTime = Date.now() - 1500;
 
-      function spawnFireworkRocket() {
+      function spawnFireworkRocket(forcedWord) {
         const isLeft = nextSide === 'left';
         nextSide = isLeft ? 'right' : 'left';
 
-        const word = isLeft ? leftNames[leftIdx++ % leftNames.length] : rightNames[rightIdx++ % rightNames.length];
+        const word = forcedWord || (isLeft ? leftNames[leftIdx++ % leftNames.length] : rightNames[rightIdx++ % rightNames.length]);
         const targetX = isLeft 
           ? canvas.width * (0.08 + Math.random() * 0.06) 
           : canvas.width * (0.86 + Math.random() * 0.06);
@@ -2026,6 +2418,7 @@
           color: isLeft ? '#f59e0b' : '#38bdf8'
         });
       }
+      window.spawnFireworkRocket = spawnFireworkRocket;
 
       function explodeRocket(r) {
         const dots = getWordDots(r.word, Math.max(3.8, Math.min(5.2, canvas.width / 400)));
@@ -2254,8 +2647,8 @@
           }
         }
 
-        // 3. St. Patrick's Dynamic Peek-a-Boo Leprechaun
-        if (type === 'clovers' && activeLep) {
+        // 3. St. Patrick's & Thanksgiving Dynamic Peek-a-Boo Mascots
+        if ((type === 'clovers' || type === 'leaves') && activeLep) {
           const now = Date.now();
           if (activeLep.state === 'hidden' && now - lastLepPeekTime > 13000) {
             triggerLepPeek();
@@ -2308,7 +2701,7 @@
                     vy: -Math.random() * 2 - 1,
                     size: Math.random() * 2.5 + 1.5,
                     alpha: 1,
-                    color: Math.random() < 0.6 ? '#22c55e' : '#fbbf24'
+                    color: Math.random() < 0.6 ? (type === 'leaves' ? '#f97316' : '#22c55e') : '#fbbf24'
                   });
                 }
               } else if (activeLep.coinTossed) {
@@ -2337,13 +2730,14 @@
               }
             }
 
-            // Draw Leprechaun Cutout Sprite
+            // Draw Mascot Cutout Sprite
             if (skinImg && skinImg.complete && skinImg.naturalWidth > 0) {
               ctx.save();
               ctx.translate(activeLep.x, activeLep.y);
               ctx.rotate(activeLep.angle + (activeLep.jigTilt || 0));
               const effScale = activeLep.scale * (skinObj.scaleMul || 1.0);
-              ctx.scale(effScale * (activeLep.flip ? -1 : 1), effScale);
+              const flipDir = (activeLep.flip && !skinObj.noFlip) ? -1 : 1;
+              ctx.scale(effScale * flipDir, effScale);
               ctx.shadowColor = skinObj.shadowColor;
               ctx.shadowBlur = skinObj.shadowBlur;
               const iw = skinImg.naturalWidth;
@@ -2352,7 +2746,7 @@
               ctx.restore();
             }
 
-            // Draw Spinning 3D Celtic Coin ONLY if coin_toss action
+            // Draw Spinning 3D Coin / Golden Acorn ONLY if coin_toss action
             if (activeLep.action === 'coin_toss' && activeLep.coinTossed) {
               ctx.save();
               ctx.translate(activeLep.x, activeLep.coinY);
@@ -2376,7 +2770,7 @@
             }
           }
 
-          // Update & Draw Gold Sparks
+          // Update & Draw Sparks
           for (let sIdx = activeGoldSparks.length - 1; sIdx >= 0; sIdx--) {
             const spk = activeGoldSparks[sIdx];
             spk.x += spk.vx;
@@ -2397,18 +2791,22 @@
             if (spk.alpha <= 0) activeGoldSparks.splice(sIdx, 1);
           }
 
-          // Auto-trigger Rainbow Jump-Scare event every 3.5 minutes (210s) so a 10-minute pre-show lobby gets 2-3 jump-scares
+          // Auto-trigger Jump-Scare event every 3.5 minutes (210s) so a 10-minute pre-show lobby gets 2-3 jump-scares
           if (!activeRainbowScare.active && (!activeLep || activeLep.state === 'hidden') && (now - lastRainbowEventTime >= RAINBOW_JUMPSCARE_INTERVAL_MS)) {
             triggerRainbowJumpScare();
             lastRainbowEventTime = now;
           }
 
           // ==========================================
-          // 4. St. Patrick's Rainbow & Pot of Gold Jump-Scare Event
+          // 4. St. Patrick's Rainbow OR Thanksgiving Oven Escape Jump-Scare Event
           // ==========================================
           if (activeRainbowScare.active) {
             const curSpot = activeRainbowScare.spot || getLeprechaunSpots()[0];
             const elapsed = now - activeRainbowScare.timer;
+            const isTG = Boolean(activeRainbowScare.isThanksgiving || type === 'leaves');
+            const scareSkinKey = isTG ? 'roast' : 'creepy';
+            const scareSkin = LEP_SKINS[scareSkinKey] || LEP_SKINS.creepy;
+            const scareImg = lepImages[scareSkinKey] || lepImages.creepy;
 
             const startX = (curSpot.x < canvas.width / 2) ? canvas.width * 0.92 : canvas.width * 0.08;
             const startY = canvas.height * 0.08;
@@ -2466,7 +2864,7 @@
               activeRainbowScare.shakeY = (Math.random() - 0.5) * 14;
               drawRainbowArc(ctx, startX, startY, targetX, targetY, 1, true);
 
-              drawPotOfGold(ctx, targetX, targetY - 25, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.9)');
+              drawPotOfGold(ctx, targetX, targetY - 25, curSpot.scale * 0.95, 1, isTG ? 'rgba(239, 68, 68, 0.9)' : 'rgba(34, 197, 94, 0.9)');
 
               if (elapsed > 240) {
                 activeRainbowScare.phase = 'jumpscare';
@@ -2482,10 +2880,14 @@
                     vy: Math.sin(angle) * spd - 1,
                     size: Math.random() * 3 + 2,
                     alpha: 1,
-                    color: (k % 2 === 0) ? '#22c55e' : '#ef4444'
+                    color: (k % 2 === 0) ? (isTG ? '#f97316' : '#22c55e') : '#ef4444'
                   });
                 }
-                lepAudio.playHorrorJumpScare();
+                if (isTG) {
+                  lepAudio.playTurkeyGobble(true);
+                } else {
+                  lepAudio.playHorrorJumpScare();
+                }
               }
 
             } else if (activeRainbowScare.phase === 'jumpscare') {
@@ -2503,40 +2905,37 @@
               const lungeY = targetY + (curSpot.peekOffset * 1.35) * ease;
               const scareScale = curSpot.scale * 1.38;
 
-              // Draw Warwick Davis Horror Leprechaun
-              const creepySkin = LEP_SKINS.creepy;
-              const creepyImg = lepImages.creepy;
-              const effScale = scareScale * ((creepySkin && creepySkin.scaleMul) || 1.0);
-              if (creepyImg && creepyImg.complete && creepyImg.naturalWidth > 0) {
+              const effScale = scareScale * ((scareSkin && scareSkin.scaleMul) || 1.0);
+              if (scareImg && scareImg.complete && scareImg.naturalWidth > 0) {
                 ctx.save();
                 ctx.translate(targetX, lungeY);
                 ctx.rotate(curSpot.angle);
                 ctx.scale(effScale * (curSpot.flip ? -1 : 1), effScale);
-                ctx.shadowColor = 'rgba(34, 197, 94, 0.95)';
+                ctx.shadowColor = isTG ? 'rgba(239, 68, 68, 0.95)' : 'rgba(34, 197, 94, 0.95)';
                 ctx.shadowBlur = 35;
-                const iw = creepyImg.naturalWidth;
-                const ih = creepyImg.naturalHeight;
-                ctx.drawImage(creepyImg, -iw / 2, -ih, iw, ih);
+                const iw = scareImg.naturalWidth;
+                const ih = scareImg.naturalHeight;
+                ctx.drawImage(scareImg, -iw / 2, -ih, iw, ih);
                 ctx.restore();
               }
 
-              // Draw Pot of Gold in front of his torso
-              drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95, 1, 'rgba(34, 197, 94, 0.85)');
+              // Draw Pot of Gold or Cast-Iron Roaster in front
+              drawPotOfGold(ctx, targetX, targetY - 20, curSpot.scale * 0.95, 1, isTG ? 'rgba(239, 68, 68, 0.85)' : 'rgba(34, 197, 94, 0.85)');
 
-              // Shaking "I WANT MY GOLD!" Horror Comic Dialogue Bubble
+              // Shaking Comic Dialogue Bubble
               if (elapsed > 160 && elapsed < 2150) {
                 ctx.save();
                 const bubbleAlpha = Math.min(1, (elapsed - 160) / 120);
                 const textShakeX = (Math.random() - 0.5) * 6;
                 const textShakeY = (Math.random() - 0.5) * 6;
-                const spriteH = (creepyImg && creepyImg.naturalHeight ? creepyImg.naturalHeight : 660) * effScale;
+                const spriteH = (scareImg && scareImg.naturalHeight ? scareImg.naturalHeight : 520) * effScale;
                 const bubbleY = lungeY - spriteH - 18;
 
                 ctx.translate(targetX + textShakeX, bubbleY + textShakeY);
                 ctx.globalAlpha = bubbleAlpha;
 
-                const textStr = "I WANT ME GOLD!";
-                ctx.font = '900 24px Impact, "Arial Black", sans-serif';
+                const textStr = isTG ? "EAT MOR POPCORN! GOBBLE!" : "I WANT ME GOLD!";
+                ctx.font = '900 22px Impact, "Arial Black", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
@@ -2559,7 +2958,7 @@
                 ctx.fill();
                 ctx.stroke();
 
-                // Downward pointer spike pointing towards his mouth
+                // Downward pointer spike
                 ctx.beginPath();
                 ctx.moveTo(-10, ph / 2 - 1);
                 ctx.lineTo(0, ph / 2 + 14);
@@ -2567,7 +2966,6 @@
                 ctx.fillStyle = '#ef4444';
                 ctx.fill();
 
-                // Shouted Celtic Gold Text
                 ctx.shadowColor = '#fbbf24';
                 ctx.shadowBlur = 10;
                 ctx.fillStyle = '#fbbf24';
@@ -2589,19 +2987,17 @@
               const retreatY = targetY + (curSpot.peekOffset * 1.35) * (1 - ease);
               const fadeAlpha = 1 - ease;
 
-              const creepySkin = LEP_SKINS.creepy;
-              const creepyImg = lepImages.creepy;
-              if (creepyImg && creepyImg.complete && creepyImg.naturalWidth > 0) {
+              if (scareImg && scareImg.complete && scareImg.naturalWidth > 0) {
                 ctx.save();
                 ctx.translate(targetX, retreatY);
                 ctx.rotate(curSpot.angle);
-                const effScale = curSpot.scale * (1.38 - ease * 0.4) * (creepySkin.scaleMul || 1.0);
+                const effScale = curSpot.scale * (1.38 - ease * 0.4) * ((scareSkin && scareSkin.scaleMul) || 1.0);
                 ctx.scale(effScale * (curSpot.flip ? -1 : 1), effScale);
-                ctx.shadowColor = 'rgba(34, 197, 94, 0.6)';
+                ctx.shadowColor = isTG ? 'rgba(239, 68, 68, 0.6)' : 'rgba(34, 197, 94, 0.6)';
                 ctx.shadowBlur = 20;
-                const iw = creepyImg.naturalWidth;
-                const ih = creepyImg.naturalHeight;
-                ctx.drawImage(creepyImg, -iw / 2, -ih, iw, ih);
+                const iw = scareImg.naturalWidth;
+                const ih = scareImg.naturalHeight;
+                ctx.drawImage(scareImg, -iw / 2, -ih, iw, ih);
                 ctx.restore();
               }
 
@@ -3470,7 +3866,7 @@
       }
       if (data.seasonalTheme) {
         const urlThemeLock = new URLSearchParams(window.location.search).get('theme');
-        if (!urlThemeLock) {
+        if (!urlThemeLock && !studioThemeLocked) {
           applySeasonalTheme(data.seasonalTheme);
         }
         if (typeof data.seasonalTheme === 'object' && data.seasonalTheme.bgmTrack && typeof window.setLeprechaunBgmTrack === 'function') {
@@ -4425,9 +4821,325 @@
     }
 
     // ==========================================
+    // 4B. TWITCH LAYOUT & THEME DESIGN STUDIO
+    // ==========================================
+    let studioThemeLocked = Boolean(new URLSearchParams(window.location.search).get('theme'));
+    let studioSavedLiveMovieSnapshot = null;
+    let studioVignetteLevel = 0; // 0 = Default, 1 = Dark, 2 = Bright
+
+    function toggleTwitchStudioDrawer(forceState) {
+      const drawer = document.getElementById('twitchStudioDrawer');
+      if (!drawer) return;
+      const shouldShow = (forceState !== undefined) ? Boolean(forceState) : drawer.classList.contains('hidden');
+      if (shouldShow) {
+        drawer.classList.remove('hidden');
+        syncStudioDrawerActiveState();
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+    window.toggleTwitchStudioDrawer = toggleTwitchStudioDrawer;
+
+    function syncStudioDrawerActiveState() {
+      const effective = getActiveThemeName();
+      const labelEl = document.getElementById('studioActiveThemeLabel');
+      const conf = THEME_CONFIG[effective] || THEME_CONFIG.normal;
+      if (labelEl) labelEl.textContent = `${conf.icon} ${effective.toUpperCase()}`;
+
+      const allThemes = ['normal', 'newyears', 'valentines', 'stpatricks', 'july4th', 'halloween', 'thanksgiving', 'christmas'];
+      allThemes.forEach(t => {
+        const btn = document.getElementById(`studioThemeBtn-${t}`);
+        if (btn) btn.classList.toggle('active', t === effective);
+      });
+
+      // Contextual Theme Panels
+      const stpPanel = document.getElementById('studioContextStPatricks');
+      const tgPanel = document.getElementById('studioContextThanksgiving');
+      const spotsPanel = document.getElementById('studioContext MascotSpots');
+      const julyPanel = document.getElementById('studioContextJuly4th');
+
+      if (stpPanel) {
+        stpPanel.classList.toggle('hidden', effective !== 'stpatricks');
+        stpPanel.classList.toggle('flex', effective === 'stpatricks');
+      }
+      if (tgPanel) {
+        tgPanel.classList.toggle('hidden', effective !== 'thanksgiving');
+        tgPanel.classList.toggle('flex', effective === 'thanksgiving');
+      }
+      if (spotsPanel) {
+        const hasMascots = (effective === 'stpatricks' || effective === 'thanksgiving');
+        spotsPanel.classList.toggle('hidden', !hasMascots);
+        spotsPanel.classList.toggle('flex', hasMascots);
+      }
+      if (julyPanel) {
+        julyPanel.classList.toggle('hidden', effective !== 'july4th');
+        julyPanel.classList.toggle('flex', effective === 'july4th');
+      }
+
+      // Sync Flanks & Mist layer buttons
+      const flanksEl = document.getElementById('themeFlanksContainer');
+      const mistEl = document.getElementById('themeMistContainer');
+      const flanksBtn = document.getElementById('studioLayerBtn-flanks');
+      const mistBtn = document.getElementById('studioLayerBtn-mist');
+      if (flanksBtn && flanksEl) flanksBtn.classList.toggle('active', flanksEl.style.display !== 'none');
+      if (mistBtn && mistEl) mistBtn.classList.toggle('active', mistEl.style.display !== 'none');
+    }
+    window.syncStudioDrawerActiveState = syncStudioDrawerActiveState;
+
+    function studioSelectTheme(themeKey) {
+      studioThemeLocked = true;
+      applySeasonalTheme(themeKey);
+      syncStudioDrawerActiveState();
+      // Reset particle override buttons to Theme Default
+      ['default', 'snow', 'sparkles', 'hearts', 'clovers', 'fireworks', 'leaves', 'off'].forEach(p => {
+        const b = document.getElementById(`studioPartBtn-${p}`);
+        if (b) b.classList.toggle('active', p === 'default');
+      });
+    }
+    window.studioSelectTheme = studioSelectTheme;
+
+    function studioSetDoorState(mode) {
+      ['closed', 'open', 'trailer'].forEach(k => {
+        const b = document.getElementById(`studioDoorBtn-${k}`);
+        if (b) b.classList.remove('active');
+      });
+      if (mode === 'force_open') {
+        activeMovie.doorMode = 'force_open';
+        twitchTrailerPreviewForced = false;
+        window.twitchTrailerPreviewForced = false;
+        const b = document.getElementById('studioDoorBtn-open');
+        if (b) b.classList.add('active');
+      } else if (mode === 'trailer') {
+        activeMovie.doorMode = 'force_open';
+        twitchTrailerEnabled = true;
+        twitchTrailerPreviewForced = true;
+        window.twitchTrailerEnabled = true;
+        window.twitchTrailerPreviewForced = true;
+        if (!activeMovie.trailerId) activeMovie.trailerId = 'nulvWqYUM8k';
+        const b = document.getElementById('studioDoorBtn-trailer');
+        if (b) b.classList.add('active');
+      } else {
+        activeMovie.doorMode = 'force_closed';
+        twitchTrailerPreviewForced = false;
+        window.twitchTrailerPreviewForced = false;
+        const b = document.getElementById('studioDoorBtn-closed');
+        if (b) b.classList.add('active');
+      }
+      updateCountdown();
+    }
+    window.studioSetDoorState = studioSetDoorState;
+
+    function studioSelectSampleMovie(sampleKey) {
+      ['live', 'moana', 'ahs', 'nosferatu'].forEach(k => {
+        const b = document.getElementById(`studioSampleBtn-${k}`);
+        if (b) b.classList.toggle('active', k === sampleKey);
+      });
+      if (!studioSavedLiveMovieSnapshot) {
+        studioSavedLiveMovieSnapshot = Object.assign({}, activeMovie);
+      }
+      if (sampleKey === 'moana') {
+        activeMovie.title = "Moana";
+        activeMovie.posterUrl = "images/moana_demo_poster.jpg";
+        activeMovie.showtimeText = "Friday, Nov 6, 2026 • 7:00 PM PST";
+        activeMovie.trailerId = "LKFuXETZUsI";
+        activeMovie.isPosterError = false;
+      } else if (sampleKey === 'ahs') {
+        activeMovie.title = "AHS: s13 e9: the devils is in the Details";
+        activeMovie.posterUrl = "https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg";
+        activeMovie.showtimeText = "Wednesday, Oct 21, 2026 • 7:00 PM PST";
+        activeMovie.trailerId = "";
+        activeMovie.isPosterError = false;
+      } else if (sampleKey === 'nosferatu') {
+        activeMovie.title = "Nosferatu";
+        activeMovie.posterUrl = "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg";
+        activeMovie.showtimeText = "Saturday, Oct 31, 2026 • 9:00 PM PST";
+        activeMovie.trailerId = "nulvWqYUM8k";
+        activeMovie.isPosterError = false;
+      } else if (studioSavedLiveMovieSnapshot) {
+        Object.assign(activeMovie, studioSavedLiveMovieSnapshot);
+        resolveActiveOrNextMovie(Date.now());
+      }
+      renderMovieState();
+    }
+    window.studioSelectSampleMovie = studioSelectSampleMovie;
+
+    function studioToggleLayer(layerName) {
+      if (layerName === 'flanks') {
+        const flanksEl = document.getElementById('themeFlanksContainer');
+        const sLeft = document.getElementById('themeSpotlightLeft');
+        const sRight = document.getElementById('themeSpotlightRight');
+        if (flanksEl) {
+          const isHidden = flanksEl.style.display === 'none';
+          flanksEl.style.display = isHidden ? '' : 'none';
+          if (sLeft) sLeft.style.display = isHidden ? '' : 'none';
+          if (sRight) sRight.style.display = isHidden ? '' : 'none';
+        }
+      } else if (layerName === 'mist') {
+        const mistEl = document.getElementById('themeMistContainer');
+        if (mistEl) {
+          const isHidden = mistEl.style.display === 'none';
+          mistEl.style.display = isHidden ? '' : 'none';
+        }
+      }
+      syncStudioDrawerActiveState();
+    }
+    window.studioToggleLayer = studioToggleLayer;
+
+    function studioCycleVignette() {
+      studioVignetteLevel = (studioVignetteLevel + 1) % 3;
+      const vigEl = document.getElementById('themeVignetteOverlay');
+      const btn = document.getElementById('studioLayerBtn-vignette');
+      if (!vigEl) return;
+      if (studioVignetteLevel === 0) {
+        vigEl.style.opacity = '1';
+        if (btn) { btn.textContent = '🌓 Vignette: Default'; btn.classList.remove('active'); }
+      } else if (studioVignetteLevel === 1) {
+        vigEl.style.opacity = '0.35';
+        if (btn) { btn.textContent = '☀️ Vignette: Bright'; btn.classList.add('active'); }
+      } else {
+        vigEl.style.opacity = '0';
+        if (btn) { btn.textContent = '✨ Vignette: Clear'; btn.classList.add('active'); }
+      }
+    }
+    window.studioCycleVignette = studioCycleVignette;
+
+    function studioSetParticles(pType) {
+      ['default', 'snow', 'sparkles', 'hearts', 'clovers', 'fireworks', 'leaves', 'off'].forEach(p => {
+        const b = document.getElementById(`studioPartBtn-${p}`);
+        if (b) b.classList.toggle('active', p === pType);
+      });
+      if (pType === 'off') {
+        stopThemeParticleAnimation();
+      } else if (pType === 'default') {
+        const conf = THEME_CONFIG[getActiveThemeName()] || THEME_CONFIG.normal;
+        if (conf.particles) startThemeParticleAnimation(conf.particles);
+        else stopThemeParticleAnimation();
+      } else {
+        startThemeParticleAnimation(pType);
+      }
+    }
+    window.studioSetParticles = studioSetParticles;
+
+    function studioSelectMascotSkin(skinId) {
+      const effective = getActiveThemeName();
+      const prefix = effective === 'thanksgiving' ? 'studioTgSkin-' : 'studioStpSkin-';
+      const list = effective === 'thanksgiving'
+        ? ['random', 'pilgrim', 'chef', 'football', 'chipmunk', 'roast']
+        : ['random', 'pixar', 'pint', 'piper', 'cheerful', 'dancer', 'creepy'];
+      list.forEach(k => {
+        const b = document.getElementById(`${prefix}${k}`);
+        if (b) b.classList.toggle('active', k === skinId);
+      });
+      if (activeLep) {
+        activeLep.skinPref = skinId;
+      }
+      if (typeof window.triggerLeprechaunPeek === 'function') {
+        window.triggerLeprechaunPeek(null, skinId === 'random' ? null : skinId);
+      }
+    }
+    window.studioSelectMascotSkin = studioSelectMascotSkin;
+
+    function studioSelectSpot(spotId) {
+      ['random', 'left_barrel', 'upper_window', 'right_barrels', 'schedule_card', 'header_sign'].forEach(s => {
+        const b = document.getElementById(`studioSpot-${s}`);
+        if (b) b.classList.toggle('active', s === spotId);
+      });
+      if (activeLep) activeLep.spotPref = spotId;
+      if (typeof window.triggerLeprechaunPeek === 'function') {
+        window.triggerLeprechaunPeek(spotId === 'random' ? null : spotId);
+      }
+    }
+    window.studioSelectSpot = studioSelectSpot;
+
+    function studioSelectAction(actId) {
+      ['random', 'coin_toss', 'jig'].forEach(a => {
+        const b = document.getElementById(`studioAction-${a}`);
+        if (b) b.classList.toggle('active', a === actId);
+      });
+      if (activeLep) activeLep.actionPref = actId;
+      if (typeof window.triggerLeprechaunPeek === 'function') {
+        window.triggerLeprechaunPeek(null, null, actId === 'random' ? null : actId);
+      }
+    }
+    window.studioSelectAction = studioSelectAction;
+
+    function studioSelectBgmTrack(trackId) {
+      ['jig', 'pub', 'harp', 'reel'].forEach(t => {
+        const b = document.getElementById(`studioStpBgm-${t}`);
+        if (b) b.classList.toggle('active', t === trackId);
+      });
+      try { localStorage.setItem('brian_stpatricks_bgm_track', trackId); } catch(e) {}
+      if (typeof window.setLeprechaunBgmTrack === 'function') {
+        window.setLeprechaunBgmTrack(trackId);
+      }
+    }
+    window.studioSelectBgmTrack = studioSelectBgmTrack;
+
+    function studioToggleAudioSound() {
+      if (typeof window.toggleLeprechaunSound === 'function') {
+        const isOn = window.toggleLeprechaunSound();
+        const btn = document.getElementById('studioBtnStpSound');
+        if (btn) btn.textContent = isOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+      }
+    }
+    window.studioToggleAudioSound = studioToggleAudioSound;
+
+    function studioToggleAudioBgm() {
+      if (typeof window.toggleLeprechaunBgm === 'function') {
+        const isOn = window.toggleLeprechaunBgm();
+        const btn = document.getElementById('studioBtnStpMusic');
+        if (btn) btn.textContent = isOn ? '🎵 BGM: ON' : '🔕 BGM: OFF';
+      }
+    }
+    window.studioToggleAudioBgm = studioToggleAudioBgm;
+
+    async function broadcastStudioThemeToLive() {
+      const themeToSave = getActiveThemeName();
+      const bgmTrack = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
+      const btnLabel = document.getElementById('broadcastStudioBtnLabel');
+      if (btnLabel) btnLabel.textContent = 'Broadcasting to Stream...';
+
+      try {
+        localStorage.setItem('brian_theater_seasonal_theme', themeToSave);
+      } catch(e) {}
+
+      try {
+        if (typeof BroadcastChannel !== 'undefined') {
+          const bc = new BroadcastChannel('brian_theater_sync');
+          bc.postMessage({
+            type: 'SEASONAL_THEME_UPDATED',
+            theme: themeToSave,
+            bgmTrack: bgmTrack,
+            updatedAt: Date.now()
+          });
+        }
+      } catch(e) {}
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonalTheme.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            theme: themeToSave,
+            bgmTrack: bgmTrack,
+            updatedAt: Date.now()
+          })
+        });
+      } catch(e) {}
+
+      if (btnLabel) {
+        btnLabel.textContent = `✅ Live: ${themeToSave.toUpperCase()} Broadcasted!`;
+        setTimeout(() => {
+          btnLabel.textContent = 'Save & Broadcast Theme Live';
+        }, 2500);
+      }
+    }
+    window.broadcastStudioThemeToLive = broadcastStudioThemeToLive;
+
+    // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.258";
+    const TWITCH_OVERLAY_VERSION = "4.9.259";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -4510,9 +5222,15 @@
 
       // 4. Hydrate Seasonal Theme preference (URL ?theme= parameter takes priority)
       try {
-        const urlThemeParam = new URLSearchParams(window.location.search).get('theme');
+        const searchParams = new URLSearchParams(window.location.search);
+        const urlThemeParam = searchParams.get('theme');
         const savedTheme = urlThemeParam || localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
         applySeasonalTheme(savedTheme);
+        if (searchParams.get('studio') === '1' || searchParams.get('studio') === 'true') {
+          toggleTwitchStudioDrawer(true);
+        } else {
+          syncStudioDrawerActiveState();
+        }
       } catch(e) {}
 
       window.renderMovieState = renderMovieState;

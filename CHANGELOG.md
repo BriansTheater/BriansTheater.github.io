@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.259] - 2026-11-02
+
+### What's New
+- Built unified Twitch Layout Studio for all eight themes.
+- Added top-right settings gear drawer on Twitch overlay.
+- Added four Pixar Thanksgiving mascots to Harvest Lodge.
+- Added Roast Turkey Oven Escape jump-scare event.
+
 ## [4.9.258] - 2026-11-02
 
 ### What's New

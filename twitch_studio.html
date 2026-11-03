@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎨 Brian's Theater • Twitch Layout & Theme Design Studio</title>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has('studio')) params.set('studio', '1');
+      window.location.replace('./twitch.html?' + params.toString());
+    })();
+  </script>
+</head>
+<body style="background:#020617;color:#f8fafc;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+  <p>Loading Twitch Layout & Theme Design Studio...</p>
+</body>
+</html>

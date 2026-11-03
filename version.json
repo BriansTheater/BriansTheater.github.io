@@ -1,10 +1,11 @@
 {
-  "version": "4.9.258",
+  "version": "4.9.259",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.258",
+  "title": "Brian's Theater v4.9.259",
   "notes": [
-    "Added St. Patrick's controls to Admin Theme Settings.",
-    "Synced ambient tavern music switcher with Twitch overlay.",
-    "Synced calibrated mascot hiding spots to live stream."
+    "Built unified Twitch Layout Studio for all eight themes.",
+    "Added top-right settings gear drawer on Twitch overlay.",
+    "Added four Pixar Thanksgiving mascots to Harvest Lodge.",
+    "Added Roast Turkey Oven Escape jump-scare event."
   ]
 }
