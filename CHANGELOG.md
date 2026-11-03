@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.256] - 2026-11-02
+
+### What's New
+- Rebuilt Demo Studio with exact Twitch stream layout.
+- Added top-right settings gear for collapsible controls.
+- Kept full Twitch overlay unobstructed by demo buttons.
+- Synced four-column countdown grid with live stream design.
+
 ## [4.9.255] - 2026-11-02
 
 ### What's New

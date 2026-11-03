@@ -1,20 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>St. Patrick's Peek-a-Boo Leprechaun Demo — Brian's Theater</title>
+  <title>🍀 Brian's Celtic Tavern • Twitch Stream Overlay & Motion Demo (1080p)</title>
   <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinzel: ['Cinzel', 'serif']
+          }
+        }
+      }
+    };
+  </script>
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      background-color: #020d08;
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
+      background-color: #020d08;
+      color: #e2e8f0;
       user-select: none;
+      -webkit-user-select: none;
     }
     #stageContainer {
       position: relative;
@@ -25,6 +44,30 @@
       justify-content: center;
       background: url('images/stpatricks_stream_background.jpg') center center / cover no-repeat;
     }
+    .center-readability-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(2, 10, 6, 0.82) 0%, rgba(2, 10, 6, 0.48) 45%, rgba(2, 10, 6, 0) 75%),
+                  linear-gradient(to top, rgba(2, 10, 6, 0.88) 0%, rgba(2, 10, 6, 0.45) 20%, transparent 40%);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .hero-glow-aura {
+      position: absolute;
+      inset: -15px;
+      background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.25) 0%, rgba(245, 158, 11, 0.15) 50%, transparent 75%);
+      filter: blur(32px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    @keyframes eerieCandleFlicker {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.45)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.25)); transform: scale(1); }
+      30% { filter: drop-shadow(0 0 18px rgba(16, 185, 129, 0.8)) drop-shadow(0 0 35px rgba(245, 158, 11, 0.6)); transform: scale(1.06); }
+      60% { filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.35)) drop-shadow(0 0 14px rgba(245, 158, 11, 0.15)); transform: scale(0.97); }
+      85% { filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.65)) drop-shadow(0 0 28px rgba(245, 158, 11, 0.4)); transform: scale(1.03); }
+    }
+    .anim-candle { animation: eerieCandleFlicker 3s ease-in-out infinite; }
+    .anim-flicker { animation: eerieCandleFlicker 4s ease-in-out infinite; }
     #effectCanvas {
       position: absolute;
       inset: 0;
@@ -34,114 +77,222 @@
       z-index: 25;
     }
     .demo-pill {
-      background: rgba(6, 30, 20, 0.85);
+      background: rgba(6, 30, 20, 0.88);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(52, 211, 153, 0.4);
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
     .demo-pill.active {
       background: linear-gradient(135deg, #059669 0%, #10b981 100%);
       border-color: #a7f3d0;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
-      transform: translateY(-2px);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+      transform: translateY(-1px);
     }
   </style>
 </head>
 <body>
   <div id="stageContainer">
-    <!-- Top Interactive Control Studio -->
-    <header class="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1.5 max-w-6xl w-full px-3">
-      <div class="px-4 py-1 rounded-full bg-slate-950/85 backdrop-blur-md border border-emerald-500/50 shadow-xl flex items-center gap-2">
-        <span class="text-emerald-400 text-sm">🍀</span>
-        <span class="text-[11px] uppercase tracking-widest font-black text-emerald-200">St. Patrick's Leprechaun Motion Studio</span>
+    <!-- Center Card Readability Vignette (Matches twitch.html) -->
+    <div id="themeVignetteOverlay" class="center-readability-vignette"></div>
+
+    <!-- ========================================== -->
+    <!-- EXACT 1:1 TWITCH STREAM OVERLAY BILLBOARD  -->
+    <!-- ========================================== -->
+    <main id="centerMockMovieCard" class="relative z-20 w-full max-w-5xl mx-auto px-4 py-3 flex flex-col items-center justify-center text-center">
+
+      <!-- A. TOP THEATER BRANDING TITLE -->
+      <header class="mb-2 sm:mb-3">
+        <div id="themeHeaderPill" class="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-950/90 border border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.35)] backdrop-blur-md">
+          <div id="themeHeaderIconBox" class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-amber-400 p-0.5 shadow-lg shadow-emerald-950/60 flex items-center justify-center text-slate-950 font-black text-lg sm:text-2xl shrink-0">
+            <span id="themeHeaderIcon">🍀</span>
+          </div>
+          <div class="flex flex-col text-left">
+            <div class="flex items-center gap-1.5">
+              <h1 id="themeHeaderTitle" class="text-sm sm:text-lg md:text-xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 leading-tight anim-flicker">
+                Brian's Celtic Tavern
+              </h1>
+              <span id="themeHeaderSecondaryIcon" class="anim-candle inline-block text-base sm:text-lg select-none">🍻</span>
+            </div>
+            <span id="themeHeaderEdition" class="text-[9px] sm:text-[10px] text-emerald-300 font-mono tracking-wider uppercase font-semibold">
+              St. Patrick's Edition
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <!-- B. SCREENING STATUS & MOVIE TITLE -->
+      <section class="flex flex-col items-center gap-1 mb-2.5 sm:mb-3 w-full px-4 text-center">
+        <span id="screeningStatusBadge" class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.26em] text-emerald-300/90 uppercase">
+          🍀 NEXT PUB SCREENING 🍀
+        </span>
+
+        <h2 id="movieTitle" class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight flex items-center justify-center text-center text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 filter drop-shadow-[0_0_25px_rgba(16,185,129,0.5)] max-w-full leading-tight">
+          <span id="movieTitleText">Moana</span>
+        </h2>
+
+        <p id="movieShowtime" class="text-xs sm:text-sm md:text-base text-slate-300 font-medium tracking-wide">
+          Wednesday, Nov 4, 2026 • 7:00 PM PST
+        </p>
+      </section>
+
+      <!-- C. CENTER HERO POSTER FRAME (16:9 Glowing Widescreen) -->
+      <section class="relative w-full max-w-2xl sm:max-w-3xl mb-3 sm:mb-4 flex items-center justify-center">
+        <div class="hero-glow-aura"></div>
+        <div id="posterFrame" class="relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-emerald-500/50 bg-slate-950/95 shadow-[0_0_40px_rgba(16,185,129,0.4)] aspect-[16/9] max-h-[38vh] flex items-center justify-center">
+          <img
+            id="heroPosterImg"
+            src="images/moana_demo_poster.jpg"
+            alt="Featured Movie Screening"
+            class="w-full h-full object-cover object-center"
+          />
+        </div>
+      </section>
+
+      <!-- D. DIGITAL COUNTDOWN CARD CONTAINER -->
+      <section id="countdownContainer" class="w-full max-w-xl">
+        <div id="countdownBox" class="w-full bg-slate-950/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center gap-3">
+          <!-- Header Label -->
+          <div id="countdownHeader" class="text-xs sm:text-sm font-mono font-bold tracking-[0.25em] text-emerald-300 uppercase flex items-center justify-center gap-2">
+            <span id="countdownHeaderText">🍻 TAVERN DOORS OPEN IN 🍻</span>
+          </div>
+
+          <!-- Digits Grid (DAYS / HOURS / MINS / SECS) -->
+          <div id="countdownGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3.5 w-full font-mono">
+            <div id="colDays" class="flex flex-col items-center justify-center bg-slate-900/90 border border-emerald-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+              <span id="countDays" class="text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight leading-none">02</span>
+              <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">DAYS</span>
+            </div>
+            <div id="colHours" class="flex flex-col items-center justify-center bg-slate-900/90 border border-emerald-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+              <span id="countHours" class="text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight leading-none">05</span>
+              <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">HOURS</span>
+            </div>
+            <div id="colMins" class="flex flex-col items-center justify-center bg-slate-900/90 border border-emerald-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+              <span id="countMins" class="text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight leading-none">59</span>
+              <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">MINS</span>
+            </div>
+            <div id="colSecs" class="flex flex-col items-center justify-center bg-slate-900/90 border border-emerald-500/30 rounded-xl p-2 sm:p-2.5 shadow-md">
+              <span id="countSecs" class="text-2xl sm:text-4xl font-black text-amber-400 tracking-tight leading-none">41</span>
+              <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SECS</span>
+            </div>
+          </div>
+          <!-- Hidden legacy helper span for test compatibility -->
+          <span id="demoCountdownText" class="hidden">02d 05h 59m 41s</span>
+
+          <!-- Stream Watch URL Banner -->
+          <div id="countdownUrlBadge" class="w-full flex items-center justify-center pt-1">
+            <a
+              id="countdownUrlLink"
+              href="http://tiny.cc/BriansTheater"
+              target="_blank"
+              class="w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-amber-500/20 border-2 border-emerald-400/80 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer overflow-hidden"
+            >
+              <span class="text-2xl sm:text-3xl filter drop-shadow select-none">🍀</span>
+              <div class="flex flex-col items-center justify-center text-center flex-1 min-w-0 px-1">
+                <span class="text-xs sm:text-sm font-mono font-black tracking-[0.25em] text-amber-300 uppercase">
+                  JOIN THEATER:
+                </span>
+                <span id="countdownUrlText" class="text-lg sm:text-xl md:text-2xl font-mono font-black tracking-wider text-white uppercase underline underline-offset-4 decoration-amber-400 truncate max-w-full">
+                  tiny.cc/BriansTheater
+                </span>
+              </div>
+              <span class="text-2xl sm:text-3xl filter drop-shadow select-none">🍻</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================================================== -->
+    <!-- TOP-RIGHT SETTINGS ICON & COLLAPSIBLE STUDIO DRAWER   -->
+    <!-- ===================================================== -->
+    <button
+      id="btnToggleSettingsDrawer"
+      onclick="toggleSettingsDrawer()"
+      title="Open St. Patrick's Demo Controls"
+      class="fixed top-4 right-4 z-50 w-11 h-11 rounded-2xl bg-slate-950/90 hover:bg-emerald-950/90 border-2 border-emerald-500/60 shadow-[0_0_25px_rgba(16,185,129,0.45)] backdrop-blur-md flex items-center justify-center text-xl cursor-pointer transition-all hover:scale-105 active:scale-95"
+    >
+      <span id="settingsGearIcon">⚙️</span>
+    </button>
+
+    <aside
+      id="demoSettingsDrawer"
+      class="hidden fixed top-16 right-4 z-50 w-80 sm:w-96 p-4 rounded-2xl bg-slate-950/95 backdrop-blur-xl border-2 border-emerald-500/50 shadow-[0_15px_50px_rgba(0,0,0,0.95)] flex flex-col gap-3 text-left"
+    >
+      <div class="flex items-center justify-between border-b border-emerald-500/30 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🍀</span>
+          <span class="text-xs font-mono font-black text-emerald-300 uppercase tracking-wider">St. Patrick's Demo Studio</span>
+        </div>
+        <button onclick="toggleSettingsDrawer()" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-700 cursor-pointer">✕</button>
       </div>
 
-      <!-- Controls: Manual Peek Trigger, Hiding Spot & Mascot Skin Selection -->
-      <div class="flex flex-wrap items-center justify-center gap-1 p-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-emerald-500/40 shadow-2xl">
-        <button id="btnTriggerPeek" onclick="triggerPeekNow()" class="demo-pill active px-3 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1 cursor-pointer hover:brightness-110">
-          <span>✨</span> <span>Peek</span>
+      <!-- Quick Triggers & Audio -->
+      <div class="flex flex-wrap items-center gap-1.5">
+        <button id="btnTriggerPeek" onclick="triggerPeekNow()" class="demo-pill active px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 cursor-pointer hover:brightness-110">
+          <span>✨</span> <span>Peek Now</span>
         </button>
 
-        <button id="btnRainbowJumpScare" onclick="triggerRainbowJumpScareNow()" class="demo-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1 cursor-pointer bg-gradient-to-r from-red-500/80 via-yellow-500/80 to-emerald-500/80 text-white hover:brightness-125 border border-amber-300/60 shadow-lg">
-          <span>🌈</span> <span>Rainbow Jump-Scare!</span>
+        <button id="btnRainbowJumpScare" onclick="triggerRainbowJumpScareNow()" class="demo-pill px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 cursor-pointer bg-gradient-to-r from-red-500/80 via-yellow-500/80 to-emerald-500/80 text-white hover:brightness-125 border border-amber-300/60 shadow-lg">
+          <span>🌈</span> <span>Jump-Scare!</span>
         </button>
 
-        <button id="btnToggleSound" onclick="toggleDemoSound()" class="demo-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1 cursor-pointer bg-emerald-950/70 text-emerald-300 hover:brightness-125 border border-emerald-500/50">
+        <button id="btnToggleSound" onclick="toggleDemoSound()" class="demo-pill px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer bg-emerald-950/70 text-emerald-300 border border-emerald-500/50">
           <span id="soundIcon">🔊</span> <span id="soundLabel">Sound: ON</span>
         </button>
 
-        <button id="btnToggleMusic" onclick="toggleDemoMusic()" class="demo-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1 cursor-pointer bg-emerald-950/70 text-emerald-300 hover:brightness-125 border border-emerald-500/50">
+        <button id="btnToggleMusic" onclick="toggleDemoMusic()" class="demo-pill px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer bg-emerald-950/70 text-emerald-300 border border-emerald-500/50">
           <span id="musicIcon">🎵</span> <span id="musicLabel">Music: ON</span>
         </button>
-
-        <div class="flex items-center gap-1 bg-emerald-950/60 p-1 rounded-xl border border-emerald-500/30">
-          <span class="text-[11px] font-mono font-bold text-amber-300 px-1 uppercase tracking-wider">Ambient:</span>
-          <button id="bgmBtn-jig" onclick="selectDemoBgmTrack('jig')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Lively fiddle, guitar & tin whistle">🎻 Tavern Jig</button>
-          <button id="bgmBtn-pub" onclick="selectDemoBgmTrack('pub')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Dublin crowd chatter, clinking pints & hearth">🍺 Irish Pub</button>
-          <button id="bgmBtn-harp" onclick="selectDemoBgmTrack('harp')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Serene acoustic harp & woodland breeze">🪕 Celtic Harp</button>
-          <button id="bgmBtn-reel" onclick="selectDemoBgmTrack('reel')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Fast traditional tin whistle & bodhrán">🥁 Bodhrán Reel</button>
-        </div>
-
-        <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Spot:</span>
-        <button id="spotBtn-random" onclick="selectSpot('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
-        <button id="spotBtn-0" onclick="selectSpot(0)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Left</button>
-        <button id="spotBtn-1" onclick="selectSpot(1)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪟 Window</button>
-        <button id="spotBtn-2" onclick="selectSpot(2)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍻 Right</button>
-        <button id="spotBtn-3" onclick="selectSpot(3)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎬 Card</button>
-        <button id="spotBtn-4" onclick="selectSpot(4)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">📜 Sign</button>
-
-        <span class="text-slate-600 hidden sm:inline">|</span>
-
-        <span class="text-[11px] font-mono font-bold text-amber-300 px-1 uppercase tracking-wider">Face:</span>
-        <button id="skinBtn-random" onclick="selectSkin('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
-        <button id="skinBtn-pixar" onclick="selectSkin('pixar')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎩 Pixar</button>
-        <button id="skinBtn-pint" onclick="selectSkin('pint')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Pint</button>
-        <button id="skinBtn-piper" onclick="selectSkin('piper')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪕 Piper</button>
-        <button id="skinBtn-cheerful" onclick="selectSkin('cheerful')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">😊 Cheerful</button>
-        <button id="skinBtn-dancer" onclick="selectSkin('dancer')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🕺 Dancer</button>
-        <button id="skinBtn-creepy" onclick="selectSkin('creepy')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🧟 1993 Horror</button>
-
-        <span class="text-slate-600 hidden sm:inline">|</span>
-
-        <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Action:</span>
-        <button id="actionBtn-random" onclick="selectAction('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
-        <button id="actionBtn-coin_toss" onclick="selectAction('coin_toss')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪙 Coin Toss</button>
-        <button id="actionBtn-jig" onclick="selectAction('jig')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🕺 Irish Jig</button>
-      </div>
-    </header>
-
-    <!-- Center Real Movie Poster Frame (16:9 Widescreen Stream Clearance) -->
-    <div id="centerMockMovieCard" class="relative z-20 mt-20 w-[440px] sm:w-[500px] max-w-[90vw] aspect-[16/9] rounded-2xl border-2 border-emerald-500/60 shadow-[0_0_40px_rgba(16,185,129,0.35)] overflow-hidden bg-slate-950 flex flex-col items-center justify-between p-4 text-center group">
-      <!-- Real High-Res Movie Poster Backdrop -->
-      <img
-        src="images/moana_demo_poster.jpg"
-        alt="Featured Movie Screening"
-        class="absolute inset-0 w-full h-full object-cover object-center brightness-90 group-hover:scale-105 transition-transform duration-700"
-      />
-      <!-- Atmospheric Vignette Gradients -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/60 pointer-events-none"></div>
-
-      <!-- Header Tag -->
-      <div class="relative z-10 w-full flex items-center justify-between text-[11px] font-mono font-bold">
-        <span class="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 tracking-wider uppercase">
-          ☘️ Brian's Celtic Tavern
-        </span>
-        <span class="px-2 py-0.5 rounded-md bg-amber-950/80 border border-amber-500/50 text-amber-300 font-bold">
-          PG • Animation
-        </span>
       </div>
 
-      <!-- Title & Live Countdown -->
-      <div class="relative z-10 w-full flex flex-col items-center">
-        <h1 class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-amber-200 to-green-300 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-          Moana
-        </h1>
-        <div class="mt-2 px-3 py-1 rounded-xl bg-slate-950/85 border border-emerald-500/40 text-xs sm:text-sm font-mono font-bold text-amber-300 shadow-md flex items-center gap-2">
-          <span>⏳ DOORS OPEN IN:</span>
-          <span id="demoCountdownText" class="text-emerald-400 font-mono">02d 05h 59m 41s</span>
+      <!-- Ambient Background Soundscapes -->
+      <div class="flex flex-col gap-1">
+        <span class="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">Ambient Background Soundscape:</span>
+        <div class="flex flex-wrap gap-1">
+          <button id="bgmBtn-jig" onclick="selectDemoBgmTrack('jig')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎻 Tavern Jig</button>
+          <button id="bgmBtn-pub" onclick="selectDemoBgmTrack('pub')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Irish Pub</button>
+          <button id="bgmBtn-harp" onclick="selectDemoBgmTrack('harp')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪕 Celtic Harp</button>
+          <button id="bgmBtn-reel" onclick="selectDemoBgmTrack('reel')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🥁 Bodhrán Reel</button>
         </div>
       </div>
-    </div>
+
+      <!-- Hiding Spot Selection -->
+      <div class="flex flex-col gap-1">
+        <span class="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Peek Hiding Spot:</span>
+        <div class="flex flex-wrap gap-1">
+          <button id="spotBtn-random" onclick="selectSpot('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
+          <button id="spotBtn-0" onclick="selectSpot(0)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Left</button>
+          <button id="spotBtn-1" onclick="selectSpot(1)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪟 Window</button>
+          <button id="spotBtn-2" onclick="selectSpot(2)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍻 Right</button>
+          <button id="spotBtn-3" onclick="selectSpot(3)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎬 Poster</button>
+          <button id="spotBtn-4" onclick="selectSpot(4)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">📜 Sign</button>
+        </div>
+      </div>
+
+      <!-- Leprechaun Face Selection -->
+      <div class="flex flex-col gap-1">
+        <span class="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">Leprechaun Mascot Face:</span>
+        <div class="flex flex-wrap gap-1">
+          <button id="skinBtn-random" onclick="selectSkin('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
+          <button id="skinBtn-pixar" onclick="selectSkin('pixar')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎩 Pixar</button>
+          <button id="skinBtn-pint" onclick="selectSkin('pint')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Pint</button>
+          <button id="skinBtn-piper" onclick="selectSkin('piper')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪕 Piper</button>
+          <button id="skinBtn-cheerful" onclick="selectSkin('cheerful')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">😊 Cheerful</button>
+          <button id="skinBtn-dancer" onclick="selectSkin('dancer')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🕺 Dancer</button>
+          <button id="skinBtn-creepy" onclick="selectSkin('creepy')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🧟 1993 Horror</button>
+        </div>
+      </div>
+
+      <!-- Pop-up Action Selection -->
+      <div class="flex flex-col gap-1">
+        <span class="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Pop-Up Action:</span>
+        <div class="flex flex-wrap gap-1">
+          <button id="actionBtn-random" onclick="selectAction('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
+          <button id="actionBtn-coin_toss" onclick="selectAction('coin_toss')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪙 Coin Toss</button>
+          <button id="actionBtn-jig" onclick="selectAction('jig')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🕺 Irish Jig</button>
+        </div>
+      </div>
+    </aside>
 
     <!-- Live Motion Canvas -->
     <canvas id="effectCanvas"></canvas>
@@ -846,7 +997,7 @@
           id: 'schedule_card',
           name: 'Movie Schedule Card Top',
           x: canvas.width * 0.50,
-          baseY: canvas.height * 0.56,
+          baseY: canvas.height * 0.44,
           peekOffset: -canvas.height * 0.11,
           scale: 0.23,
           angle: 0.0,
@@ -856,14 +1007,26 @@
           id: 'header_sign',
           name: 'Tavern Arch Header',
           x: canvas.width * 0.36,
-          baseY: canvas.height * 0.46,
-          peekOffset: -canvas.height * 0.09,
+          baseY: canvas.height * 0.25,
+          peekOffset: -canvas.height * 0.08,
           scale: 0.21,
           angle: -0.03,
           flip: true
         }
       ];
     }
+
+    function toggleSettingsDrawer(forceOpen) {
+      const drawer = document.getElementById('demoSettingsDrawer');
+      if (!drawer) return;
+      if (typeof forceOpen === 'boolean') {
+        drawer.classList.toggle('hidden', !forceOpen);
+      } else {
+        drawer.classList.toggle('hidden');
+      }
+      return !drawer.classList.contains('hidden');
+    }
+    window.toggleSettingsDrawer = toggleSettingsDrawer;
 
     function triggerPeekNow() {
       lepAudio.ensureContext();
@@ -917,6 +1080,14 @@
       if (el) {
         el.textContent = `${String(d).padStart(2, '0')}d ${String(h).padStart(2, '0')}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
       }
+      const elD = document.getElementById('countDays');
+      const elH = document.getElementById('countHours');
+      const elM = document.getElementById('countMins');
+      const elS = document.getElementById('countSecs');
+      if (elD) elD.textContent = String(d).padStart(2, '0');
+      if (elH) elH.textContent = String(h).padStart(2, '0');
+      if (elM) elM.textContent = String(m).padStart(2, '0');
+      if (elS) elS.textContent = String(s).padStart(2, '0');
     }
     setInterval(updateDemoCountdown, 1000);
     updateDemoCountdown();

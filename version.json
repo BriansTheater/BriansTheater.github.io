@@ -1,10 +1,10 @@
 {
-  "version": "4.9.255",
+  "version": "4.9.256",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.255",
+  "title": "Brian's Theater v4.9.256",
   "notes": [
-    "Added real widescreen movie poster to Demo Studio.",
-    "Converted Irish step dance into dynamic popup action.",
-    "Added five friendly leprechaun faces with selector controls."
+    "Rebuilt Demo Studio with exact Twitch stream layout.",
+    "Moved demo controls into top-right settings drawer.",
+    "Aligned mascot peek spots with live stream billboard."
   ]
 }
