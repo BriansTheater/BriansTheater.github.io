@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.255] - 2026-11-02
+
+### What's New
+- Added real widescreen movie poster to Demo Studio.
+- Added live doors-open countdown timer to poster card.
+- Converted Irish step dance into dynamic popup action.
+- Added five friendly leprechaun faces to mascot roster.
+- Added face and action selector buttons in studio.
+
 ## [4.9.254] - 2026-11-02
 
 ### What's New

@@ -1,10 +1,10 @@
 {
-  "version": "4.9.254",
+  "version": "4.9.255",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.254",
+  "title": "Brian's Theater v4.9.255",
   "notes": [
-    "Added animated bottom dancing leprechaun jig with controls.",
-    "Added schedule card and tavern arch friendly peeks.",
-    "Rebalanced jump-scare rarity to rare 4.5-minute interval."
+    "Added real widescreen movie poster to Demo Studio.",
+    "Converted Irish step dance into dynamic popup action.",
+    "Added five friendly leprechaun faces with selector controls."
   ]
 }

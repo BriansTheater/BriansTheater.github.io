@@ -1167,6 +1167,62 @@
           scaleMul: 1.0,
           sparkColors: ['#fbbf24', '#34d399', '#fef08a']
         },
+        pint: {
+          id: 'pint',
+          name: 'Toasting Ale Pint',
+          src: 'images/lep_face_pint.png',
+          shadowColor: 'rgba(245, 158, 11, 0.45)',
+          shadowBlur: 20,
+          coinFill: '#fbbf24',
+          coinStroke: '#92400e',
+          coinShadow: 'rgba(245, 158, 11, 0.8)',
+          coinStamp: '🍺',
+          coinStampColor: '#78350f',
+          scaleMul: 0.95,
+          sparkColors: ['#fbbf24', '#f59e0b', '#22c55e', '#fef08a']
+        },
+        piper: {
+          id: 'piper',
+          name: 'Celtic Piper',
+          src: 'images/lep_face_piper.png',
+          shadowColor: 'rgba(16, 185, 129, 0.45)',
+          shadowBlur: 20,
+          coinFill: '#34d399',
+          coinStroke: '#065f46',
+          coinShadow: 'rgba(16, 185, 129, 0.8)',
+          coinStamp: '🪕',
+          coinStampColor: '#064e3b',
+          scaleMul: 0.90,
+          sparkColors: ['#10b981', '#34d399', '#fbbf24', '#a7f3d0']
+        },
+        cheerful: {
+          id: 'cheerful',
+          name: 'Cheerful Classic',
+          src: 'images/lep_face_cheerful.png',
+          shadowColor: 'rgba(34, 197, 94, 0.45)',
+          shadowBlur: 20,
+          coinFill: '#fbbf24',
+          coinStroke: '#b45309',
+          coinShadow: 'rgba(251, 191, 36, 0.8)',
+          coinStamp: '🎩',
+          coinStampColor: '#15803d',
+          scaleMul: 1.0,
+          sparkColors: ['#22c55e', '#4ade80', '#fbbf24', '#fef08a']
+        },
+        dancer: {
+          id: 'dancer',
+          name: 'Full Jig Dancer',
+          src: 'images/dancing_leprechaun_cutout.png',
+          shadowColor: 'rgba(34, 197, 94, 0.55)',
+          shadowBlur: 24,
+          coinFill: '#fbbf24',
+          coinStroke: '#b45309',
+          coinShadow: 'rgba(251, 191, 36, 0.8)',
+          coinStamp: '☘️',
+          coinStampColor: '#15803d',
+          scaleMul: 0.82,
+          sparkColors: ['#22c55e', '#4ade80', '#fbbf24', '#fef08a']
+        },
         creepy: {
           id: 'creepy',
           name: '1993 Horror Creepy Leprechaun',
@@ -1182,6 +1238,7 @@
           sparkColors: ['#22c55e', '#16a34a', '#fbbf24', '#ef4444']
         }
       };
+      window.LEP_SKINS = LEP_SKINS;
 
       const lepImages = {};
       for (const [key, skin] of Object.entries(LEP_SKINS)) {
@@ -1281,10 +1338,20 @@
         
         let skinChoice = forcedSkinId;
         if (!skinChoice) {
-          if (activeLep.skinPref === 'creepy') skinChoice = 'creepy';
-          else skinChoice = 'pixar'; // Standard peeks are 100% friendly Pixar; creepy horror is reserved exclusively for rainbow jump-scares!
+          if (activeLep.skinPref === 'creepy') {
+            skinChoice = 'creepy';
+          } else if (activeLep.skinPref && LEP_SKINS[activeLep.skinPref]) {
+            skinChoice = activeLep.skinPref;
+          } else {
+            const friendlySkins = ['pixar', 'pint', 'piper', 'cheerful', 'dancer'];
+            skinChoice = friendlySkins[Math.floor(Math.random() * friendlySkins.length)];
+          }
         }
+
+        const actionChoice = (skinChoice === 'dancer') ? 'jig' : (Math.random() < 0.5 ? 'jig' : 'coin_toss');
+
         activeLep.skinKey = skinChoice;
+        activeLep.action = actionChoice;
         activeLep.currentSpot = spot;
         activeLep.x = spot.x;
         activeLep.baseY = spot.baseY;
@@ -1300,8 +1367,10 @@
         activeLep.coinY = 0;
         activeLep.coinVy = 0;
         activeLep.coinRot = 0;
+        activeLep.jigTilt = 0;
       }
       window.triggerLeprechaunPeek = triggerLepPeek;
+      window.getActiveLepState = () => activeLep;
 
       const potImg = new Image();
       potImg.src = 'images/pot_of_gold_cutout.png';
@@ -2202,7 +2271,7 @@
               if (activeLep.progress >= 1) {
                 activeLep.state = 'hold';
                 activeLep.holdTimer = 0;
-                activeLep.coinTossed = true;
+                activeLep.coinTossed = (activeLep.action === 'coin_toss');
                 activeLep.coinY = activeLep.targetY - (activeLep.scale * 180);
                 activeLep.coinVy = -8;
                 // Burst of sparks tailored to skin
@@ -2212,7 +2281,7 @@
                   const spd = Math.random() * 4 + 1.5;
                   activeGoldSparks.push({
                     x: activeLep.x,
-                    y: activeLep.coinY,
+                    y: activeLep.targetY - 40,
                     vx: Math.cos(angle) * spd,
                     vy: Math.sin(angle) * spd - 1,
                     size: Math.random() * 3 + 2,
@@ -2220,11 +2289,28 @@
                     color: colors[k % colors.length]
                   });
                 }
-                lepAudio.playCoinFlip();
+                if (activeLep.action === 'coin_toss') lepAudio.playCoinFlip();
               }
             } else if (activeLep.state === 'hold') {
               activeLep.holdTimer++;
-              if (activeLep.coinTossed) {
+              if (activeLep.action === 'jig') {
+                const bounce = -Math.abs(Math.sin(activeLep.holdTimer * 0.16)) * 12;
+                activeLep.jigTilt = Math.sin(activeLep.holdTimer * 0.08) * 0.08;
+                activeLep.y = activeLep.targetY + bounce;
+
+                if (Math.random() < 0.25) {
+                  activeGoldSparks.push({
+                    x: activeLep.x + (Math.random() - 0.5) * 35,
+                    y: activeLep.targetY - 5,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -Math.random() * 2 - 1,
+                    size: Math.random() * 2.5 + 1.5,
+                    alpha: 1,
+                    color: Math.random() < 0.6 ? '#22c55e' : '#fbbf24'
+                  });
+                }
+              } else if (activeLep.coinTossed) {
+                activeLep.jigTilt = 0;
                 activeLep.coinY += activeLep.coinVy;
                 activeLep.coinVy += 0.4;
                 activeLep.coinRot += 0.18;
@@ -2235,12 +2321,14 @@
               if (activeLep.holdTimer > 180) {
                 activeLep.state = 'peek_out';
                 activeLep.progress = 0;
+                activeLep.jigTilt = 0;
                 lepAudio.playSnatchVanish();
               }
             } else if (activeLep.state === 'peek_out') {
               activeLep.progress += 0.022;
               const ease = Math.pow(Math.min(1, activeLep.progress), 3);
               activeLep.y = activeLep.targetY + (activeLep.baseY - activeLep.targetY) * ease;
+              activeLep.jigTilt = 0;
               if (activeLep.progress >= 1) {
                 activeLep.state = 'hidden';
                 lastLepPeekTime = Date.now();
@@ -2251,7 +2339,7 @@
             if (skinImg && skinImg.complete && skinImg.naturalWidth > 0) {
               ctx.save();
               ctx.translate(activeLep.x, activeLep.y);
-              ctx.rotate(activeLep.angle);
+              ctx.rotate(activeLep.angle + (activeLep.jigTilt || 0));
               const effScale = activeLep.scale * (skinObj.scaleMul || 1.0);
               ctx.scale(effScale * (activeLep.flip ? -1 : 1), effScale);
               ctx.shadowColor = skinObj.shadowColor;
@@ -2262,8 +2350,8 @@
               ctx.restore();
             }
 
-            // Draw Spinning 3D Celtic Coin
-            if (activeLep.coinTossed) {
+            // Draw Spinning 3D Celtic Coin ONLY if coin_toss action
+            if (activeLep.action === 'coin_toss' && activeLep.coinTossed) {
               ctx.save();
               ctx.translate(activeLep.x, activeLep.coinY);
               const spinScale = Math.cos(activeLep.coinRot);
@@ -2550,65 +2638,6 @@
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             ctx.fill();
-            ctx.restore();
-          }
-
-          // 5. Draw Bottom Dancing Leprechaun (Jig Dancer)
-          if (dancingLeprechaun.enabled && dancingLepImg.complete && dancingLepImg.naturalWidth > 0) {
-            const danceTime = now * 0.0075;
-            const bounceY = -Math.abs(Math.sin(danceTime * 2)) * 16;
-            const tiltAngle = Math.sin(danceTime) * 0.08;
-            const squash = 1 + Math.sin(danceTime * 2) * 0.035;
-
-            let posX = canvas.width * 0.5;
-            if (dancingLeprechaun.position === 'right') posX = canvas.width * 0.88;
-            else if (dancingLeprechaun.position === 'left') posX = canvas.width * 0.12;
-
-            const posY = canvas.height - 12 + bounceY;
-            const dw = dancingLepImg.naturalWidth * dancingLeprechaun.scale;
-            const dh = dancingLepImg.naturalHeight * dancingLeprechaun.scale * squash;
-
-            // Emit lucky green sparkles and gold coins from tapping feet
-            if (Math.random() < 0.35) {
-              dancingLeprechaun.particles.push({
-                x: posX + (Math.random() - 0.5) * (dw * 0.6),
-                y: canvas.height - 15,
-                vx: (Math.random() - 0.5) * 2.5,
-                vy: -Math.random() * 2.5 - 1.2,
-                size: Math.random() * 3 + 2,
-                alpha: 1,
-                color: Math.random() < 0.6 ? '#22c55e' : '#fbbf24'
-              });
-            }
-
-            // Draw dancing sparkles
-            for (let pIdx = dancingLeprechaun.particles.length - 1; pIdx >= 0; pIdx--) {
-              const p = dancingLeprechaun.particles[pIdx];
-              p.x += p.vx;
-              p.y += p.vy;
-              p.alpha -= 0.025;
-              if (p.alpha <= 0) {
-                dancingLeprechaun.particles.splice(pIdx, 1);
-                continue;
-              }
-              ctx.save();
-              ctx.globalAlpha = p.alpha;
-              ctx.fillStyle = p.color;
-              ctx.shadowColor = p.color;
-              ctx.shadowBlur = 8;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.restore();
-            }
-
-            // Render Dancing Leprechaun
-            ctx.save();
-            ctx.translate(posX, posY);
-            ctx.rotate(tiltAngle);
-            ctx.shadowColor = 'rgba(34, 197, 94, 0.45)';
-            ctx.shadowBlur = 20;
-            ctx.drawImage(dancingLepImg, -dw / 2, -dh, dw, dh);
             ctx.restore();
           }
         }
@@ -4382,7 +4411,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.254";
+    const TWITCH_OVERLAY_VERSION = "4.9.255";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
