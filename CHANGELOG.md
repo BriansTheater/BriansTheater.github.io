@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.261] - 2026-11-02
+
+### What's New
+- Added explicit Sound Off button to stream music selectors.
+- Replaced Thanksgiving rainbow with swirling autumn leaf oven steam.
+- Added kitchen oven timer ding for Harvest Lodge jump-scare.
+
 ## [4.9.260] - 2026-11-02
 
 ### What's New

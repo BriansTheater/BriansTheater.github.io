@@ -824,6 +824,7 @@
         <button type="button" id="studioStpBgm-pub" onclick="studioSelectBgmTrack('pub')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🍺 Irish Pub</button>
         <button type="button" id="studioStpBgm-harp" onclick="studioSelectBgmTrack('harp')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🪕 Celtic Harp</button>
         <button type="button" id="studioStpBgm-reel" onclick="studioSelectBgmTrack('reel')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🥁 Bodhrán Reel</button>
+        <button type="button" id="studioStpBgm-stp_off" onclick="studioSelectBgmTrack('stp_off')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer text-rose-300 border-rose-500/40">🔇 Sound Off</button>
       </div>
     </div>
 
@@ -854,6 +855,7 @@
         <button type="button" id="studioTgBgm-tg_jazz" onclick="studioSelectBgmTrack('tg_jazz')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎷 Thanksgiving Jazz</button>
         <button type="button" id="studioTgBgm-tg_fiddle" onclick="studioSelectBgmTrack('tg_fiddle')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎻 Autumn Bluegrass</button>
         <button type="button" id="studioTgBgm-tg_piano" onclick="studioSelectBgmTrack('tg_piano')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer">🎹 Cozy Hearth Piano</button>
+        <button type="button" id="studioTgBgm-tg_off" onclick="studioSelectBgmTrack('tg_off')" class="studio-pill px-2 py-0.5 rounded-lg text-[10px] font-bold cursor-pointer text-rose-300 border-rose-500/40">🔇 Sound Off</button>
       </div>
     </div>
 
@@ -1757,15 +1759,18 @@
         constructor(options = {}) {
           this.enabled = options.enabled !== undefined ? options.enabled : true;
           this.volume = options.volume !== undefined ? options.volume : 0.75;
-          this.bgmEnabled = options.bgmEnabled !== undefined ? options.bgmEnabled : true;
+          const initialTrack = options.trackId || 'jig';
+          const isMutedTrack = (initialTrack === 'off' || initialTrack === 'tg_off' || initialTrack === 'stp_off');
+          this.bgmEnabled = isMutedTrack ? false : (options.bgmEnabled !== undefined ? options.bgmEnabled : true);
           this.bgmVolume = options.bgmVolume !== undefined ? options.bgmVolume : 0.40;
-          this.currentTrackId = options.trackId || 'jig';
+          this.currentTrackId = initialTrack;
           this.bgmAudio = null;
           this.ctx = null;
         }
 
         initBgm() {
           if (typeof Audio === 'undefined') return;
+          if (this.currentTrackId === 'off' || this.currentTrackId === 'tg_off' || this.currentTrackId === 'stp_off') return;
           const track = BGM_TRACKS[this.currentTrackId] || BGM_TRACKS.jig;
           if (!this.bgmAudio) {
             this.bgmAudio = new Audio(track.src);
@@ -1775,10 +1780,19 @@
         }
 
         setBgmTrack(trackId) {
+          if (trackId === 'off' || trackId === 'tg_off' || trackId === 'stp_off') {
+            this.currentTrackId = trackId;
+            this.bgmEnabled = false;
+            if (this.bgmAudio) {
+              this.bgmAudio.pause();
+              this.bgmAudio.volume = 0;
+            }
+            return this.currentTrackId;
+          }
           if (!BGM_TRACKS[trackId]) return this.currentTrackId;
           this.currentTrackId = trackId;
+          this.bgmEnabled = true;
           const track = BGM_TRACKS[trackId];
-          const wasPlaying = this.bgmAudio && !this.bgmAudio.paused;
 
           if (this.bgmAudio) {
             this.bgmAudio.pause();
@@ -1788,7 +1802,7 @@
             this.initBgm();
           }
 
-          if (this.bgmAudio && this.bgmEnabled && (wasPlaying || this.bgmEnabled)) {
+          if (this.bgmAudio && this.bgmEnabled) {
             this.bgmAudio.playbackRate = 1.0;
             this.bgmAudio.volume = this.bgmVolume;
             this.bgmAudio.play().catch(() => {});
@@ -1797,6 +1811,7 @@
         }
 
         startBgm() {
+          if (this.currentTrackId === 'off' || this.currentTrackId === 'tg_off' || this.currentTrackId === 'stp_off' || !this.bgmEnabled) return;
           this.initBgm();
           if (!this.bgmAudio) return;
           if (this.bgmEnabled) {
@@ -1948,6 +1963,28 @@
 
             osc.start(noteTime);
             osc.stop(noteTime + 0.6);
+          });
+        }
+
+        // 2B. Thanksgiving Kitchen Oven Timer Brass Ding & Harvest Wind Whoosh
+        playOvenTimerDing() {
+          if (!this.enabled) return;
+          const ctx = this.ensureContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+
+          // Brass Kitchen Timer Bell ("DING!")
+          [1174.66, 2349.32, 3520.00].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = i === 0 ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime((0.28 / (i + 1)) * this.volume, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.9);
           });
         }
 
@@ -2249,7 +2286,12 @@
       function triggerRainbowJumpScare(forcedSpotId) {
         lepAudio.ensureContext();
         if (type === 'clovers' || type === 'leaves') lepAudio.startBgm();
-        lepAudio.playRainbowChime();
+        const isThanksgivingEvent = (type === 'leaves');
+        if (isThanksgivingEvent) {
+          lepAudio.playOvenTimerDing();
+        } else {
+          lepAudio.playRainbowChime();
+        }
         const spots = getLeprechaunSpots();
         let resolvedSpotId = forcedSpotId;
         if (!resolvedSpotId && activeLep && activeLep.spotPref && activeLep.spotPref !== 'random') {
@@ -2258,7 +2300,7 @@
         const spot = (resolvedSpotId ? spots.find((s, idx) => s.id === resolvedSpotId || String(idx) === String(resolvedSpotId)) : null) || spots[Math.floor(Math.random() * spots.length)];
         if (activeLep) activeLep.state = 'hidden';
         activeRainbowScare.active = true;
-        activeRainbowScare.isThanksgiving = (type === 'leaves');
+        activeRainbowScare.isThanksgiving = isThanksgivingEvent;
         activeRainbowScare.phase = 'arc';
         activeRainbowScare.progress = 0;
         activeRainbowScare.spot = spot;
@@ -2293,6 +2335,73 @@
 
       function drawRainbowArc(c, startX, startY, endX, endY, progress, isCrackle) {
         if (progress <= 0) return;
+
+        // Thanksgiving Harvest Lodge: Swirling Autumn Leaf Gust & Rising Oven Steam (NO Rainbow!)
+        if (activeRainbowScare && activeRainbowScare.isThanksgiving) {
+          c.save();
+          // 1. Warm Hearth Fire / Oven Glow at the Roaster Spot
+          const glowRadius = 115 * Math.min(1, progress * 1.3);
+          const grad = c.createRadialGradient(endX, endY - 40, 8, endX, endY - 40, Math.max(15, glowRadius));
+          if (isCrackle) {
+            grad.addColorStop(0, 'rgba(239, 68, 68, 0.85)');
+            grad.addColorStop(0.5, 'rgba(249, 115, 22, 0.45)');
+            grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+          } else {
+            grad.addColorStop(0, 'rgba(251, 191, 36, 0.65)');
+            grad.addColorStop(0.55, 'rgba(217, 119, 6, 0.30)');
+            grad.addColorStop(1, 'rgba(217, 119, 6, 0)');
+          }
+          c.fillStyle = grad;
+          c.beginPath();
+          c.arc(endX, endY - 40, Math.max(15, glowRadius), 0, Math.PI * 2);
+          c.fill();
+
+          // 2. Rising Oven Steam / Smoke Puffs & Swirling Autumn Maple Leaves
+          const leafIcons = ['🍁', '🍂', '🔥', '✨'];
+          const numItems = 10;
+          const timeSec = Date.now() * 0.004;
+          for (let i = 0; i < numItems; i++) {
+            const itemProg = (progress + i / numItems) % 1;
+            const spiralAngle = itemProg * Math.PI * 3 + i * 1.1 + timeSec;
+            const radiusX = (1 - itemProg * 0.45) * 85;
+            const lx = endX + Math.cos(spiralAngle) * radiusX;
+            const ly = endY - 15 - itemProg * 165;
+
+            // Soft Oven Steam Puff
+            c.save();
+            c.beginPath();
+            c.arc(lx, ly, 14 + itemProg * 18, 0, Math.PI * 2);
+            c.fillStyle = isCrackle
+              ? `rgba(254, 215, 170, ${(1 - itemProg) * 0.32})`
+              : `rgba(255, 251, 235, ${(1 - itemProg) * 0.24})`;
+            c.fill();
+            c.restore();
+
+            // Swirling Autumn Leaf / Ember
+            c.save();
+            c.translate(lx, ly);
+            c.rotate(spiralAngle * 0.7);
+            c.font = `${Math.floor(18 + (1 - itemProg) * 10)}px sans-serif`;
+            c.globalAlpha = Math.min(1, (1 - itemProg) * 1.3);
+            c.fillText(leafIcons[i % leafIcons.length], 0, 0);
+            c.restore();
+          }
+          c.restore();
+
+          if (progress < 1 && Math.random() < 0.65) {
+            rainbowStars.push({
+              x: endX + (Math.random() - 0.5) * 110,
+              y: endY - 30 - Math.random() * 90,
+              vx: (Math.random() - 0.5) * 2.2,
+              vy: -Math.random() * 2.2 - 0.6,
+              size: Math.random() * 3.5 + 2,
+              alpha: 1,
+              color: isCrackle ? '#ef4444' : '#f59e0b'
+            });
+          }
+          return;
+        }
+
         const colors = isCrackle ? [
           'rgba(34, 197, 94, 0.95)',
           'rgba(74, 222, 128, 0.95)',
@@ -4940,12 +5049,12 @@
 
       // Sync St. Patrick's & Thanksgiving BGM button states
       const stpTrack = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
-      ['jig', 'pub', 'harp', 'reel'].forEach(t => {
+      ['jig', 'pub', 'harp', 'reel', 'stp_off'].forEach(t => {
         const b = document.getElementById(`studioStpBgm-${t}`);
         if (b) b.classList.toggle('active', t === stpTrack);
       });
       const tgTrack = localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic';
-      ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano'].forEach(t => {
+      ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano', 'tg_off'].forEach(t => {
         const b = document.getElementById(`studioTgBgm-${t}`);
         if (b) b.classList.toggle('active', t === tgTrack);
       });
@@ -5151,13 +5260,13 @@
     function studioSelectBgmTrack(trackId) {
       const isTg = String(trackId).startsWith('tg_');
       if (isTg) {
-        ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano'].forEach(t => {
+        ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano', 'tg_off'].forEach(t => {
           const b = document.getElementById(`studioTgBgm-${t}`);
           if (b) b.classList.toggle('active', t === trackId);
         });
         try { localStorage.setItem('brian_thanksgiving_bgm_track', trackId); } catch(e) {}
       } else {
-        ['jig', 'pub', 'harp', 'reel'].forEach(t => {
+        ['jig', 'pub', 'harp', 'reel', 'stp_off'].forEach(t => {
           const b = document.getElementById(`studioStpBgm-${t}`);
           if (b) b.classList.toggle('active', t === trackId);
         });
@@ -5166,6 +5275,11 @@
       if (typeof window.setLeprechaunBgmTrack === 'function') {
         window.setLeprechaunBgmTrack(trackId);
       }
+      const isOff = (trackId === 'tg_off' || trackId === 'stp_off' || trackId === 'off');
+      ['studioBtnStpMusic', 'studioBtnTgMusic'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.textContent = isOff ? '🔕 BGM: OFF' : '🎵 BGM: ON';
+      });
     }
     window.studioSelectBgmTrack = studioSelectBgmTrack;
 
@@ -5239,7 +5353,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.260";
+    const TWITCH_OVERLAY_VERSION = "4.9.261";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

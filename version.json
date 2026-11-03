@@ -1,11 +1,10 @@
 {
-  "version": "4.9.260",
+  "version": "4.9.261",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.260",
+  "title": "Brian's Theater v4.9.261",
   "notes": [
-    "Added four cozy instrumental Thanksgiving Harvest Lodge music tracks.",
-    "Updated Smart Auto-Switch to display themes by full month.",
-    "Hid settings gear icon on live Twitch stream overlay.",
-    "Added Thanksgiving music controls to Admin Theme Settings."
+    "Added explicit Sound Off button to stream music selectors.",
+    "Replaced Thanksgiving rainbow with swirling autumn leaf oven steam.",
+    "Added kitchen oven timer ding for Harvest Lodge jump-scare."
   ]
 }

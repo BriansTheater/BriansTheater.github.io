@@ -1847,11 +1847,12 @@
                 </div>
                 <div class="flex flex-col gap-1">
                   <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider">Ambient Background Soundscape:</span>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1">
+                  <div class="grid grid-cols-2 sm:grid-cols-5 gap-1">
                     <button type="button" id="adminStpBgm-jig" onclick="setAdminStPatricksBgm('jig')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-emerald-600 text-white border border-emerald-300 cursor-pointer transition">🎻 Tavern Jig</button>
                     <button type="button" id="adminStpBgm-pub" onclick="setAdminStPatricksBgm('pub')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition">🍺 Irish Pub</button>
                     <button type="button" id="adminStpBgm-harp" onclick="setAdminStPatricksBgm('harp')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition">🪕 Celtic Harp</button>
                     <button type="button" id="adminStpBgm-reel" onclick="setAdminStPatricksBgm('reel')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition">🥁 Bodhrán Reel</button>
+                    <button type="button" id="adminStpBgm-stp_off" onclick="setAdminStPatricksBgm('stp_off')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-rose-300 border border-rose-500/40 hover:bg-rose-950 cursor-pointer transition">🔇 Sound Off</button>
                   </div>
                 </div>
                 <div class="text-[10px] text-emerald-200/80 font-mono leading-snug">
@@ -1870,12 +1871,13 @@
                   </a>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider">Harvest Lodge Background Music (4 Instrumental Tracks):</span>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1">
+                  <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider">Harvest Lodge Background Music (4 Instrumental Tracks + Off):</span>
+                  <div class="grid grid-cols-2 sm:grid-cols-5 gap-1">
                     <button type="button" id="adminTgBgm-tg_acoustic" onclick="setAdminThanksgivingBgm('tg_acoustic')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-amber-600 text-white border border-amber-300 cursor-pointer transition">🎸 Acoustic Harvest</button>
                     <button type="button" id="adminTgBgm-tg_jazz" onclick="setAdminThanksgivingBgm('tg_jazz')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition">🎷 Thanksgiving Jazz</button>
                     <button type="button" id="adminTgBgm-tg_fiddle" onclick="setAdminThanksgivingBgm('tg_fiddle')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition">🎻 Autumn Bluegrass</button>
                     <button type="button" id="adminTgBgm-tg_piano" onclick="setAdminThanksgivingBgm('tg_piano')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition">🎹 Cozy Hearth Piano</button>
+                    <button type="button" id="adminTgBgm-tg_off" onclick="setAdminThanksgivingBgm('tg_off')" class="py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-rose-300 border border-rose-500/40 hover:bg-rose-950 cursor-pointer transition">🔇 Sound Off</button>
                   </div>
                 </div>
                 <div class="text-[10px] text-amber-200/80 font-mono leading-snug">
@@ -7719,13 +7721,17 @@
       try {
         localStorage.setItem('brian_stpatricks_bgm_track', trackId);
       } catch(e) {}
-      ['jig', 'pub', 'harp', 'reel'].forEach(id => {
+      ['jig', 'pub', 'harp', 'reel', 'stp_off'].forEach(id => {
         const btn = document.getElementById(`adminStpBgm-${id}`);
         if (btn) {
           if (id === trackId) {
-            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-emerald-600 text-white border border-emerald-300 cursor-pointer transition';
+            btn.className = (id === 'stp_off')
+              ? 'py-1 px-2 rounded-lg text-[10px] font-bold bg-rose-600 text-white border border-rose-300 cursor-pointer transition'
+              : 'py-1 px-2 rounded-lg text-[10px] font-bold bg-emerald-600 text-white border border-emerald-300 cursor-pointer transition';
           } else {
-            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition';
+            btn.className = (id === 'stp_off')
+              ? 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-rose-300 border border-rose-500/40 hover:bg-rose-950 cursor-pointer transition'
+              : 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-950 cursor-pointer transition';
           }
         }
       });
@@ -7756,7 +7762,8 @@
         jig: '🎻 Tavern Jig',
         pub: '🍺 Irish Pub',
         harp: '🪕 Celtic Harp',
-        reel: '🥁 Bodhrán Reel'
+        reel: '🥁 Bodhrán Reel',
+        stp_off: '🔇 Sound Off'
       };
       if (typeof showTheaterToast === 'function') {
         showTheaterToast(`🍀 St. Patrick's Stream BGM set to ${trackNames[trackId] || trackId}`);
@@ -7768,13 +7775,17 @@
       try {
         localStorage.setItem('brian_thanksgiving_bgm_track', trackId);
       } catch(e) {}
-      ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano'].forEach(id => {
+      ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano', 'tg_off'].forEach(id => {
         const btn = document.getElementById(`adminTgBgm-${id}`);
         if (btn) {
           if (id === trackId) {
-            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-amber-600 text-white border border-amber-300 cursor-pointer transition';
+            btn.className = (id === 'tg_off')
+              ? 'py-1 px-2 rounded-lg text-[10px] font-bold bg-rose-600 text-white border border-rose-300 cursor-pointer transition'
+              : 'py-1 px-2 rounded-lg text-[10px] font-bold bg-amber-600 text-white border border-amber-300 cursor-pointer transition';
           } else {
-            btn.className = 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition';
+            btn.className = (id === 'tg_off')
+              ? 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-rose-300 border border-rose-500/40 hover:bg-rose-950 cursor-pointer transition'
+              : 'py-1 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-amber-300 border border-amber-500/40 hover:bg-amber-950 cursor-pointer transition';
           }
         }
       });
@@ -7805,7 +7816,8 @@
         tg_acoustic: '🎸 Acoustic Harvest',
         tg_jazz: '🎷 Thanksgiving Jazz',
         tg_fiddle: '🎻 Autumn Bluegrass',
-        tg_piano: '🎹 Cozy Hearth Piano'
+        tg_piano: '🎹 Cozy Hearth Piano',
+        tg_off: '🔇 Sound Off'
       };
       if (typeof showTheaterToast === 'function') {
         showTheaterToast(`🍂 Thanksgiving Stream BGM set to ${trackNames[trackId] || trackId}`);
