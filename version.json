@@ -1,10 +1,10 @@
 {
-  "version": "4.9.256",
+  "version": "4.9.257",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.256",
+  "title": "Brian's Theater v4.9.257",
   "notes": [
-    "Rebuilt Demo Studio with exact Twitch stream layout.",
-    "Moved demo controls into top-right settings drawer.",
-    "Aligned mascot peek spots with live stream billboard."
+    "Set Rainbow Jump-Scare cadence to 3.5 minutes.",
+    "Guaranteed 2 to 3 jump-scares per 10-minute lobby.",
+    "Synced automatic jump-scare timer in Demo Studio."
   ]
 }

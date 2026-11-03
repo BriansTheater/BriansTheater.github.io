@@ -1,5 +1,12 @@
 # Changelog
  
+## [4.9.257] - 2026-11-02
+
+### What's New
+- Set Rainbow Jump-Scare cadence to 3.5 minutes.
+- Guaranteed two to three jump-scares per ten-minute lobby.
+- Synced automatic jump-scare timer in Demo Studio.
+
 ## [4.9.256] - 2026-11-02
 
 ### What's New

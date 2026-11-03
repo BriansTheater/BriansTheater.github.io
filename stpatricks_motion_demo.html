@@ -954,8 +954,11 @@
       jumpProgress: 0
     };
     let rainbowStars = [];
+    const RAINBOW_JUMPSCARE_INTERVAL_MS = 210000; // 3.5 minutes (3m 30s) -> 2 to 3 jump-scares in 10-min pre-show window
+    window.RAINBOW_JUMPSCARE_INTERVAL_MS = RAINBOW_JUMPSCARE_INTERVAL_MS;
 
-    let lastAutoPeekTime = Date.now();
+    let lastAutoPeekTime = performance.now();
+    let lastRainbowEventTime = performance.now() - 30000;
     let clovers = [];
     let goldSparks = [];
     let rainbows = [];
@@ -1146,7 +1149,7 @@
       rainbowScare.potAlpha = 0;
       rainbowScare.shakeX = 0;
       rainbowScare.shakeY = 0;
-      rainbowScare.timer = Date.now();
+      rainbowScare.timer = performance.now();
       rainbowScare.jumpProgress = 0;
       rainbowStars = [];
     }
@@ -1347,8 +1350,12 @@
         ctx.restore();
       }
 
-      // 2. Auto-Trigger Peek Every 14 Seconds if Idle
-      if (!leprechaun.active && (now - lastAutoPeekTime > 14000)) {
+      // 2. Auto-Trigger Rainbow Jump-Scare Every 3.5 Minutes (210s) or Friendly Peek Every 14 Seconds if Idle
+      if (!rainbowScare.active && !leprechaun.active && (now - lastRainbowEventTime >= RAINBOW_JUMPSCARE_INTERVAL_MS)) {
+        triggerRainbowJumpScareNow();
+        lastRainbowEventTime = now;
+        lastAutoPeekTime = now;
+      } else if (!rainbowScare.active && !leprechaun.active && (now - lastAutoPeekTime > 14000)) {
         startLeprechaunPeek();
         lastAutoPeekTime = now;
       }

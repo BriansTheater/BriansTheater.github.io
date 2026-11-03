@@ -1849,6 +1849,8 @@
         jumpProgress: 0
       };
       let rainbowStars = [];
+      const RAINBOW_JUMPSCARE_INTERVAL_MS = 210000; // 3.5 minutes (3m 30s) -> guaranteed 2 to 3 jump-scares in a 10-min pre-show window
+      window.RAINBOW_JUMPSCARE_INTERVAL_MS = RAINBOW_JUMPSCARE_INTERVAL_MS;
       let lastRainbowEventTime = Date.now() - 30000;
 
       function triggerRainbowJumpScare(forcedSpotId) {
@@ -2395,11 +2397,9 @@
             if (spk.alpha <= 0) activeGoldSparks.splice(sIdx, 1);
           }
 
-          // Auto-trigger rare Rainbow Jump-Scare event every ~4.5 minutes (270s) if idle with 25% chance check
-          if (!activeRainbowScare.active && (!activeLep || activeLep.state === 'hidden') && (now - lastRainbowEventTime > 270000)) {
-            if (Math.random() < 0.25) {
-              triggerRainbowJumpScare();
-            }
+          // Auto-trigger Rainbow Jump-Scare event every 3.5 minutes (210s) so a 10-minute pre-show lobby gets 2-3 jump-scares
+          if (!activeRainbowScare.active && (!activeLep || activeLep.state === 'hidden') && (now - lastRainbowEventTime >= RAINBOW_JUMPSCARE_INTERVAL_MS)) {
+            triggerRainbowJumpScare();
             lastRainbowEventTime = now;
           }
 
@@ -4411,7 +4411,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.256";
+    const TWITCH_OVERLAY_VERSION = "4.9.257";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
