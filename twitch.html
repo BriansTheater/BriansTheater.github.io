@@ -1254,6 +1254,7 @@
       function triggerLepPeek(forcedSpotId, forcedSkinId) {
         if (!activeLep) return;
         lepAudio.ensureContext();
+        lepAudio.startBgm();
         const spots = getLeprechaunSpots();
         const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
         
@@ -1292,7 +1293,91 @@
         constructor(options = {}) {
           this.enabled = options.enabled !== undefined ? options.enabled : true;
           this.volume = options.volume !== undefined ? options.volume : 0.75;
+          this.bgmEnabled = options.bgmEnabled !== undefined ? options.bgmEnabled : true;
+          this.bgmVolume = options.bgmVolume !== undefined ? options.bgmVolume : 0.40;
+          this.bgmAudio = null;
           this.ctx = null;
+        }
+
+        initBgm() {
+          if (typeof Audio === 'undefined') return;
+          if (!this.bgmAudio) {
+            this.bgmAudio = new Audio('audio/celtic_tavern_jig.mp3');
+            this.bgmAudio.loop = true;
+            this.bgmAudio.volume = this.bgmEnabled ? this.bgmVolume : 0;
+          }
+        }
+
+        startBgm() {
+          this.initBgm();
+          if (!this.bgmAudio) return;
+          if (this.bgmEnabled) {
+            this.bgmAudio.volume = this.bgmVolume;
+            this.bgmAudio.play().catch(() => {});
+          }
+        }
+
+        pauseBgm() {
+          if (this.bgmAudio) this.bgmAudio.pause();
+        }
+
+        toggleBgm() {
+          this.bgmEnabled = !this.bgmEnabled;
+          this.initBgm();
+          if (this.bgmAudio) {
+            if (this.bgmEnabled) {
+              this.bgmAudio.volume = this.bgmVolume;
+              this.bgmAudio.play().catch(() => {});
+            } else {
+              this.bgmAudio.pause();
+            }
+          }
+          return this.bgmEnabled;
+        }
+
+        setBgmVolume(vol) {
+          this.bgmVolume = Math.max(0, Math.min(1, vol));
+          if (this.bgmAudio && this.bgmEnabled) {
+            this.bgmAudio.volume = this.bgmVolume;
+          }
+        }
+
+        // Vinyl Tape-Stop & Duck for Horror Jump-Scare
+        warpAndDuckBgm() {
+          if (!this.bgmAudio || !this.bgmEnabled) return;
+          let step = 0;
+          const interval = setInterval(() => {
+            step++;
+            if (step >= 8 || !this.bgmAudio) {
+              clearInterval(interval);
+              if (this.bgmAudio) {
+                this.bgmAudio.volume = 0;
+                this.bgmAudio.pause();
+                this.bgmAudio.playbackRate = 1.0;
+              }
+            } else {
+              this.bgmAudio.playbackRate = Math.max(0.3, 1.0 - (step * 0.09));
+              this.bgmAudio.volume = Math.max(0, this.bgmVolume * (1 - step / 8));
+            }
+          }, 30);
+        }
+
+        // Smooth Tavern Jig Recovery after retreat
+        restoreBgm() {
+          if (!this.bgmAudio || !this.bgmEnabled) return;
+          this.bgmAudio.playbackRate = 1.0;
+          this.bgmAudio.volume = 0;
+          this.bgmAudio.play().catch(() => {});
+          let step = 0;
+          const interval = setInterval(() => {
+            step++;
+            if (step >= 10 || !this.bgmAudio) {
+              clearInterval(interval);
+              if (this.bgmAudio && this.bgmEnabled) this.bgmAudio.volume = this.bgmVolume;
+            } else {
+              this.bgmAudio.volume = this.bgmVolume * (step / 10);
+            }
+          }, 60);
         }
 
         ensureContext() {
@@ -1591,6 +1676,13 @@
       window.lepAudio = lepAudio;
       window.setLeprechaunVolume = vol => lepAudio.setVolume(vol);
       window.toggleLeprechaunSound = () => lepAudio.toggleSound();
+      window.setLeprechaunBgmVolume = vol => lepAudio.setBgmVolume(vol);
+      window.toggleLeprechaunBgm = () => lepAudio.toggleBgm();
+
+      // Start joyful tavern BGM upon first user interaction
+      ['click', 'keydown', 'touchstart'].forEach(evt => {
+        window.addEventListener(evt, () => lepAudio.startBgm(), { once: true });
+      });
 
       let activeRainbowScare = {
         active: false,
@@ -1609,6 +1701,7 @@
 
       function triggerRainbowJumpScare(forcedSpotId) {
         lepAudio.ensureContext();
+        lepAudio.startBgm();
         lepAudio.playRainbowChime();
         const spots = getLeprechaunSpots();
         const spot = (forcedSpotId ? spots.find(s => s.id === forcedSpotId) : null) || spots[Math.floor(Math.random() * spots.length)];
@@ -2175,6 +2268,7 @@
                 activeRainbowScare.phase = 'crackle';
                 activeRainbowScare.timer = now;
                 lepAudio.playCrackleTrap();
+                lepAudio.warpAndDuckBgm();
               }
 
             } else if (activeRainbowScare.phase === 'crackle') {
@@ -2329,6 +2423,7 @@
                 activeRainbowScare.shakeX = 0;
                 activeRainbowScare.shakeY = 0;
                 lastLepPeekTime = now;
+                lepAudio.restoreBgm();
               }
             }
 
@@ -4126,7 +4221,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.251";
+    const TWITCH_OVERLAY_VERSION = "4.9.252";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

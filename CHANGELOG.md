@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.252] - 2026-11-02
+
+### What's New
+- Added lively Celtic tavern jig background music loop.
+- Added vinyl tape-stop pitch warp on electric trap.
+- Added instant audio ducking during horror jump-scare scream.
+- Added smooth tavern jig volume spin-up after retreat.
+- Added interactive music toggle button in Demo Studio.
+- Added background music volume controls to Twitch overlay.
+
 ## [4.9.251] - 2026-11-02
 
 ### What's New
