@@ -1,10 +1,10 @@
 {
-  "version": "4.9.253",
+  "version": "4.9.254",
   "releaseDate": "2026-11-02",
-  "title": "Brian's Theater v4.9.253",
+  "title": "Brian's Theater v4.9.254",
   "notes": [
-    "Added 4-track ambient soundscape switcher to Demo Studio.",
-    "Added Dublin pub chatter, Celtic harp, and bodhrán reel.",
-    "Integrated live track switching into Twitch overlay parameters."
+    "Added animated bottom dancing leprechaun jig with controls.",
+    "Added schedule card and tavern arch friendly peeks.",
+    "Rebalanced jump-scare rarity to rare 4.5-minute interval."
   ]
 }

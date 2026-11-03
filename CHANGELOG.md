@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.254] - 2026-11-02
+
+### What's New
+- Added animated bottom dancing leprechaun doing an Irish jig.
+- Added interactive position buttons for center, right, and left.
+- Added new friendly mascot peeks on card and sign.
+- Increased friendly peek frequency to every thirteen seconds.
+- Rebalanced jump-scare cooldown to rare four-minute interval.
+- Added stream URL parameters to toggle bottom dancer position.
+
 ## [4.9.253] - 2026-11-02
 
 ### What's New

@@ -82,11 +82,23 @@
           <button id="bgmBtn-reel" onclick="selectDemoBgmTrack('reel')" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer" title="Fast traditional tin whistle & bodhrán">🥁 Bodhrán Reel</button>
         </div>
 
+        <div class="flex items-center gap-1 bg-emerald-950/60 p-1 rounded-xl border border-emerald-500/30">
+          <button id="btnToggleDancer" onclick="toggleDemoDancer()" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer bg-emerald-900/80 text-emerald-300 border border-emerald-400/50">
+            <span id="dancerIcon">🕺</span> <span id="dancerLabel">Dancer: ON</span>
+          </button>
+          <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Position:</span>
+          <button id="dancerPosBtn-center" onclick="setDancerPosition('center')" class="demo-pill active px-2 py-1 rounded-xl text-xs font-bold cursor-pointer">Center</button>
+          <button id="dancerPosBtn-right" onclick="setDancerPosition('right')" class="demo-pill px-2 py-1 rounded-xl text-xs font-bold cursor-pointer">Right</button>
+          <button id="dancerPosBtn-left" onclick="setDancerPosition('left')" class="demo-pill px-2 py-1 rounded-xl text-xs font-bold cursor-pointer">Left</button>
+        </div>
+
         <span class="text-[11px] font-mono font-bold text-emerald-300 px-1 uppercase tracking-wider">Spot:</span>
         <button id="spotBtn-random" onclick="selectSpot('random')" class="demo-pill active px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎲 Random</button>
         <button id="spotBtn-0" onclick="selectSpot(0)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍺 Left</button>
         <button id="spotBtn-1" onclick="selectSpot(1)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🪟 Window</button>
         <button id="spotBtn-2" onclick="selectSpot(2)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🍻 Right</button>
+        <button id="spotBtn-3" onclick="selectSpot(3)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">🎬 Card</button>
+        <button id="spotBtn-4" onclick="selectSpot(4)" class="demo-pill px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer">📜 Sign</button>
 
         <span class="text-slate-600 hidden sm:inline">|</span>
 
@@ -715,7 +727,7 @@
     let goldSparks = [];
     let rainbows = [];
 
-    // The 3 Tailored Celtic Tavern Hiding Spots
+    // Tailored Celtic Tavern Hiding Spots
     function getSpots() {
       return [
         {
@@ -747,6 +759,26 @@
           scale: 0.38,
           angle: 0.02,
           flip: true
+        },
+        {
+          id: 'schedule_card',
+          name: 'Movie Schedule Card Top',
+          x: canvas.width * 0.50,
+          baseY: canvas.height * 0.42,
+          peekOffset: -canvas.height * 0.13,
+          scale: 0.30,
+          angle: 0.0,
+          flip: false
+        },
+        {
+          id: 'header_sign',
+          name: 'Tavern Arch Header',
+          x: canvas.width * 0.36,
+          baseY: canvas.height * 0.22,
+          peekOffset: -canvas.height * 0.08,
+          scale: 0.22,
+          angle: -0.03,
+          flip: true
         }
       ];
     }
@@ -773,6 +805,53 @@
       if (btn) btn.classList.add('active');
       triggerPeekNow();
     }
+
+    // Dancing Leprechaun (Bottom Footer Jig)
+    const dancingLepImg = new Image();
+    dancingLepImg.src = 'images/dancing_leprechaun_cutout.png';
+
+    let dancingLeprechaun = {
+      enabled: true,
+      position: 'center', // 'center', 'right', 'left'
+      scale: 0.22,
+      particles: []
+    };
+    window.dancingLeprechaun = dancingLeprechaun;
+
+    function toggleDemoDancer() {
+      dancingLeprechaun.enabled = !dancingLeprechaun.enabled;
+      const btn = document.getElementById('btnToggleDancer');
+      const label = document.getElementById('dancerLabel');
+      const icon = document.getElementById('dancerIcon');
+      if (dancingLeprechaun.enabled) {
+        if (label) label.textContent = 'Dancer: ON';
+        if (icon) icon.textContent = '🕺';
+        if (btn) {
+          btn.classList.add('bg-emerald-900/80', 'text-emerald-300', 'border-emerald-400/50');
+          btn.classList.remove('bg-rose-950/70', 'text-rose-300', 'border-rose-500/50');
+        }
+      } else {
+        if (label) label.textContent = 'Dancer: OFF';
+        if (icon) icon.textContent = '⏸️';
+        if (btn) {
+          btn.classList.remove('bg-emerald-900/80', 'text-emerald-300', 'border-emerald-400/50');
+          btn.classList.add('bg-rose-950/70', 'text-rose-300', 'border-rose-500/50');
+        }
+      }
+    }
+    window.toggleDemoDancer = toggleDemoDancer;
+
+    function setDancerPosition(pos) {
+      dancingLeprechaun.position = pos;
+      ['center', 'right', 'left'].forEach(p => {
+        const btn = document.getElementById(`dancerPosBtn-${p}`);
+        if (btn) {
+          if (p === pos) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+    }
+    window.setDancerPosition = setDancerPosition;
 
     function startLeprechaunPeek() {
       const spots = getSpots();
@@ -1321,6 +1400,68 @@
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
+        ctx.restore();
+      }
+
+      // 7. Draw Bottom Dancing Leprechaun (Jig Dancer)
+      if (dancingLeprechaun.enabled && dancingLepImg.complete && dancingLepImg.naturalWidth > 0) {
+        const danceTime = now * 0.0075;
+        // Rhythmic step bounce
+        const bounceY = -Math.abs(Math.sin(danceTime * 2)) * 16;
+        // Heel tap & body sway tilt
+        const tiltAngle = Math.sin(danceTime) * 0.08;
+        // Stretch & squash on step impact
+        const squash = 1 + Math.sin(danceTime * 2) * 0.035;
+
+        let posX = canvas.width * 0.5;
+        if (dancingLeprechaun.position === 'right') posX = canvas.width * 0.88;
+        else if (dancingLeprechaun.position === 'left') posX = canvas.width * 0.12;
+
+        const posY = canvas.height - 12 + bounceY;
+        const dw = dancingLepImg.naturalWidth * dancingLeprechaun.scale;
+        const dh = dancingLepImg.naturalHeight * dancingLeprechaun.scale * squash;
+
+        // Emit lucky green sparkles and gold coins from tapping feet
+        if (Math.random() < 0.4) {
+          dancingLeprechaun.particles.push({
+            x: posX + (Math.random() - 0.5) * (dw * 0.6),
+            y: canvas.height - 15,
+            vx: (Math.random() - 0.5) * 2.5,
+            vy: -Math.random() * 2.5 - 1.2,
+            size: Math.random() * 3 + 2,
+            alpha: 1,
+            color: Math.random() < 0.6 ? '#22c55e' : '#fbbf24'
+          });
+        }
+
+        // Draw dancing sparkles
+        for (let pIdx = dancingLeprechaun.particles.length - 1; pIdx >= 0; pIdx--) {
+          const p = dancingLeprechaun.particles[pIdx];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= 0.025;
+          if (p.alpha <= 0) {
+            dancingLeprechaun.particles.splice(pIdx, 1);
+            continue;
+          }
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Render Dancing Leprechaun
+        ctx.save();
+        ctx.translate(posX, posY);
+        ctx.rotate(tiltAngle);
+        ctx.shadowColor = 'rgba(34, 197, 94, 0.45)';
+        ctx.shadowBlur = 20;
+        ctx.drawImage(dancingLepImg, -dw / 2, -dh, dw, dh);
         ctx.restore();
       }
 

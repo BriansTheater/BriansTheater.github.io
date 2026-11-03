@@ -1247,9 +1247,30 @@
             scale: 0.38,
             angle: 0.02,
             flip: true
+          },
+          {
+            id: 'schedule_card',
+            name: 'Movie Schedule Card Top',
+            x: canvas.width * 0.50,
+            baseY: canvas.height * 0.42,
+            peekOffset: -canvas.height * 0.13,
+            scale: 0.30,
+            angle: 0.0,
+            flip: false
+          },
+          {
+            id: 'header_sign',
+            name: 'Tavern Arch Header',
+            x: canvas.width * 0.36,
+            baseY: canvas.height * 0.22,
+            peekOffset: -canvas.height * 0.08,
+            scale: 0.22,
+            angle: -0.03,
+            flip: true
           }
         ];
       }
+      window.getLeprechaunSpots = getLeprechaunSpots;
 
       function triggerLepPeek(forcedSpotId, forcedSkinId) {
         if (!activeLep) return;
@@ -1783,6 +1804,23 @@
       window.triggerRainbowJumpScare = triggerRainbowJumpScare;
       window.getActiveRainbowScareState = () => activeRainbowScare;
 
+      // Bottom Dancing Leprechaun
+      const dancingLepImg = new Image();
+      dancingLepImg.src = 'images/dancing_leprechaun_cutout.png';
+
+      const urlDancer = urlParams.get('dancer');
+      let dancingLeprechaun = {
+        enabled: urlDancer !== 'off' && urlDancer !== 'false',
+        position: (urlDancer === 'left' || urlDancer === 'right') ? urlDancer : 'center',
+        scale: 0.22,
+        particles: []
+      };
+      window.dancingLeprechaun = dancingLeprechaun;
+      window.setDancingLeprechaun = (enabled, pos) => {
+        if (enabled !== undefined) dancingLeprechaun.enabled = enabled;
+        if (pos) dancingLeprechaun.position = pos;
+      };
+
       function drawRainbowArc(c, startX, startY, endX, endY, progress, isCrackle) {
         if (progress <= 0) return;
         const colors = isCrackle ? [
@@ -2148,7 +2186,7 @@
         // 3. St. Patrick's Dynamic Peek-a-Boo Leprechaun
         if (type === 'clovers' && activeLep) {
           const now = Date.now();
-          if (activeLep.state === 'hidden' && now - lastLepPeekTime > 22000) {
+          if (activeLep.state === 'hidden' && now - lastLepPeekTime > 13000) {
             triggerLepPeek();
             lastLepPeekTime = now;
           }
@@ -2269,9 +2307,11 @@
             if (spk.alpha <= 0) activeGoldSparks.splice(sIdx, 1);
           }
 
-          // Auto-trigger rare Rainbow Jump-Scare event every ~70s if idle
-          if (!activeRainbowScare.active && (!activeLep || activeLep.state === 'hidden') && (now - lastRainbowEventTime > 70000)) {
-            triggerRainbowJumpScare();
+          // Auto-trigger rare Rainbow Jump-Scare event every ~4.5 minutes (270s) if idle with 25% chance check
+          if (!activeRainbowScare.active && (!activeLep || activeLep.state === 'hidden') && (now - lastRainbowEventTime > 270000)) {
+            if (Math.random() < 0.25) {
+              triggerRainbowJumpScare();
+            }
             lastRainbowEventTime = now;
           }
 
@@ -2510,6 +2550,65 @@
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             ctx.fill();
+            ctx.restore();
+          }
+
+          // 5. Draw Bottom Dancing Leprechaun (Jig Dancer)
+          if (dancingLeprechaun.enabled && dancingLepImg.complete && dancingLepImg.naturalWidth > 0) {
+            const danceTime = now * 0.0075;
+            const bounceY = -Math.abs(Math.sin(danceTime * 2)) * 16;
+            const tiltAngle = Math.sin(danceTime) * 0.08;
+            const squash = 1 + Math.sin(danceTime * 2) * 0.035;
+
+            let posX = canvas.width * 0.5;
+            if (dancingLeprechaun.position === 'right') posX = canvas.width * 0.88;
+            else if (dancingLeprechaun.position === 'left') posX = canvas.width * 0.12;
+
+            const posY = canvas.height - 12 + bounceY;
+            const dw = dancingLepImg.naturalWidth * dancingLeprechaun.scale;
+            const dh = dancingLepImg.naturalHeight * dancingLeprechaun.scale * squash;
+
+            // Emit lucky green sparkles and gold coins from tapping feet
+            if (Math.random() < 0.35) {
+              dancingLeprechaun.particles.push({
+                x: posX + (Math.random() - 0.5) * (dw * 0.6),
+                y: canvas.height - 15,
+                vx: (Math.random() - 0.5) * 2.5,
+                vy: -Math.random() * 2.5 - 1.2,
+                size: Math.random() * 3 + 2,
+                alpha: 1,
+                color: Math.random() < 0.6 ? '#22c55e' : '#fbbf24'
+              });
+            }
+
+            // Draw dancing sparkles
+            for (let pIdx = dancingLeprechaun.particles.length - 1; pIdx >= 0; pIdx--) {
+              const p = dancingLeprechaun.particles[pIdx];
+              p.x += p.vx;
+              p.y += p.vy;
+              p.alpha -= 0.025;
+              if (p.alpha <= 0) {
+                dancingLeprechaun.particles.splice(pIdx, 1);
+                continue;
+              }
+              ctx.save();
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = p.color;
+              ctx.shadowColor = p.color;
+              ctx.shadowBlur = 8;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+
+            // Render Dancing Leprechaun
+            ctx.save();
+            ctx.translate(posX, posY);
+            ctx.rotate(tiltAngle);
+            ctx.shadowColor = 'rgba(34, 197, 94, 0.45)';
+            ctx.shadowBlur = 20;
+            ctx.drawImage(dancingLepImg, -dw / 2, -dh, dw, dh);
             ctx.restore();
           }
         }
@@ -4283,7 +4382,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.9.253";
+    const TWITCH_OVERLAY_VERSION = "4.9.254";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
