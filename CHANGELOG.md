@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.264] - 2026-11-04
+
+### What's New
+- Renamed Admin schedule studio to Scheduler.
+- Added full-calendar +60 days popup modal view.
+- Added coming-month calendar tab for next month planning.
+- Expanded Kevin 4 PM shift scanner across +60 days.
+
 ## [4.9.263] - 2026-11-04
 
 ### What's New

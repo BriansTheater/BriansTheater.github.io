@@ -1722,8 +1722,8 @@
           <button type="button" onclick="setAdminSectionFilter('stage')" id="adminSecBtn-stage" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>🎛️</span> Stage & Doors
           </button>
-          <button type="button" onclick="setAdminSectionFilter('reschedule')" id="adminSecBtn-reschedule" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
-            <span>🍿</span> Smart Scheduler & Kevin Shifts
+          <button type="button" onclick="setAdminSectionFilter('reschedule'); openSchedulerCalendarPopup();" id="adminSecBtn-reschedule" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 transition shrink-0 flex items-center gap-1.5 cursor-pointer">
+            <span>📅</span> Scheduler
           </button>
           <button type="button" onclick="setAdminSectionFilter('media')" id="adminSecBtn-media" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>🎬</span> Movie Media Studio
@@ -2251,31 +2251,34 @@
             </div>
           </div>
 
-          <!-- 🎬 IN-APP SMART MOVIE NIGHT SCHEDULER & KEVIN 4:00 PM SHIFT SCANNER (v4.9.263) -->
+          <!-- 🎬 SCHEDULER — FULL CALENDAR & KEVIN 4:00 PM SHIFT SCANNER (v4.9.264) -->
           <div id="adminSmartSchedulerStudio" class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-950 to-slate-900/95 border border-emerald-500/40 flex flex-col gap-4 shadow-[0_0_35px_rgba(16,185,129,0.12)]">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3.5">
               <div class="flex items-start gap-3">
                 <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500/25 via-teal-500/20 to-amber-500/25 border border-emerald-400/50 flex items-center justify-center text-2xl shrink-0 shadow-md">
-                  🍿
+                  📅
                 </div>
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
                     <h4 class="text-sm sm:text-base font-black text-emerald-300 tracking-wide">
-                      Smart Movie Night Scheduler & Kevin's 4 PM Shift Scanner
+                      Scheduler
                     </h4>
                     <span id="kevinScanStatusBadge" class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      Kevin's Calendar Connected
+                      Kevin's Calendar Connected (+60 Days)
                     </span>
                   </div>
                   <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                    Automatically scans Kevin's shifts starting at <b class="text-amber-300">4:00 PM PT</b> (<code class="text-sky-300">kevindurham61@gmail.com</code>). Nights with no 4 PM shift appear as <b class="text-emerald-300">🍿 Movie Night Open — Click to Schedule a Movie</b> and auto-sync directly to Google Calendar!
+                    Open the full <b class="text-emerald-300">60-Day Calendar Popup</b> to plan this month & next month! Automatically scans Kevin's shifts starting at <b class="text-amber-300">4:00 PM PT</b> (<code class="text-sky-300">kevindurham61@gmail.com</code>) and marks open nights as <b class="text-emerald-300">🍿 Movie Night Open — Click to Schedule a Movie</b>.
                   </p>
                 </div>
               </div>
 
               <div class="flex flex-wrap items-center gap-2 shrink-0">
-                <button type="button" id="btnScanKevinShifts" onclick="scanKevinScheduleFromApp(true)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-md flex items-center gap-1.5 active:scale-95 cursor-pointer">
-                  <span>📅</span> <span id="btnScanKevinShiftsLabel">Scan Kevin's 4 PM Shifts</span>
+                <button type="button" id="btnOpenSchedulerPopup" onclick="openSchedulerCalendarPopup()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center gap-1.5 active:scale-95 cursor-pointer">
+                  <span>📅</span> <span>Open Scheduler Calendar (+60 Days Popup)</span>
+                </button>
+                <button type="button" id="btnScanKevinShifts" onclick="scanKevinScheduleFromApp(true)" class="px-3.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
+                  <span>🔄</span> <span id="btnScanKevinShiftsLabel">Scan Kevin's 4 PM Shifts</span>
                 </button>
                 <button type="button" id="btnSyncAllToGoogleCal" onclick="syncAllScheduledMoviesToGoogleCalendar()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
                   <span>⚡</span> <span>Sync All ➔ Google Calendar</span>
@@ -3369,6 +3372,100 @@
         </button>
         <button type="button" id="btnConfirmSmartSchedule" onclick="confirmSmartScheduleMovie()" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center gap-2 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
           <span>📅</span> <span id="btnConfirmSmartScheduleLabel">Schedule Movie & Sync to Google Calendar</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 📅 SCHEDULER FULL-CALENDAR (+60 DAYS) POPUP MODAL (v4.9.264) -->
+  <div id="schedulerCalendarPopupModal" class="fixed inset-0 bg-black/88 backdrop-blur-md z-40 hidden flex items-center justify-center p-2 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeSchedulerCalendarPopup()">
+    <div class="bg-slate-950 border-2 border-emerald-500/50 rounded-3xl max-w-7xl w-full p-4 sm:p-6 shadow-[0_0_70px_rgba(16,185,129,0.28)] relative flex flex-col gap-3.5 text-slate-100 max-h-[94vh] overflow-hidden">
+
+      <!-- Top Glowing Accent Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-amber-400 rounded-t-3xl"></div>
+
+      <!-- Popup Header -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3 pt-1">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500/25 via-teal-500/20 to-amber-500/25 border border-emerald-400/50 flex items-center justify-center text-2xl shrink-0 shadow-md">
+            📅
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-base sm:text-xl font-black text-emerald-300 tracking-wide">
+                Scheduler — Full Calendar & Coming Month (+60 Days)
+              </h3>
+              <span id="schedulerPopupRangeBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                60+ Days Active
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Plan this month and the coming month! Kevin's <b class="text-amber-300">4:00 PM PT shifts</b> are marked automatically — click any <b class="text-emerald-300">🍿 Movie Night Open</b> day to schedule a movie & sync to Google Calendar!
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button type="button" onclick="scanKevinScheduleFromApp(true)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-md flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <span>🔄</span> <span id="btnPopupScanKevinLabel">Scan Kevin's 4 PM Shifts (+60d)</span>
+          </button>
+          <button type="button" onclick="syncAllScheduledMoviesToGoogleCalendar()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <span>⚡</span> <span>Sync All ➔ Google Calendar</span>
+          </button>
+          <button type="button" onclick="closeSchedulerCalendarPopup()" class="w-9 h-9 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center text-xl leading-none transition cursor-pointer" aria-label="Close Scheduler">&times;</button>
+        </div>
+      </div>
+
+      <!-- Month / +60 Days View Tabs & Status Counters Bar -->
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-2.5 bg-slate-900/90 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
+        <!-- View Mode Tabs: All +60 Days (Both Months), This Month, Coming Month -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button type="button" id="schedPopupTab-60days" onclick="setSchedulerPopupViewMode('60days')" class="px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs transition shadow cursor-pointer flex items-center gap-1.5">
+            <span>🗓️</span> <span id="schedPopupTabLabel-60days">Full Calendar (+60 Days)</span>
+          </button>
+          <button type="button" id="schedPopupTab-currentMonth" onclick="setSchedulerPopupViewMode('currentMonth')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
+            <span>📅</span> <span id="schedPopupTabLabel-currentMonth">This Month</span>
+          </button>
+          <button type="button" id="schedPopupTab-nextMonth" onclick="setSchedulerPopupViewMode('nextMonth')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
+            <span>🎬</span> <span id="schedPopupTabLabel-nextMonth">Coming Month</span>
+          </button>
+          <button type="button" id="schedPopupTab-monthAfter" onclick="setSchedulerPopupViewMode('monthAfter')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-sky-300 border border-sky-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
+            <span>🚀</span> <span id="schedPopupTabLabel-monthAfter">+2 Months</span>
+          </button>
+        </div>
+
+        <!-- Live Counters & Filter Pills across 60+ Days -->
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <button type="button" onclick="setSchedulerPopupStatusFilter('all')" id="schedPopupFilter-all" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black transition cursor-pointer">
+            All (<span id="schedPopupTotalCount">60</span>d)
+          </button>
+          <button type="button" onclick="setSchedulerPopupStatusFilter('open')" id="schedPopupFilter-open" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 font-bold transition cursor-pointer">
+            🍿 Open Nights: <b id="schedPopupOpenCount" class="font-mono">0</b>
+          </button>
+          <button type="button" onclick="setSchedulerPopupStatusFilter('scheduled')" id="schedPopupFilter-scheduled" class="px-2.5 py-1 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold transition cursor-pointer">
+            🎬 Scheduled: <b id="schedPopupBookedCount" class="font-mono">0</b>
+          </button>
+          <button type="button" onclick="setSchedulerPopupStatusFilter('work')" id="schedPopupFilter-work" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold transition cursor-pointer">
+            🏢 Kevin 4PM Shifts: <b id="schedPopupWorkCount" class="font-mono">0</b>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Full-Calendar Body -->
+      <div id="schedulerPopupCalendarContainer" class="flex-1 overflow-y-auto pr-1 custom-scrollbar flex flex-col gap-6">
+        <!-- Dynamically rendered 7-column monthly calendar(s) for This Month + Coming Month (+60 Days) -->
+      </div>
+
+      <!-- Popup Footer -->
+      <div class="pt-2.5 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> <b class="text-emerald-300">🍿 Movie Night Open</b> (Click to schedule)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> <b class="text-sky-300">🎬 Movie Scheduled</b> (Auto-synced to Calendar)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> <b class="text-rose-300">🏢 Kevin 4:00 PM Shift</b> (Skip night)</span>
+        </div>
+        <button type="button" onclick="closeSchedulerCalendarPopup()" class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition cursor-pointer self-end sm:self-auto">
+          Done
         </button>
       </div>
 
@@ -4619,7 +4716,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.263";
+    const APP_VERSION = "4.9.264";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -10703,6 +10800,8 @@
     let smartModalSelectedDateKey = '';
     let smartModalSelectedMetadata = null;
     let smartModalSearchDebounceTimer = null;
+    let schedulerPopupViewMode = '60days'; // '60days' | 'currentMonth' | 'nextMonth' | 'monthAfter'
+    let schedulerPopupStatusFilter = 'all'; // 'all' | 'open' | 'scheduled' | 'work'
 
     function getPacificDateKeyFromMs(ms) {
       try {
@@ -10742,12 +10841,11 @@
       return '';
     }
 
-    function buildSmartSchedulerDaysList(daysCount = 14) {
+    function buildSchedulerLookupMaps() {
       const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
         ? window.theaterScheduleCache
         : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
 
-      // Index scheduled movies by YYYY-MM-DD
       const scheduledMap = {};
       schedSource.forEach(item => {
         if (!item || !item.title || item.status === 'POSTPONED') return;
@@ -10757,7 +10855,6 @@
         }
       });
 
-      // Index Kevin shifts from cached scan if available
       const kevinDaysMap = {};
       if (kevinScheduleScanCache && Array.isArray(kevinScheduleScanCache.days)) {
         kevinScheduleScanCache.days.forEach(d => {
@@ -10765,66 +10862,82 @@
         });
       }
 
-      // Read any local admin overrides for Kevin shifts
       let localKevinShifts = {};
       try {
         const rawLocal = localStorage.getItem('brian_kevin_4pm_shifts_map');
         if (rawLocal) localKevinShifts = JSON.parse(rawLocal) || {};
       } catch (e) {}
 
+      const todayKey = getPacificDateKeyFromMs(Date.now());
+      return { scheduledMap, kevinDaysMap, localKevinShifts, todayKey };
+    }
+
+    function getSchedulerDayDataForDateKey(dateKey, lookupMaps = null) {
+      const maps = lookupMaps || buildSchedulerLookupMaps();
+      const { scheduledMap, kevinDaysMap, localKevinShifts, todayKey } = maps;
+
+      const targetDate = new Date(`${dateKey}T12:00:00`);
+      const displayDate = targetDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+      const dayName = targetDate.toLocaleDateString('en-US', { weekday: 'short' });
+      const fullDayLabel = targetDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const longDateStr = targetDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+      const dayOfMonth = targetDate.getDate();
+      const dayOfWeek = targetDate.getDay(); // 0=Sun .. 6=Sat
+
+      const cachedKevin = kevinDaysMap[dateKey];
+      const localOverride = localKevinShifts[dateKey];
+
+      let isWorkingNight = false;
+      let shiftLabel = '4:00 PM – 10:30 PM';
+
+      if (localOverride !== undefined) {
+        isWorkingNight = !!localOverride.isWorkingNight;
+        shiftLabel = localOverride.shiftLabel || '4:00 PM – 10:30 PM';
+      } else if (cachedKevin) {
+        isWorkingNight = !!cachedKevin.isWorkingNight;
+        shiftLabel = cachedKevin.shiftLabel || (cachedKevin.shiftStart ? `${cachedKevin.shiftStart} – ${cachedKevin.shiftEnd || 'Late'}` : '4:00 PM – 10:30 PM');
+      } else {
+        // When awaiting first Google Calendar scan, show realistic 4:00 PM shift slots on Mon/Tue/Thu so both states are testable & toggleable across all +60 days
+        isWorkingNight = (dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 4);
+        shiftLabel = (dayOfWeek === 4) ? '4:00 PM – 11:00 PM' : '4:00 PM – 10:30 PM';
+      }
+
+      const scheduledMovie = scheduledMap[dateKey] || (cachedKevin && cachedKevin.scheduledMovie ? cachedKevin.scheduledMovie : null);
+
+      let status = 'movie_night_open';
+      if (scheduledMovie && scheduledMovie.title) {
+        status = 'movie_scheduled';
+      } else if (isWorkingNight) {
+        status = 'working_night';
+      }
+
+      return {
+        dateKey,
+        displayDate,
+        dayName,
+        dayOfMonth,
+        dayOfWeek,
+        fullDayLabel,
+        longDateStr,
+        isToday: dateKey === todayKey,
+        isPast: dateKey < todayKey,
+        status,
+        isWorkingNight,
+        shiftLabel,
+        scheduledMovie
+      };
+    }
+
+    function buildSmartSchedulerDaysList(daysCount = 65) {
+      const maps = buildSchedulerLookupMaps();
       const now = new Date();
       const resultDays = [];
 
       for (let offset = 0; offset < daysCount; offset++) {
         const targetMs = now.getTime() + (offset * 24 * 60 * 60 * 1000);
-        const targetDate = new Date(targetMs);
         const dateKey = getPacificDateKeyFromMs(targetMs);
-        const displayDate = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', month: 'numeric', day: 'numeric' });
-        const dayName = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'short' });
-        const fullDayLabel = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'short', month: 'short', day: 'numeric' });
-        const longDateStr = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-
-        const cachedKevin = kevinDaysMap[dateKey];
-        const localOverride = localKevinShifts[dateKey];
-
-        // Default pattern if no live scan has been stored yet so Kevin's 4 PM shifts & Open Movie Nights are immediately visible
-        const dayOfWeek = new Date(dateKey + 'T12:00:00').getDay(); // 0=Sun .. 6=Sat
-        let isWorkingNight = false;
-        let shiftLabel = '4:00 PM – 10:30 PM';
-
-        if (localOverride !== undefined) {
-          isWorkingNight = !!localOverride.isWorkingNight;
-          shiftLabel = localOverride.shiftLabel || '4:00 PM – 10:30 PM';
-        } else if (cachedKevin) {
-          isWorkingNight = !!cachedKevin.isWorkingNight;
-          shiftLabel = cachedKevin.shiftLabel || (cachedKevin.shiftStart ? `${cachedKevin.shiftStart} – ${cachedKevin.shiftEnd || 'Late'}` : '4:00 PM – 10:30 PM');
-        } else {
-          // When awaiting first Google Calendar scan, show realistic 4:00 PM shift slots on Mon/Tue/Thu so both states are testable & toggleable
-          isWorkingNight = (dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 4);
-          shiftLabel = (dayOfWeek === 4) ? '4:00 PM – 11:00 PM' : '4:00 PM – 10:30 PM';
-        }
-
-        const scheduledMovie = scheduledMap[dateKey] || (cachedKevin && cachedKevin.scheduledMovie ? cachedKevin.scheduledMovie : null);
-
-        let status = 'movie_night_open';
-        if (scheduledMovie && scheduledMovie.title) {
-          status = 'movie_scheduled';
-        } else if (isWorkingNight) {
-          status = 'working_night';
-        }
-
-        resultDays.push({
-          dateKey,
-          displayDate,
-          dayName,
-          fullDayLabel,
-          longDateStr,
-          isToday: offset === 0,
-          status,
-          isWorkingNight,
-          shiftLabel,
-          scheduledMovie
-        });
+        if (!dateKey) continue;
+        resultDays.push(getSchedulerDayDataForDateKey(dateKey, maps));
       }
 
       return resultDays;
@@ -10858,8 +10971,7 @@
         if (rawLocal) localKevinShifts = JSON.parse(rawLocal) || {};
       } catch (e) {}
 
-      const allDays = buildSmartSchedulerDaysList(21);
-      const target = allDays.find(d => d.dateKey === dateKey);
+      const target = getSchedulerDayDataForDateKey(dateKey);
       const nextWorking = target ? !target.isWorkingNight : true;
 
       localKevinShifts[dateKey] = {
@@ -10877,11 +10989,306 @@
         : `🍿 Marked ${dateKey} as Movie Night Open! Click to schedule a movie.`);
     }
 
+    function openSchedulerCalendarPopup(initialViewMode = null) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      if (initialViewMode) {
+        schedulerPopupViewMode = initialViewMode;
+      }
+      const modal = document.getElementById('schedulerCalendarPopupModal');
+      if (modal) modal.classList.remove('hidden');
+      renderSchedulerCalendarPopup();
+    }
+
+    function closeSchedulerCalendarPopup() {
+      const modal = document.getElementById('schedulerCalendarPopupModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function setSchedulerPopupViewMode(mode) {
+      schedulerPopupViewMode = mode || '60days';
+      renderSchedulerCalendarPopup();
+    }
+
+    function setSchedulerPopupStatusFilter(filter) {
+      schedulerPopupStatusFilter = filter || 'all';
+      renderSchedulerCalendarPopup();
+    }
+
+    function renderSchedulerCalendarPopup() {
+      const container = document.getElementById('schedulerPopupCalendarContainer');
+      if (!container) return;
+
+      const maps = buildSchedulerLookupMaps();
+      const todayKey = maps.todayKey || getPacificDateKeyFromMs(Date.now());
+      const [todayY, todayM] = todayKey.split('-').map(Number);
+
+      // Compute 3 consecutive month specs: This Month, Coming Month (+1), and +2 Months
+      const monthSpecs = [0, 1, 2].map((offsetIdx) => {
+        const d = new Date(todayY, (todayM - 1) + offsetIdx, 1);
+        const y = d.getFullYear();
+        const m = d.getMonth(); // 0-indexed
+        const monthNameLong = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        const monthNameShort = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const daysInMonth = new Date(y, m + 1, 0).getDate();
+        const firstWeekday = new Date(y, m, 1).getDay(); // 0=Sun .. 6=Sat
+
+        const days = [];
+        for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+          const dKey = `${y}-${String(m + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+          days.push(getSchedulerDayDataForDateKey(dKey, maps));
+        }
+
+        return {
+          offsetIdx,
+          year: y,
+          monthIndex: m,
+          monthNameLong,
+          monthNameShort,
+          daysInMonth,
+          firstWeekday,
+          days
+        };
+      });
+
+      // Update Tab Labels with real Month Names
+      const curTabLbl = document.getElementById('schedPopupTabLabel-currentMonth');
+      const nextTabLbl = document.getElementById('schedPopupTabLabel-nextMonth');
+      const afterTabLbl = document.getElementById('schedPopupTabLabel-monthAfter');
+      if (curTabLbl && monthSpecs[0]) curTabLbl.textContent = `This Month (${monthSpecs[0].monthNameShort})`;
+      if (nextTabLbl && monthSpecs[1]) nextTabLbl.textContent = `Coming Month (${monthSpecs[1].monthNameShort})`;
+      if (afterTabLbl && monthSpecs[2]) afterTabLbl.textContent = `${monthSpecs[2].monthNameShort}`;
+
+      // Update Active Tab Styles
+      const tabModes = ['60days', 'currentMonth', 'nextMonth', 'monthAfter'];
+      tabModes.forEach(mode => {
+        const btn = document.getElementById(`schedPopupTab-${mode}`);
+        if (!btn) return;
+        if (mode === schedulerPopupViewMode) {
+          btn.className = "px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs transition shadow cursor-pointer flex items-center gap-1.5";
+        } else if (mode === 'nextMonth') {
+          btn.className = "px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs transition cursor-pointer flex items-center gap-1.5";
+        }
+      });
+
+      // Update Active Filter Pill Styles
+      ['all', 'open', 'scheduled', 'work'].forEach(fKey => {
+        const fBtn = document.getElementById(`schedPopupFilter-${fKey}`);
+        if (!fBtn) return;
+        if (fKey === schedulerPopupStatusFilter) {
+          fBtn.className = "px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black transition cursor-pointer";
+        } else {
+          const styles = {
+            all: "px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-700 font-bold transition cursor-pointer",
+            open: "px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 font-bold transition cursor-pointer",
+            scheduled: "px-2.5 py-1 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold transition cursor-pointer",
+            work: "px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold transition cursor-pointer"
+          };
+          fBtn.className = styles[fKey];
+        }
+      });
+
+      // Select which months to render based on view mode
+      let visibleMonths = monthSpecs;
+      if (schedulerPopupViewMode === 'currentMonth') visibleMonths = [monthSpecs[0]];
+      else if (schedulerPopupViewMode === 'nextMonth') visibleMonths = [monthSpecs[1]];
+      else if (schedulerPopupViewMode === 'monthAfter') visibleMonths = [monthSpecs[2]];
+      else visibleMonths = [monthSpecs[0], monthSpecs[1], monthSpecs[2]]; // Full Calendar (+60 Days)
+
+      // Compute counters across all active days in the visible view (excluding past days before today)
+      const allVisibleDays = [];
+      visibleMonths.forEach(ms => {
+        ms.days.forEach(d => {
+          if (!d.isPast || schedulerPopupViewMode !== '60days') {
+            allVisibleDays.push(d);
+          }
+        });
+      });
+
+      const totalCountEl = document.getElementById('schedPopupTotalCount');
+      const openCountEl = document.getElementById('schedPopupOpenCount');
+      const bookedCountEl = document.getElementById('schedPopupBookedCount');
+      const workCountEl = document.getElementById('schedPopupWorkCount');
+      const rangeBadgeEl = document.getElementById('schedulerPopupRangeBadge');
+
+      if (totalCountEl) totalCountEl.textContent = String(allVisibleDays.length);
+      if (openCountEl) openCountEl.textContent = String(allVisibleDays.filter(d => d.status === 'movie_night_open').length);
+      if (bookedCountEl) bookedCountEl.textContent = String(allVisibleDays.filter(d => d.status === 'movie_scheduled').length);
+      if (workCountEl) workCountEl.textContent = String(allVisibleDays.filter(d => d.status === 'working_night').length);
+      if (rangeBadgeEl) {
+        if (schedulerPopupViewMode === '60days') {
+          rangeBadgeEl.textContent = `${monthSpecs[0].monthNameShort} – ${monthSpecs[2].monthNameShort} (+60 Days)`;
+        } else if (visibleMonths[0]) {
+          rangeBadgeEl.textContent = visibleMonths[0].monthNameLong;
+        }
+      }
+
+      const weekdayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      container.innerHTML = visibleMonths.map((mSpec) => {
+        const mOpen = mSpec.days.filter(d => d.status === 'movie_night_open').length;
+        const mBooked = mSpec.days.filter(d => d.status === 'movie_scheduled').length;
+        const mWork = mSpec.days.filter(d => d.status === 'working_night').length;
+        const roleTag = mSpec.offsetIdx === 0
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">THIS MONTH</span>`
+          : (mSpec.offsetIdx === 1
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">COMING MONTH SCHEDULE</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">+60 DAYS EXTENDED</span>`);
+
+        // Build leading blank cells for 7-column Sun-Sat alignment
+        const leadingBlanks = Array.from({ length: mSpec.firstWeekday }).map(() => `
+          <div class="hidden md:block min-h-[120px] rounded-xl bg-slate-950/40 border border-slate-900/60"></div>
+        `).join('');
+
+        const dayCellsHtml = mSpec.days.map((day) => {
+          const matchesFilter = (
+            schedulerPopupStatusFilter === 'all' ||
+            (schedulerPopupStatusFilter === 'open' && day.status === 'movie_night_open') ||
+            (schedulerPopupStatusFilter === 'scheduled' && day.status === 'movie_scheduled') ||
+            (schedulerPopupStatusFilter === 'work' && day.status === 'working_night')
+          );
+          const dimClass = !matchesFilter ? 'opacity-25 pointer-events-none scale-[0.98]' : (day.isPast ? 'opacity-65 hover:opacity-100' : '');
+
+          const dateHeaderLeft = `
+            <div class="flex items-center gap-1.5">
+              <span class="w-6 h-6 rounded-lg ${day.isToday ? 'bg-amber-400 text-slate-950 font-black shadow' : 'bg-slate-800/90 text-slate-200 font-bold'} text-xs flex items-center justify-center">${day.dayOfMonth}</span>
+              <span class="text-[10px] font-bold text-slate-400 md:hidden">${escapeHtml(day.dayName)}</span>
+              ${day.isToday ? `<span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40">Today</span>` : ''}
+            </div>
+          `;
+
+          if (day.status === 'movie_scheduled' && day.scheduledMovie) {
+            const m = day.scheduledMovie;
+            const mTitle = m.title || 'Scheduled Movie';
+            const mPoster = m.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(mTitle) : '');
+            const mStart = m.startTime || m.time || '7:00 PM';
+            const mEnd = m.endTime || '9:00 PM';
+            const safeTitle = escapeHtml(mTitle).replace(/'/g, "\\'");
+
+            return `
+              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-slate-900/95 border-2 border-sky-500/60 hover:border-sky-400 flex flex-col justify-between gap-2 shadow-lg transition ${dimClass}">
+                <div class="flex items-center justify-between gap-1">
+                  ${dateHeaderLeft}
+                  <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Synced</span>
+                </div>
+
+                <div class="flex items-center gap-2 my-0.5">
+                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-9 h-13 rounded object-cover border border-sky-400/40 bg-black shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+                  <div class="min-w-0 flex-1">
+                    <div class="text-xs font-black text-white truncate" title="${escapeHtml(mTitle)}">${escapeHtml(mTitle)}</div>
+                    <div class="text-[10px] font-mono text-amber-300 truncate">${escapeHtml(mStart)} – ${escapeHtml(mEnd)}</div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between gap-1 pt-1 border-t border-slate-800/80">
+                  <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}', '${safeTitle}')" class="flex-1 py-1 px-1.5 rounded bg-sky-500/20 hover:bg-sky-500/35 text-sky-300 border border-sky-500/40 text-[10px] font-bold transition cursor-pointer">
+                    ✏️ Change
+                  </button>
+                  <button type="button" onclick="clearSmartScheduledMovieNight('${day.dateKey}', '${safeTitle}')" class="py-1 px-1.5 rounded bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[10px] font-bold transition cursor-pointer" title="Clear movie">
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+
+          if (day.status === 'working_night') {
+            return `
+              <div data-cal-date="${day.dateKey}" data-cal-status="working_night" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-rose-950/20 border border-rose-500/35 flex flex-col justify-between gap-2 transition ${dimClass}">
+                <div class="flex items-center justify-between gap-1">
+                  ${dateHeaderLeft}
+                  <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">🏢 4PM Shift</span>
+                </div>
+
+                <div class="my-0.5">
+                  <div class="text-[11px] font-bold text-rose-300 leading-tight">Kevin Working Night</div>
+                  <div class="text-[10px] font-mono text-amber-300 mt-0.5">⏰ ${escapeHtml(day.shiftLabel || '4:00 PM – 10:30 PM')}</div>
+                </div>
+
+                <div class="flex items-center justify-between gap-1 pt-1 border-t border-rose-900/40">
+                  <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}')" class="text-[10px] text-slate-400 hover:text-emerald-300 underline cursor-pointer">
+                    Schedule
+                  </button>
+                  <button type="button" onclick="toggleKevinNightShiftForDate('${day.dateKey}', event)" class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">
+                    Mark Off
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+
+          // Movie Night Open cell
+          return `
+            <div data-cal-date="${day.dateKey}" data-cal-status="movie_night_open" onclick="openSmartScheduleMovieModal('${day.dateKey}')" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/35 border-2 border-emerald-500/50 hover:border-emerald-400 flex flex-col justify-between gap-2 shadow-[0_0_15px_rgba(16,185,129,0.12)] hover:shadow-[0_0_22px_rgba(16,185,129,0.28)] transition cursor-pointer group ${dimClass}">
+              <div class="flex items-center justify-between gap-1">
+                ${dateHeaderLeft}
+                <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-500/25 text-emerald-300 border border-emerald-400/50">🍿 OPEN</span>
+              </div>
+
+              <div class="my-0.5">
+                <div class="text-xs font-black text-emerald-300 group-hover:text-emerald-200 leading-tight">🍿 Movie Night Open!</div>
+                <div class="text-[10px] text-slate-300 mt-0.5">No 4:00 PM shift</div>
+              </div>
+
+              <div class="flex items-center justify-between gap-1 pt-1 border-t border-emerald-800/40">
+                <span class="flex-1 py-1 px-1.5 rounded bg-gradient-to-r from-emerald-500 to-teal-400 group-hover:brightness-110 text-slate-950 font-black text-[10px] text-center shadow">
+                  + Schedule Movie
+                </span>
+                <button type="button" onclick="toggleKevinNightShiftForDate('${day.dateKey}', event)" class="py-1 px-1.5 rounded bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-rose-300 border border-slate-700 text-[9px] font-bold cursor-pointer" title="Mark Kevin working 4 PM">
+                  🏢
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="sched-month-block bg-slate-900/60 border border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-col gap-3">
+            <!-- Month Banner Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h4 class="text-base sm:text-lg font-black text-white tracking-wide">🗓️ ${escapeHtml(mSpec.monthNameLong)}</h4>
+                ${roleTag}
+              </div>
+              <div class="flex flex-wrap items-center gap-2 text-[11px]">
+                <span class="px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">🍿 ${mOpen} Open Nights</span>
+                <span class="px-2 py-0.5 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold">🎬 ${mBooked} Scheduled</span>
+                <span class="px-2 py-0.5 rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 font-bold">🏢 ${mWork} Kevin 4PM Shifts</span>
+              </div>
+            </div>
+
+            <!-- 7-Column Weekday Header (Sun - Sat) -->
+            <div class="hidden md:grid md:grid-cols-7 gap-2 text-center">
+              ${weekdayHeaders.map(w => `
+                <div class="py-1.5 rounded-lg bg-slate-950/90 border border-slate-800/80 text-[11px] font-black uppercase tracking-wider text-slate-300">
+                  ${w}
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- 7-Column Monthly Calendar Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 gap-2">
+              ${leadingBlanks}
+              ${dayCellsHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function renderSmartMovieNightScheduler() {
+      // Always keep the Full-Calendar (+60 Days) Popup synchronized
+      renderSchedulerCalendarPopup();
+
       const grid = document.getElementById('smartSchedulerDaysGrid');
       if (!grid) return;
 
-      const allDays = buildSmartSchedulerDaysList(16);
+      const allDays = buildSmartSchedulerDaysList(65);
       const openCount = allDays.filter(d => d.status === 'movie_night_open').length;
       const workCount = allDays.filter(d => d.status === 'working_night').length;
       const bookedCount = allDays.filter(d => d.status === 'movie_scheduled').length;
@@ -11051,17 +11458,19 @@
       }
       const btn = document.getElementById('btnScanKevinShifts');
       const label = document.getElementById('btnScanKevinShiftsLabel');
+      const popupLabel = document.getElementById('btnPopupScanKevinLabel');
       const badge = document.getElementById('kevinScanStatusBadge');
       if (btn) btn.disabled = true;
-      if (label) label.textContent = "Scanning Kevin's 4 PM Shifts...";
-      if (badge) badge.textContent = "Scanning kevindurham61@gmail.com...";
+      if (label) label.textContent = "Scanning Kevin's 4 PM Shifts (+60d)...";
+      if (popupLabel) popupLabel.textContent = "Scanning Kevin's 4 PM Shifts (+60d)...";
+      if (badge) badge.textContent = "Scanning kevindurham61@gmail.com (+60d)...";
 
       try {
-        // Queue a scan command in Firebase so the Google Apps Script backend executes getKevinNightShiftSchedule(30)
+        // Queue a scan command in Firebase so the Google Apps Script backend executes getKevinNightShiftSchedule(65)
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'scan_kevin', requestedAt: Date.now() })
+          body: JSON.stringify({ action: 'scan_kevin', days: 65, requestedAt: Date.now() })
         }).catch(() => {});
 
         // Trigger force_sync on Apps Script so it processes the queue immediately
@@ -11071,18 +11480,19 @@
         await loadKevinScheduleScanFromFirebase();
         renderSmartMovieNightScheduler();
 
-        const days = buildSmartSchedulerDaysList(16);
+        const days = buildSmartSchedulerDaysList(65);
         const openNights = days.filter(d => d.status === 'movie_night_open').length;
         const workNights = days.filter(d => d.status === 'working_night').length;
         if (badge) {
-          badge.textContent = `Scanned • ${openNights} Open / ${workNights} 4PM Shifts`;
+          badge.textContent = `Scanned (+60d) • ${openNights} Open / ${workNights} 4PM Shifts`;
         }
         if (showFeedback) {
-          showTheaterToast(`📅 Scanned Kevin's 4 PM shifts: ${openNights} Movie Nights Open, ${workNights} Night Shifts!`);
+          showTheaterToast(`📅 Scanned Kevin's 4 PM shifts (+60 days): ${openNights} Movie Nights Open, ${workNights} Night Shifts!`);
         }
       } finally {
         if (btn) btn.disabled = false;
         if (label) label.textContent = "Scan Kevin's 4 PM Shifts";
+        if (popupLabel) popupLabel.textContent = "Scan Kevin's 4 PM Shifts (+60d)";
       }
     }
 
