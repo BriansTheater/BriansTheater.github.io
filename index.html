@@ -12147,14 +12147,21 @@
       if (btn) btn.disabled = true;
 
       try {
-        await fetch(API_BASE_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'sync_google_calendar', updateExisting: true })
-        }).catch(() => {});
-        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
-        showTheaterToast(`⚡ Syncing all scheduled movies directly to "Movies" Google Calendar!`);
+        showTheaterToast("⚡ Syncing schedule to Google Calendar (Title only, no emojis)...");
+        const calId = encodeURIComponent("ls7pgevicthgfep3rgfghmht4s@group.calendar.google.com");
+        const res = await fetch(`${API_BASE_URL}?action=sync_google_calendar&calendarId=${calId}&updateExisting=true`);
+        const data = await res.json();
+        if (data && data.status === "ok") {
+          showTheaterToast(`✅ Google Calendar Synced: ${data.message || 'Movies synced without emojis!'}`);
+        } else if (data && data.error) {
+          showTheaterToast(`⚠️ Google Calendar: ${data.error}`);
+        } else {
+          showTheaterToast(`✅ Synced scheduled movies to "Movies" Google Calendar!`);
+        }
+      } catch (err) {
+        // Fallback dispatch if response is blocked by client CORS policy
+        fetch(`${API_BASE_URL}?action=sync_google_calendar&calendarId=ls7pgevicthgfep3rgfghmht4s%40group.calendar.google.com&updateExisting=true`, { mode: 'no-cors' }).catch(() => {});
+        showTheaterToast("⚡ Calendar sync dispatched to Google Calendar!");
       } finally {
         if (btn) btn.disabled = false;
       }

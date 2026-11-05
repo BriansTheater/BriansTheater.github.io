@@ -5,6 +5,8 @@
 ### What's New
 - Featured Minions & Monsters as tonight's live screening.
 - Restored collapsible Recently Concluded Screenings hidden drawer.
+- Posted movie titles only without emojis to Google Calendar.
+- Enhanced 1-click Google Calendar sync with dedicated calendar ID.
 - Synchronized live cinema stage countdown with authoritative schedule.
 - Tucked past screenings neatly away into collapsible drawer.
 
