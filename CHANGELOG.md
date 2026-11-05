@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.263] - 2026-11-04
+
+### What's New
+- Added in-app Smart Movie Night Scheduler in Admin Studio.
+- Added Kevin 4 PM night-shift scanner with open-night badges.
+- Added one-click movie scheduling with automatic TMDB data pull.
+- Added automatic Google Calendar sync for newly scheduled movies.
+
 ## [4.9.262] - 2026-11-02
 
 ### What's New

@@ -1723,7 +1723,7 @@
             <span>🎛️</span> Stage & Doors
           </button>
           <button type="button" onclick="setAdminSectionFilter('reschedule')" id="adminSecBtn-reschedule" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
-            <span>🗓️</span> Reschedule & Lineup
+            <span>🍿</span> Smart Scheduler & Kevin Shifts
           </button>
           <button type="button" onclick="setAdminSectionFilter('media')" id="adminSecBtn-media" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>🎬</span> Movie Media Studio
@@ -2248,6 +2248,66 @@
                 </div>
                 <span class="text-xs text-emerald-400 group-hover:translate-x-1 transition-transform">→</span>
               </button>
+            </div>
+          </div>
+
+          <!-- 🎬 IN-APP SMART MOVIE NIGHT SCHEDULER & KEVIN 4:00 PM SHIFT SCANNER (v4.9.263) -->
+          <div id="adminSmartSchedulerStudio" class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-950 to-slate-900/95 border border-emerald-500/40 flex flex-col gap-4 shadow-[0_0_35px_rgba(16,185,129,0.12)]">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3.5">
+              <div class="flex items-start gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500/25 via-teal-500/20 to-amber-500/25 border border-emerald-400/50 flex items-center justify-center text-2xl shrink-0 shadow-md">
+                  🍿
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="text-sm sm:text-base font-black text-emerald-300 tracking-wide">
+                      Smart Movie Night Scheduler & Kevin's 4 PM Shift Scanner
+                    </h4>
+                    <span id="kevinScanStatusBadge" class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      Kevin's Calendar Connected
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">
+                    Automatically scans Kevin's shifts starting at <b class="text-amber-300">4:00 PM PT</b> (<code class="text-sky-300">kevindurham61@gmail.com</code>). Nights with no 4 PM shift appear as <b class="text-emerald-300">🍿 Movie Night Open — Click to Schedule a Movie</b> and auto-sync directly to Google Calendar!
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2 shrink-0">
+                <button type="button" id="btnScanKevinShifts" onclick="scanKevinScheduleFromApp(true)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-md flex items-center gap-1.5 active:scale-95 cursor-pointer">
+                  <span>📅</span> <span id="btnScanKevinShiftsLabel">Scan Kevin's 4 PM Shifts</span>
+                </button>
+                <button type="button" id="btnSyncAllToGoogleCal" onclick="syncAllScheduledMoviesToGoogleCalendar()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
+                  <span>⚡</span> <span>Sync All ➔ Google Calendar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Summary Counters & Filter Pills -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-slate-950/80 p-3 rounded-xl border border-slate-800/90">
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold flex items-center gap-1.5">
+                  <span>🍿</span> <span>Movie Nights Open:</span> <b id="smartSchedOpenCount" class="font-mono">0</b>
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 font-bold flex items-center gap-1.5">
+                  <span>🏢</span> <span>Kevin 4 PM Shifts:</span> <b id="smartSchedWorkCount" class="font-mono">0</b>
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1.5">
+                  <span>🎬</span> <span>Movies Scheduled:</span> <b id="smartSchedBookedCount" class="font-mono">0</b>
+                </span>
+              </div>
+
+              <div class="flex items-center gap-1.5 text-xs">
+                <button type="button" onclick="setSmartSchedulerFilter('all')" id="smartSchedFilter-all" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black transition cursor-pointer">All Nights (14d)</button>
+                <button type="button" onclick="setSmartSchedulerFilter('open')" id="smartSchedFilter-open" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-800 font-semibold transition cursor-pointer">🍿 Open Only</button>
+                <button type="button" onclick="setSmartSchedulerFilter('scheduled')" id="smartSchedFilter-scheduled" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-800 font-semibold transition cursor-pointer">🎬 Scheduled</button>
+                <button type="button" onclick="setSmartSchedulerFilter('work')" id="smartSchedFilter-work" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-rose-300 border border-slate-800 font-semibold transition cursor-pointer">🏢 Work Shifts</button>
+              </div>
+            </div>
+
+            <!-- Interactive Upcoming Nights Grid -->
+            <div id="smartSchedulerDaysGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
+              <!-- Populated dynamically by renderSmartMovieNightScheduler() -->
             </div>
           </div>
 
@@ -3202,6 +3262,113 @@
         </button>
         <button type="button" id="btnConfirmMovieSwitch" onclick="confirmAndExecuteMovieSwitch()" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-lg flex items-center gap-1.5 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
           <span>🚀</span> <span>Confirm & Switch Movie</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 🍿 SMART SCHEDULE MOVIE NIGHT MODAL (CLICK TO SCHEDULE A MOVIE + AUTO TMDB + GOOGLE CALENDAR SYNC) -->
+  <div id="smartScheduleMovieModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200" onclick="if (event.target === this) closeSmartScheduleMovieModal()">
+    <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-[0_0_50px_rgba(16,185,129,0.25)] relative flex flex-col gap-4 text-slate-200 max-h-[92vh] overflow-y-auto custom-scrollbar">
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3.5 gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-xl shrink-0">
+            🍿
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-100">Schedule Open Movie Night</h3>
+              <span id="smartModalDateBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Open Night</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Pick from Pending Movie Requests or search TMDb — auto-pulls poster, runtime, plot & trailer and syncs to Google Calendar!</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSmartScheduleMovieModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none rounded-lg hover:bg-slate-800/60 transition cursor-pointer" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Date & Showtime Bar -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800">
+        <div>
+          <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Movie Night Date</label>
+          <input type="date" id="smartModalDateInput" class="w-full mt-1 px-3 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 font-mono focus:border-emerald-400 outline-none">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Showtime (Pacific Time)</label>
+          <select id="smartModalStartTimeSelect" onchange="recalcSmartModalEndTime()" class="w-full mt-1 px-3 py-2 text-xs sm:text-sm rounded-lg bg-slate-900 border border-slate-700 text-slate-100 font-semibold focus:border-emerald-400 outline-none">
+            <option value="7:00 PM" selected>7:00 PM PT (Standard)</option>
+            <option value="6:30 PM">6:30 PM PT</option>
+            <option value="7:30 PM">7:30 PM PT</option>
+            <option value="8:00 PM">8:00 PM PT</option>
+            <option value="8:30 PM">8:30 PM PT</option>
+            <option value="9:00 PM">9:00 PM PT</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 1-Click Pending Movie Requests Queue Picker -->
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span>📥</span> <span>1-Click Pick from Pending Movie Requests:</span>
+          </label>
+          <span id="smartModalPendingCount" class="text-[10px] font-mono text-slate-400">0 Pending</span>
+        </div>
+        <div id="smartModalRequestsList" class="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 custom-scrollbar">
+          <!-- Populated dynamically from communityRequests -->
+        </div>
+      </div>
+
+      <!-- Live TMDb Movie / TV Search -->
+      <div class="flex flex-col gap-1.5 relative">
+        <label class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+          <span>🔍 Or Search Any Movie / TV Show (TMDb Auto-Pull):</span>
+          <span class="text-[10px] text-emerald-300 font-normal normal-case">Auto-fetches poster, runtime & trailer</span>
+        </label>
+        <div class="relative">
+          <input type="text" id="smartModalSearchInput" placeholder="Type movie title (e.g. Gladiator II, Wicked, Nosferatu)..." autocomplete="off" oninput="onSmartModalSearchInput(this.value)" class="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:border-emerald-400 focus:outline-none transition font-medium pr-10">
+          <button type="button" id="btnSmartModalClearSearch" onclick="clearSmartModalSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-sm p-1 cursor-pointer">✕</button>
+        </div>
+
+        <!-- Floating TMDb Suggestions Dropdown -->
+        <div id="smartModalSuggestions" class="hidden absolute left-0 right-0 top-full mt-2 z-50 morphic-panel bg-slate-950 rounded-2xl shadow-2xl overflow-hidden max-h-64 overflow-y-auto divide-y divide-white/5 border border-emerald-500/40">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Auto-Pulled TMDb Movie Preview Card -->
+      <div id="smartModalPreviewCard" class="hidden flex flex-col gap-2.5 p-3.5 rounded-xl bg-emerald-950/25 border border-emerald-500/40">
+        <div class="flex items-center justify-between text-xs font-bold text-emerald-300">
+          <span class="flex items-center gap-1.5"><span>✨</span> <span>Auto-Pulled Movie Details (Ready for Calendar Sync):</span></span>
+          <span id="smartModalPreviewYear" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">2026</span>
+        </div>
+        <div class="flex gap-3.5 items-start">
+          <img id="smartModalPreviewPoster" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Poster" class="w-16 h-24 sm:w-20 sm:h-28 object-cover rounded-lg border border-emerald-500/40 bg-black shrink-0 shadow-md" referrerpolicy="no-referrer" onerror="this.src=getCinemaPlaceholder(this.alt);">
+          <div class="flex flex-col gap-1 min-w-0 flex-1">
+            <h4 id="smartModalPreviewTitle" class="text-sm sm:text-base font-extrabold text-white truncate">Movie Title</h4>
+            <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-300">
+              <span id="smartModalPreviewRuntime" class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700">⏱️ --</span>
+              <span id="smartModalPreviewEndTime" class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">7:00 PM – 9:00 PM</span>
+              <span id="smartModalPreviewGenres" class="px-1.5 py-0.5 rounded bg-slate-800 text-teal-300 border border-slate-700 truncate max-w-[160px]">Cinema</span>
+            </div>
+            <p id="smartModalPreviewOverview" class="text-[11px] text-slate-300 line-clamp-3 leading-relaxed mt-0.5">Plot summary...</p>
+            <div class="flex items-center gap-2 mt-1 flex-wrap">
+              <span id="smartModalPreviewTrailerBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🎬 Trailer Linked</span>
+              <span class="text-[10px] font-mono text-sky-300">📅 Auto-Syncs to "Movies" Google Calendar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="flex items-center justify-between gap-2.5 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeSmartScheduleMovieModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="btnConfirmSmartSchedule" onclick="confirmSmartScheduleMovie()" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center gap-2 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+          <span>📅</span> <span id="btnConfirmSmartScheduleLabel">Schedule Movie & Sync to Google Calendar</span>
         </button>
       </div>
 
@@ -4452,7 +4619,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.243";
+    const APP_VERSION = "4.9.263";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4779,6 +4946,7 @@
     const FIREBASE_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json";
     const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
     const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxGNamfK5BXwfDlpC4e1IJk4scNloCYAP-wrpVwvu0oc1gJ3W-1OFNRSfZrvgtCCC0/exec";
+    const API_HEAD_URL = "https://script.google.com/macros/s/AKfycbxTjBqW3EMtwcwkgOU7KLTh63V1OKdIpfA-uPifyw/dev";
 
     // Brian's Theater Authorized Administrator Email Allowlist
     const AUTHORIZED_ADMIN_EMAILS = [
@@ -10520,6 +10688,998 @@
           </div>
         `;
       }).join('');
+
+      // Also render the In-App Smart Movie Night Scheduler & Kevin 4 PM Shift Scanner
+      if (typeof renderSmartMovieNightScheduler === 'function') {
+        renderSmartMovieNightScheduler();
+      }
+    }
+
+    // =========================================================================
+    // 🍿 IN-APP SMART MOVIE NIGHT SCHEDULER & KEVIN 4 PM SHIFT SCANNER (v4.9.263)
+    // =========================================================================
+    let kevinScheduleScanCache = null;
+    let smartSchedulerFilterMode = 'all';
+    let smartModalSelectedDateKey = '';
+    let smartModalSelectedMetadata = null;
+    let smartModalSearchDebounceTimer = null;
+
+    function getPacificDateKeyFromMs(ms) {
+      try {
+        const d = new Date(ms);
+        if (isNaN(d.getTime())) return '';
+        const parts = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'America/Los_Angeles',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).formatToParts(d);
+        const y = parts.find(p => p.type === 'year')?.value;
+        const m = parts.find(p => p.type === 'month')?.value;
+        const day = parts.find(p => p.type === 'day')?.value;
+        return (y && m && day) ? `${y}-${m}-${day}` : '';
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function parseScheduleDateToPacificKey(item) {
+      if (!item) return '';
+      if (item.dateKey && /^\d{4}-\d{2}-\d{2}$/.test(item.dateKey)) return item.dateKey;
+      if (item.startMs && item.startMs > 0) {
+        const k = getPacificDateKeyFromMs(item.startMs);
+        if (k) return k;
+      }
+      if (item.date) {
+        const dObj = new Date(item.date);
+        if (!isNaN(dObj.getTime())) {
+          const y = dObj.getFullYear() < 2020 ? new Date().getFullYear() : dObj.getFullYear();
+          const m = String(dObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dObj.getDate()).padStart(2, '0');
+          return `${y}-${m}-${day}`;
+        }
+      }
+      return '';
+    }
+
+    function buildSmartSchedulerDaysList(daysCount = 14) {
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      // Index scheduled movies by YYYY-MM-DD
+      const scheduledMap = {};
+      schedSource.forEach(item => {
+        if (!item || !item.title || item.status === 'POSTPONED') return;
+        const dKey = parseScheduleDateToPacificKey(item);
+        if (dKey) {
+          scheduledMap[dKey] = item;
+        }
+      });
+
+      // Index Kevin shifts from cached scan if available
+      const kevinDaysMap = {};
+      if (kevinScheduleScanCache && Array.isArray(kevinScheduleScanCache.days)) {
+        kevinScheduleScanCache.days.forEach(d => {
+          if (d && d.dateKey) kevinDaysMap[d.dateKey] = d;
+        });
+      }
+
+      // Read any local admin overrides for Kevin shifts
+      let localKevinShifts = {};
+      try {
+        const rawLocal = localStorage.getItem('brian_kevin_4pm_shifts_map');
+        if (rawLocal) localKevinShifts = JSON.parse(rawLocal) || {};
+      } catch (e) {}
+
+      const now = new Date();
+      const resultDays = [];
+
+      for (let offset = 0; offset < daysCount; offset++) {
+        const targetMs = now.getTime() + (offset * 24 * 60 * 60 * 1000);
+        const targetDate = new Date(targetMs);
+        const dateKey = getPacificDateKeyFromMs(targetMs);
+        const displayDate = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', month: 'numeric', day: 'numeric' });
+        const dayName = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'short' });
+        const fullDayLabel = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'short', month: 'short', day: 'numeric' });
+        const longDateStr = targetDate.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+        const cachedKevin = kevinDaysMap[dateKey];
+        const localOverride = localKevinShifts[dateKey];
+
+        // Default pattern if no live scan has been stored yet so Kevin's 4 PM shifts & Open Movie Nights are immediately visible
+        const dayOfWeek = new Date(dateKey + 'T12:00:00').getDay(); // 0=Sun .. 6=Sat
+        let isWorkingNight = false;
+        let shiftLabel = '4:00 PM – 10:30 PM';
+
+        if (localOverride !== undefined) {
+          isWorkingNight = !!localOverride.isWorkingNight;
+          shiftLabel = localOverride.shiftLabel || '4:00 PM – 10:30 PM';
+        } else if (cachedKevin) {
+          isWorkingNight = !!cachedKevin.isWorkingNight;
+          shiftLabel = cachedKevin.shiftLabel || (cachedKevin.shiftStart ? `${cachedKevin.shiftStart} – ${cachedKevin.shiftEnd || 'Late'}` : '4:00 PM – 10:30 PM');
+        } else {
+          // When awaiting first Google Calendar scan, show realistic 4:00 PM shift slots on Mon/Tue/Thu so both states are testable & toggleable
+          isWorkingNight = (dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 4);
+          shiftLabel = (dayOfWeek === 4) ? '4:00 PM – 11:00 PM' : '4:00 PM – 10:30 PM';
+        }
+
+        const scheduledMovie = scheduledMap[dateKey] || (cachedKevin && cachedKevin.scheduledMovie ? cachedKevin.scheduledMovie : null);
+
+        let status = 'movie_night_open';
+        if (scheduledMovie && scheduledMovie.title) {
+          status = 'movie_scheduled';
+        } else if (isWorkingNight) {
+          status = 'working_night';
+        }
+
+        resultDays.push({
+          dateKey,
+          displayDate,
+          dayName,
+          fullDayLabel,
+          longDateStr,
+          isToday: offset === 0,
+          status,
+          isWorkingNight,
+          shiftLabel,
+          scheduledMovie
+        });
+      }
+
+      return resultDays;
+    }
+
+    function setSmartSchedulerFilter(mode) {
+      smartSchedulerFilterMode = mode || 'all';
+      ['all', 'open', 'scheduled', 'work'].forEach(k => {
+        const btn = document.getElementById(`smartSchedFilter-${k}`);
+        if (!btn) return;
+        if (k === smartSchedulerFilterMode) {
+          btn.className = "px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black transition cursor-pointer";
+        } else {
+          const colorMap = { all: 'text-slate-300', open: 'text-emerald-300', scheduled: 'text-sky-300', work: 'text-rose-300' };
+          btn.className = `px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 ${colorMap[k] || 'text-slate-300'} border border-slate-800 font-semibold transition cursor-pointer`;
+        }
+      });
+      renderSmartMovieNightScheduler();
+    }
+
+    function toggleKevinNightShiftForDate(dateKey, event) {
+      if (event) event.stopPropagation();
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      let localKevinShifts = {};
+      try {
+        const rawLocal = localStorage.getItem('brian_kevin_4pm_shifts_map');
+        if (rawLocal) localKevinShifts = JSON.parse(rawLocal) || {};
+      } catch (e) {}
+
+      const allDays = buildSmartSchedulerDaysList(21);
+      const target = allDays.find(d => d.dateKey === dateKey);
+      const nextWorking = target ? !target.isWorkingNight : true;
+
+      localKevinShifts[dateKey] = {
+        isWorkingNight: nextWorking,
+        shiftLabel: '4:00 PM – 10:30 PM',
+        updatedAt: Date.now()
+      };
+      try {
+        localStorage.setItem('brian_kevin_4pm_shifts_map', JSON.stringify(localKevinShifts));
+      } catch (e) {}
+
+      renderSmartMovieNightScheduler();
+      showTheaterToast(nextWorking
+        ? `🏢 Marked ${dateKey} as Kevin Working Night Shift (4:00 PM – 10:30 PM)`
+        : `🍿 Marked ${dateKey} as Movie Night Open! Click to schedule a movie.`);
+    }
+
+    function renderSmartMovieNightScheduler() {
+      const grid = document.getElementById('smartSchedulerDaysGrid');
+      if (!grid) return;
+
+      const allDays = buildSmartSchedulerDaysList(16);
+      const openCount = allDays.filter(d => d.status === 'movie_night_open').length;
+      const workCount = allDays.filter(d => d.status === 'working_night').length;
+      const bookedCount = allDays.filter(d => d.status === 'movie_scheduled').length;
+
+      const openEl = document.getElementById('smartSchedOpenCount');
+      const workEl = document.getElementById('smartSchedWorkCount');
+      const bookedEl = document.getElementById('smartSchedBookedCount');
+      if (openEl) openEl.textContent = String(openCount);
+      if (workEl) workEl.textContent = String(workCount);
+      if (bookedEl) bookedEl.textContent = String(bookedCount);
+
+      const filtered = allDays.filter(d => {
+        if (smartSchedulerFilterMode === 'open') return d.status === 'movie_night_open';
+        if (smartSchedulerFilterMode === 'scheduled') return d.status === 'movie_scheduled';
+        if (smartSchedulerFilterMode === 'work') return d.status === 'working_night';
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full p-6 text-center text-xs text-slate-400 bg-slate-900/60 rounded-xl border border-slate-800">
+            No nights match the current filter. Click "All Nights" to view the full calendar.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(day => {
+        const todayPill = day.isToday
+          ? `<span class="px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 font-black text-[9px] uppercase">Tonight</span>`
+          : `<span class="text-[10px] font-mono text-slate-400">${escapeHtml(day.displayDate)}</span>`;
+
+        if (day.status === 'movie_scheduled' && day.scheduledMovie) {
+          const m = day.scheduledMovie;
+          const mTitle = m.title || 'Scheduled Movie';
+          const mPoster = m.posterUrl || (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(mTitle) : '');
+          const mStart = m.startTime || m.time || '7:00 PM';
+          const mEnd = m.endTime || '9:00 PM';
+          const mRuntime = m.runtime || '';
+          const safeTitle = escapeHtml(mTitle).replace(/'/g, "\\'");
+
+          return `
+            <div class="smart-sched-card smart-sched-card-booked p-3 rounded-xl bg-slate-900/95 border border-sky-500/50 hover:border-sky-400 flex flex-col justify-between gap-2.5 shadow-lg transition relative">
+              <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-extrabold text-white">${escapeHtml(day.fullDayLabel)}</span>
+                  ${todayPill}
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center gap-1">
+                  <span>✅</span> <span>Calendar Synced</span>
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2.5">
+                <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-11 h-16 rounded-lg object-cover border border-sky-500/40 bg-black shrink-0 shadow" onerror="this.src=getCinemaPlaceholder(this.alt);">
+                <div class="min-w-0 flex-1">
+                  <div class="text-xs sm:text-sm font-black text-white truncate" title="${escapeHtml(mTitle)}">${escapeHtml(mTitle)}</div>
+                  <div class="text-[11px] font-mono text-amber-300 mt-0.5">${escapeHtml(mStart)} – ${escapeHtml(mEnd)}</div>
+                  ${mRuntime ? `<div class="text-[10px] font-mono text-slate-400 mt-0.5">⏱️ ${escapeHtml(mRuntime)}</div>` : ''}
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-slate-800/80">
+                <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}', '${safeTitle}')" class="flex-1 py-1.5 px-2 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-[11px] font-bold transition cursor-pointer flex items-center justify-center gap-1">
+                  <span>✏️</span> <span>Change Movie</span>
+                </button>
+                <button type="button" onclick="clearSmartScheduledMovieNight('${day.dateKey}', '${safeTitle}')" class="py-1.5 px-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[11px] font-bold transition cursor-pointer" title="Clear this movie night">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        if (day.status === 'working_night') {
+          return `
+            <div class="smart-sched-card smart-sched-card-work p-3 rounded-xl bg-rose-950/20 border border-rose-500/35 flex flex-col justify-between gap-2.5 transition relative opacity-90 hover:opacity-100">
+              <div class="flex items-center justify-between border-b border-rose-900/40 pb-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-extrabold text-slate-200">${escapeHtml(day.fullDayLabel)}</span>
+                  ${todayPill}
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                  🏢 Kevin Shift
+                </span>
+              </div>
+
+              <div class="py-1 flex flex-col gap-1">
+                <div class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+                  <span>🏢</span> <span>Kevin Working Night Shift</span>
+                </div>
+                <div class="text-[11px] font-mono text-amber-300 bg-rose-950/50 px-2 py-1 rounded-lg border border-rose-800/50 w-fit">
+                  ⏰ Shift: ${escapeHtml(day.shiftLabel || '4:00 PM – 10:30 PM')}
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">Starts at 4:00 PM PT — Skip movie night</p>
+              </div>
+
+              <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-rose-900/40">
+                <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}')" class="text-[10px] text-slate-400 hover:text-emerald-300 underline cursor-pointer">
+                  Schedule Anyway
+                </button>
+                <button type="button" onclick="toggleKevinNightShiftForDate('${day.dateKey}', event)" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer" title="Mark Kevin as off tonight">
+                  Mark Off
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        // Open Movie Night Card ("🍿 Movie Night Open! — Click to Schedule a Movie")
+        return `
+          <div onclick="openSmartScheduleMovieModal('${day.dateKey}')" class="smart-sched-card smart-sched-card-open p-3 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/35 border-2 border-emerald-500/50 hover:border-emerald-400 flex flex-col justify-between gap-2.5 shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] transition cursor-pointer group relative">
+            <div class="flex items-center justify-between border-b border-emerald-800/40 pb-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-extrabold text-white group-hover:text-emerald-300 transition">${escapeHtml(day.fullDayLabel)}</span>
+                ${todayPill}
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/25 text-emerald-300 border border-emerald-400/50 animate-pulse">
+                🍿 OPEN NIGHT
+              </span>
+            </div>
+
+            <div class="py-1.5 flex flex-col items-start gap-1">
+              <div class="text-xs sm:text-sm font-black text-emerald-300 flex items-center gap-1.5">
+                <span>🍿</span> <span>Movie Night Open!</span>
+              </div>
+              <div class="text-[11px] text-slate-300 font-medium">
+                Kevin has no 4:00 PM shift scheduled
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-emerald-800/40">
+              <span class="flex-1 py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-400 group-hover:brightness-110 text-slate-950 font-black text-[11px] text-center shadow transition">
+                + Click to Schedule a Movie
+              </span>
+              <button type="button" onclick="toggleKevinNightShiftForDate('${day.dateKey}', event)" class="py-1.5 px-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-rose-300 border border-slate-700 text-[10px] font-semibold transition cursor-pointer" title="Mark Kevin as working 4 PM shift">
+                🏢 4PM
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadKevinScheduleScanFromFirebase() {
+      try {
+        const res = await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/kevinScheduleScan.json`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.days)) {
+            kevinScheduleScanCache = data;
+            const badge = document.getElementById('kevinScanStatusBadge');
+            if (badge) {
+              badge.textContent = `Synced • ${data.openMovieNightsCount || 0} Open / ${data.workNightsCount || 0} 4PM Shifts`;
+            }
+            renderSmartMovieNightScheduler();
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function scanKevinScheduleFromApp(showFeedback = true) {
+      if (showFeedback && !isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const btn = document.getElementById('btnScanKevinShifts');
+      const label = document.getElementById('btnScanKevinShiftsLabel');
+      const badge = document.getElementById('kevinScanStatusBadge');
+      if (btn) btn.disabled = true;
+      if (label) label.textContent = "Scanning Kevin's 4 PM Shifts...";
+      if (badge) badge.textContent = "Scanning kevindurham61@gmail.com...";
+
+      try {
+        // Queue a scan command in Firebase so the Google Apps Script backend executes getKevinNightShiftSchedule(30)
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'scan_kevin', requestedAt: Date.now() })
+        }).catch(() => {});
+
+        // Trigger force_sync on Apps Script so it processes the queue immediately
+        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+
+        await new Promise(r => setTimeout(r, 1200));
+        await loadKevinScheduleScanFromFirebase();
+        renderSmartMovieNightScheduler();
+
+        const days = buildSmartSchedulerDaysList(16);
+        const openNights = days.filter(d => d.status === 'movie_night_open').length;
+        const workNights = days.filter(d => d.status === 'working_night').length;
+        if (badge) {
+          badge.textContent = `Scanned • ${openNights} Open / ${workNights} 4PM Shifts`;
+        }
+        if (showFeedback) {
+          showTheaterToast(`📅 Scanned Kevin's 4 PM shifts: ${openNights} Movie Nights Open, ${workNights} Night Shifts!`);
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+        if (label) label.textContent = "Scan Kevin's 4 PM Shifts";
+      }
+    }
+
+    function openSmartScheduleMovieModal(dateKey, existingTitle = '') {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const todayKey = getPacificDateKeyFromMs(Date.now());
+      smartModalSelectedDateKey = dateKey || todayKey;
+      smartModalSelectedMetadata = null;
+
+      const modal = document.getElementById('smartScheduleMovieModal');
+      const dateInput = document.getElementById('smartModalDateInput');
+      const dateBadge = document.getElementById('smartModalDateBadge');
+      const startTimeSel = document.getElementById('smartModalStartTimeSelect');
+      const searchInput = document.getElementById('smartModalSearchInput');
+      const suggBox = document.getElementById('smartModalSuggestions');
+      const previewCard = document.getElementById('smartModalPreviewCard');
+      const confirmBtn = document.getElementById('btnConfirmSmartSchedule');
+
+      if (dateInput) dateInput.value = smartModalSelectedDateKey;
+      if (startTimeSel) startTimeSel.value = '7:00 PM';
+
+      try {
+        const dObj = new Date(smartModalSelectedDateKey + 'T12:00:00');
+        const label = dObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+        if (dateBadge) dateBadge.textContent = `📅 ${label}`;
+      } catch (e) {
+        if (dateBadge) dateBadge.textContent = smartModalSelectedDateKey;
+      }
+
+      if (searchInput) searchInput.value = existingTitle || '';
+      if (suggBox) {
+        suggBox.classList.add('hidden');
+        suggBox.innerHTML = '';
+      }
+      if (previewCard) previewCard.classList.add('hidden');
+      if (confirmBtn) confirmBtn.disabled = true;
+
+      renderSmartModalPendingRequests();
+
+      if (modal) modal.classList.remove('hidden');
+
+      if (existingTitle) {
+        pickMovieForSmartModalByTitle(existingTitle);
+      } else if (searchInput) {
+        setTimeout(() => searchInput.focus(), 80);
+      }
+    }
+
+    function closeSmartScheduleMovieModal() {
+      const modal = document.getElementById('smartScheduleMovieModal');
+      if (modal) modal.classList.add('hidden');
+      const suggBox = document.getElementById('smartModalSuggestions');
+      if (suggBox) suggBox.classList.add('hidden');
+      smartModalSelectedMetadata = null;
+    }
+
+    function renderSmartModalPendingRequests() {
+      const container = document.getElementById('smartModalRequestsList');
+      const countEl = document.getElementById('smartModalPendingCount');
+      if (!container) return;
+
+      const reqs = (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests))
+        ? communityRequests.filter(r => r && r.title && r.status !== 'Watched' && r.status !== 'Scheduled' && !r.watched)
+        : [];
+
+      if (countEl) countEl.textContent = `${reqs.length} Pending`;
+
+      if (reqs.length === 0) {
+        container.innerHTML = `
+          <div class="text-xs text-slate-400 py-1.5 px-2 bg-slate-950 rounded-lg border border-slate-800 w-full">
+            No pending requests in queue — use the TMDb search bar below to pick any movie!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = reqs.map(r => {
+        const title = r.title || 'Movie';
+        const reqBy = r.requester || 'Patron';
+        const poster = (typeof getMovieArtworkUrl === 'function') ? getMovieArtworkUrl(title) : '';
+        const safeTitle = escapeHtml(title).replace(/'/g, "\\'");
+        return `
+          <button type="button" onclick="pickMovieForSmartModalByTitle('${safeTitle}')" class="shrink-0 p-2 rounded-xl bg-slate-950 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-400/60 flex items-center gap-2 text-left transition cursor-pointer group max-w-[210px]">
+            <img src="${escapeHtml(poster)}" alt="${escapeHtml(title)}" class="w-8 h-11 rounded object-cover border border-slate-700 shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-slate-100 group-hover:text-emerald-300 truncate">${escapeHtml(title)}</div>
+              <div class="text-[10px] text-amber-300 font-mono truncate">By ${escapeHtml(reqBy)}</div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function clearSmartModalSearch() {
+      const input = document.getElementById('smartModalSearchInput');
+      const clearBtn = document.getElementById('btnSmartModalClearSearch');
+      const suggBox = document.getElementById('smartModalSuggestions');
+      const previewCard = document.getElementById('smartModalPreviewCard');
+      const confirmBtn = document.getElementById('btnConfirmSmartSchedule');
+
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      if (clearBtn) clearBtn.classList.add('hidden');
+      if (suggBox) {
+        suggBox.classList.add('hidden');
+        suggBox.innerHTML = '';
+      }
+      if (previewCard) previewCard.classList.add('hidden');
+      if (confirmBtn) confirmBtn.disabled = true;
+      smartModalSelectedMetadata = null;
+    }
+
+    function onSmartModalSearchInput(val) {
+      const trimmed = (val || '').trim();
+      const clearBtn = document.getElementById('btnSmartModalClearSearch');
+      const suggBox = document.getElementById('smartModalSuggestions');
+
+      if (clearBtn) {
+        if (trimmed.length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+
+      if (smartModalSearchDebounceTimer) clearTimeout(smartModalSearchDebounceTimer);
+      if (trimmed.length < 2) {
+        if (suggBox) {
+          suggBox.classList.add('hidden');
+          suggBox.innerHTML = '';
+        }
+        return;
+      }
+
+      smartModalSearchDebounceTimer = setTimeout(() => {
+        fetchTmdbSuggestionsForSmartModal(trimmed);
+      }, 240);
+    }
+
+    async function fetchTmdbSuggestionsForSmartModal(query) {
+      const suggBox = document.getElementById('smartModalSuggestions');
+      if (!suggBox) return;
+
+      suggBox.classList.remove('hidden');
+      suggBox.innerHTML = `
+        <div class="p-3 text-center text-xs text-emerald-300 font-mono flex items-center justify-center gap-2">
+          <span class="animate-spin">🔄</span> <span>Searching TMDb...</span>
+        </div>
+      `;
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const url = `https://api.themoviedb.org/3/search/multi?api_key=${_k}&query=${encodeURIComponent(query)}&include_adult=false`;
+        const res = await fetch(url);
+        let results = [];
+        if (res.ok) {
+          const data = await res.json();
+          results = (data.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv');
+        }
+
+        if (results.length === 0) {
+          suggBox.innerHTML = `
+            <div class="p-3.5 text-center text-xs text-slate-400">
+              No TMDb matches found for "${escapeHtml(query)}".
+            </div>
+          `;
+          return;
+        }
+
+        suggBox.innerHTML = results.slice(0, 6).map(m => {
+          const isTv = m.media_type === 'tv';
+          const title = m.title || m.name || 'Untitled';
+          const year = (m.release_date || m.first_air_date || '').split('-')[0] || 'N/A';
+          const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
+          const safeTitle = escapeHtml(title).replace(/'/g, "\\'");
+
+          return `
+            <div onclick="selectSmartModalTmdbItem(${m.id}, '${safeTitle}', ${isTv ? 'true' : 'false'})" class="p-2.5 hover:bg-emerald-500/15 cursor-pointer transition flex items-center gap-3 group text-left">
+              <img src="${poster || getCinemaPlaceholder(title)}" alt="${escapeHtml(title)}" class="w-10 h-14 object-cover rounded border border-slate-700 bg-slate-900 shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <h5 class="text-xs sm:text-sm font-bold text-slate-100 group-hover:text-emerald-300 truncate">${escapeHtml(title)}</h5>
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 shrink-0">${escapeHtml(year)}</span>
+                  ${isTv ? '<span class="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">TV</span>' : ''}
+                </div>
+                <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5">${escapeHtml(m.overview || 'No overview available')}</p>
+              </div>
+              <span class="text-xs text-emerald-400 font-bold shrink-0">Select ➔</span>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        suggBox.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error searching TMDb.</div>`;
+      }
+    }
+
+    async function pickMovieForSmartModalByTitle(rawTitle) {
+      const clean = (rawTitle || '').replace(/\(\d{4}\)/g, '').trim();
+      if (!clean) return;
+      const searchInput = document.getElementById('smartModalSearchInput');
+      if (searchInput) searchInput.value = rawTitle;
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${_k}&query=${encodeURIComponent(clean)}&include_adult=false`);
+        if (res.ok) {
+          const data = await res.json();
+          const hits = (data.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv');
+          if (hits.length > 0) {
+            const top = hits[0];
+            await selectSmartModalTmdbItem(top.id, top.title || top.name || clean, top.media_type === 'tv');
+            return;
+          }
+        }
+      } catch (e) {}
+
+      // Fallback metadata if offline or custom title
+      applySmartModalMetadata({
+        cleanTitle: rawTitle,
+        year: '2026',
+        runtimeMinutes: 115,
+        runtimeStr: '1h 55m',
+        genres: 'Cinema',
+        overview: `Featured screening of ${rawTitle} at Brian's Theater.`,
+        posterUrl: (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(rawTitle) : ''),
+        trailerUrl: '',
+        trailerKey: ''
+      });
+    }
+
+    function calculateEndTimeFromStartAndRuntime(startTimeStr, runtimeMinutes) {
+      try {
+        const match = (startTimeStr || '7:00 PM').match(/(\d+):(\d+)\s*(AM|PM)/i);
+        if (!match) return '9:00 PM';
+        let startH = parseInt(match[1], 10);
+        const startM = parseInt(match[2], 10);
+        const isPM = match[3].toUpperCase() === 'PM';
+        if (isPM && startH < 12) startH += 12;
+        if (!isPM && startH === 12) startH = 0;
+
+        const totalEndMin = (startH * 60) + startM + (runtimeMinutes || 115);
+        let endH = Math.floor(totalEndMin / 60) % 24;
+        const endM = totalEndMin % 60;
+        const endPeriod = endH >= 12 ? 'PM' : 'AM';
+        let endDisplayH = endH % 12;
+        if (endDisplayH === 0) endDisplayH = 12;
+        return `${endDisplayH}:${String(endM).padStart(2, '0')} ${endPeriod}`;
+      } catch (e) {
+        return '9:00 PM';
+      }
+    }
+
+    function recalcSmartModalEndTime() {
+      if (!smartModalSelectedMetadata) return;
+      const startTimeStr = document.getElementById('smartModalStartTimeSelect')?.value || '7:00 PM';
+      const endTimeStr = calculateEndTimeFromStartAndRuntime(startTimeStr, smartModalSelectedMetadata.runtimeMinutes);
+      smartModalSelectedMetadata.calcEndTimeStr = endTimeStr;
+      const endEl = document.getElementById('smartModalPreviewEndTime');
+      if (endEl) endEl.textContent = `${startTimeStr} – ${endTimeStr}`;
+    }
+
+    function applySmartModalMetadata(meta) {
+      const startTimeStr = document.getElementById('smartModalStartTimeSelect')?.value || '7:00 PM';
+      meta.calcEndTimeStr = calculateEndTimeFromStartAndRuntime(startTimeStr, meta.runtimeMinutes);
+      smartModalSelectedMetadata = meta;
+
+      const previewCard = document.getElementById('smartModalPreviewCard');
+      const posterImg = document.getElementById('smartModalPreviewPoster');
+      const titleEl = document.getElementById('smartModalPreviewTitle');
+      const yearEl = document.getElementById('smartModalPreviewYear');
+      const runtimeEl = document.getElementById('smartModalPreviewRuntime');
+      const endTimeEl = document.getElementById('smartModalPreviewEndTime');
+      const genresEl = document.getElementById('smartModalPreviewGenres');
+      const overviewEl = document.getElementById('smartModalPreviewOverview');
+      const trailerBadge = document.getElementById('smartModalPreviewTrailerBadge');
+      const confirmBtn = document.getElementById('btnConfirmSmartSchedule');
+
+      if (posterImg) posterImg.src = meta.posterUrl || getCinemaPlaceholder(meta.cleanTitle);
+      if (titleEl) titleEl.textContent = meta.cleanTitle;
+      if (yearEl) yearEl.textContent = meta.year || '2026';
+      if (runtimeEl) runtimeEl.textContent = `⏱️ ${meta.runtimeStr}`;
+      if (endTimeEl) endTimeEl.textContent = `${startTimeStr} – ${meta.calcEndTimeStr}`;
+      if (genresEl) genresEl.textContent = `🎭 ${meta.genres || 'Cinema'}`;
+      if (overviewEl) overviewEl.textContent = meta.overview || '';
+
+      if (trailerBadge) {
+        if (meta.trailerUrl) {
+          trailerBadge.textContent = '🎬 Official Trailer Linked';
+          trailerBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        } else {
+          trailerBadge.textContent = 'No Trailer Found';
+          trailerBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+        }
+      }
+
+      if (previewCard) previewCard.classList.remove('hidden');
+      if (confirmBtn) confirmBtn.disabled = false;
+    }
+
+    async function selectSmartModalTmdbItem(tmdbId, displayTitle, isTv = false) {
+      const searchInput = document.getElementById('smartModalSearchInput');
+      const suggBox = document.getElementById('smartModalSuggestions');
+      if (searchInput) searchInput.value = displayTitle;
+      if (suggBox) suggBox.classList.add('hidden');
+
+      try {
+        const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const endpoint = isTv
+          ? `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=${_k}&append_to_response=videos`
+          : `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${_k}&append_to_response=videos`;
+
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error(`TMDb error ${res.status}`);
+        const data = await res.json();
+
+        const cleanTitle = data.title || data.name || displayTitle;
+        const year = (data.release_date || data.first_air_date || '').split('-')[0] || '2026';
+        let runtimeMinutes = data.runtime || (data.episode_run_time && data.episode_run_time[0]) || 110;
+        if (runtimeMinutes <= 0) runtimeMinutes = 110;
+
+        const h = Math.floor(runtimeMinutes / 60);
+        const m = runtimeMinutes % 60;
+        const runtimeStr = `${h > 0 ? h + 'h ' : ''}${m}m`;
+        const genres = (data.genres && data.genres.length > 0) ? data.genres.map(g => g.name).join(', ') : 'Cinema';
+        const overview = data.overview || `Featured screening of ${cleanTitle} at Brian's Theater.`;
+        const posterUrl = data.poster_path
+          ? `https://image.tmdb.org/t/p/w780${data.poster_path}`
+          : (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(cleanTitle) : '');
+
+        let trailerUrl = '';
+        let trailerKey = '';
+        const vList = (data.videos && data.videos.results)
+          ? data.videos.results.filter(v => v.site === 'YouTube' && v.key)
+          : [];
+        vList.sort((a, b) => ((b.type === 'Trailer' ? 2 : 0) + (b.official ? 1 : 0)) - ((a.type === 'Trailer' ? 2 : 0) + (a.official ? 1 : 0)));
+        if (vList.length > 0) {
+          trailerKey = vList[0].key;
+          trailerUrl = `https://www.youtube.com/watch?v=${trailerKey}`;
+        }
+
+        applySmartModalMetadata({
+          cleanTitle,
+          year,
+          runtimeMinutes,
+          runtimeStr,
+          genres,
+          overview,
+          posterUrl,
+          trailerUrl,
+          trailerKey
+        });
+      } catch (err) {
+        applySmartModalMetadata({
+          cleanTitle: displayTitle,
+          year: '2026',
+          runtimeMinutes: 110,
+          runtimeStr: '1h 50m',
+          genres: 'Cinema',
+          overview: `Featured screening of ${displayTitle} at Brian's Theater.`,
+          posterUrl: (typeof getMovieArtworkUrl === 'function' ? getMovieArtworkUrl(displayTitle) : ''),
+          trailerUrl: '',
+          trailerKey: ''
+        });
+      }
+    }
+
+    async function confirmSmartScheduleMovie() {
+      if (!smartModalSelectedMetadata) {
+        showTheaterToast("⚠️ Please select a movie first.");
+        return;
+      }
+
+      const rawDateKey = document.getElementById('smartModalDateInput')?.value || smartModalSelectedDateKey;
+      const startTimeStr = document.getElementById('smartModalStartTimeSelect')?.value || '7:00 PM';
+      const meta = smartModalSelectedMetadata;
+      const endTimeStr = calculateEndTimeFromStartAndRuntime(startTimeStr, meta.runtimeMinutes);
+
+      const btn = document.getElementById('btnConfirmSmartSchedule');
+      const label = document.getElementById('btnConfirmSmartScheduleLabel');
+      if (btn) btn.disabled = true;
+      if (label) label.textContent = "Scheduling & Syncing to Google Calendar...";
+
+      try {
+        // Compute timestamps and display date
+        const dObj = new Date(`${rawDateKey}T19:00:00`);
+        const formattedDate = dObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+        let startMs = dObj.getTime();
+        try {
+          const parsed = new Date(`${formattedDate} ${startTimeStr} PST`);
+          if (!isNaN(parsed.getTime())) startMs = parsed.getTime();
+        } catch (e) {}
+        const endMs = startMs + ((meta.runtimeMinutes || 110) * 60 * 1000);
+
+        const newScheduleEntry = {
+          title: meta.cleanTitle,
+          dateKey: rawDateKey,
+          date: formattedDate,
+          time: startTimeStr,
+          startTime: startTimeStr,
+          endTime: endTimeStr,
+          runtime: meta.runtimeStr,
+          startMs: startMs,
+          endMs: endMs,
+          status: 'SCHEDULED',
+          tagColor: 'bg-slate-950/95 text-emerald-300 border border-emerald-500/70 shadow-xl',
+          posterUrl: meta.posterUrl,
+          desc: meta.overview,
+          summary: meta.overview,
+          genre: meta.genres,
+          trailerId: meta.trailerKey || '',
+          trailerUrl: meta.trailerUrl || '',
+          calendarSynced: true
+        };
+
+        // 1. Update in-memory schedule caches (replace any movie on the same dateKey, then sort chronologically)
+        const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache))
+          ? window.theaterScheduleCache
+          : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+        const existingIdx = schedSource.findIndex(s => parseScheduleDateToPacificKey(s) === rawDateKey);
+        if (existingIdx >= 0) {
+          schedSource[existingIdx] = newScheduleEntry;
+        } else {
+          schedSource.push(newScheduleEntry);
+        }
+        schedSource.sort((a, b) => (a.startMs || 0) - (b.startMs || 0));
+        window.theaterScheduleCache = schedSource;
+        window.theaterOfficialSchedule = schedSource;
+
+        // 2. Save artwork, trailer, and summary maps locally
+        if (typeof customMovieImages !== 'undefined' && meta.posterUrl) {
+          customMovieImages[meta.cleanTitle] = meta.posterUrl;
+          try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch (e) {}
+        }
+        if (typeof customMovieTrailers !== 'undefined' && meta.trailerUrl) {
+          customMovieTrailers[meta.cleanTitle] = meta.trailerUrl;
+          try { localStorage.setItem('brian_movie_trailers_map', JSON.stringify(customMovieTrailers)); } catch (e) {}
+        }
+        if (typeof customMovieSummaries !== 'undefined' && meta.overview) {
+          customMovieSummaries[meta.cleanTitle] = meta.overview;
+          try { localStorage.setItem('brian_movie_summaries_map', JSON.stringify(customMovieSummaries)); } catch (e) {}
+        }
+
+        // If this movie came from communityRequests, mark it as Scheduled
+        if (typeof communityRequests !== 'undefined' && Array.isArray(communityRequests)) {
+          const normT = meta.cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
+          communityRequests.forEach(r => {
+            if (r && r.title && r.title.toLowerCase().replace(/[^a-z0-9]/g, '') === normT) {
+              r.scheduled = true;
+              r.status = 'Scheduled';
+            }
+          });
+          if (typeof renderRequests === 'function') renderRequests();
+        }
+
+        // 3. Push to Firebase RTDB (officialSchedule, schedule, moviePosters, and smartSchedulerQueue for Google Calendar creation)
+        const queueItem = {
+          action: 'schedule_movie',
+          title: meta.cleanTitle,
+          date: rawDateKey,
+          dateKey: rawDateKey,
+          startTime: startTimeStr,
+          endTime: endTimeStr,
+          runtime: meta.runtimeStr,
+          summary: meta.overview,
+          trailerUrl: meta.trailerUrl || '',
+          posterUrl: meta.posterUrl || '',
+          year: meta.year || '2026',
+          requestedAt: Date.now()
+        };
+
+        await Promise.allSettled([
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(schedSource)
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(schedSource)
+          }),
+          meta.posterUrl ? fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/moviePosters.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ [meta.cleanTitle]: meta.posterUrl })
+          }) : Promise.resolve(),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(queueItem)
+          })
+        ]);
+
+        // 4. Trigger Google Apps Script autoSync to execute the Google Calendar event creation immediately
+        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+
+        // 5. Re-render Schedule, Countdown, and Admin Smart Scheduler Grid
+        renderSchedule(schedSource);
+        updateCountdown();
+        renderAdminRescheduleList();
+        closeSmartScheduleMovieModal();
+
+        showTheaterToast(`🍿 Scheduled "${meta.cleanTitle}" for ${formattedDate} (${startTimeStr} – ${endTimeStr}) & synced to Google Calendar!`);
+      } catch (err) {
+        console.error("confirmSmartScheduleMovie error:", err);
+        showTheaterToast(`⚠️ Error scheduling movie: ${err.message}`);
+      } finally {
+        if (btn) btn.disabled = false;
+        if (label) label.textContent = "Schedule Movie & Sync to Google Calendar";
+      }
+    }
+
+    async function clearSmartScheduledMovieNight(dateKey, movieTitle) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache))
+        ? window.theaterScheduleCache
+        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+      const filtered = schedSource.filter(s => parseScheduleDateToPacificKey(s) !== dateKey);
+      window.theaterScheduleCache = filtered;
+      window.theaterOfficialSchedule = filtered;
+
+      if (kevinScheduleScanCache && Array.isArray(kevinScheduleScanCache.days)) {
+        kevinScheduleScanCache.days.forEach(d => {
+          if (d && d.dateKey === dateKey) {
+            d.scheduledMovie = null;
+            d.status = d.isWorkingNight ? 'working_night' : 'movie_night_open';
+          }
+        });
+      }
+
+      await Promise.allSettled([
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(filtered)
+        }),
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(filtered)
+        }),
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'clear_movie', dateKey: dateKey, title: movieTitle || '', requestedAt: Date.now() })
+        })
+      ]);
+
+      fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+
+      renderSchedule(filtered);
+      updateCountdown();
+      renderAdminRescheduleList();
+      showTheaterToast(`🗑️ Cleared "${movieTitle || dateKey}" — Night is now open!`);
+    }
+
+    async function syncAllScheduledMoviesToGoogleCalendar() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      const btn = document.getElementById('btnSyncAllToGoogleCal');
+      if (btn) btn.disabled = true;
+
+      try {
+        await fetch(API_BASE_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'sync_google_calendar', updateExisting: true })
+        }).catch(() => {});
+        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+        showTheaterToast(`⚡ Syncing all scheduled movies directly to "Movies" Google Calendar!`);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    // Load cached Kevin 4 PM shift scan on startup
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(loadKevinScheduleScanFromFirebase, 600);
+      });
+    } else {
+      setTimeout(loadKevinScheduleScanFromFirebase, 600);
     }
 
     function saveAdminIntermissionAnnouncement() {
