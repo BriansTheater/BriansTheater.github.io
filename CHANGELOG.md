@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.265] - 2026-11-05
+
+### What's New
+- Shortened long scheduler headers to simply Scheduler.
+- Added 1-click Remove button on live Schedule cards.
+- Added 1-click Remove button in Admin Lineup and Modal.
+- Purged test Gladiator II entry from live schedule.
+
 ## [4.9.264] - 2026-11-04
 
 ### What's New

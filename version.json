@@ -1,11 +1,11 @@
 {
-  "version": "4.9.264",
-  "releaseDate": "2026-11-04",
-  "title": "Brian's Theater v4.9.264",
+  "version": "4.9.265",
+  "releaseDate": "2026-11-05",
+  "title": "Brian's Theater v4.9.265",
   "notes": [
-    "Renamed Admin schedule studio to Scheduler.",
-    "Added full-calendar +60 days popup modal view.",
-    "Added coming-month calendar tab for next month planning.",
-    "Expanded Kevin 4 PM shift scanner across +60 days."
+    "Shortened long scheduler headers to simply Scheduler.",
+    "Added 1-click Remove button on live Schedule cards.",
+    "Added 1-click Remove button in Admin Lineup and Modal.",
+    "Purged test Gladiator II entry from live schedule."
   ]
 }
