@@ -19494,6 +19494,7 @@
             : sampleSchedule);
       const now = Date.now();
 
+      const allScheduleItems = [];
       const upcomingItems = [];
       const pastItems = [];
 
@@ -19517,15 +19518,19 @@
           }
         }
         const isConcluded = s.status === 'CONCLUDED' || (s.endMs && s.endMs < now);
+        s.isConcluded = isConcluded;
         if (isConcluded) {
+          s.status = 'CONCLUDED';
+          s.tagColor = 'bg-slate-800/60 text-slate-500 border border-slate-800';
           pastItems.push(s);
         } else {
           upcomingItems.push(s);
         }
+        allScheduleItems.push(s);
       });
 
-      // Sort upcoming items chronologically by startMs, placing postponed/TBD items at the end
-      upcomingItems.sort((a, b) => {
+      // Sort all items chronologically by startMs, placing postponed/TBD items at the end
+      allScheduleItems.sort((a, b) => {
         const aPost = a.status === 'POSTPONED' || a.rescheduled || !a.startMs || Number(a.startMs) <= 0;
         const bPost = b.status === 'POSTPONED' || b.rescheduled || !b.startMs || Number(b.startMs) <= 0;
         if (aPost && !bPost) return 1;
@@ -19536,9 +19541,10 @@
       // Strict Single "NEXT UP" Invariant:
       // Only the very first chronological upcoming movie can ever display "⚡ NEXT UP".
       // Any subsequent movies tagged as "NEXT UP" or "SCHEDULED" are normalized to their proper Pacific weekday tag or TOMORROW.
-      // Postponed/rescheduled movies retain their POSTPONED tag.
+      // Postponed/rescheduled movies retain their POSTPONED tag. Concluded movies retain CONCLUDED.
       let assignedNextUp = false;
-      upcomingItems.forEach(item => {
+      allScheduleItems.forEach(item => {
+        if (item.isConcluded) return;
         const isLive = item.status && (item.status.includes('LIVE') || item.status.includes('NOW'));
         if (isLive) return;
         const isPostponed = item.status === 'POSTPONED' || item.rescheduled || !item.startMs || Number(item.startMs) <= 0;
@@ -19567,9 +19573,10 @@
       });
 
       const grid = document.getElementById('scheduleCardsGrid');
-      if (upcomingItems.length > 0) {
+      if (allScheduleItems.length > 0) {
         if (grid) {
-          grid.innerHTML = upcomingItems.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
+          // Render all monthly scheduled movies in the primary lineup so past screenings never disappear
+          grid.innerHTML = allScheduleItems.map((s, idx) => renderScheduleCardHtml(s, idx, s.isConcluded)).join('');
         }
       } else {
         const monthInfo = (typeof getIntermissionMonthInfo === 'function') 
@@ -19612,26 +19619,11 @@
         }
       }
 
-      // Render recently concluded shelf (lazy-hydrated when shelf is expanded)
-      window._cachedPastScheduleItems = pastItems;
+      // Hide redundant separate concluded drawer since all monthly screenings are now visible in the primary schedule grid
       const concWrapper = document.getElementById('concludedScreeningsWrapper');
-      const concGrid = document.getElementById('concludedCardsGrid');
-      const concTitle = document.getElementById('concludedShelfTitle');
-      if (concWrapper && concGrid) {
-        if (pastItems.length > 0) {
-          concWrapper.classList.remove('hidden');
-          concWrapper.classList.add('flex');
-          if (concTitle) concTitle.textContent = `Recently Concluded Screenings (${pastItems.length})`;
-          if (!concGrid.classList.contains('hidden')) {
-            concGrid.innerHTML = pastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
-            concGrid.dataset.needsHydration = 'false';
-          } else {
-            concGrid.dataset.needsHydration = 'true';
-          }
-        } else {
-          concWrapper.classList.add('hidden');
-          concWrapper.classList.remove('flex');
-        }
+      if (concWrapper) {
+        concWrapper.classList.add('hidden');
+        concWrapper.classList.remove('flex');
       }
     }
 
