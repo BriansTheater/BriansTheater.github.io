@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.269] - 2026-11-05
+
+### What's New
+- Switched Buffer queue to post-count basis rather than calendar days.
+- Queues strictly next 4 upcoming movies regardless of days off.
+- Isolated current month so future month planning never touches Buffer.
+- Guaranteed at least 6 Buffer slots stay open constantly.
+
 ## [4.9.268] - 2026-11-05
 
 ### What's New
