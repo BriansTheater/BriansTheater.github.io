@@ -1,5 +1,15 @@
 # Changelog
  
+## [4.9.268] - 2026-11-05
+
+### What's New
+- Updated all Buffer social post links to Tiny.cc/BriansTheater.
+- Added rolling 7-day Buffer window to protect 10 slots.
+- Capped Buffer auto-queue at 4 movies leaving open slots.
+- Prevented future months drafts from occupying current Buffer queue.
+- Updated Google Calendar location links to Tiny.cc/BriansTheater.
+- Updated theater entrance button default URL to Tiny.cc/BriansTheater.
+
 ## [4.9.267] - 2026-11-05
 
 ### What's New
