@@ -1,12 +1,10 @@
 {
-  "version": "4.9.266",
+  "version": "4.9.267",
   "releaseDate": "2026-11-05",
-  "title": "Brian's Theater v4.9.266",
+  "title": "Brian's Theater v4.9.267",
   "notes": [
-    "Restored all missing scheduled movies across live theater.",
-    "Fixed Quick Schedule formula and eliminated spill error.",
-    "Aligned movie runtimes, descriptions, and official trailers.",
-    "Prevented cell overwrite conflicts during in-app scheduling.",
-    "Purged stray Gladiator event from live Google Calendar."
+    "Restored Minions & Monsters as tonight's live screening.",
+    "Re-enabled collapsible Recently Concluded Screenings hidden drawer.",
+    "Synchronized authoritative Firebase stage countdown and cinema banner."
   ]
 }

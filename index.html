@@ -4721,7 +4721,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.266";
+    const APP_VERSION = "4.9.267";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -19493,8 +19493,6 @@
             ? window.theaterScheduleCache 
             : sampleSchedule);
       const now = Date.now();
-
-      const allScheduleItems = [];
       const upcomingItems = [];
       const pastItems = [];
 
@@ -19526,11 +19524,10 @@
         } else {
           upcomingItems.push(s);
         }
-        allScheduleItems.push(s);
       });
 
-      // Sort all items chronologically by startMs, placing postponed/TBD items at the end
-      allScheduleItems.sort((a, b) => {
+      // Sort upcoming items chronologically by startMs, placing postponed/TBD items at the end
+      upcomingItems.sort((a, b) => {
         const aPost = a.status === 'POSTPONED' || a.rescheduled || !a.startMs || Number(a.startMs) <= 0;
         const bPost = b.status === 'POSTPONED' || b.rescheduled || !b.startMs || Number(b.startMs) <= 0;
         if (aPost && !bPost) return 1;
@@ -19541,10 +19538,9 @@
       // Strict Single "NEXT UP" Invariant:
       // Only the very first chronological upcoming movie can ever display "⚡ NEXT UP".
       // Any subsequent movies tagged as "NEXT UP" or "SCHEDULED" are normalized to their proper Pacific weekday tag or TOMORROW.
-      // Postponed/rescheduled movies retain their POSTPONED tag. Concluded movies retain CONCLUDED.
+      // Postponed/rescheduled movies retain their POSTPONED tag.
       let assignedNextUp = false;
-      allScheduleItems.forEach(item => {
-        if (item.isConcluded) return;
+      upcomingItems.forEach(item => {
         const isLive = item.status && (item.status.includes('LIVE') || item.status.includes('NOW'));
         if (isLive) return;
         const isPostponed = item.status === 'POSTPONED' || item.rescheduled || !item.startMs || Number(item.startMs) <= 0;
@@ -19573,10 +19569,9 @@
       });
 
       const grid = document.getElementById('scheduleCardsGrid');
-      if (allScheduleItems.length > 0) {
+      if (upcomingItems.length > 0) {
         if (grid) {
-          // Render all monthly scheduled movies in the primary lineup so past screenings never disappear
-          grid.innerHTML = allScheduleItems.map((s, idx) => renderScheduleCardHtml(s, idx, s.isConcluded)).join('');
+          grid.innerHTML = upcomingItems.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
         }
       } else {
         const monthInfo = (typeof getIntermissionMonthInfo === 'function') 
@@ -19619,11 +19614,26 @@
         }
       }
 
-      // Hide redundant separate concluded drawer since all monthly screenings are now visible in the primary schedule grid
+      // Render recently concluded shelf (lazy-hydrated when shelf is expanded)
+      window._cachedPastScheduleItems = pastItems;
       const concWrapper = document.getElementById('concludedScreeningsWrapper');
-      if (concWrapper) {
-        concWrapper.classList.add('hidden');
-        concWrapper.classList.remove('flex');
+      const concGrid = document.getElementById('concludedCardsGrid');
+      const concTitle = document.getElementById('concludedShelfTitle');
+      if (concWrapper && concGrid) {
+        if (pastItems.length > 0) {
+          concWrapper.classList.remove('hidden');
+          concWrapper.classList.add('flex');
+          if (concTitle) concTitle.textContent = `Recently Concluded Screenings (${pastItems.length})`;
+          if (!concGrid.classList.contains('hidden')) {
+            concGrid.innerHTML = pastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
+            concGrid.dataset.needsHydration = 'false';
+          } else {
+            concGrid.dataset.needsHydration = 'true';
+          }
+        } else {
+          concWrapper.classList.add('hidden');
+          concWrapper.classList.remove('flex');
+        }
       }
     }
 

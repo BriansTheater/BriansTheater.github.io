@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.9.267] - 2026-11-05
+
+### What's New
+- Featured Minions & Monsters as tonight's live screening.
+- Restored collapsible Recently Concluded Screenings hidden drawer.
+- Synchronized live cinema stage countdown with authoritative schedule.
+- Tucked past screenings neatly away into collapsible drawer.
+
 ## [4.9.266] - 2026-11-05
 
 ### What's New
