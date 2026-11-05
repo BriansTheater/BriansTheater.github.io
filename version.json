@@ -1,11 +1,12 @@
 {
-  "version": "4.9.265",
+  "version": "4.9.266",
   "releaseDate": "2026-11-05",
-  "title": "Brian's Theater v4.9.265",
+  "title": "Brian's Theater v4.9.266",
   "notes": [
-    "Shortened long scheduler headers to simply Scheduler.",
-    "Added 1-click Remove button on live Schedule cards.",
-    "Added 1-click Remove button in Admin Lineup and Modal.",
-    "Purged test Gladiator II entry from live schedule."
+    "Restored all missing scheduled movies across live theater.",
+    "Fixed Quick Schedule formula and eliminated spill error.",
+    "Aligned movie runtimes, descriptions, and official trailers.",
+    "Prevented cell overwrite conflicts during in-app scheduling.",
+    "Purged stray Gladiator event from live Google Calendar."
   ]
 }

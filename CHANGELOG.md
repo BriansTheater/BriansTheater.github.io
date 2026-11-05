@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.266] - 2026-11-05
+
+### What's New
+- Restored all missing scheduled movies across live theater.
+- Fixed Quick Schedule formula and eliminated spill error.
+- Aligned movie runtimes, descriptions, and official trailers.
+- Prevented cell overwrite conflicts during in-app scheduling.
+- Purged stray Gladiator event from live Google Calendar.
+
 ## [4.9.265] - 2026-11-05
 
 ### What's New
