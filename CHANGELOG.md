@@ -1,5 +1,16 @@
 # Changelog
  
+## [4.11.0] - 2026-11-11
+
+### What's New
+- Added dedicated Admin Season Planner and Monthly Draft Slate.
+- Staged upcoming holiday month screenings in private draft mode.
+- Hid unfinalized future schedules from public visitors by default.
+- Added 1-click publish action to make draft months live.
+- Enabled automatic calendar and spreadsheet syncing on publish.
+- Added revert to draft control for flexible season adjustments.
+- Updated admin navigation with direct Season Planner launch shortcut.
+
 ## [4.10.3] - 2026-11-11
 
 ### What's New

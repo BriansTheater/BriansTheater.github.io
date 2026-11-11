@@ -1726,8 +1726,8 @@
           <button type="button" onclick="setAdminSectionFilter('stage')" id="adminSecBtn-stage" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>🎛️</span> Stage & Doors
           </button>
-          <button type="button" onclick="setAdminSectionFilter('reschedule'); openSchedulerCalendarPopup();" id="adminSecBtn-reschedule" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 transition shrink-0 flex items-center gap-1.5 cursor-pointer">
-            <span>📅</span> Scheduler
+          <button type="button" onclick="setAdminSectionFilter('reschedule'); openSchedulerCalendarPopup();" id="adminSecBtn-reschedule" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 transition shrink-0 flex items-center gap-1.5 cursor-pointer" title="Season Planner & Monthly Draft Slate">
+            <span>📅</span> Season Planner
           </button>
           <button type="button" onclick="setAdminSectionFilter('media')" id="adminSecBtn-media" class="admin-sec-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition shrink-0 flex items-center gap-1.5">
             <span>🎬</span> Movie Media Studio
@@ -2354,7 +2354,7 @@
 
               <div class="flex flex-wrap items-center gap-2 shrink-0">
                 <button type="button" id="btnOpenSchedulerPopup" onclick="openSchedulerCalendarPopup()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm transition shadow-lg flex items-center gap-1.5 active:scale-95 cursor-pointer">
-                  <span>📅</span> <span>Open Scheduler Calendar (+60 Days Popup)</span>
+                  <span>📅</span> <span>Open Season Planner & Monthly Draft Slate</span>
                 </button>
                 <button type="button" id="btnScanKevinShifts" onclick="scanKevinScheduleFromApp(true)" class="px-3.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
                   <span>🔄</span> <span id="btnScanKevinShiftsLabel">Scan Kevin's 4 PM Shifts</span>
@@ -3477,15 +3477,15 @@
           </div>
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="text-base sm:text-xl font-black text-emerald-300 tracking-wide">
-                Scheduler
+              <h3 class="text-base sm:text-xl font-black text-emerald-300 tracking-wide flex items-center gap-2">
+                <span>📅</span> <span>Season Planner & Monthly Draft Slate</span>
               </h3>
               <span id="schedulerPopupRangeBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                 +60 Days Calendar
               </span>
             </div>
             <p class="text-xs text-slate-400 mt-0.5">
-              Plan this month and the coming month! Kevin's <b class="text-amber-300">4:00 PM PT shifts</b> are marked automatically — click any <b class="text-emerald-300">🍿 Movie Night Open</b> day to schedule a movie & sync to Google Calendar!
+              Assemble future months in private staging before making them live! Kevin's <b class="text-amber-300">4:00 PM PT shifts</b> are marked automatically. Stage and organize your schedule, then 1-click publish to the public theater!
             </p>
           </div>
         </div>
@@ -4873,7 +4873,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.10.3";
+    const APP_VERSION = "4.11.0";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -11529,6 +11529,144 @@
       renderSchedulerCalendarPopup();
     }
 
+    // Global published months registry for Season Planner (e.g. { "2026-11": true })
+    window.theaterPublishedMonths = (function() {
+      try {
+        const raw = localStorage.getItem('brian_published_months');
+        if (raw) return JSON.parse(raw) || {};
+      } catch (e) {}
+      return {};
+    })();
+
+    function isMonthPublished(monthKey) {
+      if (!monthKey) return true;
+      const now = new Date();
+      const curY = parseInt(now.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+      const curM = parseInt(now.toLocaleDateString('en-US', { month: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+      const currentKey = `${curY}-${String(curM).padStart(2, '0')}`;
+      // Current active month and past months are always considered active/published
+      if (monthKey <= currentKey) return true;
+      if (window.theaterPublishedMonths && typeof window.theaterPublishedMonths[monthKey] !== 'undefined') {
+        return !!window.theaterPublishedMonths[monthKey];
+      }
+      return false;
+    }
+    window.isMonthPublished = isMonthPublished;
+
+    async function publishMonthSlate(monthKey, monthName, movieCount = 0) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const countMsg = movieCount > 0 ? `${movieCount} scheduled movies` : 'all scheduled screenings';
+      const confirmed = window.confirm(
+        `🚀 Publish ${monthName} Lineup to Public Theater?\n\n` +
+        `This will make ${countMsg} LIVE on the website, sync all dates to Google Calendar, and mirror to Google Sheets.\n\n` +
+        `Are you ready to publish?`
+      );
+      if (!confirmed) return;
+
+      if (!window.theaterPublishedMonths) window.theaterPublishedMonths = {};
+      window.theaterPublishedMonths[monthKey] = true;
+      try { localStorage.setItem('brian_published_months', JSON.stringify(window.theaterPublishedMonths)); } catch (e) {}
+
+      // Push to Firebase RTDB publishedMonths branch
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/publishedMonths/${monthKey}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(true)
+        });
+      } catch(e) {
+        console.warn("Firebase publishedMonths sync warning:", e);
+      }
+
+      // Queue Google Calendar events for any movies scheduled in this month
+      try {
+        const schedSource = (Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+          ? window.theaterScheduleCache
+          : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+
+        const monthMovies = schedSource.filter(item => {
+          if (!item || !item.title) return false;
+          const pk = (typeof parseScheduleDateToPacificKey === 'function') ? parseScheduleDateToPacificKey(item) : (item.dateKey || '');
+          return pk && pk.startsWith(monthKey);
+        });
+
+        for (const m of monthMovies) {
+          const pk = (typeof parseScheduleDateToPacificKey === 'function') ? parseScheduleDateToPacificKey(m) : (m.dateKey || '');
+          const qItem = {
+            action: 'schedule_movie',
+            title: (m.title || '').replace(/^[🎬🎥📽️\s]+/, '').trim(),
+            date: pk,
+            dateKey: pk,
+            startTime: m.startTime || m.time || '7:00 PM',
+            endTime: m.endTime || '9:00 PM',
+            runtime: m.runtime || '1h 50m',
+            summary: m.overview || m.summary || m.desc || '',
+            trailerUrl: m.trailerUrl || '',
+            posterUrl: m.posterUrl || '',
+            year: m.year || '2026',
+            requestedAt: Date.now()
+          };
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(qItem)
+          }).catch(() => {});
+        }
+
+        // Trigger Google Apps Script force_sync to mirror to Google Sheets Quick Schedule
+        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+      } catch(syncErr) {
+        console.warn("Month publish sync warning:", syncErr);
+      }
+
+      renderSchedulerCalendarPopup();
+      window.selectedScheduleMonthKey = monthKey; // Automatically select published month in Schedule tab
+      renderSchedule();
+
+      showTheaterToast(`🎉 ${monthName} Lineup is now LIVE on Brian's Theater!`);
+    }
+    window.publishMonthSlate = publishMonthSlate;
+
+    async function unpublishMonthSlate(monthKey, monthName) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const confirmed = window.confirm(
+        `🔒 Revert ${monthName} to Private Draft Mode?\n\n` +
+        `This month's screenings will remain safely saved in your Admin Season Planner, but will be hidden from public patrons while you make adjustments.`
+      );
+      if (!confirmed) return;
+
+      if (!window.theaterPublishedMonths) window.theaterPublishedMonths = {};
+      window.theaterPublishedMonths[monthKey] = false;
+      try { localStorage.setItem('brian_published_months', JSON.stringify(window.theaterPublishedMonths)); } catch (e) {}
+
+      try {
+        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/publishedMonths/${monthKey}.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(false)
+        });
+      } catch(e) {
+        console.warn("Firebase unpublish warning:", e);
+      }
+
+      renderSchedulerCalendarPopup();
+      window.selectedScheduleMonthKey = null; // Reset to active month (November)
+      renderSchedule();
+
+      showTheaterToast(`🔒 ${monthName} returned to private Draft Staging.`);
+    }
+    window.unpublishMonthSlate = unpublishMonthSlate;
+
     function renderSchedulerCalendarPopup() {
       const container = document.getElementById('schedulerPopupCalendarContainer');
       if (!container) return;
@@ -11546,6 +11684,9 @@
         const monthNameShort = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
         const daysInMonth = new Date(y, m + 1, 0).getDate();
         const firstWeekday = new Date(y, m, 1).getDay(); // 0=Sun .. 6=Sat
+        const monthKey = `${y}-${String(m + 1).padStart(2, '0')}`;
+        const isCurrent = (offsetIdx === 0);
+        const isPublished = isCurrent || isMonthPublished(monthKey);
 
         const days = [];
         for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
@@ -11557,6 +11698,9 @@
           offsetIdx,
           year: y,
           monthIndex: m,
+          monthKey,
+          isCurrent,
+          isPublished,
           monthNameLong,
           monthNameShort,
           daysInMonth,
@@ -11565,13 +11709,13 @@
         };
       });
 
-      // Update Tab Labels with real Month Names
+      // Update Tab Labels with real Month Names & Live/Draft Status
       const curTabLbl = document.getElementById('schedPopupTabLabel-currentMonth');
       const nextTabLbl = document.getElementById('schedPopupTabLabel-nextMonth');
       const afterTabLbl = document.getElementById('schedPopupTabLabel-monthAfter');
-      if (curTabLbl && monthSpecs[0]) curTabLbl.textContent = `This Month (${monthSpecs[0].monthNameShort})`;
-      if (nextTabLbl && monthSpecs[1]) nextTabLbl.textContent = `Coming Month (${monthSpecs[1].monthNameShort})`;
-      if (afterTabLbl && monthSpecs[2]) afterTabLbl.textContent = `${monthSpecs[2].monthNameShort}`;
+      if (curTabLbl && monthSpecs[0]) curTabLbl.textContent = `This Month (${monthSpecs[0].monthNameShort} • LIVE)`;
+      if (nextTabLbl && monthSpecs[1]) nextTabLbl.textContent = `Coming Month (${monthSpecs[1].monthNameShort} • ${monthSpecs[1].isPublished ? 'LIVE' : 'DRAFT'})`;
+      if (afterTabLbl && monthSpecs[2]) afterTabLbl.textContent = `${monthSpecs[2].monthNameShort} (${monthSpecs[2].isPublished ? 'LIVE' : 'OPEN'})`;
 
       // Update Active Tab Styles
       const tabModes = ['60days', 'currentMonth', 'nextMonth', 'monthAfter'];
@@ -11581,7 +11725,10 @@
         if (mode === schedulerPopupViewMode) {
           btn.className = "px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs transition shadow cursor-pointer flex items-center gap-1.5";
         } else if (mode === 'nextMonth') {
-          btn.className = "px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5";
+          const nextIsDraft = monthSpecs[1] && !monthSpecs[1].isPublished;
+          btn.className = nextIsDraft
+            ? "px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
+            : "px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5";
         } else {
           btn.className = "px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs transition cursor-pointer flex items-center gap-1.5";
         }
@@ -11645,11 +11792,54 @@
         const mOpen = mSpec.days.filter(d => d.status === 'movie_night_open').length;
         const mBooked = mSpec.days.filter(d => d.status === 'movie_scheduled').length;
         const mWork = mSpec.days.filter(d => d.status === 'working_night').length;
-        const roleTag = mSpec.offsetIdx === 0
-          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">THIS MONTH</span>`
-          : (mSpec.offsetIdx === 1
-            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">COMING MONTH SCHEDULE</span>`
-            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">+60 DAYS EXTENDED</span>`);
+        const roleTag = mSpec.isCurrent
+          ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 ACTIVE MONTH • LIVE ON THEATER</span>`
+          : (mSpec.isPublished
+            ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 PUBLISHED • LIVE ON THEATER</span>`
+            : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]">🔒 DRAFT STAGING MODE (Hidden from Public)</span>`);
+
+        const draftActionBarHtml = (!mSpec.isCurrent && !mSpec.isPublished) ? `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/30 border border-amber-500/40 shadow-inner">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base shrink-0">
+                🔒
+              </div>
+              <div>
+                <div class="text-xs font-black text-amber-300 flex items-center gap-2">
+                  <span>Draft Staging Sandbox</span>
+                  <span class="text-[10px] font-mono font-normal text-slate-300">(${mBooked} screenings slated)</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Assemble and tweak your ${escapeHtml(mSpec.monthNameLong)} schedule without leaking to the public site.</div>
+              </div>
+            </div>
+            <button type="button" onclick="publishMonthSlate('${mSpec.monthKey}', '${escapeHtml(mSpec.monthNameLong)}', ${mBooked})" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-[0_0_20px_rgba(245,158,11,0.35)] active:scale-95 flex items-center gap-2 cursor-pointer shrink-0">
+              <span>🚀</span> <span>Publish ${escapeHtml(mSpec.monthNameShort)} Lineup to Public (${mBooked} Movies)</span>
+            </button>
+          </div>
+        ` : ((!mSpec.isCurrent && mSpec.isPublished) ? `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-base shrink-0">
+                ✅
+              </div>
+              <div>
+                <div class="text-xs font-black text-emerald-300 flex items-center gap-2">
+                  <span>Lineup is LIVE on Public Theater</span>
+                  <span class="text-[10px] font-mono font-normal text-slate-300">(${mBooked} screenings active)</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Patrons can view this month's schedule. Synced with Google Calendar & Sheets.</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" onclick="publishMonthSlate('${mSpec.monthKey}', '${escapeHtml(mSpec.monthNameLong)}', ${mBooked})" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+                <span>🔄</span> <span>Re-Sync</span>
+              </button>
+              <button type="button" onclick="unpublishMonthSlate('${mSpec.monthKey}', '${escapeHtml(mSpec.monthNameLong)}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+                <span>🔒</span> <span>Revert to Draft</span>
+              </button>
+            </div>
+          </div>
+        ` : '');
 
         // Build leading blank cells for 7-column Sun-Sat alignment
         const leadingBlanks = Array.from({ length: mSpec.firstWeekday }).map(() => `
@@ -11680,16 +11870,19 @@
             const mStart = m.startTime || m.time || '7:00 PM';
             const mEnd = m.endTime || '9:00 PM';
             const safeTitle = escapeHtml(mTitle).replace(/'/g, "\\'");
+            const statusBadge = (!mSpec.isPublished)
+              ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">🔒 Draft</span>'
+              : '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Live</span>';
 
             return `
-              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-slate-900/95 border-2 border-sky-500/60 hover:border-sky-400 flex flex-col justify-between gap-2 shadow-lg transition ${dimClass}">
+              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-slate-900/95 border-2 ${!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400'} flex flex-col justify-between gap-2 shadow-lg transition ${dimClass}">
                 <div class="flex items-center justify-between gap-1">
                   ${dateHeaderLeft}
-                  <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Synced</span>
+                  ${statusBadge}
                 </div>
 
                 <div class="flex items-center gap-2 my-0.5">
-                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-9 h-13 rounded object-cover border border-sky-400/40 bg-black shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-9 h-13 rounded object-cover ${!mSpec.isPublished ? 'border border-amber-400/40' : 'border border-sky-400/40'} bg-black shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
                   <div class="min-w-0 flex-1">
                     <div class="text-xs font-black text-white truncate" title="${escapeHtml(mTitle)}">${escapeHtml(mTitle)}</div>
                     <div class="text-[10px] font-mono text-amber-300 truncate">${escapeHtml(mStart)} – ${escapeHtml(mEnd)}</div>
@@ -11697,7 +11890,7 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-1 pt-1 border-t border-slate-800/80">
-                  <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}', '${safeTitle}')" class="flex-1 py-1 px-1.5 rounded bg-sky-500/20 hover:bg-sky-500/35 text-sky-300 border border-sky-500/40 text-[10px] font-bold transition cursor-pointer">
+                  <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}', '${safeTitle}')" class="flex-1 py-1 px-1.5 rounded ${!mSpec.isPublished ? 'bg-amber-500/20 hover:bg-amber-500/35 text-amber-300 border border-amber-500/40' : 'bg-sky-500/20 hover:bg-sky-500/35 text-sky-300 border border-sky-500/40'} text-[10px] font-bold transition cursor-pointer">
                     ✏️ Change
                   </button>
                   <button type="button" onclick="clearSmartScheduledMovieNight('${day.dateKey}', '${safeTitle}')" class="py-1 px-1.5 rounded bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[10px] font-bold transition cursor-pointer" title="Clear movie">
@@ -11772,6 +11965,8 @@
                 <span class="px-2 py-0.5 rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 font-bold">🏢 ${mWork} Kevin 4PM Shifts</span>
               </div>
             </div>
+
+            ${draftActionBarHtml}
 
             <!-- 7-Column Weekday Header (Sun - Sat) -->
             <div class="hidden md:grid md:grid-cols-7 gap-2 text-center">
@@ -15631,6 +15826,12 @@
 
         window.theaterOfficialSchedule = reconciled;
         window.theaterScheduleCache = reconciled;
+      }
+
+      // Synchronize published months registry from Firebase RTDB for Season Planner
+      if (data.publishedMonths && typeof data.publishedMonths === 'object') {
+        window.theaterPublishedMonths = Object.assign({}, window.theaterPublishedMonths || {}, data.publishedMonths);
+        try { localStorage.setItem('brian_published_months', JSON.stringify(window.theaterPublishedMonths)); } catch(e) {}
       }
 
       // Enrich schedule items with custom artwork and local posters so bulk images NEVER revert
@@ -20326,30 +20527,43 @@
         const ym = getItemPacificYearMonth(item);
         if (!monthGroups.has(ym.key)) {
           const mName = new Date(ym.year, ym.month - 1, 1).toLocaleDateString('en-US', { month: 'long' });
+          const isCurr = (ym.key === currentMonthKey);
+          const isPub = isCurr || (typeof isMonthPublished === 'function' ? isMonthPublished(ym.key) : false);
           monthGroups.set(ym.key, {
             key: ym.key,
             year: ym.year,
             month: ym.month,
             name: mName,
-            isCurrent: (ym.key === currentMonthKey),
+            isCurrent: isCurr,
+            isPublished: isPub,
             items: []
           });
         }
         monthGroups.get(ym.key).items.push(item);
       });
 
+      // Filter visible month groups for the user:
+      // If user is Admin, they can preview both Live and Draft months (with clear Draft Staging badge).
+      // If user is a public patron, they only see Live/Published months!
+      const visibleGroups = new Map();
+      monthGroups.forEach((val, k) => {
+        if (val.isPublished || isAdmin) {
+          visibleGroups.set(k, val);
+        }
+      });
+
       // Default to current active month (e.g. November) so future months (December) are never shown prematurely
-      if (!window.selectedScheduleMonthKey || !monthGroups.has(window.selectedScheduleMonthKey)) {
-        if (monthGroups.has(currentMonthKey)) {
+      if (!window.selectedScheduleMonthKey || !visibleGroups.has(window.selectedScheduleMonthKey)) {
+        if (visibleGroups.has(currentMonthKey)) {
           window.selectedScheduleMonthKey = currentMonthKey;
-        } else if (monthGroups.size > 0) {
-          window.selectedScheduleMonthKey = Array.from(monthGroups.keys()).sort()[0];
+        } else if (visibleGroups.size > 0) {
+          window.selectedScheduleMonthKey = Array.from(visibleGroups.keys()).sort()[0];
         } else {
           window.selectedScheduleMonthKey = currentMonthKey;
         }
       }
 
-      const activeGroup = monthGroups.get(window.selectedScheduleMonthKey) || monthGroups.get(currentMonthKey);
+      const activeGroup = visibleGroups.get(window.selectedScheduleMonthKey) || monthGroups.get(currentMonthKey);
       const itemsToRender = activeGroup ? activeGroup.items : [];
 
       // Update Header Text & Subtitle
@@ -20363,25 +20577,27 @@
         }
       }
       if (subtitleText) {
-        if (activeGroup && !activeGroup.isCurrent) {
-          subtitleText.textContent = `Draft schedule currently in preparation by Brian • Screenings subject to change`;
+        if (activeGroup && !activeGroup.isPublished) {
+          subtitleText.textContent = `Draft Season Slate staged privately by Brian • Screenings will appear live once published`;
         } else {
-          subtitleText.textContent = `Current month screenings • Additional ${currentPacificMonthName} dates being scheduled`;
+          subtitleText.textContent = `Current month screenings • Additional ${activeGroup ? activeGroup.name : currentPacificMonthName} dates being scheduled`;
         }
       }
 
-      // Render Month Filter Pills (only if more than 1 month has scheduled screenings)
+      // Render Month Filter Pills (only if more than 1 visible month exists)
       const pillsContainer = document.getElementById('scheduleMonthSelectorPills');
       if (pillsContainer) {
-        if (monthGroups.size > 1) {
-          const sortedGroups = Array.from(monthGroups.values()).sort((a, b) => a.key.localeCompare(b.key));
+        if (visibleGroups.size > 1) {
+          const sortedGroups = Array.from(visibleGroups.values()).sort((a, b) => a.key.localeCompare(b.key));
           pillsContainer.innerHTML = sortedGroups.map(g => {
             const isSelected = (g.key === window.selectedScheduleMonthKey);
-            const isDraft = !g.isCurrent;
+            const isDraft = !g.isPublished;
             const icon = g.isCurrent ? '📅' : (g.month === 12 ? '🎄' : '✨');
-            const badge = isDraft ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">In Prep</span>' : '';
+            const badge = isDraft
+              ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">🔒 Draft Staging</span>'
+              : (g.isCurrent ? '' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">LIVE</span>');
             const activeClass = isSelected
-              ? 'bg-amber-500/20 text-amber-300 border-amber-500/70 shadow-lg'
+              ? (isDraft ? 'bg-amber-500/20 text-amber-300 border-amber-500/70 shadow-lg' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/70 shadow-lg')
               : 'bg-slate-950/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700';
             return `
               <button type="button" onclick="setScheduleMonthFilter('${g.key}')" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${activeClass}">
