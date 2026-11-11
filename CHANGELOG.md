@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.272] - 2026-11-11
+
+### What's New
+- Updated Buffer social post URL to http://tiny.cc/BriansTheater.
+- Fixed December schedule saving and persistent cross-device synchronization.
+- Reconciled schedule streams to prevent future months from disappearing.
+- Added automatic future month schedule preservation in auto-sync.
+- Expanded spreadsheet query ceiling to support up to 200 rows.
+
 ## [4.9.271] - 2026-11-11
 
 ### What's New
