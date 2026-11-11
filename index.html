@@ -3525,6 +3525,17 @@
         </div>
       </div>
 
+      <!-- Interactive Move / Repositioning Action Banner (Active during Move Mode) -->
+      <div id="schedPopupMoveBanner" class="hidden flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 border-2 border-amber-400/80 text-amber-200 text-xs font-bold shadow-lg animate-pulse">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📦</span>
+          <span id="schedPopupMoveBannerText">Moving movie... Click ANY calendar day cell to place it!</span>
+        </div>
+        <button type="button" onclick="cancelCalendarMovieMoveSelection()" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 text-xs font-bold transition cursor-pointer">
+          ✕ Cancel Move
+        </button>
+      </div>
+
       <!-- Scrollable Full-Calendar Body -->
       <div id="schedulerPopupCalendarContainer" class="flex-1 overflow-y-auto pr-1 custom-scrollbar flex flex-col gap-6">
         <!-- Dynamically rendered 7-column monthly calendar(s) for This Month + Coming Month (+60 Days) -->
@@ -3533,9 +3544,10 @@
       <!-- Popup Footer -->
       <div class="pt-2.5 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
         <div class="flex flex-wrap items-center gap-3">
-          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> <b class="text-emerald-300">🍿 Movie Night Open</b> (Click to schedule)</span>
-          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> <b class="text-sky-300">🎬 Movie Scheduled</b> (Auto-synced to Calendar)</span>
-          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> <b class="text-rose-300">🏢 Kevin 4:00 PM Shift</b> (Skip night)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> <b class="text-emerald-300">🍿 Movie Night Open</b></span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> <b class="text-sky-300">🎬 Scheduled</b></span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> <b class="text-rose-300">🏢 Kevin 4:00 PM Shift</b></span>
+          <span class="hidden md:inline-flex items-center gap-1 text-slate-400">| 💡 <b class="text-amber-300">Drag</b> or click <b class="text-amber-300">Move</b> to change dates!</span>
         </div>
         <button type="button" onclick="closeSchedulerCalendarPopup()" class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition cursor-pointer self-end sm:self-auto">
           Done
@@ -4862,7 +4874,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.2";
+    const APP_VERSION = "4.11.3";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -11867,11 +11879,13 @@
               : '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Live</span>';
 
             return `
-              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" draggable="true" ondragstart="handleCalendarMovieDragStart(event, '${day.dateKey}', '${safeTitle}')" ondragend="handleCalendarMovieDragEnd(event)" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-slate-900/95 border-2 ${!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400'} flex flex-col justify-between gap-1.5 shadow-lg transition cursor-grab active:cursor-grabbing hover:scale-[1.01] group ${dimClass}">
+              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" onclick="handleCalendarCellClick('${day.dateKey}', event)" draggable="true" ondragstart="handleCalendarMovieDragStart(event, '${day.dateKey}', '${safeTitle}')" ondragend="handleCalendarMovieDragEnd(event)" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-slate-900/95 border-2 ${!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400'} flex flex-col justify-between gap-1.5 shadow-lg transition cursor-grab active:cursor-grabbing hover:scale-[1.01] group ${dimClass}">
                 <div class="flex items-center justify-between gap-1">
                   ${dateHeaderLeft}
                   <div class="flex items-center gap-1">
-                    <span class="text-[9px] font-mono text-slate-400 group-hover:text-amber-300 flex items-center gap-0.5 select-none" title="Drag to move this movie night">⠿ Move</span>
+                    <button type="button" onclick="event.stopPropagation(); startCalendarMovieMoveSelection('${day.dateKey}', '${safeTitle}', event);" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/25 hover:bg-amber-400 text-amber-200 hover:text-slate-950 border border-amber-500/50 flex items-center gap-0.5 cursor-pointer transition select-none active:scale-95 shadow-sm" title="Click to move to any date, or drag this card">
+                      <span>⠿</span> <span>Move</span>
+                    </button>
                     ${statusBadge}
                   </div>
                 </div>
@@ -11898,7 +11912,7 @@
 
           if (day.status === 'working_night') {
             return `
-              <div data-cal-date="${day.dateKey}" data-cal-status="working_night" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-rose-950/20 border border-rose-500/35 flex flex-col justify-between gap-1.5 transition ${dimClass}">
+              <div data-cal-date="${day.dateKey}" data-cal-status="working_night" onclick="handleCalendarCellClick('${day.dateKey}', event)" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-rose-950/20 border border-rose-500/35 flex flex-col justify-between gap-1.5 transition ${dimClass}">
                 <div class="flex items-center justify-between gap-1">
                   ${dateHeaderLeft}
                   <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">🏢 4PM Shift</span>
@@ -11923,7 +11937,7 @@
 
           // Movie Night Open cell
           return `
-            <div data-cal-date="${day.dateKey}" data-cal-status="movie_night_open" onclick="openSmartScheduleMovieModal('${day.dateKey}')" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/35 border-2 border-emerald-500/50 hover:border-emerald-400 flex flex-col justify-between gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.12)] hover:shadow-[0_0_22px_rgba(16,185,129,0.28)] transition cursor-pointer group ${dimClass}">
+            <div data-cal-date="${day.dateKey}" data-cal-status="movie_night_open" onclick="handleCalendarCellClick('${day.dateKey}', event) || openSmartScheduleMovieModal('${day.dateKey}')" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/35 border-2 border-emerald-500/50 hover:border-emerald-400 flex flex-col justify-between gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.12)] hover:shadow-[0_0_22px_rgba(16,185,129,0.28)] transition cursor-pointer group ${dimClass}">
               <div class="flex items-center justify-between gap-1">
                 ${dateHeaderLeft}
                 <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-500/25 text-emerald-300 border border-emerald-400/50">🍿 OPEN</span>
@@ -11988,9 +12002,76 @@
     // 🗓️ SEASON PLANNER DRAG & DROP ENGINE
     // ==========================================
     let calendarDragState = null;
+    let calendarActiveMoveSelection = null;
+
+    function startCalendarMovieMoveSelection(sourceDateKey, movieTitle, event) {
+      if (event) event.stopPropagation();
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required to move movies.");
+        return;
+      }
+
+      calendarActiveMoveSelection = { sourceDateKey, movieTitle };
+      window.calendarActiveMoveSelection = calendarActiveMoveSelection;
+
+      // Update banner
+      const banner = document.getElementById('schedPopupMoveBanner');
+      const bannerText = document.getElementById('schedPopupMoveBannerText');
+      if (banner && bannerText) {
+        bannerText.textContent = `Moving "${movieTitle}" from ${sourceDateKey} ➔ Click ANY calendar day to place it!`;
+        banner.classList.remove('hidden');
+      }
+
+      // Add high-visibility pulsating rings to candidate cells
+      document.querySelectorAll('.sched-cal-cell').forEach(cell => {
+        const dKey = cell.getAttribute('data-cal-date');
+        if (dKey === sourceDateKey) {
+          cell.classList.add('ring-4', 'ring-amber-400', 'scale-[1.02]');
+        } else {
+          cell.classList.add('ring-2', 'ring-emerald-400/80', 'cursor-pointer');
+        }
+      });
+
+      showTheaterToast(`📦 Moving "${movieTitle}". Click any target date on the calendar to drop it!`);
+    }
+    window.startCalendarMovieMoveSelection = startCalendarMovieMoveSelection;
+
+    function cancelCalendarMovieMoveSelection() {
+      calendarActiveMoveSelection = null;
+      window.calendarActiveMoveSelection = null;
+      const banner = document.getElementById('schedPopupMoveBanner');
+      if (banner) banner.classList.add('hidden');
+      document.querySelectorAll('.sched-cal-cell').forEach(cell => {
+        cell.classList.remove('ring-4', 'ring-2', 'ring-amber-400', 'ring-emerald-400/80', 'ring-rose-400', 'bg-amber-500/20', 'bg-emerald-500/20', 'bg-rose-500/20', 'scale-[1.02]');
+      });
+    }
+    window.cancelCalendarMovieMoveSelection = cancelCalendarMovieMoveSelection;
+
+    function handleCalendarCellClick(dateKey, event) {
+      if (calendarActiveMoveSelection) {
+        if (event) event.stopPropagation();
+        const sourceKey = calendarActiveMoveSelection.sourceDateKey;
+        const moveTitle = calendarActiveMoveSelection.movieTitle;
+        if (sourceKey === dateKey) {
+          // Clicked on the same card being moved: keep move mode active
+          return true;
+        }
+        cancelCalendarMovieMoveSelection();
+        moveScheduledMovieDate(sourceKey, dateKey, moveTitle);
+        return true;
+      }
+      return false;
+    }
+    window.handleCalendarCellClick = handleCalendarCellClick;
 
     function handleCalendarMovieDragStart(e, sourceDateKey, movieTitle) {
-      if (!isAdmin) return;
+      if (!isAdmin) {
+        if (e) e.preventDefault();
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required to move movies.");
+        return;
+      }
       calendarDragState = {
         sourceDateKey,
         movieTitle
@@ -12436,6 +12517,16 @@
     }
 
     function openSmartScheduleMovieModal(dateKey, existingTitle = '') {
+      if (calendarActiveMoveSelection) {
+        const sourceKey = calendarActiveMoveSelection.sourceDateKey;
+        const moveTitle = calendarActiveMoveSelection.movieTitle;
+        cancelCalendarMovieMoveSelection();
+        if (sourceKey && dateKey && sourceKey !== dateKey) {
+          moveScheduledMovieDate(sourceKey, dateKey, moveTitle);
+        }
+        return;
+      }
+
       if (!isAdmin) {
         openAdminAuthModal();
         showTheaterToast("🔒 Admin authentication required.");

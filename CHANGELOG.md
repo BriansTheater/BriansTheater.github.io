@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.11.3] - 2026-11-11
+
+### What's New
+- Added 1-click tap-to-move mode alongside drag-and-drop movie rescheduling.
+- Added dedicated Move buttons to all scheduled movie cards.
+- Added interactive moving banner with real-time placement guidance.
+- Added automatic admin login prompt when dragging without authentication.
+- Enabled quick movie swapping between dates with confirmation.
+
 ## [4.11.2] - 2026-11-11
 
 ### What's New
