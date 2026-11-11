@@ -918,11 +918,15 @@
       </div>
 
       <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl flex flex-col gap-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-            <span>📅</span> Upcoming Movie Lineup
-          </h3>
-          <span class="text-xs text-sky-400">Synced from Quick Schedule</span>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h3 id="scheduleTabHeading" class="text-base font-bold text-slate-100 flex items-center gap-2">
+              <span>📅</span> <span id="scheduleTabTitleText">Upcoming Movie Lineup</span>
+            </h3>
+            <p id="scheduleTabSubtitle" class="text-[11px] text-slate-400 mt-0.5">Current month screenings • Additional dates being scheduled</p>
+          </div>
+          <!-- Month View Selector (Filters by active month by default so future drafts are not shown prematurely) -->
+          <div id="scheduleMonthSelectorPills" class="flex items-center gap-1.5 self-start sm:self-auto flex-wrap"></div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="scheduleCardsGrid"></div>
@@ -4869,7 +4873,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.10.2";
+    const APP_VERSION = "4.10.3";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -20285,10 +20289,119 @@
         }
       });
 
+      // Resolve Pacific date/month info
+      const nowPacific = new Date(now);
+      const currentPacificYear = parseInt(nowPacific.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+      const currentPacificMonth = parseInt(nowPacific.toLocaleDateString('en-US', { month: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+      const currentPacificMonthName = nowPacific.toLocaleDateString('en-US', { month: 'long', timeZone: 'America/Los_Angeles' });
+      const currentMonthKey = `${currentPacificYear}-${String(currentPacificMonth).padStart(2, '0')}`;
+
+      // Helper to extract year/month in Pacific time
+      const getItemPacificYearMonth = (s) => {
+        if (!s) return { year: currentPacificYear, month: currentPacificMonth, key: currentMonthKey };
+        if (s.startMs && Number(s.startMs) > 0) {
+          const d = new Date(Number(s.startMs));
+          const y = parseInt(d.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+          const m = parseInt(d.toLocaleDateString('en-US', { month: 'numeric', timeZone: 'America/Los_Angeles' }), 10);
+          return { year: y, month: m, key: `${y}-${String(m).padStart(2, '0')}` };
+        }
+        const pk = (typeof parseScheduleDateToPacificKey === 'function') ? parseScheduleDateToPacificKey(s) : (s.dateKey || '');
+        if (pk && /^\d{4}-\d{2}-\d{2}$/.test(pk)) {
+          const [y, m] = pk.split('-').map(Number);
+          return { year: y, month: m, key: `${y}-${String(m).padStart(2, '0')}` };
+        }
+        if (s.date) {
+          const dStr = String(s.date).toLowerCase();
+          if (dStr.includes('dec')) return { year: currentPacificYear, month: 12, key: `${currentPacificYear}-12` };
+          if (dStr.includes('nov')) return { year: currentPacificYear, month: 11, key: `${currentPacificYear}-11` };
+          if (dStr.includes('oct')) return { year: currentPacificYear, month: 10, key: `${currentPacificYear}-10` };
+          if (dStr.includes('sep')) return { year: currentPacificYear, month: 9, key: `${currentPacificYear}-9` };
+        }
+        return { year: currentPacificYear, month: currentPacificMonth, key: currentMonthKey };
+      };
+
+      // Group upcoming items by calendar month
+      const monthGroups = new Map();
+      upcomingItems.forEach(item => {
+        const ym = getItemPacificYearMonth(item);
+        if (!monthGroups.has(ym.key)) {
+          const mName = new Date(ym.year, ym.month - 1, 1).toLocaleDateString('en-US', { month: 'long' });
+          monthGroups.set(ym.key, {
+            key: ym.key,
+            year: ym.year,
+            month: ym.month,
+            name: mName,
+            isCurrent: (ym.key === currentMonthKey),
+            items: []
+          });
+        }
+        monthGroups.get(ym.key).items.push(item);
+      });
+
+      // Default to current active month (e.g. November) so future months (December) are never shown prematurely
+      if (!window.selectedScheduleMonthKey || !monthGroups.has(window.selectedScheduleMonthKey)) {
+        if (monthGroups.has(currentMonthKey)) {
+          window.selectedScheduleMonthKey = currentMonthKey;
+        } else if (monthGroups.size > 0) {
+          window.selectedScheduleMonthKey = Array.from(monthGroups.keys()).sort()[0];
+        } else {
+          window.selectedScheduleMonthKey = currentMonthKey;
+        }
+      }
+
+      const activeGroup = monthGroups.get(window.selectedScheduleMonthKey) || monthGroups.get(currentMonthKey);
+      const itemsToRender = activeGroup ? activeGroup.items : [];
+
+      // Update Header Text & Subtitle
+      const headingText = document.getElementById('scheduleTabTitleText');
+      const subtitleText = document.getElementById('scheduleTabSubtitle');
+      if (headingText) {
+        if (activeGroup) {
+          headingText.textContent = `${activeGroup.name} ${activeGroup.year} Movie Lineup`;
+        } else {
+          headingText.textContent = `${currentPacificMonthName} ${currentPacificYear} Movie Lineup`;
+        }
+      }
+      if (subtitleText) {
+        if (activeGroup && !activeGroup.isCurrent) {
+          subtitleText.textContent = `Draft schedule currently in preparation by Brian • Screenings subject to change`;
+        } else {
+          subtitleText.textContent = `Current month screenings • Additional ${currentPacificMonthName} dates being scheduled`;
+        }
+      }
+
+      // Render Month Filter Pills (only if more than 1 month has scheduled screenings)
+      const pillsContainer = document.getElementById('scheduleMonthSelectorPills');
+      if (pillsContainer) {
+        if (monthGroups.size > 1) {
+          const sortedGroups = Array.from(monthGroups.values()).sort((a, b) => a.key.localeCompare(b.key));
+          pillsContainer.innerHTML = sortedGroups.map(g => {
+            const isSelected = (g.key === window.selectedScheduleMonthKey);
+            const isDraft = !g.isCurrent;
+            const icon = g.isCurrent ? '📅' : (g.month === 12 ? '🎄' : '✨');
+            const badge = isDraft ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">In Prep</span>' : '';
+            const activeClass = isSelected
+              ? 'bg-amber-500/20 text-amber-300 border-amber-500/70 shadow-lg'
+              : 'bg-slate-950/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700';
+            return `
+              <button type="button" onclick="setScheduleMonthFilter('${g.key}')" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${activeClass}">
+                <span>${icon}</span>
+                <span>${escapeHtml(g.name)}</span>
+                ${badge}
+              </button>
+            `;
+          }).join('');
+          pillsContainer.classList.remove('hidden');
+        } else {
+          pillsContainer.innerHTML = '';
+          pillsContainer.classList.add('hidden');
+        }
+      }
+
       const grid = document.getElementById('scheduleCardsGrid');
-      if (upcomingItems.length > 0) {
+      if (itemsToRender.length > 0) {
         if (grid) {
-          grid.innerHTML = upcomingItems.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
+          grid.innerHTML = itemsToRender.map((s, idx) => renderScheduleCardHtml(s, idx, false)).join('');
         }
       } else {
         const monthInfo = (typeof getIntermissionMonthInfo === 'function') 
@@ -20353,6 +20466,12 @@
         }
       }
     }
+
+    function setScheduleMonthFilter(monthKey) {
+      window.selectedScheduleMonthKey = monthKey;
+      renderSchedule();
+    }
+    window.setScheduleMonthFilter = setScheduleMonthFilter;
 
     communityRequests = [
       { title: "The interview", requester: "Dwarf", genre: "Comedy", platform: "Disney+ / Hulu", status: "Under Review", posterUrl: "https://image.tmdb.org/t/p/w780/tIDC4xT65l7a8qbgg8GvwD5g8c5.jpg" },

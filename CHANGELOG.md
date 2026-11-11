@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.10.3] - 2026-11-11
+
+### What's New
+- Isolated active Schedule view to current month screenings only.
+- Hid unfinalized December schedule while completing November lineup.
+- Added month switcher pills to preview upcoming draft schedules.
+- Preserved all December dates in admin scheduler and cloud.
+
 ## [4.10.2] - 2026-11-11
 
 ### What's New
