@@ -3469,70 +3469,59 @@
       <!-- Top Glowing Accent Bar -->
       <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-amber-400 rounded-t-3xl"></div>
 
-      <!-- Popup Header -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3 pt-1">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500/25 via-teal-500/20 to-amber-500/25 border border-emerald-400/50 flex items-center justify-center text-2xl shrink-0 shadow-md">
-            📅
+      <!-- Unified Compact Top Control Bar (Zero-Redundancy) -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 bg-slate-900/95 p-2.5 sm:p-3 rounded-2xl border border-slate-800 shadow-md">
+        <!-- Left: Title & Month Segmented Control Tabs -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-2 pr-2.5 border-r border-slate-800 shrink-0">
+            <span class="text-xl">🎬</span>
+            <span class="text-xs sm:text-sm font-black text-emerald-300 uppercase tracking-wide">Season Planner</span>
+            <span id="schedulerPopupRangeBadge" class="hidden"></span>
           </div>
-          <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="text-base sm:text-xl font-black text-emerald-300 tracking-wide flex items-center gap-2">
-                <span>📅</span> <span>Season Planner & Monthly Draft Slate</span>
-              </h3>
-              <span id="schedulerPopupRangeBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                +60 Days Calendar
-              </span>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5">
-              Assemble future months in private staging before making them live! Kevin's <b class="text-amber-300">4:00 PM PT shifts</b> are marked automatically. Stage and organize your schedule, then 1-click publish to the public theater!
-            </p>
+
+          <!-- View Mode Tabs: This Month, Coming Month, Month After, Full 60 Days -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button type="button" id="schedPopupTab-currentMonth" onclick="setSchedulerPopupViewMode('currentMonth')" class="px-2.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
+              <span>📅</span> <span id="schedPopupTabLabel-currentMonth">This Month</span>
+            </button>
+            <button type="button" id="schedPopupTab-nextMonth" onclick="setSchedulerPopupViewMode('nextMonth')" class="px-2.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
+              <span>🎬</span> <span id="schedPopupTabLabel-nextMonth">Coming Month</span>
+            </button>
+            <button type="button" id="schedPopupTab-monthAfter" onclick="setSchedulerPopupViewMode('monthAfter')" class="px-2.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-sky-300 border border-sky-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
+              <span>🚀</span> <span id="schedPopupTabLabel-monthAfter">+2 Months</span>
+            </button>
+            <button type="button" id="schedPopupTab-60days" onclick="setSchedulerPopupViewMode('60days')" class="px-2.5 py-1.5 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs transition shadow cursor-pointer flex items-center gap-1.5">
+              <span>🗓️</span> <span id="schedPopupTabLabel-60days">Full 60 Days</span>
+            </button>
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2 shrink-0">
-          <button type="button" onclick="scanKevinScheduleFromApp(true)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-md flex items-center gap-1.5 active:scale-95 cursor-pointer">
-            <span>🔄</span> <span id="btnPopupScanKevinLabel">Scan Kevin's 4 PM Shifts (+60d)</span>
+        <!-- Center: Single Compact Stats & Filter Ribbon -->
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <button type="button" onclick="setSchedulerPopupStatusFilter('all')" id="schedPopupFilter-all" class="px-2 py-1 rounded-lg bg-amber-400 text-slate-950 font-black transition cursor-pointer text-xs">
+            All (<span id="schedPopupTotalCount">31</span>d)
           </button>
-          <button type="button" onclick="syncAllScheduledMoviesToGoogleCalendar()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
-            <span>⚡</span> <span>Sync All ➔ Google Calendar</span>
+          <button type="button" onclick="setSchedulerPopupStatusFilter('open')" id="schedPopupFilter-open" class="px-2 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 font-bold transition cursor-pointer text-xs">
+            🍿 <span id="schedPopupOpenCount" class="font-mono font-bold">0</span> Open
           </button>
-          <button type="button" onclick="closeSchedulerCalendarPopup()" class="w-9 h-9 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center text-xl leading-none transition cursor-pointer" aria-label="Close Scheduler">&times;</button>
-        </div>
-      </div>
-
-      <!-- Month / +60 Days View Tabs & Status Counters Bar -->
-      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-2.5 bg-slate-900/90 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
-        <!-- View Mode Tabs: All +60 Days (Both Months), This Month, Coming Month -->
-        <div class="flex flex-wrap items-center gap-1.5">
-          <button type="button" id="schedPopupTab-60days" onclick="setSchedulerPopupViewMode('60days')" class="px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs transition shadow cursor-pointer flex items-center gap-1.5">
-            <span>🗓️</span> <span id="schedPopupTabLabel-60days">Full Calendar (+60 Days)</span>
+          <button type="button" onclick="setSchedulerPopupStatusFilter('scheduled')" id="schedPopupFilter-scheduled" class="px-2 py-1 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold transition cursor-pointer text-xs">
+            🎬 <span id="schedPopupBookedCount" class="font-mono font-bold">0</span> Movies
           </button>
-          <button type="button" id="schedPopupTab-currentMonth" onclick="setSchedulerPopupViewMode('currentMonth')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
-            <span>📅</span> <span id="schedPopupTabLabel-currentMonth">This Month</span>
-          </button>
-          <button type="button" id="schedPopupTab-nextMonth" onclick="setSchedulerPopupViewMode('nextMonth')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
-            <span>🎬</span> <span id="schedPopupTabLabel-nextMonth">Coming Month</span>
-          </button>
-          <button type="button" id="schedPopupTab-monthAfter" onclick="setSchedulerPopupViewMode('monthAfter')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-sky-300 border border-sky-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1.5">
-            <span>🚀</span> <span id="schedPopupTabLabel-monthAfter">+2 Months</span>
+          <button type="button" onclick="setSchedulerPopupStatusFilter('work')" id="schedPopupFilter-work" class="px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold transition cursor-pointer text-xs">
+            🏢 <span id="schedPopupWorkCount" class="font-mono font-bold">0</span> Shifts
           </button>
         </div>
 
-        <!-- Live Counters & Filter Pills across 60+ Days -->
-        <div class="flex flex-wrap items-center gap-2 text-xs">
-          <button type="button" onclick="setSchedulerPopupStatusFilter('all')" id="schedPopupFilter-all" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black transition cursor-pointer">
-            All (<span id="schedPopupTotalCount">60</span>d)
+        <!-- Right: Action Cluster (Publish Lineup + Scan + Sync + Close) -->
+        <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+          <div id="schedPopupPublishActionSlot" class="flex items-center gap-1.5"></div>
+          <button type="button" onclick="scanKevinScheduleFromApp(true)" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow flex items-center gap-1 active:scale-95 cursor-pointer">
+            <span>🔄</span> <span id="btnPopupScanKevinLabel">Scan Shifts</span>
           </button>
-          <button type="button" onclick="setSchedulerPopupStatusFilter('open')" id="schedPopupFilter-open" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 font-bold transition cursor-pointer">
-            🍿 Open Nights: <b id="schedPopupOpenCount" class="font-mono">0</b>
+          <button type="button" onclick="syncAllScheduledMoviesToGoogleCalendar()" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1 active:scale-95 cursor-pointer">
+            <span>⚡</span> <span>Sync</span>
           </button>
-          <button type="button" onclick="setSchedulerPopupStatusFilter('scheduled')" id="schedPopupFilter-scheduled" class="px-2.5 py-1 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold transition cursor-pointer">
-            🎬 Scheduled: <b id="schedPopupBookedCount" class="font-mono">0</b>
-          </button>
-          <button type="button" onclick="setSchedulerPopupStatusFilter('work')" id="schedPopupFilter-work" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold transition cursor-pointer">
-            🏢 Kevin 4PM Shifts: <b id="schedPopupWorkCount" class="font-mono">0</b>
-          </button>
+          <button type="button" onclick="closeSchedulerCalendarPopup()" class="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center text-lg leading-none transition cursor-pointer" aria-label="Close Scheduler">&times;</button>
         </div>
       </div>
 
@@ -4873,7 +4862,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.1";
+    const APP_VERSION = "4.11.2";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -11801,6 +11790,37 @@
         }
       }
 
+      // Update Top Control Bar Action Slot (Publish / Revert / Sync)
+      const publishSlot = document.getElementById('schedPopupPublishActionSlot');
+      if (publishSlot) {
+        const activeTargetSpec = (schedulerPopupViewMode === 'nextMonth')
+          ? monthSpecs[1]
+          : ((schedulerPopupViewMode === 'monthAfter') ? monthSpecs[2] : null);
+
+        if (activeTargetSpec) {
+          const mBooked = activeTargetSpec.days.filter(d => d.status === 'movie_scheduled').length;
+          if (!activeTargetSpec.isPublished) {
+            publishSlot.innerHTML = `
+              <button type="button" onclick="publishMonthSlate('${activeTargetSpec.monthKey}', '${escapeHtml(activeTargetSpec.monthNameLong)}', ${mBooked})" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                <span>🚀</span> <span>Publish Lineup (${mBooked})</span>
+              </button>
+            `;
+          } else {
+            publishSlot.innerHTML = `
+              <button type="button" onclick="unpublishMonthSlate('${activeTargetSpec.monthKey}', '${escapeHtml(activeTargetSpec.monthNameLong)}')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                <span>🔒</span> <span>Revert to Draft</span>
+              </button>
+            `;
+          }
+        } else if (schedulerPopupViewMode === 'currentMonth') {
+          publishSlot.innerHTML = `
+            <span class="px-2.5 py-1 rounded-xl text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">🟢 LIVE</span>
+          `;
+        } else {
+          publishSlot.innerHTML = '';
+        }
+      }
+
       const weekdayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
       container.innerHTML = visibleMonths.map((mSpec) => {
@@ -11808,57 +11828,14 @@
         const mBooked = mSpec.days.filter(d => d.status === 'movie_scheduled').length;
         const mWork = mSpec.days.filter(d => d.status === 'working_night').length;
         const roleTag = mSpec.isCurrent
-          ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 ACTIVE MONTH • LIVE ON THEATER</span>`
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 LIVE</span>`
           : (mSpec.isPublished
-            ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 PUBLISHED • LIVE ON THEATER</span>`
-            : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]">🔒 DRAFT STAGING MODE (Hidden from Public)</span>`);
-
-        const draftActionBarHtml = (!mSpec.isCurrent && !mSpec.isPublished) ? `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/30 border border-amber-500/40 shadow-inner">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base shrink-0">
-                🔒
-              </div>
-              <div>
-                <div class="text-xs font-black text-amber-300 flex items-center gap-2">
-                  <span>Draft Staging Sandbox</span>
-                  <span class="text-[10px] font-mono font-normal text-slate-300">(${mBooked} screenings slated)</span>
-                </div>
-                <div class="text-[11px] text-slate-400">Assemble and tweak your ${escapeHtml(mSpec.monthNameLong)} schedule without leaking to the public site.</div>
-              </div>
-            </div>
-            <button type="button" onclick="publishMonthSlate('${mSpec.monthKey}', '${escapeHtml(mSpec.monthNameLong)}', ${mBooked})" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow-[0_0_20px_rgba(245,158,11,0.35)] active:scale-95 flex items-center gap-2 cursor-pointer shrink-0">
-              <span>🚀</span> <span>Publish ${escapeHtml(mSpec.monthNameShort)} Lineup to Public (${mBooked} Movies)</span>
-            </button>
-          </div>
-        ` : ((!mSpec.isCurrent && mSpec.isPublished) ? `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-base shrink-0">
-                ✅
-              </div>
-              <div>
-                <div class="text-xs font-black text-emerald-300 flex items-center gap-2">
-                  <span>Lineup is LIVE on Public Theater</span>
-                  <span class="text-[10px] font-mono font-normal text-slate-300">(${mBooked} screenings active)</span>
-                </div>
-                <div class="text-[11px] text-slate-400">Patrons can view this month's schedule. Synced with Google Calendar & Sheets.</div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <button type="button" onclick="publishMonthSlate('${mSpec.monthKey}', '${escapeHtml(mSpec.monthNameLong)}', ${mBooked})" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-                <span>🔄</span> <span>Re-Sync</span>
-              </button>
-              <button type="button" onclick="unpublishMonthSlate('${mSpec.monthKey}', '${escapeHtml(mSpec.monthNameLong)}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-                <span>🔒</span> <span>Revert to Draft</span>
-              </button>
-            </div>
-          </div>
-        ` : '');
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 LIVE</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">🔒 DRAFT</span>`);
 
         // Build leading blank cells for 7-column Sun-Sat alignment
         const leadingBlanks = Array.from({ length: mSpec.firstWeekday }).map(() => `
-          <div class="hidden md:block min-h-[120px] rounded-xl bg-slate-950/40 border border-slate-900/60"></div>
+          <div class="hidden md:block min-h-[110px] md:min-h-[118px] rounded-xl bg-slate-950/40 border border-slate-900/60"></div>
         `).join('');
 
         const dayCellsHtml = mSpec.days.map((day) => {
@@ -11890,14 +11867,17 @@
               : '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Live</span>';
 
             return `
-              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-slate-900/95 border-2 ${!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400'} flex flex-col justify-between gap-2 shadow-lg transition ${dimClass}">
+              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" draggable="true" ondragstart="handleCalendarMovieDragStart(event, '${day.dateKey}', '${safeTitle}')" ondragend="handleCalendarMovieDragEnd(event)" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-slate-900/95 border-2 ${!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400'} flex flex-col justify-between gap-1.5 shadow-lg transition cursor-grab active:cursor-grabbing hover:scale-[1.01] group ${dimClass}">
                 <div class="flex items-center justify-between gap-1">
                   ${dateHeaderLeft}
-                  ${statusBadge}
+                  <div class="flex items-center gap-1">
+                    <span class="text-[9px] font-mono text-slate-400 group-hover:text-amber-300 flex items-center gap-0.5 select-none" title="Drag to move this movie night">⠿ Move</span>
+                    ${statusBadge}
+                  </div>
                 </div>
 
                 <div class="flex items-center gap-2 my-0.5">
-                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-9 h-13 rounded object-cover ${!mSpec.isPublished ? 'border border-amber-400/40' : 'border border-sky-400/40'} bg-black shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-8 h-12 rounded object-cover ${!mSpec.isPublished ? 'border border-amber-400/40' : 'border border-sky-400/40'} bg-black shrink-0 pointer-events-none" onerror="this.src=getCinemaPlaceholder(this.alt);">
                   <div class="min-w-0 flex-1">
                     <div class="text-xs font-black text-white truncate" title="${escapeHtml(mTitle)}">${escapeHtml(mTitle)}</div>
                     <div class="text-[10px] font-mono text-amber-300 truncate">${escapeHtml(mStart)} – ${escapeHtml(mEnd)}</div>
@@ -11905,10 +11885,10 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-1 pt-1 border-t border-slate-800/80">
-                  <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}', '${safeTitle}')" class="flex-1 py-1 px-1.5 rounded ${!mSpec.isPublished ? 'bg-amber-500/20 hover:bg-amber-500/35 text-amber-300 border border-amber-500/40' : 'bg-sky-500/20 hover:bg-sky-500/35 text-sky-300 border border-sky-500/40'} text-[10px] font-bold transition cursor-pointer">
+                  <button type="button" onclick="openSmartScheduleMovieModal('${day.dateKey}', '${safeTitle}')" class="flex-1 py-0.5 px-1.5 rounded ${!mSpec.isPublished ? 'bg-amber-500/20 hover:bg-amber-500/35 text-amber-300 border border-amber-500/40' : 'bg-sky-500/20 hover:bg-sky-500/35 text-sky-300 border border-sky-500/40'} text-[10px] font-bold transition cursor-pointer">
                     ✏️ Change
                   </button>
-                  <button type="button" onclick="clearSmartScheduledMovieNight('${day.dateKey}', '${safeTitle}')" class="py-1 px-1.5 rounded bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[10px] font-bold transition cursor-pointer" title="Clear movie">
+                  <button type="button" onclick="clearSmartScheduledMovieNight('${day.dateKey}', '${safeTitle}')" class="py-0.5 px-1.5 rounded bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[10px] font-bold transition cursor-pointer" title="Clear movie">
                     🗑️
                   </button>
                 </div>
@@ -11918,7 +11898,7 @@
 
           if (day.status === 'working_night') {
             return `
-              <div data-cal-date="${day.dateKey}" data-cal-status="working_night" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-rose-950/20 border border-rose-500/35 flex flex-col justify-between gap-2 transition ${dimClass}">
+              <div data-cal-date="${day.dateKey}" data-cal-status="working_night" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-rose-950/20 border border-rose-500/35 flex flex-col justify-between gap-1.5 transition ${dimClass}">
                 <div class="flex items-center justify-between gap-1">
                   ${dateHeaderLeft}
                   <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">🏢 4PM Shift</span>
@@ -11926,7 +11906,7 @@
 
                 <div class="my-0.5">
                   <div class="text-[11px] font-bold text-rose-300 leading-tight">Kevin Working Night</div>
-                  <div class="text-[10px] font-mono text-amber-300 mt-0.5">⏰ ${escapeHtml(day.shiftLabel || '4:00 PM – 10:30 PM')}</div>
+                  <div class="text-[10px] font-mono text-amber-300 mt-0.5">⏰ ${escapeHtml(day.shiftLabel || '4:00 PM – 4:00 AM')}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-1 pt-1 border-t border-rose-900/40">
@@ -11943,7 +11923,7 @@
 
           // Movie Night Open cell
           return `
-            <div data-cal-date="${day.dateKey}" data-cal-status="movie_night_open" onclick="openSmartScheduleMovieModal('${day.dateKey}')" class="sched-cal-cell min-h-[132px] p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/35 border-2 border-emerald-500/50 hover:border-emerald-400 flex flex-col justify-between gap-2 shadow-[0_0_15px_rgba(16,185,129,0.12)] hover:shadow-[0_0_22px_rgba(16,185,129,0.28)] transition cursor-pointer group ${dimClass}">
+            <div data-cal-date="${day.dateKey}" data-cal-status="movie_night_open" onclick="openSmartScheduleMovieModal('${day.dateKey}')" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/35 border-2 border-emerald-500/50 hover:border-emerald-400 flex flex-col justify-between gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.12)] hover:shadow-[0_0_22px_rgba(16,185,129,0.28)] transition cursor-pointer group ${dimClass}">
               <div class="flex items-center justify-between gap-1">
                 ${dateHeaderLeft}
                 <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-500/25 text-emerald-300 border border-emerald-400/50">🍿 OPEN</span>
@@ -11966,27 +11946,29 @@
           `;
         }).join('');
 
-        return `
-          <div class="sched-month-block bg-slate-900/60 border border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-col gap-3">
-            <!-- Month Banner Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
-              <div class="flex items-center gap-2.5 flex-wrap">
-                <h4 class="text-base sm:text-lg font-black text-white tracking-wide">🗓️ ${escapeHtml(mSpec.monthNameLong)}</h4>
-                ${roleTag}
-              </div>
-              <div class="flex flex-wrap items-center gap-2 text-[11px]">
-                <span class="px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">🍿 ${mOpen} Open Nights</span>
-                <span class="px-2 py-0.5 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold">🎬 ${mBooked} Scheduled</span>
-                <span class="px-2 py-0.5 rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 font-bold">🏢 ${mWork} Kevin 4PM Shifts</span>
-              </div>
+        // Clean month block: only render month title header if in 60-days multi-month mode
+        const multiMonthHeaderHtml = (visibleMonths.length > 1) ? `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <div class="flex items-center gap-2">
+              <h4 class="text-sm font-black text-white tracking-wide">🗓️ ${escapeHtml(mSpec.monthNameLong)}</h4>
+              ${roleTag}
             </div>
+            <div class="text-xs text-slate-400 flex items-center gap-2">
+              <span class="text-emerald-300 font-bold">${mOpen} open</span> •
+              <span class="text-sky-300 font-bold">${mBooked} scheduled</span> •
+              <span class="text-rose-300 font-bold">${mWork} shifts</span>
+            </div>
+          </div>
+        ` : '';
 
-            ${draftActionBarHtml}
+        return `
+          <div class="sched-month-block bg-slate-900/40 border border-slate-800/80 rounded-2xl p-2 sm:p-3 flex flex-col gap-2">
+            ${multiMonthHeaderHtml}
 
             <!-- 7-Column Weekday Header (Sun - Sat) -->
-            <div class="hidden md:grid md:grid-cols-7 gap-2 text-center">
+            <div class="hidden md:grid md:grid-cols-7 gap-2 text-center mb-0.5">
               ${weekdayHeaders.map(w => `
-                <div class="py-1.5 rounded-lg bg-slate-950/90 border border-slate-800/80 text-[11px] font-black uppercase tracking-wider text-slate-300">
+                <div class="py-1 rounded-lg bg-slate-950/90 border border-slate-800/80 text-[11px] font-black uppercase tracking-wider text-slate-400">
                   ${w}
                 </div>
               `).join('')}
@@ -12001,6 +11983,242 @@
         `;
       }).join('');
     }
+
+    // ==========================================
+    // 🗓️ SEASON PLANNER DRAG & DROP ENGINE
+    // ==========================================
+    let calendarDragState = null;
+
+    function handleCalendarMovieDragStart(e, sourceDateKey, movieTitle) {
+      if (!isAdmin) return;
+      calendarDragState = {
+        sourceDateKey,
+        movieTitle
+      };
+      if (e.dataTransfer) {
+        e.dataTransfer.setData('text/plain', JSON.stringify({ sourceDateKey, movieTitle }));
+        e.dataTransfer.effectAllowed = 'move';
+      }
+      const el = e.currentTarget;
+      if (el) {
+        el.classList.add('opacity-40', 'scale-95');
+      }
+    }
+    window.handleCalendarMovieDragStart = handleCalendarMovieDragStart;
+
+    function handleCalendarMovieDragEnd(e) {
+      const el = e.currentTarget;
+      if (el) {
+        el.classList.remove('opacity-40', 'scale-95');
+      }
+      document.querySelectorAll('.sched-cal-cell').forEach(cell => {
+        cell.classList.remove('ring-2', 'ring-amber-400', 'ring-emerald-400', 'ring-rose-400', 'bg-amber-500/20', 'bg-emerald-500/20', 'bg-rose-500/20');
+      });
+      calendarDragState = null;
+    }
+    window.handleCalendarMovieDragEnd = handleCalendarMovieDragEnd;
+
+    function handleCalendarDayDragOver(e) {
+      if (!calendarDragState) return;
+      e.preventDefault();
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = 'move';
+      }
+    }
+    window.handleCalendarDayDragOver = handleCalendarDayDragOver;
+
+    function handleCalendarDayDragEnter(e) {
+      if (!calendarDragState) return;
+      e.preventDefault();
+      const cell = e.currentTarget;
+      if (!cell) return;
+      const status = cell.getAttribute('data-cal-status');
+      if (status === 'working_night') {
+        cell.classList.add('ring-2', 'ring-rose-400', 'bg-rose-500/20');
+      } else if (status === 'movie_scheduled') {
+        cell.classList.add('ring-2', 'ring-amber-400', 'bg-amber-500/20');
+      } else {
+        cell.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-500/20');
+      }
+    }
+    window.handleCalendarDayDragEnter = handleCalendarDayDragEnter;
+
+    function handleCalendarDayDragLeave(e) {
+      const cell = e.currentTarget;
+      if (cell) {
+        cell.classList.remove('ring-2', 'ring-amber-400', 'ring-emerald-400', 'ring-rose-400', 'bg-amber-500/20', 'bg-emerald-500/20', 'bg-rose-500/20');
+      }
+    }
+    window.handleCalendarDayDragLeave = handleCalendarDayDragLeave;
+
+    async function handleCalendarDayDrop(e, targetDateKey) {
+      e.preventDefault();
+      const cell = e.currentTarget;
+      if (cell) {
+        cell.classList.remove('ring-2', 'ring-amber-400', 'ring-emerald-400', 'ring-rose-400', 'bg-amber-500/20', 'bg-emerald-500/20', 'bg-rose-500/20');
+      }
+
+      let sourceDateKey = calendarDragState ? calendarDragState.sourceDateKey : null;
+      let movieTitle = calendarDragState ? calendarDragState.movieTitle : null;
+
+      if (!sourceDateKey && e.dataTransfer) {
+        try {
+          const raw = e.dataTransfer.getData('text/plain');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            sourceDateKey = parsed.sourceDateKey;
+            movieTitle = parsed.movieTitle;
+          }
+        } catch (err) {}
+      }
+
+      calendarDragState = null;
+
+      if (!sourceDateKey || !targetDateKey || sourceDateKey === targetDateKey) {
+        return;
+      }
+
+      await moveScheduledMovieDate(sourceDateKey, targetDateKey, movieTitle);
+    }
+    window.handleCalendarDayDrop = handleCalendarDayDrop;
+
+    async function moveScheduledMovieDate(sourceDateKey, targetDateKey, movieTitle) {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+
+      const maps = buildSchedulerLookupMaps();
+      const targetDay = getSchedulerDayDataForDateKey(targetDateKey, maps);
+      const [tY, tM, tD] = targetDateKey.split('-').map(Number);
+      const targetDisplayDate = new Date(tY, tM - 1, tD, 12, 0, 0).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+      if (targetDay && targetDay.status === 'working_night') {
+        const proceed = window.confirm(
+          `⚠️ Shift Conflict Warning!\n\n` +
+          `Kevin is scheduled to work (${targetDay.shiftLabel || '4:00 PM – 4:00 AM'}) on ${targetDisplayDate}.\n\n` +
+          `Are you sure you want to move "${movieTitle}" onto Kevin's work shift night?`
+        );
+        if (!proceed) return;
+      }
+
+      let swapMovie = null;
+      if (targetDay && targetDay.status === 'movie_scheduled' && targetDay.scheduledMovie) {
+        const existingTitle = targetDay.scheduledMovie.title;
+        const doSwap = window.confirm(
+          `🔄 Swap Movie Nights?\n\n` +
+          `"${existingTitle}" is currently scheduled on ${targetDisplayDate}.\n\n` +
+          `Do you want to swap:\n` +
+          `• "${movieTitle}" ➔ ${targetDisplayDate}\n` +
+          `• "${existingTitle}" ➔ ${sourceDateKey}?`
+        );
+        if (!doSwap) return;
+        swapMovie = targetDay.scheduledMovie;
+      }
+
+      showTheaterToast(`⏳ Moving "${movieTitle}" to ${targetDisplayDate}...`);
+
+      const sourceNorm = (movieTitle || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      const schedule = (window.theaterOfficialSchedule && Array.isArray(window.theaterOfficialSchedule))
+        ? JSON.parse(JSON.stringify(window.theaterOfficialSchedule))
+        : (window.theaterScheduleCache ? JSON.parse(JSON.stringify(window.theaterScheduleCache)) : []);
+
+      let foundSource = schedule.find(s => {
+        if (!s) return false;
+        const sKey = parseScheduleDateToPacificKey(s);
+        const sTitleNorm = (s.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        return sKey === sourceDateKey || (sourceNorm && sTitleNorm === sourceNorm);
+      });
+
+      if (!foundSource) {
+        const sourceDay = getSchedulerDayDataForDateKey(sourceDateKey, maps);
+        if (sourceDay && sourceDay.scheduledMovie) {
+          foundSource = JSON.parse(JSON.stringify(sourceDay.scheduledMovie));
+          schedule.push(foundSource);
+        } else {
+          showTheaterToast(`❌ Could not locate screening data for "${movieTitle}".`);
+          return;
+        }
+      }
+
+      if (swapMovie) {
+        const [sY, sM, sD] = sourceDateKey.split('-').map(Number);
+        const sourceDisplayDate = new Date(sY, sM - 1, sD, 12, 0, 0).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+        const swapNorm = (swapMovie.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const foundSwap = schedule.find(s => {
+          if (!s) return false;
+          const sKey = parseScheduleDateToPacificKey(s);
+          const sTitleNorm = (s.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          return sKey === targetDateKey || (swapNorm && sTitleNorm === swapNorm);
+        });
+        if (foundSwap) {
+          foundSwap.date = sourceDisplayDate;
+          foundSwap.dateKey = sourceDateKey;
+          let sHour = 19, sMin = 0;
+          const sTimeMatch = (foundSwap.startTime || foundSwap.time || '7:00 PM').match(/(\d+):?(\d+)?\s*(AM|PM)?/i);
+          if (sTimeMatch) {
+            let h = parseInt(sTimeMatch[1], 10);
+            let m = sTimeMatch[2] ? parseInt(sTimeMatch[2], 10) : 0;
+            const ampm = (sTimeMatch[3] || '').toUpperCase();
+            if (ampm === 'PM' && h < 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+            sHour = h; sMin = m;
+          }
+          foundSwap.startMs = new Date(Date.UTC(sY, sM - 1, sD, sHour + 8, sMin, 0)).getTime();
+        }
+      }
+
+      foundSource.date = targetDisplayDate;
+      foundSource.dateKey = targetDateKey;
+      let tHour = 19, tMin = 0;
+      const tTimeMatch = (foundSource.startTime || foundSource.time || '7:00 PM').match(/(\d+):?(\d+)?\s*(AM|PM)?/i);
+      if (tTimeMatch) {
+        let h = parseInt(tTimeMatch[1], 10);
+        let m = tTimeMatch[2] ? parseInt(tTimeMatch[2], 10) : 0;
+        const ampm = (tTimeMatch[3] || '').toUpperCase();
+        if (ampm === 'PM' && h < 12) h += 12;
+        if (ampm === 'AM' && h === 12) h = 0;
+        tHour = h; tMin = m;
+      }
+      foundSource.startMs = new Date(Date.UTC(tY, tM - 1, tD, tHour + 8, tMin, 0)).getTime();
+
+      window.theaterScheduleCache = schedule;
+      window.theaterOfficialSchedule = schedule;
+
+      await Promise.allSettled([
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(schedule)
+        }),
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(schedule)
+        }),
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'move_movie',
+            title: foundSource.title,
+            from: sourceDateKey,
+            to: targetDateKey,
+            timestamp: Date.now()
+          })
+        })
+      ]);
+
+      renderSchedulerCalendarPopup();
+      renderSchedule(schedule);
+      updateCountdown();
+      if (typeof renderSmartMovieNightScheduler === 'function') renderSmartMovieNightScheduler();
+
+      showTheaterToast(`🎉 Successfully moved "${foundSource.title}" to ${targetDisplayDate}!`);
+    }
+    window.moveScheduledMovieDate = moveScheduledMovieDate;
 
     function renderSmartMovieNightScheduler() {
       // Always keep the Full-Calendar (+60 Days) Popup synchronized

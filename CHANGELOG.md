@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.11.2] - 2026-11-11
+
+### What's New
+- Consolidated Season Planner into a unified single-row control bar.
+- Eliminated redundant subheaders, duplicate stats, and tall banner boxes.
+- Added drag-and-drop movie rescheduling with shift conflict protection.
+- Enabled full 5-week monthly calendar grid visibility without scrolling.
+- Streamlined day cells with quick move indicators and tags.
+
 ## [4.11.1] - 2026-11-11
 
 ### What's New
