@@ -4873,7 +4873,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.0";
+    const APP_VERSION = "4.11.1";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -11336,6 +11336,21 @@
     function parseScheduleDateToPacificKey(item) {
       if (!item) return '';
       if (item.dateKey && /^\d{4}-\d{2}-\d{2}$/.test(item.dateKey)) return item.dateKey;
+      if (item.date) {
+        const isoM = String(item.date).match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (isoM) return `${isoM[1]}-${isoM[2]}-${isoM[3]}`;
+        const cleanD = String(item.date).replace(/^[a-z]+,\s*/i, "").trim();
+        const mNamed = cleanD.match(/^([a-z]+)\.?\s+(\d{1,2})(?:[,\s]+(\d{4}))?/i);
+        if (mNamed) {
+          const monthMap = { jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06', jul: '07', aug: '08', sep: '09', sept: '09', oct: '10', nov: '11', dec: '12' };
+          const mk = mNamed[1].toLowerCase().substring(0, 3);
+          if (monthMap[mk]) {
+            const yr = mNamed[3] || '2026';
+            const dy = String(mNamed[2]).padStart(2, '0');
+            return `${yr}-${monthMap[mk]}-${dy}`;
+          }
+        }
+      }
       if (item.startMs && item.startMs > 0) {
         const k = getPacificDateKeyFromMs(item.startMs);
         if (k) return k;
@@ -12679,10 +12694,24 @@
       if (label) label.textContent = "Scheduling & Syncing to Google Calendar...";
 
       try {
-        // Compute timestamps and display date
-        const dObj = new Date(`${rawDateKey}T19:00:00`);
+        // Compute timestamps and display date explicitly from dateKey parts to prevent ANY timezone shift
+        const [rY, rM, rD] = rawDateKey.split('-').map(Number);
+        const dObj = new Date(rY, rM - 1, rD, 12, 0, 0);
         const formattedDate = dObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-        let startMs = dObj.getTime();
+        
+        let startHour = 19, startMin = 0;
+        const tMatch = startTimeStr.match(/(\d+):?(\d+)?\s*(AM|PM)?/i);
+        if (tMatch) {
+          let h = parseInt(tMatch[1], 10);
+          let m = tMatch[2] ? parseInt(tMatch[2], 10) : 0;
+          const ampm = (tMatch[3] || '').toUpperCase();
+          if (ampm === 'PM' && h < 12) h += 12;
+          if (ampm === 'AM' && h === 12) h = 0;
+          startHour = h;
+          startMin = m;
+        }
+
+        let startMs = new Date(Date.UTC(rY, rM - 1, rD, startHour + 8, startMin, 0)).getTime();
         try {
           const parsed = new Date(`${formattedDate} ${startTimeStr} PST`);
           if (!isNaN(parsed.getTime())) startMs = parsed.getTime();

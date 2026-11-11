@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.11.1] - 2026-11-11
+
+### What's New
+- Fixed timezone offset bug shifting Dec 2 to Dec 1.
+- Restored Kevin's Tuesday night shift on December 1.
+- Moved The 12 Dates of Christmas to December 2.
+- Made Firebase the primary source of truth for scheduling.
+- Prevented spreadsheet auto-sync from stomping movie dates.
+
 ## [4.11.0] - 2026-11-11
 
 ### What's New
