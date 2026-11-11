@@ -4869,7 +4869,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.10.1";
+    const APP_VERSION = "4.10.2";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -12511,18 +12511,58 @@
           calendarSynced: true
         };
 
-        // 1. Update in-memory schedule caches (replace any movie on the same dateKey, then sort chronologically)
-        const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache))
-          ? window.theaterScheduleCache
-          : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
-
-        const existingIdx = schedSource.findIndex(s => parseScheduleDateToPacificKey(s) === rawDateKey);
-        if (existingIdx >= 0) {
-          schedSource[existingIdx] = newScheduleEntry;
-        } else {
-          schedSource.push(newScheduleEntry);
+        // 1. Fetch live officialSchedule from Firebase first so existing future schedule entries are NEVER lost or stomped!
+        let baseLiveList = [];
+        try {
+          const liveRes = await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`);
+          if (liveRes.ok) {
+            const liveData = await liveRes.json();
+            if (Array.isArray(liveData) && liveData.length > 0) {
+              baseLiveList = liveData;
+            }
+          }
+        } catch(fetchErr) {
+          console.warn("Live schedule pre-fetch warning:", fetchErr);
         }
-        schedSource.sort((a, b) => (a.startMs || 0) - (b.startMs || 0));
+
+        // Build comprehensive union map of current schedule items across server and client
+        const schedMap = new Map();
+        const normSchedTitle = s => (s && s.title ? String(s.title).toLowerCase().replace(/^[🎬🎥📽️\s]+/, '').replace(/[^a-z0-9]/g, '') : '');
+        const getSchedItemKey = s => {
+          const dk = parseScheduleDateToPacificKey(s) || (s && s.dateKey) || '';
+          const tm = (s && (s.startTime || s.time)) ? String(s.startTime || s.time).trim().toLowerCase() : '';
+          const tt = normSchedTitle(s);
+          return dk ? `${dk}_${tm || tt}` : tt;
+        };
+
+        const candidates = [
+          ...(typeof sampleSchedule !== 'undefined' ? sampleSchedule : []),
+          ...(Array.isArray(window.theaterScheduleCache) ? window.theaterScheduleCache : []),
+          ...baseLiveList
+        ];
+        candidates.forEach(s => {
+          if (!s || !s.title) return;
+          const k = getSchedItemKey(s);
+          if (k) schedMap.set(k, s);
+        });
+
+        // Set or replace the movie scheduled for rawDateKey
+        let replaced = false;
+        for (const [k, v] of schedMap.entries()) {
+          const vDateKey = parseScheduleDateToPacificKey(v) || (v && v.dateKey) || '';
+          if (vDateKey === rawDateKey) {
+            schedMap.delete(k);
+            schedMap.set(getSchedItemKey(newScheduleEntry), newScheduleEntry);
+            replaced = true;
+            break;
+          }
+        }
+        if (!replaced) {
+          schedMap.set(getSchedItemKey(newScheduleEntry), newScheduleEntry);
+        }
+
+        const schedSource = Array.from(schedMap.values());
+        schedSource.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
         window.theaterScheduleCache = schedSource;
         window.theaterOfficialSchedule = schedSource;
 
@@ -12626,9 +12666,41 @@
       const normTargetTitle = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
       const cleanDateKey = (dateKey || '').toString().trim();
 
-      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache))
-        ? window.theaterScheduleCache
-        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+      // Fetch live officialSchedule from Firebase first so other scheduled movies are NEVER stomped!
+      let baseLiveList = [];
+      try {
+        const liveRes = await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`);
+        if (liveRes.ok) {
+          const liveData = await liveRes.json();
+          if (Array.isArray(liveData) && liveData.length > 0) {
+            baseLiveList = liveData;
+          }
+        }
+      } catch(fetchErr) {
+        console.warn("Live schedule pre-fetch for removal warning:", fetchErr);
+      }
+
+      const schedMap = new Map();
+      const normSchedTitle = s => (s && s.title ? String(s.title).toLowerCase().replace(/^[🎬🎥📽️\s]+/, '').replace(/[^a-z0-9]/g, '') : '');
+      const getSchedItemKey = s => {
+        const dk = parseScheduleDateToPacificKey(s) || (s && s.dateKey) || '';
+        const tm = (s && (s.startTime || s.time)) ? String(s.startTime || s.time).trim().toLowerCase() : '';
+        const tt = normSchedTitle(s);
+        return dk ? `${dk}_${tm || tt}` : tt;
+      };
+
+      const candidates = [
+        ...(typeof sampleSchedule !== 'undefined' ? sampleSchedule : []),
+        ...(Array.isArray(window.theaterScheduleCache) ? window.theaterScheduleCache : []),
+        ...baseLiveList
+      ];
+      candidates.forEach(s => {
+        if (!s || !s.title) return;
+        const k = getSchedItemKey(s);
+        if (k) schedMap.set(k, s);
+      });
+
+      const schedSource = Array.from(schedMap.values());
 
       let resolvedDateKey = cleanDateKey;
       const filtered = schedSource.filter(s => {
@@ -15536,6 +15608,18 @@
           if (!mergedSchedMap.has(liveKey)) {
             mergedSchedMap.set(liveKey, existingLive);
           }
+        }
+
+        // Protect all future-dated schedule items (such as December schedule) from being dropped by a partial sync packet
+        if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
+          window.theaterScheduleCache.forEach(item => {
+            if (!item || !item.title) return;
+            const k = normKey(item);
+            const isFuture = (Number(item.startMs) || 0) > (now - 86400000) || (item.date && (item.date.includes('Dec') || item.date.includes('2026')));
+            if (isFuture && !mergedSchedMap.has(k)) {
+              mergedSchedMap.set(k, Object.assign({}, item));
+            }
+          });
         }
 
         const reconciled = Array.from(mergedSchedMap.values());

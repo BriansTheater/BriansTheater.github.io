@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.10.2] - 2026-11-11
+
+### What's New
+- Restored missing December movie screenings to the live schedule.
+- Fixed schedule overwrites so scheduled movies never disappear.
+- Added live cloud pre-fetch before saving movie schedule changes.
+- Preserved future scheduled movies during spreadsheet auto-sync.
+- Hardened schedule removals to keep other movie nights intact.
+
 ## [4.10.1] - 2026-11-11
 
 ### What's New
