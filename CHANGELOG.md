@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.9.270] - 2026-11-10
+
+### What's New
+- Fixed Enter Theater button icons resetting on theme changes.
+- Added 1-click Icon Pair Presets in Admin and Modal.
+- Added 44-emoji clickable icon grid with Left/Right/Both slot selector.
+- Added 1-click Swap button for Left and Right icons.
+- Synced custom Enter button icons across Firebase in real-time.
+
 ## [4.9.269] - 2026-11-05
 
 ### What's New

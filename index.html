@@ -1922,11 +1922,86 @@
                 <input type="text" id="adminEnterButtonText" value="Enter" placeholder="e.g. Enter" oninput="previewAdminEnterButton()" class="w-full mt-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400">
               </div>
               <div>
-                <label class="text-xs font-semibold text-slate-300">Icons (Left / Right)</label>
-                <div class="flex gap-1.5 mt-1">
-                  <input type="text" id="adminEnterIconLeft" value="🎃" maxlength="4" oninput="previewAdminEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Left Emoji Icon">
-                  <input type="text" id="adminEnterIconRight" value="🦇" maxlength="4" oninput="previewAdminEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Right Emoji Icon">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-semibold text-slate-300">Icons (Left / Right)</label>
+                  <button type="button" onclick="swapEnterButtonIcons('admin')" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold cursor-pointer" title="Swap Left and Right Icons">⇄ Swap</button>
                 </div>
+                <div class="flex gap-1.5 mt-1">
+                  <input type="text" id="adminEnterIconLeft" value="🎃" maxlength="6" onfocus="setEnterIconSlotTarget('left')" oninput="onManualEnterIconInput('admin')" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Left Emoji Icon">
+                  <input type="text" id="adminEnterIconRight" value="🦇" maxlength="6" onfocus="setEnterIconSlotTarget('right')" oninput="onManualEnterIconInput('admin')" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Right Emoji Icon">
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Icon Studio (Pair Presets + Emoji Palette) -->
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col gap-2.5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">🎨 Icon System</span>
+                  <span id="adminEnterIconModeBadge" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-950/90 text-purple-300 border border-purple-700/60">AUTO THEME</span>
+                </div>
+                <button type="button" onclick="toggleEnterEmojiPalette('admin')" id="adminToggleEmojiPaletteBtn" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition cursor-pointer">
+                  ✨ Open Emoji Grid ▾
+                </button>
+              </div>
+
+              <!-- 1-Click Icon Pair Presets -->
+              <div class="flex flex-wrap gap-1.5" id="adminEnterIconPresetGrid">
+                <button type="button" onclick="applyEnterIconPairPreset('auto', 'admin')" data-preset="auto" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer" title="Automatically match the active seasonal theme">
+                  <span>🎨</span> <span>Auto Theme</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('cinema', 'admin')" data-preset="cinema" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🎬/🍿</span> <span>Cinema</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('vip', 'admin')" data-preset="vip" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🎟️/🎥</span> <span>VIP</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('stars', 'admin')" data-preset="stars" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>⭐/⭐</span> <span>Stars</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('hype', 'admin')" data-preset="hype" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🔥/⚡</span> <span>Hype</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('royal', 'admin')" data-preset="royal" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>👑/🏆</span> <span>Royal</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('thanksgiving', 'admin')" data-preset="thanksgiving" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🦃/🍁</span> <span>Harvest</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('christmas', 'admin')" data-preset="christmas" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🎄/❄️</span> <span>Holiday</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('halloween', 'admin')" data-preset="halloween" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🎃/🦇</span> <span>Spooky</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('newyears', 'admin')" data-preset="newyears" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🥂/✨</span> <span>Gala</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('valentines', 'admin')" data-preset="valentines" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>💖/💝</span> <span>Romance</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('stpatricks', 'admin')" data-preset="stpatricks" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>☘️/🪙</span> <span>Lucky</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('july4th', 'admin')" data-preset="july4th" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+                  <span>🎆/🚀</span> <span>Pyro</span>
+                </button>
+                <button type="button" onclick="applyEnterIconPairPreset('none', 'admin')" data-preset="none" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-rose-300 flex items-center gap-1 transition cursor-pointer" title="Clean button with no icons">
+                  <span>🚫</span> <span>No Icons</span>
+                </button>
+              </div>
+
+              <!-- Collapsible Individual Emoji Picker Drawer -->
+              <div id="adminEnterEmojiPaletteDrawer" class="hidden pt-2 border-t border-slate-800 flex flex-col gap-2">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[10px] text-slate-400 font-medium">Click an emoji to assign to:</span>
+                  <div class="inline-flex rounded-lg bg-slate-950 p-0.5 border border-slate-800">
+                    <button type="button" onclick="setEnterIconSlotTarget('left')" data-slot-target="left" class="enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500 text-slate-950 transition cursor-pointer">⬅️ Left</button>
+                    <button type="button" onclick="setEnterIconSlotTarget('right')" data-slot-target="right" class="enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer">➡️ Right</button>
+                    <button type="button" onclick="setEnterIconSlotTarget('both')" data-slot-target="both" class="enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer">↔️ Both</button>
+                  </div>
+                </div>
+                <div id="adminEnterSingleEmojiGrid" class="grid grid-cols-8 sm:grid-cols-11 gap-1"></div>
               </div>
             </div>
 
@@ -4687,11 +4762,84 @@
           <input type="text" id="modalEnterButtonText" value="Enter" placeholder="e.g. Enter" oninput="previewModalEnterButton()" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400">
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-xs font-semibold text-slate-200">Icons (Left / Right)</label>
-          <div class="flex gap-1.5">
-            <input type="text" id="modalEnterIconLeft" value="🎃" maxlength="4" oninput="previewModalEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Left Emoji">
-            <input type="text" id="modalEnterIconRight" value="🦇" maxlength="4" oninput="previewModalEnterButton()" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Right Emoji">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200">Icons (Left / Right)</label>
+            <button type="button" onclick="swapEnterButtonIcons('modal')" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold cursor-pointer" title="Swap Left and Right Icons">⇄ Swap</button>
           </div>
+          <div class="flex gap-1.5">
+            <input type="text" id="modalEnterIconLeft" value="🎃" maxlength="6" onfocus="setEnterIconSlotTarget('left')" oninput="onManualEnterIconInput('modal')" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Left Emoji">
+            <input type="text" id="modalEnterIconRight" value="🦇" maxlength="6" onfocus="setEnterIconSlotTarget('right')" oninput="onManualEnterIconInput('modal')" class="w-1/2 px-2 py-2 text-center text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-amber-400" title="Right Emoji">
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Icon Studio in Modal -->
+      <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col gap-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">🎨 Icon System</span>
+            <span id="modalEnterIconModeBadge" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-950/90 text-purple-300 border border-purple-700/60">AUTO THEME</span>
+          </div>
+          <button type="button" onclick="toggleEnterEmojiPalette('modal')" id="modalToggleEmojiPaletteBtn" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition cursor-pointer">
+            ✨ Open Emoji Grid ▾
+          </button>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5" id="modalEnterIconPresetGrid">
+          <button type="button" onclick="applyEnterIconPairPreset('auto', 'modal')" data-preset="auto" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🎨</span> <span>Auto Theme</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('cinema', 'modal')" data-preset="cinema" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🎬/🍿</span> <span>Cinema</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('vip', 'modal')" data-preset="vip" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🎟️/🎥</span> <span>VIP</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('stars', 'modal')" data-preset="stars" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>⭐/⭐</span> <span>Stars</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('hype', 'modal')" data-preset="hype" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🔥/⚡</span> <span>Hype</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('royal', 'modal')" data-preset="royal" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>👑/🏆</span> <span>Royal</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('thanksgiving', 'modal')" data-preset="thanksgiving" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🦃/🍁</span> <span>Harvest</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('christmas', 'modal')" data-preset="christmas" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🎄/❄️</span> <span>Holiday</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('halloween', 'modal')" data-preset="halloween" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🎃/🦇</span> <span>Spooky</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('newyears', 'modal')" data-preset="newyears" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🥂/✨</span> <span>Gala</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('valentines', 'modal')" data-preset="valentines" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>💖/💝</span> <span>Romance</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('stpatricks', 'modal')" data-preset="stpatricks" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>☘️/🪙</span> <span>Lucky</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('july4th', 'modal')" data-preset="july4th" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer">
+            <span>🎆/🚀</span> <span>Pyro</span>
+          </button>
+          <button type="button" onclick="applyEnterIconPairPreset('none', 'modal')" data-preset="none" class="enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-rose-300 flex items-center gap-1 transition cursor-pointer">
+            <span>🚫</span> <span>No Icons</span>
+          </button>
+        </div>
+
+        <div id="modalEnterEmojiPaletteDrawer" class="hidden pt-2 border-t border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] text-slate-400 font-medium">Click an emoji to assign to:</span>
+            <div class="inline-flex rounded-lg bg-slate-950 p-0.5 border border-slate-800">
+              <button type="button" onclick="setEnterIconSlotTarget('left')" data-slot-target="left" class="enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500 text-slate-950 transition cursor-pointer">⬅️ Left</button>
+              <button type="button" onclick="setEnterIconSlotTarget('right')" data-slot-target="right" class="enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer">➡️ Right</button>
+              <button type="button" onclick="setEnterIconSlotTarget('both')" data-slot-target="both" class="enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer">↔️ Both</button>
+            </div>
+          </div>
+          <div id="modalEnterSingleEmojiGrid" class="grid grid-cols-8 sm:grid-cols-11 gap-1"></div>
         </div>
       </div>
 
@@ -4721,7 +4869,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.9.269";
+    const APP_VERSION = "4.9.270";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4762,28 +4910,293 @@
     let enterButtonText = "Enter";
     let enterIconLeft = "🎃";
     let enterIconRight = "🦇";
+    let enterIconMode = "theme"; // 'theme' (auto-matches seasonal theme) or 'custom' (user-locked icons)
+    let activeEnterIconSlotTarget = "left"; // 'left' | 'right' | 'both'
     try {
       const savedText = localStorage.getItem('brian_theater_enter_btn_text');
-      if (savedText) enterButtonText = savedText;
+      if (savedText !== null && savedText !== undefined && savedText !== '') enterButtonText = savedText;
+      const savedIconMode = localStorage.getItem('brian_theater_enter_icon_mode');
+      if (savedIconMode === 'custom' || savedIconMode === 'theme') enterIconMode = savedIconMode;
       const savedIconL = localStorage.getItem('brian_theater_enter_icon_left');
-      if (savedIconL) enterIconLeft = savedIconL;
+      if (savedIconL !== null && savedIconL !== undefined) enterIconLeft = savedIconL;
       const savedIconR = localStorage.getItem('brian_theater_enter_icon_right');
-      if (savedIconR) enterIconRight = savedIconR;
+      if (savedIconR !== null && savedIconR !== undefined) enterIconRight = savedIconR;
     } catch(e) {}
     window.enterButtonText = enterButtonText;
     window.enterIconLeft = enterIconLeft;
     window.enterIconRight = enterIconRight;
+    window.enterIconMode = enterIconMode;
 
-    function syncPartyWatchUrls(url, text, iconL, iconR) {
+    const ENTER_ICON_PAIR_PRESETS = {
+      cinema:       { left: '🎬', right: '🍿', label: 'Cinema Classic' },
+      vip:          { left: '🎟️', right: '🎥', label: 'VIP Premiere' },
+      stars:        { left: '⭐', right: '⭐', label: 'Gold Stars' },
+      hype:         { left: '🔥', right: '⚡', label: 'Hype Action' },
+      royal:        { left: '👑', right: '🏆', label: 'Royal Gala' },
+      thanksgiving: { left: '🦃', right: '🍁', label: 'Harvest Thanksgiving' },
+      christmas:    { left: '🎄', right: '❄️', label: 'Holiday Winter' },
+      halloween:    { left: '🎃', right: '🦇', label: 'Shocktober Spooky' },
+      newyears:     { left: '🥂', right: '✨', label: 'New Year Gala' },
+      valentines:   { left: '💖', right: '💝', label: 'Valentine Romance' },
+      stpatricks:   { left: '☘️', right: '🪙', label: 'Lucky Clover' },
+      july4th:      { left: '🎆', right: '🚀', label: 'Summer Blockbuster' },
+      none:         { left: '',   right: '',   label: 'No Icons (Clean Text)' }
+    };
+
+    const ENTER_SINGLE_EMOJI_PALETTE = [
+      '🎬', '🍿', '🎟️', '🎥', '📽️', '🎭', '📺', '🔊', '🛋️', '🚪', '🔑',
+      '⭐', '🌟', '✨', '🔥', '⚡', '💥', '👑', '🏆', '💎', '🎉', '🎊',
+      '🥂', '🍾', '🎃', '🦇', '👻', '💀', '🦃', '🍁', '🍂', '🎄', '🎅',
+      '❄️', '⛄', '💖', '💝', '🌹', '☘️', '🪙', '🌈', '🎆', '🚀', '🦅'
+    ];
+
+    function getThemeDefaultEnterIcons(themeKey) {
+      let t = themeKey;
+      if (!t || t === 'auto') {
+        try {
+          if (typeof getActiveSeasonalTheme === 'function') {
+            const st = getActiveSeasonalTheme();
+            t = (st && st.theme) ? st.theme : 'default';
+          }
+        } catch(e) { t = 'default'; }
+      }
+      if (t === 'halloween') return { left: '🎃', right: '🦇' };
+      if (t === 'christmas') return { left: '🎄', right: '❄️' };
+      if (t === 'newyears') return { left: '🥂', right: '✨' };
+      if (t === 'valentines') return { left: '💖', right: '💝' };
+      if (t === 'stpatricks') return { left: '☘️', right: '🪙' };
+      if (t === 'july4th') return { left: '🎆', right: '🚀' };
+      if (t === 'thanksgiving') return { left: '🦃', right: '🍁' };
+      return { left: '⭐', right: '⭐' };
+    }
+
+    function updateEnterIconStudioUI() {
+      const modeBadges = [
+        document.getElementById('adminEnterIconModeBadge'),
+        document.getElementById('modalEnterIconModeBadge')
+      ];
+      modeBadges.forEach(b => {
+        if (!b) return;
+        if (enterIconMode === 'custom') {
+          b.textContent = 'CUSTOM LOCKED';
+          b.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-950/90 text-amber-300 border border-amber-600/60';
+        } else {
+          b.textContent = 'AUTO THEME';
+          b.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-950/90 text-purple-300 border border-purple-700/60';
+        }
+      });
+
+      // Highlight active preset button if it matches current state
+      const curL = enterIconLeft;
+      const curR = enterIconRight;
+      let matchedPreset = null;
+      if (enterIconMode === 'theme') {
+        matchedPreset = 'auto';
+      } else {
+        for (const [key, val] of Object.entries(ENTER_ICON_PAIR_PRESETS)) {
+          if (val.left === curL && val.right === curR) {
+            matchedPreset = key;
+            break;
+          }
+        }
+      }
+
+      document.querySelectorAll('.enter-icon-preset-btn').forEach(btn => {
+        const p = btn.getAttribute('data-preset');
+        const isActive = (p === matchedPreset);
+        if (isActive) {
+          btn.className = 'enter-icon-preset-btn px-2 py-1 rounded-lg bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-black flex items-center gap-1 shadow-sm transition cursor-pointer';
+        } else if (p === 'none') {
+          btn.className = 'enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-rose-300 flex items-center gap-1 transition cursor-pointer';
+        } else {
+          btn.className = 'enter-icon-preset-btn px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-200 flex items-center gap-1 transition cursor-pointer';
+        }
+      });
+
+      // Highlight slot target buttons
+      document.querySelectorAll('.enter-slot-target-btn').forEach(btn => {
+        const slot = btn.getAttribute('data-slot-target');
+        if (slot === activeEnterIconSlotTarget) {
+          btn.className = 'enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500 text-slate-950 transition cursor-pointer';
+        } else {
+          btn.className = 'enter-slot-target-btn px-2 py-0.5 rounded-md text-[10px] font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer';
+        }
+      });
+    }
+
+    function renderEnterSingleEmojiGrids() {
+      ['adminEnterSingleEmojiGrid', 'modalEnterSingleEmojiGrid'].forEach(gridId => {
+        const container = document.getElementById(gridId);
+        if (!container || container.dataset.rendered === 'true') return;
+        const source = gridId.startsWith('admin') ? 'admin' : 'modal';
+        container.innerHTML = ENTER_SINGLE_EMOJI_PALETTE.map(emoji =>
+          `<button type="button" onclick="pickSingleEnterEmoji('${emoji}', '${source}')" class="h-7 rounded-md bg-slate-950 hover:bg-amber-500/20 border border-slate-800 hover:border-amber-400 text-sm flex items-center justify-center transition transform active:scale-90 cursor-pointer" title="Set ${emoji}">${emoji}</button>`
+        ).join('');
+        container.dataset.rendered = 'true';
+      });
+    }
+
+    function toggleEnterEmojiPalette(source) {
+      renderEnterSingleEmojiGrids();
+      const drawerId = source === 'modal' ? 'modalEnterEmojiPaletteDrawer' : 'adminEnterEmojiPaletteDrawer';
+      const btnId = source === 'modal' ? 'modalToggleEmojiPaletteBtn' : 'adminToggleEmojiPaletteBtn';
+      const drawer = document.getElementById(drawerId);
+      const btn = document.getElementById(btnId);
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden');
+      drawer.classList.toggle('hidden', !isHidden);
+      if (btn) {
+        btn.textContent = isHidden ? '✨ Hide Emoji Grid ▴' : '✨ Open Emoji Grid ▾';
+      }
+      updateEnterIconStudioUI();
+    }
+
+    function setEnterIconSlotTarget(target) {
+      if (target === 'left' || target === 'right' || target === 'both') {
+        activeEnterIconSlotTarget = target;
+      }
+      updateEnterIconStudioUI();
+    }
+
+    function pickSingleEnterEmoji(emoji, source) {
+      enterIconMode = 'custom';
+      window.enterIconMode = 'custom';
+      try { localStorage.setItem('brian_theater_enter_icon_mode', 'custom'); } catch(e) {}
+
+      const adminL = document.getElementById('adminEnterIconLeft');
+      const adminR = document.getElementById('adminEnterIconRight');
+      const modalL = document.getElementById('modalEnterIconLeft');
+      const modalR = document.getElementById('modalEnterIconRight');
+
+      if (activeEnterIconSlotTarget === 'left' || activeEnterIconSlotTarget === 'both') {
+        enterIconLeft = emoji;
+        window.enterIconLeft = emoji;
+        if (adminL) adminL.value = emoji;
+        if (modalL) modalL.value = emoji;
+      }
+      if (activeEnterIconSlotTarget === 'right' || activeEnterIconSlotTarget === 'both') {
+        enterIconRight = emoji;
+        window.enterIconRight = emoji;
+        if (adminR) adminR.value = emoji;
+        if (modalR) modalR.value = emoji;
+      }
+
+      previewAdminEnterButton();
+      previewModalEnterButton();
+      updateEnterIconStudioUI();
+    }
+
+    function swapEnterButtonIcons(source) {
+      enterIconMode = 'custom';
+      window.enterIconMode = 'custom';
+      try { localStorage.setItem('brian_theater_enter_icon_mode', 'custom'); } catch(e) {}
+
+      const leftId = source === 'modal' ? 'modalEnterIconLeft' : 'adminEnterIconLeft';
+      const rightId = source === 'modal' ? 'modalEnterIconRight' : 'adminEnterIconRight';
+      const curL = document.getElementById(leftId)?.value ?? enterIconLeft;
+      const curR = document.getElementById(rightId)?.value ?? enterIconRight;
+
+      enterIconLeft = curR;
+      enterIconRight = curL;
+      window.enterIconLeft = enterIconLeft;
+      window.enterIconRight = enterIconRight;
+
+      const adminL = document.getElementById('adminEnterIconLeft');
+      const adminR = document.getElementById('adminEnterIconRight');
+      const modalL = document.getElementById('modalEnterIconLeft');
+      const modalR = document.getElementById('modalEnterIconRight');
+      if (adminL) adminL.value = enterIconLeft;
+      if (adminR) adminR.value = enterIconRight;
+      if (modalL) modalL.value = enterIconLeft;
+      if (modalR) modalR.value = enterIconRight;
+
+      previewAdminEnterButton();
+      previewModalEnterButton();
+      updateEnterIconStudioUI();
+    }
+
+    function applyEnterIconPairPreset(presetKey, source) {
+      if (presetKey === 'auto') {
+        enterIconMode = 'theme';
+        window.enterIconMode = 'theme';
+        try { localStorage.setItem('brian_theater_enter_icon_mode', 'theme'); } catch(e) {}
+        const defIcons = getThemeDefaultEnterIcons();
+        enterIconLeft = defIcons.left;
+        enterIconRight = defIcons.right;
+      } else if (ENTER_ICON_PAIR_PRESETS[presetKey]) {
+        enterIconMode = 'custom';
+        window.enterIconMode = 'custom';
+        try { localStorage.setItem('brian_theater_enter_icon_mode', 'custom'); } catch(e) {}
+        enterIconLeft = ENTER_ICON_PAIR_PRESETS[presetKey].left;
+        enterIconRight = ENTER_ICON_PAIR_PRESETS[presetKey].right;
+      } else {
+        return;
+      }
+
+      window.enterIconLeft = enterIconLeft;
+      window.enterIconRight = enterIconRight;
+
+      const adminL = document.getElementById('adminEnterIconLeft');
+      const adminR = document.getElementById('adminEnterIconRight');
+      const modalL = document.getElementById('modalEnterIconLeft');
+      const modalR = document.getElementById('modalEnterIconRight');
+      if (adminL) adminL.value = enterIconLeft;
+      if (adminR) adminR.value = enterIconRight;
+      if (modalL) modalL.value = enterIconLeft;
+      if (modalR) modalR.value = enterIconRight;
+
+      previewAdminEnterButton();
+      previewModalEnterButton();
+      updateEnterIconStudioUI();
+    }
+
+    function onManualEnterIconInput(source) {
+      enterIconMode = 'custom';
+      window.enterIconMode = 'custom';
+      try { localStorage.setItem('brian_theater_enter_icon_mode', 'custom'); } catch(e) {}
+
+      if (source === 'modal') {
+        const l = document.getElementById('modalEnterIconLeft')?.value ?? '';
+        const r = document.getElementById('modalEnterIconRight')?.value ?? '';
+        enterIconLeft = l;
+        enterIconRight = r;
+        const adminL = document.getElementById('adminEnterIconLeft');
+        const adminR = document.getElementById('adminEnterIconRight');
+        if (adminL) adminL.value = l;
+        if (adminR) adminR.value = r;
+      } else {
+        const l = document.getElementById('adminEnterIconLeft')?.value ?? '';
+        const r = document.getElementById('adminEnterIconRight')?.value ?? '';
+        enterIconLeft = l;
+        enterIconRight = r;
+        const modalL = document.getElementById('modalEnterIconLeft');
+        const modalR = document.getElementById('modalEnterIconRight');
+        if (modalL) modalL.value = l;
+        if (modalR) modalR.value = r;
+      }
+      window.enterIconLeft = enterIconLeft;
+      window.enterIconRight = enterIconRight;
+
+      previewAdminEnterButton();
+      previewModalEnterButton();
+      updateEnterIconStudioUI();
+    }
+
+    function syncPartyWatchUrls(url, text, iconL, iconR, iconModeArg) {
       if (url && typeof url === 'string') {
         partyWatchUrl = url.trim();
         window.partyWatchUrl = partyWatchUrl;
         try { localStorage.setItem('brian_theater_party_url', partyWatchUrl); } catch(e) {}
       }
       if (text !== undefined && text !== null && typeof text === 'string') {
-        enterButtonText = text.trim();
+        enterButtonText = text.trim() || "Enter";
         window.enterButtonText = enterButtonText;
         try { localStorage.setItem('brian_theater_enter_btn_text', enterButtonText); } catch(e) {}
+      }
+      if (iconModeArg === 'custom' || iconModeArg === 'theme') {
+        enterIconMode = iconModeArg;
+        window.enterIconMode = enterIconMode;
+        try { localStorage.setItem('brian_theater_enter_icon_mode', enterIconMode); } catch(e) {}
       }
       if (iconL !== undefined && iconL !== null && typeof iconL === 'string') {
         enterIconLeft = iconL.trim();
@@ -4794,6 +5207,14 @@
         enterIconRight = iconR.trim();
         window.enterIconRight = enterIconRight;
         try { localStorage.setItem('brian_theater_enter_icon_right', enterIconRight); } catch(e) {}
+      }
+
+      if (enterIconMode === 'theme') {
+        const defIcons = getThemeDefaultEnterIcons();
+        enterIconLeft = defIcons.left;
+        enterIconRight = defIcons.right;
+        window.enterIconLeft = enterIconLeft;
+        window.enterIconRight = enterIconRight;
       }
 
       const raw = (partyWatchUrl || "https://tiny.cc/BriansTheater").trim();
@@ -4808,8 +5229,14 @@
         btnLink.rel = "noopener noreferrer";
       }
       if (btnText) btnText.textContent = enterButtonText || "Enter";
-      if (iconLeftEl) iconLeftEl.textContent = enterIconLeft || "🎃";
-      if (iconRightEl) iconRightEl.textContent = enterIconRight || "🦇";
+      if (iconLeftEl) {
+        iconLeftEl.textContent = enterIconLeft;
+        iconLeftEl.classList.toggle('hidden', !enterIconLeft);
+      }
+      if (iconRightEl) {
+        iconRightEl.textContent = enterIconRight;
+        iconRightEl.classList.toggle('hidden', !enterIconRight);
+      }
 
       // Also keep Admin inputs synchronized
       const adminUrl = document.getElementById('adminEnterButtonUrl');
@@ -4833,10 +5260,13 @@
 
       previewAdminEnterButton();
       previewModalEnterButton();
+      updateEnterIconStudioUI();
     }
 
     // Attach click handler to ensure Enter button navigation never fails
     function initEnterButtonListener() {
+      renderEnterSingleEmojiGrids();
+      updateEnterIconStudioUI();
       const enterBtn = document.getElementById('btnEnterAuditorium');
       if (enterBtn && !enterBtn.dataset.listenerAttached) {
         enterBtn.dataset.listenerAttached = "true";
@@ -4868,6 +5298,7 @@
         showTheaterToast("🔒 Admin authentication required.");
         return;
       }
+      renderEnterSingleEmojiGrids();
       const modal = document.getElementById('enterButtonConfigModal');
       const urlInput = document.getElementById('modalEnterButtonUrl');
       const txtInput = document.getElementById('modalEnterButtonText');
@@ -4876,10 +5307,11 @@
 
       if (urlInput) urlInput.value = partyWatchUrl || "https://tiny.cc/BriansTheater";
       if (txtInput) txtInput.value = enterButtonText || "Enter";
-      if (leftInput) leftInput.value = enterIconLeft || "🎃";
-      if (rightInput) rightInput.value = enterIconRight || "🦇";
+      if (leftInput) leftInput.value = enterIconLeft;
+      if (rightInput) rightInput.value = enterIconRight;
 
       previewModalEnterButton();
+      updateEnterIconStudioUI();
       if (modal) modal.classList.remove('hidden');
     }
 
@@ -4905,8 +5337,10 @@
     function previewAdminEnterButton() {
       const url = document.getElementById('adminEnterButtonUrl')?.value || "https://tiny.cc/BriansTheater";
       const text = document.getElementById('adminEnterButtonText')?.value || "Enter";
-      const left = document.getElementById('adminEnterIconLeft')?.value || "🎃";
-      const right = document.getElementById('adminEnterIconRight')?.value || "🦇";
+      const leftEl = document.getElementById('adminEnterIconLeft');
+      const rightEl = document.getElementById('adminEnterIconRight');
+      const left = leftEl ? leftEl.value : enterIconLeft;
+      const right = rightEl ? rightEl.value : enterIconRight;
 
       const previewBtn = document.getElementById('adminEnterBtnPreview');
       const previewText = document.getElementById('adminEnterPreviewText');
@@ -4915,15 +5349,23 @@
 
       if (previewBtn) previewBtn.href = url;
       if (previewText) previewText.textContent = text;
-      if (previewLeft) previewLeft.textContent = left;
-      if (previewRight) previewRight.textContent = right;
+      if (previewLeft) {
+        previewLeft.textContent = left;
+        previewLeft.classList.toggle('hidden', !left);
+      }
+      if (previewRight) {
+        previewRight.textContent = right;
+        previewRight.classList.toggle('hidden', !right);
+      }
     }
 
     function previewModalEnterButton() {
       const url = document.getElementById('modalEnterButtonUrl')?.value || "https://tiny.cc/BriansTheater";
       const text = document.getElementById('modalEnterButtonText')?.value || "Enter";
-      const left = document.getElementById('modalEnterIconLeft')?.value || "🎃";
-      const right = document.getElementById('modalEnterIconRight')?.value || "🦇";
+      const leftEl = document.getElementById('modalEnterIconLeft');
+      const rightEl = document.getElementById('modalEnterIconRight');
+      const left = leftEl ? leftEl.value : enterIconLeft;
+      const right = rightEl ? rightEl.value : enterIconRight;
 
       const previewBtn = document.getElementById('modalEnterBtnPreview');
       const previewText = document.getElementById('modalEnterPreviewText');
@@ -4932,8 +5374,14 @@
 
       if (previewBtn) previewBtn.href = url;
       if (previewText) previewText.textContent = text;
-      if (previewLeft) previewLeft.textContent = left;
-      if (previewRight) previewRight.textContent = right;
+      if (previewLeft) {
+        previewLeft.textContent = left;
+        previewLeft.classList.toggle('hidden', !left);
+      }
+      if (previewRight) {
+        previewRight.textContent = right;
+        previewRight.classList.toggle('hidden', !right);
+      }
     }
 
     async function saveAdminEnterButtonConfig() {
@@ -4944,10 +5392,10 @@
       }
       const url = (document.getElementById('adminEnterButtonUrl')?.value || '').trim() || "https://tiny.cc/BriansTheater";
       const text = (document.getElementById('adminEnterButtonText')?.value || '').trim() || "Enter";
-      const iconL = (document.getElementById('adminEnterIconLeft')?.value || '').trim() || "🎃";
-      const iconR = (document.getElementById('adminEnterIconRight')?.value || '').trim() || "🦇";
+      const iconL = (document.getElementById('adminEnterIconLeft')?.value ?? '').trim();
+      const iconR = (document.getElementById('adminEnterIconRight')?.value ?? '').trim();
 
-      syncPartyWatchUrls(url, text, iconL, iconR);
+      syncPartyWatchUrls(url, text, iconL, iconR, enterIconMode);
 
       try {
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json?auth=${FIREBASE_SECRET_KEY}`, {
@@ -4956,8 +5404,9 @@
           body: JSON.stringify({
             partyUrl: url,
             enterButtonText: text,
-            enterButtonIconLeft: iconL,
-            enterButtonIconRight: iconR
+            enterButtonIconLeft: enterIconLeft,
+            enterButtonIconRight: enterIconRight,
+            enterButtonIconMode: enterIconMode
           })
         });
       } catch(e) {}
@@ -4969,13 +5418,14 @@
             type: 'enter_button_update',
             partyUrl: url,
             enterButtonText: text,
-            enterButtonIconLeft: iconL,
-            enterButtonIconRight: iconR
+            enterButtonIconLeft: enterIconLeft,
+            enterButtonIconRight: enterIconRight,
+            enterButtonIconMode: enterIconMode
           });
         }
       } catch(e) {}
 
-      showTheaterToast(`🚪 Enter Theater button updated & broadcasted!`);
+      showTheaterToast(`🚪 Enter Theater button updated & broadcasted! (${enterIconLeft ? enterIconLeft + ' ' : ''}${text}${enterIconRight ? ' ' + enterIconRight : ''})`);
     }
 
     async function saveModalEnterButtonConfig() {
@@ -4986,10 +5436,10 @@
       }
       const url = (document.getElementById('modalEnterButtonUrl')?.value || '').trim() || "https://tiny.cc/BriansTheater";
       const text = (document.getElementById('modalEnterButtonText')?.value || '').trim() || "Enter";
-      const iconL = (document.getElementById('modalEnterIconLeft')?.value || '').trim() || "🎃";
-      const iconR = (document.getElementById('modalEnterIconRight')?.value || '').trim() || "🦇";
+      const iconL = (document.getElementById('modalEnterIconLeft')?.value ?? '').trim();
+      const iconR = (document.getElementById('modalEnterIconRight')?.value ?? '').trim();
 
-      syncPartyWatchUrls(url, text, iconL, iconR);
+      syncPartyWatchUrls(url, text, iconL, iconR, enterIconMode);
 
       try {
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json?auth=${FIREBASE_SECRET_KEY}`, {
@@ -4998,8 +5448,9 @@
           body: JSON.stringify({
             partyUrl: url,
             enterButtonText: text,
-            enterButtonIconLeft: iconL,
-            enterButtonIconRight: iconR
+            enterButtonIconLeft: enterIconLeft,
+            enterButtonIconRight: enterIconRight,
+            enterButtonIconMode: enterIconMode
           })
         });
       } catch(e) {}
@@ -5011,19 +5462,36 @@
             type: 'enter_button_update',
             partyUrl: url,
             enterButtonText: text,
-            enterButtonIconLeft: iconL,
-            enterButtonIconRight: iconR
+            enterButtonIconLeft: enterIconLeft,
+            enterButtonIconRight: enterIconRight,
+            enterButtonIconMode: enterIconMode
           });
         }
       } catch(e) {}
 
       closeEnterButtonConfigModal();
-      showTheaterToast(`🚪 Enter Theater button updated to ${text} (${url})!`);
+      showTheaterToast(`🚪 Enter Theater button updated to ${enterIconLeft ? enterIconLeft + ' ' : ''}${text}${enterIconRight ? ' ' + enterIconRight : ''} (${url})!`);
     }
 
-    function resetAdminEnterButtonConfig() {
-      syncPartyWatchUrls("https://tiny.cc/BriansTheater", "Enter", "🎃", "🦇");
-      showTheaterToast("🔄 Enter button reset to default.");
+    async function resetAdminEnterButtonConfig() {
+      const defIcons = getThemeDefaultEnterIcons();
+      syncPartyWatchUrls("https://tiny.cc/BriansTheater", "Enter", defIcons.left, defIcons.right, 'theme');
+      if (isAdmin) {
+        try {
+          await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              partyUrl: "https://tiny.cc/BriansTheater",
+              enterButtonText: "Enter",
+              enterButtonIconLeft: defIcons.left,
+              enterButtonIconRight: defIcons.right,
+              enterButtonIconMode: 'theme'
+            })
+          });
+        } catch(e) {}
+      }
+      showTheaterToast("🔄 Enter button reset to Auto Theme default.");
     }
 
     function syncAppVersionBadges() {
@@ -6781,6 +7249,14 @@
             if (typeof applyIncomingSeasonalTheme === 'function') {
               applyIncomingSeasonalTheme(msg.theme);
             }
+          } else if (msg && msg.type === 'enter_button_update') {
+            if (typeof syncPartyWatchUrls === 'function') {
+              syncPartyWatchUrls(msg.partyUrl, msg.enterButtonText, msg.enterButtonIconLeft, msg.enterButtonIconRight, msg.enterButtonIconMode || 'custom');
+            }
+          } else if (msg && msg.type === 'party_url_update' && msg.partyUrl) {
+            if (typeof syncPartyWatchUrls === 'function') {
+              syncPartyWatchUrls(msg.partyUrl);
+            }
           }
         } catch(e) {}
       };
@@ -7910,6 +8386,27 @@
         }
         if (enterIconLeftDef) enterIconLeftDef.textContent = '⭐';
         if (enterIconRightDef) enterIconRightDef.textContent = '⭐';
+      }
+
+      // 5. Preserve or synchronize Enter Theater Button Icons & Preview Gradient
+      const adminPreviewBtn = document.getElementById('adminEnterBtnPreview');
+      const modalPreviewBtn = document.getElementById('modalEnterBtnPreview');
+      const liveEnterBtn = document.getElementById('btnEnterAuditorium');
+      if (liveEnterBtn && liveEnterBtn.className) {
+        const basePreviewCls = liveEnterBtn.className
+          .replace('py-4 px-6 rounded-2xl', 'py-3 px-4 rounded-xl')
+          .replace('text-base sm:text-lg', 'text-sm');
+        if (adminPreviewBtn) adminPreviewBtn.className = basePreviewCls;
+        if (modalPreviewBtn) modalPreviewBtn.className = basePreviewCls;
+      }
+
+      if (typeof syncPartyWatchUrls === 'function') {
+        if (enterIconMode === 'custom') {
+          syncPartyWatchUrls(partyWatchUrl, enterButtonText, enterIconLeft, enterIconRight, 'custom');
+        } else {
+          const defPair = getThemeDefaultEnterIcons(theme);
+          syncPartyWatchUrls(partyWatchUrl, enterButtonText, defPair.left, defPair.right, 'theme');
+        }
       }
     }
 
@@ -15087,9 +15584,20 @@
         applyIncomingSeasonalTheme(data.seasonalTheme);
       }
 
-      // Sync party watch URL from Firebase in real time
-      if (data.partyUrl && typeof syncPartyWatchUrls === 'function') {
-        syncPartyWatchUrls(data.partyUrl);
+      // Sync party watch URL, button text, and custom/theme icons from Firebase in real time
+      if ((data.partyUrl || data.enterButtonText !== undefined || data.enterButtonIconLeft !== undefined || data.enterButtonIconRight !== undefined || data.enterButtonIconMode !== undefined) && typeof syncPartyWatchUrls === 'function') {
+        const incomingMode = data.enterButtonIconMode || ((data.enterButtonIconLeft !== undefined || data.enterButtonIconRight !== undefined) ? enterIconMode : undefined);
+        let incomingUrl = data.partyUrl || partyWatchUrl;
+        if (typeof incomingUrl === 'string' && (/partywatch/i.test(incomingUrl) || /linktr\.ee/i.test(incomingUrl))) {
+          incomingUrl = "https://tiny.cc/BriansTheater";
+        }
+        syncPartyWatchUrls(
+          incomingUrl,
+          data.enterButtonText !== undefined ? data.enterButtonText : enterButtonText,
+          data.enterButtonIconLeft !== undefined ? data.enterButtonIconLeft : enterIconLeft,
+          data.enterButtonIconRight !== undefined ? data.enterButtonIconRight : enterIconRight,
+          incomingMode
+        );
       }
 
       // Check if Firebase broadcasts a newer app version
