@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.10.0] - 2026-11-11
+
+### What's New
+- Adopted two-digit patch rollover rule capping patches at 99.
+- Reset project version counter from 4.9.272 to 4.10.0.
+
 ## [4.9.272] - 2026-11-11
 
 ### What's New
