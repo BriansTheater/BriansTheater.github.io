@@ -1,5 +1,11 @@
 # Changelog
  
+## [4.9.271] - 2026-11-11
+
+### What's New
+- Restored Enter Theater button watch URL to http://tiny.cc/partywatch.
+- Synced PartyWatch preset and live Firebase watch link.
+
 ## [4.9.270] - 2026-11-10
 
 ### What's New
