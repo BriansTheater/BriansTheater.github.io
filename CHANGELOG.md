@@ -1,5 +1,13 @@
 # Changelog
  
+## [4.10.1] - 2026-11-11
+
+### What's New
+- Expanded TMDb search with automatic number-word conversion variants.
+- Fixed search for titles like The Twelve Dates of Christmas.
+- Enabled scrollable results tray displaying up to 15 matches.
+- Parallelized multi-query search across movies and TV shows.
+
 ## [4.10.0] - 2026-11-11
 
 ### What's New

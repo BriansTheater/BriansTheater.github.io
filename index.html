@@ -4869,7 +4869,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.10.0";
+    const APP_VERSION = "4.10.1";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -12143,6 +12143,71 @@
       }, 240);
     }
 
+    function getTmdbQueryVariants(query) {
+      if (!query || typeof query !== 'string') return [];
+      const trimmed = query.trim();
+      if (!trimmed) return [];
+
+      const wordToNum = {
+        'zero': '0', 'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5',
+        'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'ten': '10',
+        'eleven': '11', 'twelve': '12', 'thirteen': '13', 'fourteen': '14', 'fifteen': '15',
+        'sixteen': '16', 'seventeen': '17', 'eighteen': '18', 'nineteen': '19', 'twenty': '20',
+        'first': '1st', 'second': '2nd', 'third': '3rd', 'fourth': '4th', 'fifth': '5th'
+      };
+      const numToWord = {
+        '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
+        '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
+        '11': 'eleven', '12': 'twelve', '13': 'thirteen', '14': 'fourteen', '15': 'fifteen',
+        '16': 'sixteen', '17': 'seventeen', '18': 'eighteen', '19': 'nineteen', '20': 'twenty',
+        '1st': 'first', '2nd': 'second', '3rd': 'third', '4th': 'fourth', '5th': 'fifth'
+      };
+      const romanToNum = {
+        'i': '1', 'ii': '2', 'iii': '3', 'iv': '4', 'v': '5',
+        'vi': '6', 'vii': '7', 'viii': '8', 'ix': '9', 'x': '10'
+      };
+
+      const variants = new Set([trimmed]);
+
+      // 1. Convert written number words to digits
+      let withNums = trimmed;
+      for (const [w, n] of Object.entries(wordToNum)) {
+        const reg = new RegExp('\\b' + w + '\\b', 'gi');
+        if (reg.test(withNums)) withNums = withNums.replace(reg, n);
+      }
+      if (withNums !== trimmed) variants.add(withNums);
+
+      // 2. Convert digits to number words
+      let withWords = trimmed;
+      for (const [n, w] of Object.entries(numToWord)) {
+        const reg = new RegExp('\\b' + n + '\\b', 'g');
+        if (reg.test(withWords)) withWords = withWords.replace(reg, w);
+      }
+      if (withWords !== trimmed) variants.add(withWords);
+
+      // 3. Convert Roman numerals to digits
+      let withRomanNums = trimmed;
+      for (const [r, n] of Object.entries(romanToNum)) {
+        const reg = new RegExp('\\b' + r + '\\b', 'gi');
+        if (reg.test(withRomanNums)) withRomanNums = withRomanNums.replace(reg, n);
+      }
+      if (withRomanNums !== trimmed) variants.add(withRomanNums);
+
+      // 4. Strip leading articles ('The', 'A', 'An')
+      const withoutArticle = trimmed.replace(/^(the|a|an)\s+/i, '');
+      if (withoutArticle && withoutArticle !== trimmed) {
+        variants.add(withoutArticle);
+        let woNums = withoutArticle;
+        for (const [w, n] of Object.entries(wordToNum)) {
+          const reg = new RegExp('\\b' + w + '\\b', 'gi');
+          if (reg.test(woNums)) woNums = woNums.replace(reg, n);
+        }
+        if (woNums !== withoutArticle) variants.add(woNums);
+      }
+
+      return Array.from(variants);
+    }
+
     async function fetchTmdbSuggestionsForSmartModal(query) {
       const suggBox = document.getElementById('smartModalSuggestions');
       if (!suggBox) return;
@@ -12150,19 +12215,31 @@
       suggBox.classList.remove('hidden');
       suggBox.innerHTML = `
         <div class="p-3 text-center text-xs text-emerald-300 font-mono flex items-center justify-center gap-2">
-          <span class="animate-spin">🔄</span> <span>Searching TMDb...</span>
+          <span class="animate-spin">🔄</span> <span>Searching TMDb (multi-query expansion)...</span>
         </div>
       `;
 
       try {
         const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
-        const url = `https://api.themoviedb.org/3/search/multi?api_key=${_k}&query=${encodeURIComponent(query)}&include_adult=false`;
-        const res = await fetch(url);
-        let results = [];
-        if (res.ok) {
-          const data = await res.json();
-          results = (data.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv');
-        }
+        const variants = getTmdbQueryVariants(query);
+        const seenIds = new Set();
+        const results = [];
+
+        await Promise.allSettled(variants.map(async v => {
+          try {
+            const url = `https://api.themoviedb.org/3/search/multi?api_key=${_k}&query=${encodeURIComponent(v)}&include_adult=false`;
+            const res = await fetch(url);
+            if (res.ok) {
+              const data = await res.json();
+              (data.results || []).forEach(r => {
+                if ((r.media_type === 'movie' || r.media_type === 'tv') && !seenIds.has(r.id)) {
+                  seenIds.add(r.id);
+                  results.push(r);
+                }
+              });
+            }
+          } catch(e) {}
+        }));
 
         if (results.length === 0) {
           suggBox.innerHTML = `
@@ -12173,7 +12250,23 @@
           return;
         }
 
-        suggBox.innerHTML = results.slice(0, 6).map(m => {
+        // Sort: items with posters first, then by popularity
+        results.sort((a, b) => {
+          const aPost = a.poster_path ? 1 : 0;
+          const bPost = b.poster_path ? 1 : 0;
+          if (aPost !== bPost) return bPost - aPost;
+          return (b.popularity || 0) - (a.popularity || 0);
+        });
+
+        const displayed = results.slice(0, 15);
+        const headerBadge = `
+          <div class="px-3 py-1.5 bg-emerald-950/80 border-b border-emerald-500/30 text-emerald-300 font-bold text-[10px] uppercase tracking-wider flex items-center justify-between">
+            <span>✨ Found ${results.length} TMDb Matches (showing ${displayed.length})</span>
+            <span class="text-[9px] font-mono text-emerald-400/80">Scroll to view all</span>
+          </div>
+        `;
+
+        suggBox.innerHTML = headerBadge + `<div class="max-h-80 overflow-y-auto divide-y divide-slate-800/60 pr-1">` + displayed.map(m => {
           const isTv = m.media_type === 'tv';
           const title = m.title || m.name || 'Untitled';
           const year = (m.release_date || m.first_air_date || '').split('-')[0] || 'N/A';
@@ -12182,19 +12275,19 @@
 
           return `
             <div onclick="selectSmartModalTmdbItem(${m.id}, '${safeTitle}', ${isTv ? 'true' : 'false'})" class="p-2.5 hover:bg-emerald-500/15 cursor-pointer transition flex items-center gap-3 group text-left">
-              <img src="${poster || getCinemaPlaceholder(title)}" alt="${escapeHtml(title)}" class="w-10 h-14 object-cover rounded border border-slate-700 bg-slate-900 shrink-0" onerror="this.src=getCinemaPlaceholder(this.alt);">
+              <img src="${poster || getCinemaPlaceholder(title)}" alt="${escapeHtml(title)}" class="w-10 h-14 object-cover rounded border border-slate-700 bg-slate-900 shrink-0 shadow-sm" onerror="this.src=getCinemaPlaceholder(this.alt);">
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2">
                   <h5 class="text-xs sm:text-sm font-bold text-slate-100 group-hover:text-emerald-300 truncate">${escapeHtml(title)}</h5>
                   <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 shrink-0">${escapeHtml(year)}</span>
-                  ${isTv ? '<span class="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">TV</span>' : ''}
+                  ${isTv ? '<span class="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 shrink-0">TV</span>' : '<span class="text-[9px] font-bold px-1 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 shrink-0">MOVIE</span>'}
                 </div>
                 <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5">${escapeHtml(m.overview || 'No overview available')}</p>
               </div>
               <span class="text-xs text-emerald-400 font-bold shrink-0">Select ➔</span>
             </div>
           `;
-        }).join('');
+        }).join('') + `</div>`;
       } catch (err) {
         suggBox.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error searching TMDb.</div>`;
       }
@@ -12868,53 +12961,41 @@
       suggBox.innerHTML = `
         <div class="p-3.5 text-center text-xs text-sky-300 font-mono flex items-center justify-center gap-2">
           <span class="animate-spin text-sm">🔄</span>
-          <span>Searching TMDb database...</span>
+          <span>Searching TMDb database (multi-query expansion)...</span>
         </div>
       `;
 
       try {
         const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
-        let searchTitle = query;
-        let searchYear = '';
-        const yearMatch = query.match(/\b(19\d\d|20\d\d)\b/);
-        if (yearMatch) {
-          searchYear = yearMatch[1];
-          searchTitle = query.replace(/\b(19\d\d|20\d\d)\b/, '').replace(/[()]/g, '').trim();
-        }
+        const variants = (typeof getTmdbQueryVariants === 'function') ? getTmdbQueryVariants(query) : [query];
+        const seenIds = new Set();
+        const results = [];
 
-        let url = `https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}&include_adult=false`;
-        if (searchYear) url += `&primary_release_year=${searchYear}`;
-
-        let res = await fetch(url);
-        let results = [];
-        if (res.ok) {
-          const data = await res.json();
-          results = data.results || [];
-        }
-
-        if (results.length === 0 && searchYear) {
-          const retryRes = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}&include_adult=false`);
-          if (retryRes.ok) {
-            const data = await retryRes.json();
-            results = data.results || [];
+        await Promise.allSettled(variants.map(async v => {
+          let searchTitle = v;
+          let searchYear = '';
+          const yearMatch = v.match(/\b(19\d\d|20\d\d)\b/);
+          if (yearMatch) {
+            searchYear = yearMatch[1];
+            searchTitle = v.replace(/\b(19\d\d|20\d\d)\b/, '').replace(/[()]/g, '').trim();
           }
-        }
 
-        if (results.length === 0 || /\b(tv|season|series|show|episode)\b/i.test(query)) {
-          const tvRes = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${_k}&query=${encodeURIComponent(searchTitle || query)}`);
-          if (tvRes.ok) {
-            const tvData = await tvRes.json();
-            if (tvData.results && tvData.results.length > 0) {
-              const tvFormatted = tvData.results.map(t => ({
-                ...t,
-                title: t.name,
-                release_date: t.first_air_date,
-                isTv: true
-              }));
-              results = results.concat(tvFormatted);
+          let movieUrl = `https://api.themoviedb.org/3/search/multi?api_key=${_k}&query=${encodeURIComponent(searchTitle || v)}&include_adult=false`;
+          if (searchYear) movieUrl += `&primary_release_year=${searchYear}`;
+
+          try {
+            const res = await fetch(movieUrl);
+            if (res.ok) {
+              const data = await res.json();
+              (data.results || []).forEach(r => {
+                if ((r.media_type === 'movie' || r.media_type === 'tv' || r.title || r.name) && !seenIds.has(r.id)) {
+                  seenIds.add(r.id);
+                  results.push(r);
+                }
+              });
             }
-          }
-        }
+          } catch(e) {}
+        }));
 
         if (results.length === 0) {
           suggBox.innerHTML = `
@@ -12925,23 +13006,39 @@
           return;
         }
 
-        const topMatches = results.slice(0, 7);
-        suggBox.innerHTML = topMatches.map(m => {
+        // Sort: items with posters first, then by popularity
+        results.sort((a, b) => {
+          const aPost = a.poster_path ? 1 : 0;
+          const bPost = b.poster_path ? 1 : 0;
+          if (aPost !== bPost) return bPost - aPost;
+          return (b.popularity || 0) - (a.popularity || 0);
+        });
+
+        const topMatches = results.slice(0, 15);
+        const headerBadge = `
+          <div class="px-3 py-1.5 bg-sky-950/80 border-b border-sky-500/30 text-sky-300 font-bold text-[10px] uppercase tracking-wider flex items-center justify-between">
+            <span>✨ Found ${results.length} Matches (showing ${topMatches.length})</span>
+            <span class="text-[9px] font-mono text-sky-400/80">Scroll to view all</span>
+          </div>
+        `;
+
+        suggBox.innerHTML = headerBadge + `<div class="max-h-80 overflow-y-auto divide-y divide-slate-800/60 pr-1">` + topMatches.map(m => {
           const title = m.title || m.name || 'Untitled';
+          const isTv = m.media_type === 'tv' || m.isTv;
           const year = (m.release_date || m.first_air_date || '').split('-')[0] || 'N/A';
           const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
           const rating = m.vote_average ? m.vote_average.toFixed(1) : null;
           const overview = m.overview ? escapeHtml(m.overview) : 'No overview available';
 
           return `
-            <div onclick="selectSwitchMovieSuggestion(${m.id}, '${escapeHtml(title).replace(/'/g, "\\'")}', ${m.isTv ? 'true' : 'false'})" 
+            <div onclick="selectSwitchMovieSuggestion(${m.id}, '${escapeHtml(title).replace(/'/g, "\\'")}', ${isTv ? 'true' : 'false'})" 
                  class="p-2.5 sm:p-3 hover:bg-sky-500/15 cursor-pointer transition flex items-center gap-3 group text-left">
               <img src="${poster || getCinemaPlaceholder(title)}" alt="${escapeHtml(title)}" class="w-10 h-14 object-cover rounded border border-slate-700 bg-slate-900 shrink-0 group-hover:border-sky-400 transition" onerror="this.src=getCinemaPlaceholder(this.alt);">
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2">
                   <h5 class="text-xs sm:text-sm font-bold text-slate-100 group-hover:text-sky-300 transition truncate">${escapeHtml(title)}</h5>
                   <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700 shrink-0">${escapeHtml(year)}</span>
-                  ${m.isTv ? '<span class="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">TV</span>' : ''}
+                  ${isTv ? '<span class="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">TV</span>' : '<span class="text-[9px] font-bold px-1 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">MOVIE</span>'}
                 </div>
                 <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5 leading-snug">${overview}</p>
                 ${rating ? `<span class="text-[10px] font-mono font-bold text-amber-400 mt-0.5 inline-block">★ ${rating} TMDb</span>` : ''}
@@ -12949,7 +13046,7 @@
               <span class="text-xs text-sky-400 font-bold opacity-0 group-hover:opacity-100 transition shrink-0">Select ➔</span>
             </div>
           `;
-        }).join('');
+        }).join('') + `</div>`;
 
       } catch(err) {
         console.error("fetchTmdbSuggestionsForSwitch failed:", err);
@@ -20886,41 +20983,51 @@ Enjoy the show! 🎬✨`;
 
       try {
         const _k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        const variants = (typeof getTmdbQueryVariants === 'function') ? getTmdbQueryVariants(query) : [query];
 
-        // Fetch movies and collections simultaneously
-        const [resMovie, resCol] = await Promise.all([
-          fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(query)}&include_adult=false`),
-          fetch(`https://api.themoviedb.org/3/search/collection?api_key=${_k}&query=${encodeURIComponent(query)}`)
-        ]);
+        const movieResultsMap = new Map();
+        const colResultsMap = new Map();
 
-        let movieResults = [];
-        if (resMovie.ok) {
-          const data = await resMovie.json();
-          movieResults = (data.results || []).slice(0, 5);
-        }
+        await Promise.allSettled(variants.map(async v => {
+          try {
+            const [resMovie, resCol] = await Promise.all([
+              fetch(`https://api.themoviedb.org/3/search/movie?api_key=${_k}&query=${encodeURIComponent(v)}&include_adult=false`),
+              fetch(`https://api.themoviedb.org/3/search/collection?api_key=${_k}&query=${encodeURIComponent(v)}`)
+            ]);
+            if (resMovie.ok) {
+              const data = await resMovie.json();
+              (data.results || []).forEach(r => {
+                if (r && r.id && !movieResultsMap.has(r.id)) movieResultsMap.set(r.id, r);
+              });
+            }
+            if (resCol.ok) {
+              const colData = await resCol.json();
+              (colData.results || []).forEach(c => {
+                if (c && c.id && !colResultsMap.has(c.id)) colResultsMap.set(c.id, c);
+              });
+            }
+          } catch(e) {}
+        }));
 
-        let collections = [];
-        if (resCol.ok) {
-          const colData = await resCol.json();
-          const qLower = query.toLowerCase().trim();
-          collections = (colData.results || []).sort((a, b) => {
-            const aName = (a.name || '').toLowerCase();
-            const bName = (b.name || '').toLowerCase();
-            const aBad = aName.includes('making of') || aName.includes('behind the scenes') || aName.includes('sharks') ? 1 : 0;
-            const bBad = bName.includes('making of') || bName.includes('behind the scenes') || bName.includes('sharks') ? 1 : 0;
-            if (aBad !== bBad) return aBad - bBad;
+        let movieResults = Array.from(movieResultsMap.values()).slice(0, 10);
+        const qLower = query.toLowerCase().trim();
+        let collections = Array.from(colResultsMap.values()).sort((a, b) => {
+          const aName = (a.name || '').toLowerCase();
+          const bName = (b.name || '').toLowerCase();
+          const aBad = aName.includes('making of') || aName.includes('behind the scenes') || aName.includes('sharks') ? 1 : 0;
+          const bBad = bName.includes('making of') || bName.includes('behind the scenes') || bName.includes('sharks') ? 1 : 0;
+          if (aBad !== bBad) return aBad - bBad;
 
-            const aExact = aName === qLower || aName === (qLower + ' collection') || aName === ('the ' + qLower + ' collection');
-            const bExact = bName === qLower || bName === (qLower + ' collection') || bName === ('the ' + qLower + ' collection');
-            if (aExact && !bExact) return -1;
-            if (!aExact && bExact) return 1;
+          const aExact = aName === qLower || aName === (qLower + ' collection') || aName === ('the ' + qLower + ' collection');
+          const bExact = bName === qLower || bName === (qLower + ' collection') || bName === ('the ' + qLower + ' collection');
+          if (aExact && !bExact) return -1;
+          if (!aExact && bExact) return 1;
 
-            const aHasPoster = a.poster_path ? 1 : 0;
-            const bHasPoster = b.poster_path ? 1 : 0;
-            if (aHasPoster !== bHasPoster) return bHasPoster - aHasPoster;
-            return 0;
-          }).slice(0, 2);
-        }
+          const aHasPoster = a.poster_path ? 1 : 0;
+          const bHasPoster = b.poster_path ? 1 : 0;
+          if (aHasPoster !== bHasPoster) return bHasPoster - aHasPoster;
+          return 0;
+        }).slice(0, 2);
 
         if (movieResults.length === 0 && collections.length === 0) {
           hideReqMovieSuggestions();
