@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.11.5] - 2026-11-12
+
+### What's New
+- Added live automatic UI refresh for the Season Planner modal.
+- Connected real-time SSE stream for Kevin shift availability scans.
+- Accelerated background polling fallback to 15 seconds.
+- Added automatic stream reconnection with retry on network drop.
+- Eliminated need for manual page refreshes on schedule changes.
+
 ## [4.11.4] - 2026-11-12
 
 ### What's New

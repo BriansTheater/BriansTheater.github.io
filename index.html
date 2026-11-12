@@ -4874,7 +4874,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.4";
+    const APP_VERSION = "4.11.5";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -16423,6 +16423,22 @@
           .catch(() => {});
       }
 
+      // Sync Kevin 4 PM shift scan from Firebase
+      if (data.kevinScheduleScan && typeof data.kevinScheduleScan === 'object') {
+        kevinScheduleScanCache = data.kevinScheduleScan;
+      }
+
+      // Live real-time UI refresh for Season Planner & Smart Scheduler
+      if (typeof renderSchedulerCalendarPopup === 'function') {
+        const calModal = document.getElementById('schedulerCalendarPopupModal');
+        if (calModal && !calModal.classList.contains('hidden')) {
+          renderSchedulerCalendarPopup();
+        }
+      }
+      if (typeof renderSmartMovieNightScheduler === 'function') {
+        renderSmartMovieNightScheduler();
+      }
+
       // Sync live Plex VIP users database from Firebase
       if (data.plexUsers) {
         applyPlexUsersFromData(data.plexUsers);
@@ -16447,6 +16463,10 @@
               if (!payload) return;
               if (payload.path === '/' && payload.data) {
                 applyFirebaseData(payload.data);
+              } else if (payload.path === '/kevinScheduleScan' && payload.data) {
+                kevinScheduleScanCache = payload.data;
+                if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
+                if (typeof renderSmartMovieNightScheduler === 'function') renderSmartMovieNightScheduler();
               } else if (payload.path === '/moviePosters' && payload.data) {
                 if (typeof payload.data === 'object') {
                   Object.assign(customMovieImages, payload.data);
@@ -16497,6 +16517,10 @@
               if (!payload) return;
               if (payload.path === '/' && payload.data) {
                 applyFirebaseData(payload.data);
+              } else if (payload.path === '/kevinScheduleScan' && payload.data) {
+                kevinScheduleScanCache = Object.assign({}, kevinScheduleScanCache || {}, payload.data);
+                if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
+                if (typeof renderSmartMovieNightScheduler === 'function') renderSmartMovieNightScheduler();
               } else if (payload.path === '/moviePosters' && payload.data && typeof payload.data === 'object') {
                 Object.assign(customMovieImages, payload.data);
                 try { localStorage.setItem('brian_movie_posters_map', JSON.stringify(customMovieImages)); } catch(e) {}
@@ -16511,13 +16535,21 @@
               }
             } catch(err) {}
           });
+
+          firebaseEventSource.onerror = (e) => {
+            console.warn("Firebase SSE stream connection dropped. Reconnecting in 3s...", e);
+            setTimeout(() => {
+              if (firebaseEventSource) firebaseEventSource.close();
+              initFirebaseRealtimeListener();
+            }, 3000);
+          };
         }
       } catch(err) {
         console.warn("Firebase SSE initialization error:", err);
       }
     }
 
-    // Fallback Polling
+    // Fallback Polling (Every 15 Seconds)
     async function syncFromFirebase() {
       try {
         const res = await fetch(FIREBASE_URL);
@@ -16558,7 +16590,7 @@
         syncFromFirebase();
       }
     });
-    setInterval(syncFromFirebase, 15 * 60 * 1000);
+    setInterval(syncFromFirebase, 15 * 1000);
 
     // Initial Vault Library & Community Requests
     vaultMovies = [
