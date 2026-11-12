@@ -1,5 +1,14 @@
 # Changelog
  
+## [4.11.4] - 2026-11-12
+
+### What's New
+- Purged stale test movies from December schedule and scan cache.
+- Prioritized Pacific timestamps to eliminate date-shifting into work shifts.
+- Prevented deleted movies from resurrecting from cached shift scans.
+- Added high-visibility warning badges for Kevin shift conflicts.
+- Synchronized shift scan cache purge immediately upon movie deletion.
+
 ## [4.11.3] - 2026-11-11
 
 ### What's New

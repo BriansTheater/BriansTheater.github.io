@@ -4874,7 +4874,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.3";
+    const APP_VERSION = "4.11.4";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -11337,6 +11337,10 @@
     function parseScheduleDateToPacificKey(item) {
       if (!item) return '';
       if (item.dateKey && /^\d{4}-\d{2}-\d{2}$/.test(item.dateKey)) return item.dateKey;
+      if (item.startMs && item.startMs > 0) {
+        const k = getPacificDateKeyFromMs(item.startMs);
+        if (k) return k;
+      }
       if (item.date) {
         const isoM = String(item.date).match(/(\d{4})-(\d{2})-(\d{2})/);
         if (isoM) return `${isoM[1]}-${isoM[2]}-${isoM[3]}`;
@@ -11351,10 +11355,6 @@
             return `${yr}-${monthMap[mk]}-${dy}`;
           }
         }
-      }
-      if (item.startMs && item.startMs > 0) {
-        const k = getPacificDateKeyFromMs(item.startMs);
-        if (k) return k;
       }
       if (item.date) {
         const dObj = new Date(item.date);
@@ -11429,7 +11429,8 @@
         shiftLabel = (dayOfWeek === 4) ? '4:00 PM – 11:00 PM' : '4:00 PM – 10:30 PM';
       }
 
-      const scheduledMovie = scheduledMap[dateKey] || (cachedKevin && cachedKevin.scheduledMovie ? cachedKevin.scheduledMovie : null);
+      const scheduledMovie = scheduledMap[dateKey] || null;
+      const hasConflict = !!(scheduledMovie && scheduledMovie.title && isWorkingNight);
 
       let status = 'movie_night_open';
       if (scheduledMovie && scheduledMovie.title) {
@@ -11451,7 +11452,8 @@
         status,
         isWorkingNight,
         shiftLabel,
-        scheduledMovie
+        scheduledMovie,
+        hasConflict
       };
     }
 
@@ -11874,12 +11876,18 @@
             const mStart = m.startTime || m.time || '7:00 PM';
             const mEnd = m.endTime || '9:00 PM';
             const safeTitle = escapeHtml(mTitle).replace(/'/g, "\\'");
-            const statusBadge = (!mSpec.isPublished)
-              ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">🔒 Draft</span>'
-              : '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Live</span>';
+            const statusBadge = (day.hasConflict)
+              ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-500/30 text-rose-300 border border-rose-500/60 animate-pulse" title="Shift Conflict: Kevin has a 4:00 PM shift!">⚠️ Shift Conflict</span>'
+              : ((!mSpec.isPublished)
+                ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">🔒 Draft</span>'
+                : '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/40">✅ Live</span>');
+
+            const cellBorderClass = day.hasConflict
+              ? 'border-rose-500/80 bg-rose-950/40 shadow-rose-950/50'
+              : (!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400');
 
             return `
-              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" onclick="handleCalendarCellClick('${day.dateKey}', event)" draggable="true" ondragstart="handleCalendarMovieDragStart(event, '${day.dateKey}', '${safeTitle}')" ondragend="handleCalendarMovieDragEnd(event)" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-slate-900/95 border-2 ${!mSpec.isPublished ? 'border-amber-500/60 hover:border-amber-400' : 'border-sky-500/60 hover:border-sky-400'} flex flex-col justify-between gap-1.5 shadow-lg transition cursor-grab active:cursor-grabbing hover:scale-[1.01] group ${dimClass}">
+              <div data-cal-date="${day.dateKey}" data-cal-status="movie_scheduled" onclick="handleCalendarCellClick('${day.dateKey}', event)" draggable="true" ondragstart="handleCalendarMovieDragStart(event, '${day.dateKey}', '${safeTitle}')" ondragend="handleCalendarMovieDragEnd(event)" ondragover="handleCalendarDayDragOver(event)" ondragenter="handleCalendarDayDragEnter(event)" ondragleave="handleCalendarDayDragLeave(event)" ondrop="handleCalendarDayDrop(event, '${day.dateKey}')" class="sched-cal-cell min-h-[110px] md:min-h-[118px] p-2 rounded-xl bg-slate-900/95 border-2 ${cellBorderClass} flex flex-col justify-between gap-1.5 shadow-lg transition cursor-grab active:cursor-grabbing hover:scale-[1.01] group ${dimClass}">
                 <div class="flex items-center justify-between gap-1">
                   ${dateHeaderLeft}
                   <div class="flex items-center gap-1">
@@ -11891,10 +11899,11 @@
                 </div>
 
                 <div class="flex items-center gap-2 my-0.5">
-                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-8 h-12 rounded object-cover ${!mSpec.isPublished ? 'border border-amber-400/40' : 'border border-sky-400/40'} bg-black shrink-0 pointer-events-none" onerror="this.src=getCinemaPlaceholder(this.alt);">
+                  <img src="${escapeHtml(mPoster)}" alt="${escapeHtml(mTitle)}" class="w-8 h-12 rounded object-cover ${day.hasConflict ? 'border border-rose-400/60' : (!mSpec.isPublished ? 'border border-amber-400/40' : 'border border-sky-400/40')} bg-black shrink-0 pointer-events-none" onerror="this.src=getCinemaPlaceholder(this.alt);">
                   <div class="min-w-0 flex-1">
                     <div class="text-xs font-black text-white truncate" title="${escapeHtml(mTitle)}">${escapeHtml(mTitle)}</div>
                     <div class="text-[10px] font-mono text-amber-300 truncate">${escapeHtml(mStart)} – ${escapeHtml(mEnd)}</div>
+                    ${day.hasConflict ? `<div class="text-[9px] font-bold text-rose-400 mt-0.5">⚠️ Kevin Works (4 PM)</div>` : ''}
                   </div>
                 </div>
 
@@ -13289,7 +13298,7 @@
         });
       }
 
-      await Promise.allSettled([
+      const putPayloads = [
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -13310,7 +13319,19 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'clear_movie', dateKey: resolvedDateKey || '', title: cleanTitle || '', requestedAt: Date.now() })
         })
-      ]);
+      ];
+
+      if (kevinScheduleScanCache) {
+        putPayloads.push(
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/kevinScheduleScan.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(kevinScheduleScanCache)
+          })
+        );
+      }
+
+      await Promise.allSettled(putPayloads);
 
       fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
 
@@ -13318,6 +13339,7 @@
       updateCountdown();
       renderAdminRescheduleList();
       if (typeof renderSmartMovieNightScheduler === 'function') renderSmartMovieNightScheduler();
+      if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
       showTheaterToast(`🗑️ Removed "${cleanTitle || resolvedDateKey}" from the live schedule!`);
     }
 
@@ -16147,18 +16169,6 @@
           }
         }
 
-        // Protect all future-dated schedule items (such as December schedule) from being dropped by a partial sync packet
-        if (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) {
-          window.theaterScheduleCache.forEach(item => {
-            if (!item || !item.title) return;
-            const k = normKey(item);
-            const isFuture = (Number(item.startMs) || 0) > (now - 86400000) || (item.date && (item.date.includes('Dec') || item.date.includes('2026')));
-            if (isFuture && !mergedSchedMap.has(k)) {
-              mergedSchedMap.set(k, Object.assign({}, item));
-            }
-          });
-        }
-
         const reconciled = Array.from(mergedSchedMap.values());
         reconciled.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
 
@@ -16452,22 +16462,13 @@
                 if (movieKey && typeof payload.data === 'string') {
                   applySinglePosterUpdate(movieKey, payload.data, false);
                 }
-              } else if ((payload.path === '/officialSchedule' || payload.path === '/cinema/schedule' || payload.path === '/schedule') && Array.isArray(payload.data) && payload.data.length > 0) {
-                // Reconcile incoming schedule array with existing in-memory schedule to preserve future movies
-                const curr = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache)) ? window.theaterScheduleCache : [];
-                const normK = function(s) {
-                  return ((s && s.title) || '').toLowerCase().replace(/^[🎬🎥📽️\s]+/, '').replace(/[^a-z0-9]/g, '');
-                };
-                const map = new Map();
-                curr.forEach(s => { if (s && s.title) map.set(normK(s), s); });
-                payload.data.forEach(s => { if (s && s.title) map.set(normK(s), s); });
-                const mergedList = Array.from(map.values());
-                mergedList.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
-
-                window.theaterOfficialSchedule = mergedList;
-                window.theaterScheduleCache = mergedList;
-                renderSchedule(mergedList);
-                mergeScheduleIntoVault(mergedList);
+              } else if ((payload.path === '/officialSchedule' || payload.path === '/cinema/schedule' || payload.path === '/schedule') && Array.isArray(payload.data)) {
+                const newList = payload.data.filter(s => s && s.title).sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+                window.theaterOfficialSchedule = newList;
+                window.theaterScheduleCache = newList;
+                renderSchedule(newList);
+                mergeScheduleIntoVault(newList);
+                if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
               } else if (payload.path === '/cinema' && payload.data) {
                 applyFirebaseData({ cinema: payload.data });
               } else if (payload.path === '/plexUsers' && payload.data) {
