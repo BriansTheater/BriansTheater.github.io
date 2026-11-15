@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.11.10] - 2026-11-15
+- Added interactive Demo A, B, C scene layout switcher.
+- Added 3D IMAX theater walls and reflective stage floor.
+- Fixed cropped portrait posters with split and triptych stages.
+
 ## [4.11.9] - 2026-11-14
 
 ### What's New

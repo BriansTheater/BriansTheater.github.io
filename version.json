@@ -1,10 +1,10 @@
 {
-  "version": "4.11.9",
-  "releaseDate": "2026-11-14",
-  "title": "Brian's Theater v4.11.9",
+  "version": "4.11.10",
+  "releaseDate": "2026-11-15",
+  "title": "Brian's Theater v4.11.10",
   "notes": [
-    "Added upcoming schedule preview dropdown to Twitch Studio drawer.",
-    "Added Prev and Next steppers with distinct movie palettes.",
-    "Locked previews locally so live stream stays untouched."
+    "Added interactive Demo A, B, C scene layout switcher.",
+    "Added 3D IMAX theater walls and reflective stage floor.",
+    "Fixed cropped portrait posters with split and triptych stages."
   ]
 }

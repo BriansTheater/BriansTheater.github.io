@@ -242,12 +242,216 @@
       border-color: rgba(251, 191, 36, 0.6);
       color: #ffffff;
     }
+    .studio-pill:focus {
+      outline: none;
+    }
+    .studio-pill:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.75);
+      outline-offset: 1px;
+    }
     .studio-pill.active {
       background: linear-gradient(135deg, #10b981, #f59e0b);
       color: #020617;
       border-color: #fde047;
       font-weight: 900;
       box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+    }
+
+    /* ============================================================== */
+    /* INTERACTIVE SCENE LAYOUT DEMOS (DEMO A: IMAX, B: SPLIT, C: 3D) */
+    /* ============================================================== */
+    #sceneImaxStageOverlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 7;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+    #sceneImaxStageOverlay.is-visible {
+      opacity: 1;
+    }
+    .scene-imax-wall-left,
+    .scene-imax-wall-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 24vw;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(2, 5, 12, 0.90) 0px,
+          rgba(10, 16, 30, 0.34) 16px,
+          rgba(2, 5, 12, 0.90) 32px
+        );
+    }
+    .scene-imax-wall-left {
+      left: 0;
+      -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.48) 55%, transparent 100%);
+      mask-image: linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.48) 55%, transparent 100%);
+    }
+    .scene-imax-wall-right {
+      right: 0;
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.48) 55%, transparent 100%);
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.48) 55%, transparent 100%);
+    }
+    .scene-imax-neon-strip {
+      position: absolute;
+      top: 8%;
+      bottom: 16%;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(var(--scene-p-rgb, 245, 158, 11), 0.72) 22%,
+        rgba(var(--scene-s-rgb, 56, 189, 248), 0.72) 78%,
+        transparent 100%
+      );
+      box-shadow: 0 0 28px 6px rgba(var(--scene-p-rgb, 245, 158, 11), 0.38);
+      opacity: 0.72;
+    }
+    .scene-imax-sconce {
+      position: absolute;
+      width: 140px;
+      height: 170px;
+      border-radius: 999px;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(var(--scene-p-rgb, 245, 158, 11), 0.36) 0%,
+        rgba(var(--scene-s-rgb, 56, 189, 248), 0.14) 48%,
+        transparent 75%
+      );
+      filter: blur(8px);
+    }
+    .scene-imax-sconce-right {
+      background: radial-gradient(
+        ellipse at center,
+        rgba(var(--scene-s-rgb, 56, 189, 248), 0.36) 0%,
+        rgba(var(--scene-p-rgb, 245, 158, 11), 0.14) 48%,
+        transparent 75%
+      );
+    }
+    .scene-imax-canopy {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 14%;
+      background: linear-gradient(to bottom, rgba(2, 4, 10, 0.94) 0%, rgba(4, 8, 18, 0.55) 58%, transparent 100%);
+      border-top: 2px solid rgba(var(--scene-p-rgb, 245, 158, 11), 0.42);
+    }
+    .scene-imax-floor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 18%;
+      background:
+        radial-gradient(ellipse 52% 60% at 50% 62%, rgba(var(--scene-p-rgb, 245, 158, 11), 0.20) 0%, rgba(var(--scene-s-rgb, 56, 189, 248), 0.11) 46%, transparent 78%),
+        linear-gradient(to top, rgba(2, 4, 10, 0.96) 0%, rgba(4, 8, 18, 0.72) 48%, transparent 100%);
+    }
+    .scene-imax-floor::before {
+      content: "";
+      position: absolute;
+      top: 28%;
+      left: 12%;
+      right: 12%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(var(--scene-p-rgb, 245, 158, 11), 0.42) 35%,
+        rgba(var(--scene-s-rgb, 56, 189, 248), 0.42) 65%,
+        transparent 100%
+      );
+    }
+
+    #sceneTriptychWingsOverlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 8;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+    #sceneTriptychWingsOverlay.is-visible {
+      opacity: 1;
+    }
+    .scene-triptych-wing-wrap {
+      position: absolute;
+      top: 23vh;
+      width: min(25vw, max(200px, calc((100vw - 840px) / 2)));
+      aspect-ratio: 16 / 9;
+      perspective: 1200px;
+    }
+    .scene-triptych-wing-wrap.left-wing {
+      left: 2vw;
+    }
+    .scene-triptych-wing-wrap.right-wing {
+      right: 2vw;
+    }
+    .scene-triptych-wing-panel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #020617;
+      border: 1.5px solid rgba(var(--scene-p-rgb, 245, 158, 11), 0.72);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.88), 0 0 36px rgba(var(--scene-p-rgb, 245, 158, 11), 0.34);
+    }
+    .left-wing .scene-triptych-wing-panel {
+      transform: rotateY(20deg);
+      transform-origin: right center;
+    }
+    .right-wing .scene-triptych-wing-panel {
+      transform: rotateY(-20deg);
+      transform-origin: left center;
+      border-color: rgba(var(--scene-s-rgb, 56, 189, 248), 0.72);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.88), 0 0 36px rgba(var(--scene-s-rgb, 56, 189, 248), 0.34);
+    }
+    .scene-triptych-reflect-slot {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      width: 100%;
+      height: 46%;
+      opacity: 0.36;
+      pointer-events: none;
+    }
+    .scene-triptych-reflect-panel {
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      filter: blur(3px);
+      -webkit-mask-image: linear-gradient(to top, transparent 8%, rgba(0,0,0,0.78) 100%);
+      mask-image: linear-gradient(to top, transparent 8%, rgba(0,0,0,0.78) 100%);
+    }
+    .left-wing .scene-triptych-reflect-panel {
+      transform: rotateY(20deg) scaleY(-1);
+      transform-origin: right center;
+    }
+    .right-wing .scene-triptych-reflect-panel {
+      transform: rotateY(-20deg) scaleY(-1);
+      transform-origin: left center;
+    }
+    @media (max-width: 1179px) {
+      #sceneTriptychWingsOverlay {
+        display: none !important;
+      }
+      .scene-imax-wall-left, .scene-imax-wall-right {
+        width: 14vw;
+        opacity: 0.72;
+      }
+    }
+    @media (max-width: 639px) {
+      .scene-imax-wall-left, .scene-imax-wall-right {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -267,6 +471,51 @@
 
   <!-- Center Card Readability Vignette (Leaves top sky bright) -->
   <div id="themeVignetteOverlay" class="center-readability-vignette"></div>
+
+  <!-- Interactive Movie Scene Demo A/B/C Layer 1: 3D IMAX Acoustic Stage Walls & Lighting -->
+  <div id="sceneImaxStageOverlay" class="hidden" aria-hidden="true">
+    <div class="scene-imax-canopy"></div>
+    <div class="scene-imax-wall-left">
+      <div class="scene-imax-neon-strip" style="left: 14%;"></div>
+      <div class="scene-imax-sconce" style="left: 16%; top: 20%;"></div>
+      <div class="scene-imax-sconce" style="left: 32%; top: 48%;"></div>
+      <div class="scene-imax-sconce" style="left: 18%; top: 74%;"></div>
+    </div>
+    <div class="scene-imax-wall-right">
+      <div class="scene-imax-neon-strip" style="right: 14%;"></div>
+      <div class="scene-imax-sconce scene-imax-sconce-right" style="right: 16%; top: 20%;"></div>
+      <div class="scene-imax-sconce scene-imax-sconce-right" style="right: 32%; top: 48%;"></div>
+      <div class="scene-imax-sconce scene-imax-sconce-right" style="right: 18%; top: 74%;"></div>
+    </div>
+    <div class="scene-imax-floor"></div>
+  </div>
+
+  <!-- Interactive Movie Scene Demo C Layer 2: 3D Angled Triptych Wing Screens & Reflections -->
+  <div id="sceneTriptychWingsOverlay" class="hidden" aria-hidden="true">
+    <div class="scene-triptych-wing-wrap left-wing">
+      <div class="scene-triptych-wing-panel">
+        <img id="triptychLeftImg" src="images/cinema_stream_background.jpg" alt="Left Movie Scene Wing" referrerpolicy="no-referrer" class="w-full h-full object-cover object-center transition-opacity duration-500" onerror="this.src='images/cinema_stream_background.jpg'" />
+        <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 45%, rgba(2,6,23,0.52) 100%);"></div>
+      </div>
+      <div class="scene-triptych-reflect-slot">
+        <div class="scene-triptych-reflect-panel">
+          <img id="triptychLeftReflectImg" src="images/cinema_stream_background.jpg" alt="" referrerpolicy="no-referrer" class="w-full h-full object-cover object-center" onerror="this.src='images/cinema_stream_background.jpg'" />
+        </div>
+      </div>
+    </div>
+
+    <div class="scene-triptych-wing-wrap right-wing">
+      <div class="scene-triptych-wing-panel">
+        <img id="triptychRightImg" src="images/cinema_stream_background.jpg" alt="Right Movie Scene Wing" referrerpolicy="no-referrer" class="w-full h-full object-cover object-center transition-opacity duration-500" onerror="this.src='images/cinema_stream_background.jpg'" />
+        <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(225deg, rgba(255,255,255,0.08) 0%, transparent 45%, rgba(2,6,23,0.52) 100%);"></div>
+      </div>
+      <div class="scene-triptych-reflect-slot">
+        <div class="scene-triptych-reflect-panel">
+          <img id="triptychRightReflectImg" src="images/cinema_stream_background.jpg" alt="" referrerpolicy="no-referrer" class="w-full h-full object-cover object-center" onerror="this.src='images/cinema_stream_background.jpg'" />
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Falling Snow / Mascot Particle Canvas (z-25 so Jump-Scare & Mascots never clip under center card) -->
   <canvas id="themeSnowCanvas" class="hidden" style="z-index: 25;"></canvas>
@@ -359,6 +608,61 @@
           class="w-full h-full object-cover object-center transition-opacity duration-700"
           onerror="handlePosterError(this)"
         />
+
+        <!-- Interactive Movie Scene Demo B & Demo C Inner Poster/Scene Card (Sits under z-10 trailer & z-20 error badge) -->
+        <div id="heroSplitCardOverlay" class="hidden absolute inset-0 z-[9] bg-slate-950 overflow-hidden">
+          <!-- DEMO B: Split 2:3 Uncropped Poster + 16:9 Blended Widescreen Scene -->
+          <div id="splitLayoutPane" class="hidden w-full h-full flex items-stretch">
+            <div class="relative h-full w-[37.5%] shrink-0 bg-slate-950 flex items-center justify-center p-1.5 border-r border-white/10">
+              <img
+                id="splitCardPosterImg"
+                src="https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg"
+                alt="Uncropped Movie Poster"
+                referrerpolicy="no-referrer"
+                class="w-full h-full object-contain rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.85)]"
+                onerror="handlePosterError(this)"
+              />
+            </div>
+            <div class="relative flex-1 h-full overflow-hidden bg-slate-950">
+              <img
+                id="splitCardSceneImg"
+                src="images/cinema_stream_background.jpg"
+                alt="Widescreen Movie Scene Still"
+                referrerpolicy="no-referrer"
+                class="w-full h-full object-cover object-center scale-[1.02]"
+                onerror="this.src='images/cinema_stream_background.jpg'"
+              />
+              <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to right, rgba(2,6,23,0.94) 0%, rgba(2,6,23,0.42) 24%, transparent 56%), linear-gradient(to top, rgba(2,6,23,0.58) 0%, transparent 40%);"></div>
+              <div class="hidden sm:flex absolute bottom-2.5 right-3 items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 border border-white/15 backdrop-blur-md">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-200">Scene Stills</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEMO C: Centered Uncropped Poster over Blurred Ambient Scene Fill -->
+          <div id="centerPosterLayoutPane" class="hidden relative w-full h-full flex items-center justify-center p-2 sm:p-2.5">
+            <img
+              id="splitCardBlurFillImg"
+              src="images/cinema_stream_background.jpg"
+              alt=""
+              referrerpolicy="no-referrer"
+              class="absolute inset-0 w-full h-full object-cover object-center scale-110"
+              style="filter: blur(20px) brightness(0.55) saturate(1.42);"
+              onerror="this.src='images/cinema_stream_background.jpg'"
+            />
+            <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at center, rgba(var(--scene-p-rgb, 245, 158, 11), 0.22) 0%, rgba(2, 6, 23, 0.72) 72%);"></div>
+            <img
+              id="splitCardCenterPosterImg"
+              src="https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg"
+              alt="Centered Uncropped Movie Poster"
+              referrerpolicy="no-referrer"
+              class="relative z-10 h-full w-auto max-w-full object-contain rounded-xl shadow-[0_14px_40px_rgba(0,0,0,0.92)] border"
+              style="border-color: rgba(var(--scene-p-rgb, 245, 158, 11), 0.65);"
+              onerror="handlePosterError(this)"
+            />
+          </div>
+        </div>
 
         <!-- Poster Error Warning Badge (Visible if artwork is missing or invalid) -->
         <div id="posterErrorBadge" class="hidden absolute top-3 sm:top-4 right-3 sm:right-4 z-20 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-rose-950/90 border border-rose-500/80 text-rose-200 font-mono text-xs sm:text-sm font-black tracking-wide shadow-[0_0_25px_rgba(244,63,94,0.55)] backdrop-blur-md">
@@ -780,6 +1084,19 @@
         <button type="button" id="studioDoorBtn-closed" onclick="studioSetDoorState('force_closed')" class="studio-pill active px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">⏳ Countdown</button>
         <button type="button" id="studioDoorBtn-open" onclick="studioSetDoorState('force_open')" class="studio-pill px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">🚪 Doors Open</button>
         <button type="button" id="studioDoorBtn-trailer" onclick="studioSetDoorState('trailer')" class="studio-pill px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">🎬 Trailer Mode</button>
+      </div>
+
+      <!-- Movie Scene Layout Demo Switcher (Demo A / Demo B / Demo C) -->
+      <div id="studioSceneDemoSection" class="flex flex-col gap-1 mt-0.5 p-2 rounded-xl bg-amber-950/35 border border-amber-500/35">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[9px] font-mono font-bold text-amber-300 uppercase tracking-wider">🎨 Movie Scene Demo Mode:</span>
+          <span id="studioSceneDemoBadge" class="text-[9px] font-mono text-amber-200 font-bold">DEMO B: SPLIT CARD</span>
+        </div>
+        <div class="grid grid-cols-3 gap-1">
+          <button type="button" id="studioSceneDemoBtn-demoA" onclick="studioSetSceneDemoMode('demoA')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer truncate" title="Demo A: 16:9 Horizontal Key-Art + 3D IMAX Theater Walls">🅰️ A: 16:9 IMAX</button>
+          <button type="button" id="studioSceneDemoBtn-demoB" onclick="studioSetSceneDemoMode('demoB')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer truncate" title="Demo B: Split 2:3 Uncropped Poster + 16:9 Scene Card">🅱️ B: Split Card</button>
+          <button type="button" id="studioSceneDemoBtn-demoC" onclick="studioSetSceneDemoMode('demoC')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer truncate" title="Demo C: Uncropped Center Poster + 3D Triptych Wing Screens">🅲️ C: 3D Triptych</button>
+        </div>
       </div>
 
       <div class="flex items-center justify-between gap-2 mt-1">
@@ -1379,27 +1696,43 @@
     // OPTION 1: DYNAMIC MOVIE-MATCHED SCENE & PALETTE ENGINE
     // ========================================================
     const MOVIE_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v1';
+    const MOVIE_SCENE_PACK_CACHE_KEY = 'brian_movie_scene_pack_v2';
+    const SCENE_DEMO_MODE_KEY = 'brian_twitch_scene_demo_mode';
     const movieSceneMemoryCache = new Map();
+    const movieScenePackMemoryCache = new Map();
+    let sceneDemoMode = (() => {
+      try {
+        const saved = localStorage.getItem(SCENE_DEMO_MODE_KEY);
+        return ['demoA', 'demoB', 'demoC'].includes(saved) ? saved : 'demoB';
+      } catch(e) { return 'demoB'; }
+    })();
     let activeSceneRequestToken = 0;
     let activeScenePalette = null;
+    let activeScenePack = null;
+    let posterFadeSwapTimer = null;
 
-    function loadMovieSceneDiskCache() {
+    function getSceneDemoMode() {
+      return sceneDemoMode;
+    }
+    window.getSceneDemoMode = getSceneDemoMode;
+
+    function loadMovieSceneDiskCache(storageKey = MOVIE_SCENE_CACHE_KEY) {
       try {
-        const raw = localStorage.getItem(MOVIE_SCENE_CACHE_KEY);
+        const raw = localStorage.getItem(storageKey);
         return raw ? JSON.parse(raw) : {};
       } catch(e) { return {}; }
     }
 
-    function saveMovieSceneDiskCache(key, entry) {
+    function saveMovieSceneDiskCache(key, entry, storageKey = MOVIE_SCENE_CACHE_KEY) {
       try {
-        const map = loadMovieSceneDiskCache();
+        const map = loadMovieSceneDiskCache(storageKey);
         map[key] = entry;
         const keys = Object.keys(map);
         if (keys.length > 45) {
           keys.sort((a, b) => (map[a].ts || 0) - (map[b].ts || 0));
           delete map[keys[0]];
         }
-        localStorage.setItem(MOVIE_SCENE_CACHE_KEY, JSON.stringify(map));
+        localStorage.setItem(storageKey, JSON.stringify(map));
       } catch(e) {}
     }
 
@@ -1562,61 +1895,217 @@
       });
     }
 
-    async function resolveTmdbMovieSceneUrl(movieTitle, posterUrl) {
+    async function resolveTmdbMovieMediaPack(movieTitle, posterUrl) {
+      const baseFallback = posterUrl || "images/cinema_stream_background.jpg";
       const cleanTitle = cleanSceneSearchQuery(movieTitle);
-      if (!cleanTitle) return posterUrl || "images/cinema_stream_background.jpg";
+      const defaultPack = {
+        portraitPoster: baseFallback,
+        hero16x9: baseFallback,
+        scene1: "images/cinema_stream_background.jpg",
+        scene2: baseFallback,
+        posterIsLandscape: false
+      };
+      if (!cleanTitle) return defaultPack;
 
       const cacheKey = cleanTitle.toLowerCase();
-      if (movieSceneMemoryCache.has(cacheKey)) {
-        return movieSceneMemoryCache.get(cacheKey);
+      const applyCallerPoster = (pack) => {
+        const cloned = Object.assign({}, pack);
+        if (posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER && !cloned.posterIsLandscape) {
+          cloned.portraitPoster = posterUrl;
+        }
+        return cloned;
+      };
+
+      if (movieScenePackMemoryCache.has(cacheKey)) {
+        return applyCallerPoster(movieScenePackMemoryCache.get(cacheKey));
       }
 
-      const diskCache = loadMovieSceneDiskCache();
+      const diskCache = loadMovieSceneDiskCache(MOVIE_SCENE_PACK_CACHE_KEY);
       const cachedEntry = diskCache[cacheKey];
-      if (cachedEntry && cachedEntry.sceneUrl && (Date.now() - (cachedEntry.ts || 0)) < 7 * 86400000) {
-        movieSceneMemoryCache.set(cacheKey, cachedEntry.sceneUrl);
-        return cachedEntry.sceneUrl;
+      if (cachedEntry && cachedEntry.hero16x9 && cachedEntry.scene1 && (Date.now() - (cachedEntry.ts || 0)) < 7 * 86400000) {
+        movieScenePackMemoryCache.set(cacheKey, cachedEntry);
+        return applyCallerPoster(cachedEntry);
       }
 
-      let resolvedUrl = posterUrl || "images/cinema_stream_background.jpg";
+      let pack = Object.assign({}, defaultPack);
       try {
         const k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
         const searchRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${k}&query=${encodeURIComponent(cleanTitle)}&include_adult=false`);
         if (searchRes.ok) {
           const searchData = await searchRes.json();
-          const match = (searchData.results || []).find(r => (r.media_type === 'movie' || r.media_type === 'tv') && (r.backdrop_path || r.poster_path));
+          const candidates = (searchData.results || []).filter(r => (r.media_type === 'movie' || r.media_type === 'tv') && (r.backdrop_path || r.poster_path));
+          const lowerClean = cleanTitle.toLowerCase();
+          const match = candidates.find(r => ((r.title || r.name || '').trim().toLowerCase() === lowerClean)) || candidates[0];
           if (match) {
             const mediaType = match.media_type === 'tv' ? 'tv' : 'movie';
-            let chosenPath = match.backdrop_path || '';
+            let posters = [];
+            let backdrops = [];
             try {
               const imgRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${match.id}/images?api_key=${k}`);
               if (imgRes.ok) {
                 const imgData = await imgRes.json();
-                const backdrops = Array.isArray(imgData.backdrops) ? imgData.backdrops : [];
-                const cleanStills = backdrops.filter(b => !b.iso_639_1 && b.file_path);
-                // Prefer a distinct widescreen scene still so the background complements (never duplicates) the hero poster
-                const nonDupClean = cleanStills.find(b => !posterUrl || !String(posterUrl).includes(b.file_path));
-                const anyNonDup = backdrops.find(b => b.file_path && (!posterUrl || !String(posterUrl).includes(b.file_path)));
-                const best = nonDupClean || cleanStills[0] || anyNonDup || backdrops[0];
-                if (best && best.file_path) chosenPath = best.file_path;
+                posters = Array.isArray(imgData.posters) ? imgData.posters.filter(p => p.file_path) : [];
+                const rawBackdrops = Array.isArray(imgData.backdrops) ? imgData.backdrops.filter(b => b.file_path) : [];
+                const hiResBackdrops = rawBackdrops.filter(b => (b.width || 1280) >= 900);
+                backdrops = hiResBackdrops.length ? hiResBackdrops : rawBackdrops;
               }
             } catch(ie) {}
 
-            if (chosenPath) {
-              resolvedUrl = `https://image.tmdb.org/t/p/w1280${chosenPath}`;
-            }
+            const tmdbPortraitObj = posters.find(p => p.iso_639_1 === 'en') || posters.find(p => !p.iso_639_1) || posters[0];
+            const tmdbPortraitUrl = tmdbPortraitObj
+              ? `https://image.tmdb.org/t/p/w780${tmdbPortraitObj.file_path}`
+              : (match.poster_path ? `https://image.tmdb.org/t/p/w780${match.poster_path}` : baseFallback);
+
+            const posterIsLandscape = Boolean(
+              posterUrl && (
+                /cinema_stream_background/i.test(posterUrl) ||
+                backdrops.some(b => b.file_path && posterUrl.includes(b.file_path)) ||
+                (match.backdrop_path && posterUrl.includes(match.backdrop_path))
+              )
+            );
+
+            const enHero = backdrops.find(b => b.iso_639_1 === 'en');
+            const cleanStills = backdrops.filter(b => !b.iso_639_1);
+            const heroPath = (enHero && enHero.file_path)
+              || (cleanStills[0] && cleanStills[0].file_path)
+              || (backdrops[0] && backdrops[0].file_path)
+              || match.backdrop_path
+              || '';
+            const scene1Path = ((cleanStills.find(b => b.file_path !== heroPath) || cleanStills[0] || backdrops.find(b => b.file_path !== heroPath) || backdrops[0]) || {}).file_path || heroPath;
+            const scene2Path = ((cleanStills.find(b => b.file_path !== scene1Path && b.file_path !== heroPath) || cleanStills.find(b => b.file_path !== scene1Path) || backdrops.find(b => b.file_path !== scene1Path && b.file_path !== heroPath) || backdrops.find(b => b.file_path !== scene1Path)) || {}).file_path || heroPath || scene1Path;
+
+            const toW1280 = (fp, fb) => fp ? `https://image.tmdb.org/t/p/w1280${fp}` : fb;
+            pack = {
+              portraitPoster: (!posterIsLandscape && posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER) ? posterUrl : tmdbPortraitUrl,
+              hero16x9: toW1280(heroPath, posterIsLandscape ? posterUrl : tmdbPortraitUrl),
+              scene1: toW1280(scene1Path, toW1280(heroPath, "images/cinema_stream_background.jpg")),
+              scene2: toW1280(scene2Path, toW1280(heroPath || scene1Path, "images/cinema_stream_background.jpg")),
+              posterIsLandscape,
+              ts: Date.now()
+            };
           }
         }
       } catch(e) {}
 
-      movieSceneMemoryCache.set(cacheKey, resolvedUrl);
-      saveMovieSceneDiskCache(cacheKey, { sceneUrl: resolvedUrl, ts: Date.now() });
-      return resolvedUrl;
+      movieScenePackMemoryCache.set(cacheKey, pack);
+      saveMovieSceneDiskCache(cacheKey, pack, MOVIE_SCENE_PACK_CACHE_KEY);
+      return applyCallerPoster(pack);
+    }
+
+    async function resolveTmdbMovieSceneUrl(movieTitle, posterUrl) {
+      const pack = await resolveTmdbMovieMediaPack(movieTitle, posterUrl);
+      return pack.scene1 || pack.hero16x9 || posterUrl || "images/cinema_stream_background.jpg";
+    }
+
+    function setSceneImageSrc(id, url) {
+      const el = document.getElementById(id);
+      if (!el || !url) return;
+      el.referrerPolicy = 'no-referrer';
+      if (el.getAttribute('src') !== url) {
+        el.src = url;
+      }
+      el.style.opacity = '1';
+    }
+
+    function applySceneDemoLayout(pack, modeOverride) {
+      if (activeEffectiveTheme !== 'moviescene' || !pack) return;
+      if (posterFadeSwapTimer) {
+        clearTimeout(posterFadeSwapTimer);
+        posterFadeSwapTimer = null;
+      }
+      const mode = ['demoA', 'demoB', 'demoC'].includes(modeOverride) ? modeOverride : sceneDemoMode;
+      const imaxOverlay = document.getElementById('sceneImaxStageOverlay');
+      const triptychOverlay = document.getElementById('sceneTriptychWingsOverlay');
+      const splitOverlay = document.getElementById('heroSplitCardOverlay');
+      const splitPane = document.getElementById('splitLayoutPane');
+      const centerPane = document.getElementById('centerPosterLayoutPane');
+      const backdropEl = document.getElementById('themeBackdropImg');
+
+      if (imaxOverlay) {
+        imaxOverlay.classList.remove('hidden');
+        imaxOverlay.classList.add('is-visible');
+      }
+
+      if (mode === 'demoA') {
+        if (splitOverlay) splitOverlay.classList.add('hidden');
+        if (splitPane) splitPane.classList.add('hidden');
+        if (centerPane) centerPane.classList.add('hidden');
+        if (triptychOverlay) {
+          triptychOverlay.classList.add('hidden');
+          triptychOverlay.classList.remove('is-visible');
+        }
+        setSceneImageSrc('heroPosterImg', pack.hero16x9 || pack.scene1 || pack.portraitPoster);
+        if (backdropEl) {
+          const bgUrl = pack.scene1 || pack.hero16x9;
+          if (bgUrl && backdropEl.getAttribute('src') !== bgUrl) {
+            backdropEl.referrerPolicy = 'no-referrer';
+            backdropEl.src = bgUrl;
+          }
+          backdropEl.style.filter = 'blur(2.5px) brightness(0.68) saturate(1.22) contrast(1.06)';
+          backdropEl.style.transform = 'scale(1.03)';
+          backdropEl.style.opacity = '0.90';
+        }
+      } else if (mode === 'demoC') {
+        if (splitOverlay) splitOverlay.classList.remove('hidden');
+        if (splitPane) splitPane.classList.add('hidden');
+        if (centerPane) centerPane.classList.remove('hidden');
+        if (triptychOverlay) {
+          triptychOverlay.classList.remove('hidden');
+          triptychOverlay.classList.add('is-visible');
+        }
+        const portrait = pack.portraitPoster || pack.hero16x9;
+        const leftScene = pack.scene1 || pack.hero16x9;
+        const rightScene = pack.scene2 || pack.hero16x9 || pack.scene1;
+        setSceneImageSrc('heroPosterImg', portrait);
+        setSceneImageSrc('splitCardBlurFillImg', pack.hero16x9 || leftScene);
+        setSceneImageSrc('splitCardCenterPosterImg', portrait);
+        setSceneImageSrc('triptychLeftImg', leftScene);
+        setSceneImageSrc('triptychLeftReflectImg', leftScene);
+        setSceneImageSrc('triptychRightImg', rightScene);
+        setSceneImageSrc('triptychRightReflectImg', rightScene);
+        if (backdropEl) {
+          const bgUrl = pack.hero16x9 || leftScene;
+          if (bgUrl && backdropEl.getAttribute('src') !== bgUrl) {
+            backdropEl.referrerPolicy = 'no-referrer';
+            backdropEl.src = bgUrl;
+          }
+          backdropEl.style.filter = 'blur(7px) brightness(0.40) saturate(1.20) contrast(1.05)';
+          backdropEl.style.transform = 'scale(1.06)';
+          backdropEl.style.opacity = '0.84';
+        }
+      } else {
+        if (triptychOverlay) {
+          triptychOverlay.classList.add('hidden');
+          triptychOverlay.classList.remove('is-visible');
+        }
+        if (splitOverlay) splitOverlay.classList.remove('hidden');
+        if (centerPane) centerPane.classList.add('hidden');
+        if (splitPane) splitPane.classList.remove('hidden');
+        const portrait = pack.portraitPoster || pack.hero16x9;
+        const rightScene = pack.scene1 || pack.hero16x9;
+        setSceneImageSrc('heroPosterImg', portrait);
+        setSceneImageSrc('splitCardPosterImg', portrait);
+        setSceneImageSrc('splitCardSceneImg', rightScene);
+        if (backdropEl) {
+          const bgUrl = pack.scene2 || pack.scene1 || pack.hero16x9;
+          if (bgUrl && backdropEl.getAttribute('src') !== bgUrl) {
+            backdropEl.referrerPolicy = 'no-referrer';
+            backdropEl.src = bgUrl;
+          }
+          backdropEl.style.filter = 'blur(3.5px) brightness(0.56) saturate(1.24) contrast(1.06)';
+          backdropEl.style.transform = 'scale(1.04)';
+          backdropEl.style.opacity = '0.88';
+        }
+      }
     }
 
     function applyMovieScenePaletteStyles(pal) {
       if (!pal || activeEffectiveTheme !== 'moviescene') return;
       activeScenePalette = pal;
+      document.body.style.setProperty('--scene-p-rgb', pal.pRgb);
+      document.body.style.setProperty('--scene-s-rgb', pal.sRgb);
+      document.body.style.setProperty('--scene-p-hex', pal.pHex);
+      document.body.style.setProperty('--scene-s-hex', pal.sHex);
 
       const sLeft = document.getElementById('themeSpotlightLeft');
       const sRight = document.getElementById('themeSpotlightRight');
@@ -1670,6 +2159,31 @@
 
     function clearMovieSceneOverrides() {
       activeScenePalette = null;
+      activeScenePack = null;
+      ['--scene-p-rgb', '--scene-s-rgb', '--scene-p-hex', '--scene-s-hex'].forEach(v => {
+        document.body.style.removeProperty(v);
+      });
+      const imaxOverlay = document.getElementById('sceneImaxStageOverlay');
+      if (imaxOverlay) {
+        imaxOverlay.classList.add('hidden');
+        imaxOverlay.classList.remove('is-visible');
+      }
+      const triptychOverlay = document.getElementById('sceneTriptychWingsOverlay');
+      if (triptychOverlay) {
+        triptychOverlay.classList.add('hidden');
+        triptychOverlay.classList.remove('is-visible');
+      }
+      ['heroSplitCardOverlay', 'splitLayoutPane', 'centerPosterLayoutPane'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      const heroPosterEl = document.getElementById('heroPosterImg');
+      if (heroPosterEl && typeof activeMovie !== 'undefined' && activeMovie && activeMovie.posterUrl) {
+        if (heroPosterEl.getAttribute('src') !== activeMovie.posterUrl) {
+          heroPosterEl.src = activeMovie.posterUrl;
+        }
+        heroPosterEl.style.opacity = '1';
+      }
       const backdropEl = document.getElementById('themeBackdropImg');
       if (backdropEl) {
         backdropEl.style.filter = '';
@@ -1700,31 +2214,15 @@
     async function updateTwitchMovieSceneEngine(movieTitle, posterUrl) {
       if (activeEffectiveTheme !== 'moviescene') return;
       const token = ++activeSceneRequestToken;
-      const backdropEl = document.getElementById('themeBackdropImg');
 
-      const sceneUrl = await resolveTmdbMovieSceneUrl(movieTitle, posterUrl);
+      const pack = await resolveTmdbMovieMediaPack(movieTitle, posterUrl);
       if (token !== activeSceneRequestToken || activeEffectiveTheme !== 'moviescene') return;
+      activeScenePack = pack;
 
-      if (backdropEl && sceneUrl) {
-        const loader = new Image();
-        loader.referrerPolicy = 'no-referrer';
-        loader.onload = () => {
-          if (token !== activeSceneRequestToken || activeEffectiveTheme !== 'moviescene') return;
-          backdropEl.src = sceneUrl;
-          backdropEl.style.filter = 'blur(2.5px) saturate(1.22) contrast(1.06)';
-          backdropEl.style.transform = 'scale(1.03)';
-          backdropEl.style.opacity = '0.92';
-        };
-        loader.onerror = () => {
-          if (token !== activeSceneRequestToken || activeEffectiveTheme !== 'moviescene') return;
-          if (posterUrl && posterUrl !== sceneUrl) backdropEl.src = posterUrl;
-        };
-        loader.src = sceneUrl;
-      }
-
-      const pal = await extractDominantScenePalette(sceneUrl || posterUrl, movieTitle);
+      const pal = await extractDominantScenePalette(pack.scene1 || posterUrl, movieTitle);
       if (token !== activeSceneRequestToken || activeEffectiveTheme !== 'moviescene') return;
       applyMovieScenePaletteStyles(pal);
+      applySceneDemoLayout(pack, sceneDemoMode);
     }
     window.updateTwitchMovieSceneEngine = updateTwitchMovieSceneEngine;
 
@@ -4338,10 +4836,23 @@
         showPosterErrorBadge(false);
       }
 
+      if (posterFadeSwapTimer) {
+        clearTimeout(posterFadeSwapTimer);
+        posterFadeSwapTimer = null;
+      }
+
       if (posterEl && activeMovie.posterUrl) {
-        if (posterEl.src !== activeMovie.posterUrl) {
+        if (typeof getActiveThemeName === 'function' && getActiveThemeName() === 'moviescene') {
+          if (posterEl.getAttribute('src') !== activeMovie.posterUrl && getSceneDemoMode() !== 'demoA') {
+            posterEl.referrerPolicy = 'no-referrer';
+            posterEl.src = activeMovie.posterUrl;
+          }
+          posterEl.style.opacity = '1';
+        } else if (posterEl.src !== activeMovie.posterUrl) {
           posterEl.style.opacity = '0.3';
-          setTimeout(() => {
+          posterFadeSwapTimer = setTimeout(() => {
+            posterFadeSwapTimer = null;
+            if (typeof getActiveThemeName === 'function' && getActiveThemeName() === 'moviescene') return;
             posterEl.src = activeMovie.posterUrl;
             posterEl.onload = () => { posterEl.style.opacity = '1'; };
           }, 150);
@@ -5599,9 +6110,47 @@
       const mistBtn = document.getElementById('studioLayerBtn-mist');
       if (flanksBtn && flanksEl) flanksBtn.classList.toggle('active', flanksEl.style.display !== 'none');
       if (mistBtn && mistEl) mistBtn.classList.toggle('active', mistEl.style.display !== 'none');
+
+      // Sync Interactive Movie Scene Demo Mode (Demo A / B / C) buttons
+      const demoLabels = {
+        demoA: 'DEMO A: 16:9 IMAX',
+        demoB: 'DEMO B: SPLIT CARD',
+        demoC: 'DEMO C: 3D TRIPTYCH'
+      };
+      const curDemo = typeof getSceneDemoMode === 'function' ? getSceneDemoMode() : 'demoB';
+      const demoBadge = document.getElementById('studioSceneDemoBadge');
+      if (demoBadge) demoBadge.textContent = demoLabels[curDemo] || 'DEMO B: SPLIT CARD';
+      ['demoA', 'demoB', 'demoC'].forEach(m => {
+        const b = document.getElementById(`studioSceneDemoBtn-${m}`);
+        if (b) b.classList.toggle('active', m === curDemo);
+      });
+      const demoSec = document.getElementById('studioSceneDemoSection');
+      if (demoSec) demoSec.style.opacity = effective === 'moviescene' ? '1' : '0.68';
+
       if (typeof refreshStudioUpcomingDropdown === 'function') refreshStudioUpcomingDropdown();
     }
     window.syncStudioDrawerActiveState = syncStudioDrawerActiveState;
+
+    function studioSetSceneDemoMode(mode) {
+      if (!['demoA', 'demoB', 'demoC'].includes(mode)) return;
+      sceneDemoMode = mode;
+      try { localStorage.setItem(SCENE_DEMO_MODE_KEY, mode); } catch(e) {}
+
+      if (getActiveThemeName() !== 'moviescene') {
+        studioSelectTheme('moviescene');
+        return;
+      }
+
+      syncStudioDrawerActiveState();
+      const cleanTitle = (activeMovie && activeMovie.title ? activeMovie.title : '').replace(/^🎬\s*/, '').trim();
+      const posterUrl = (activeMovie && activeMovie.posterUrl) ? activeMovie.posterUrl : '';
+      if (activeScenePack) {
+        applySceneDemoLayout(activeScenePack, mode);
+      } else if (typeof updateTwitchMovieSceneEngine === 'function') {
+        updateTwitchMovieSceneEngine(cleanTitle, posterUrl);
+      }
+    }
+    window.studioSetSceneDemoMode = studioSetSceneDemoMode;
 
     function studioSelectTheme(themeKey) {
       studioThemeLocked = true;
@@ -6065,7 +6614,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.11.9";
+    const TWITCH_OVERLAY_VERSION = "4.11.10";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
@@ -6174,6 +6723,8 @@
       window.resolveActiveOrNextMovie = resolveActiveOrNextMovie;
       window.applySyncPayload = applySyncPayload;
       window.applySeasonalTheme = applySeasonalTheme;
+      window.studioSetSceneDemoMode = studioSetSceneDemoMode;
+      window.getSceneDemoMode = getSceneDemoMode;
       window.resolveSeasonalTheme = resolveSeasonalTheme;
       window.getActiveThemeName = getActiveThemeName;
       window.getActiveFireworkStats = () => ({ rockets: activeRockets.length, sparks: activeFireworkSparks.length });
