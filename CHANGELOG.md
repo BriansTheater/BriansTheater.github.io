@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.11.9] - 2026-11-14
+
+### What's New
+- Added Upcoming Schedule Preview dropdown to Twitch Studio drawer.
+- Added Prev, Next, and Live Auto preview stepper controls.
+- Locked active previews so live broadcasts stay unchanged.
+- Matched distinct accent palettes for November and December movies.
+
 ## [4.11.8] - 2026-11-14
 
 ### What's New

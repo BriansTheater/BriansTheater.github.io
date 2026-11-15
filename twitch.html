@@ -782,6 +782,20 @@
         <button type="button" id="studioDoorBtn-trailer" onclick="studioSetDoorState('trailer')" class="studio-pill px-2.5 py-1 rounded-xl text-[11px] font-bold cursor-pointer">🎬 Trailer Mode</button>
       </div>
 
+      <div class="flex items-center justify-between gap-2 mt-1">
+        <span class="text-[9px] font-mono font-semibold text-sky-300 uppercase tracking-wider">🗓️ Upcoming Schedule Preview:</span>
+        <span id="studioUpcomingCountBadge" class="text-[9px] font-mono text-emerald-300">Loading...</span>
+      </div>
+      <select id="studioUpcomingSelect" onchange="studioPreviewUpcomingByIndex(this.value)" class="w-full px-2.5 py-1.5 rounded-xl bg-slate-900/95 border border-sky-500/40 text-[11px] font-bold text-slate-100 focus:outline-none focus:border-sky-400 cursor-pointer">
+        <option value="live">📡 LIVE AUTO (Current Next Screening)</option>
+      </select>
+      <div class="flex items-center gap-1">
+        <button type="button" id="studioUpcomingPrevBtn" onclick="studioStepUpcomingPreview(-1)" class="studio-pill flex-1 px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">◀ Prev</button>
+        <button type="button" id="studioUpcomingLiveBtn" onclick="studioSelectSampleMovie('live')" class="studio-pill active px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer">📡 Live Auto</button>
+        <button type="button" id="studioUpcomingNextBtn" onclick="studioStepUpcomingPreview(1)" class="studio-pill flex-1 px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">Next ▶</button>
+      </div>
+      <div id="studioUpcomingStatusHint" class="text-[9px] font-mono text-slate-400 truncate">Synced with live schedule</div>
+
       <span class="text-[9px] font-mono font-semibold text-slate-400 mt-1">Sample Movie Poster & Title Length:</span>
       <div class="flex flex-wrap gap-1">
         <button type="button" id="studioSampleBtn-live" onclick="studioSelectSampleMovie('live')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer">📡 Live Schedule</button>
@@ -1400,17 +1414,53 @@
 
     function getFallbackPaletteForTitle(title) {
       const t = String(title || '').toLowerCase();
+      if (/guarding stars/.test(t)) {
+        return { pRgb: '96, 165, 250', sRgb: '251, 191, 36', pHex: '#60a5fa', sHex: '#fbbf24' };
+      }
+      if (/nightmare before christmas/.test(t)) {
+        return { pRgb: '249, 115, 22', sRgb: '168, 85, 247', pHex: '#f97316', sHex: '#a855f7' };
+      }
+      if (/grinch/.test(t)) {
+        return { pRgb: '132, 204, 22', sRgb: '244, 63, 94', pHex: '#84cc16', sHex: '#f43f5e' };
+      }
+      if (/polar express/.test(t)) {
+        return { pRgb: '56, 189, 248', sRgb: '251, 191, 36', pHex: '#38bdf8', sHex: '#fbbf24' };
+      }
+      if (/christmas carol|gospel of christmas/.test(t)) {
+        return { pRgb: '245, 158, 11', sRgb: '45, 212, 191', pHex: '#f59e0b', sHex: '#2dd4bf' };
+      }
+      if (/christmas switch|holidaze|clashing through the snow/.test(t)) {
+        return { pRgb: '244, 63, 94', sRgb: '251, 191, 36', pHex: '#f43f5e', sHex: '#fbbf24' };
+      }
+      if (/home alone|man with the bag|deck the halls/.test(t)) {
+        return { pRgb: '239, 68, 68', sRgb: '16, 185, 129', pHex: '#ef4444', sHex: '#10b981' };
+      }
       if (/supergirl|galactic|star|alien|disclosure|dune|avatar|sci|space|tron/.test(t)) {
         return { pRgb: '56, 189, 248', sRgb: '251, 146, 60', pHex: '#38bdf8', sHex: '#fb923c' };
       }
-      if (/christmas|holiday|home alone|polar|bag|santa|snow|grinch|holidaze|hall|snow/.test(t)) {
+      if (/christmas|holiday|santa|snow|12 dates/.test(t)) {
         return { pRgb: '52, 211, 153', sRgb: '251, 191, 36', pHex: '#34d399', sHex: '#fbbf24' };
+      }
+      if (/haunted heist/.test(t)) {
+        return { pRgb: '168, 85, 247', sRgb: '251, 191, 36', pHex: '#a855f7', sHex: '#fbbf24' };
       }
       if (/dracula|evil dead|ahs|horror|nosferatu|nightmare|terror|scream|blood|devil|backrooms/.test(t)) {
         return { pRgb: '244, 63, 94', sRgb: '168, 85, 247', pHex: '#f43f5e', sHex: '#a855f7' };
       }
-      if (/borderlands|mad max|grey|action|john wick|furious/.test(t)) {
-        return { pRgb: '245, 158, 11', sRgb: '236, 72, 153', pHex: '#f59e0b', sHex: '#ec4899' };
+      if (/in the grey|borderlands|mad max|action|john wick|furious/.test(t)) {
+        return { pRgb: '245, 158, 11', sRgb: '56, 189, 248', pHex: '#f59e0b', sHex: '#38bdf8' };
+      }
+      if (/fuze/.test(t)) {
+        return { pRgb: '249, 115, 22', sRgb: '236, 72, 153', pHex: '#f97316', sHex: '#ec4899' };
+      }
+      if (/signal one/.test(t)) {
+        return { pRgb: '34, 211, 238', sRgb: '129, 140, 248', pHex: '#22d3ee', sHex: '#818cf8' };
+      }
+      if (/lifehack/.test(t)) {
+        return { pRgb: '16, 185, 129', sRgb: '56, 189, 248', pHex: '#10b981', sHex: '#38bdf8' };
+      }
+      if (/pinocchio/.test(t)) {
+        return { pRgb: '217, 119, 6', sRgb: '225, 29, 72', pHex: '#d97706', sHex: '#e11d48' };
       }
       const presets = [
         { pRgb: '56, 189, 248', sRgb: '245, 158, 11', pHex: '#38bdf8', sHex: '#f59e0b' },
@@ -3677,6 +3727,7 @@
 
     // Curated High-Res Movie Artwork Map (Matches main theater stage)
     const verifiedMovieArtworks = {
+      "Backrooms": "https://image.tmdb.org/t/p/w780/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg",
       "Evil Dead Burn": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
       "Evil Dead": "https://image.tmdb.org/t/p/w780/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
       "Abraham's Boys A Dracula Story": "https://upload.wikimedia.org/wikipedia/en/6/6c/Abrahams_boys.jpg",
@@ -3784,7 +3835,7 @@
       } catch(e) {}
 
       const customResult = searchDict(mergedCustom);
-      if (customResult && !String(customResult).includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return customResult;
+      if (customResult && !String(customResult).includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw') && !String(customResult).includes('1jVHWheLrQKXuUXL7sZTQcwD-_swmB35w')) return customResult;
 
       const verifiedResult = searchDict(verifiedMovieArtworks);
       if (verifiedResult) return verifiedResult;
@@ -4299,22 +4350,24 @@
         }
       }
 
-      // Persist active movie state for instant seamless boot next time
-      try {
-        if (activeMovie.title && activeMovie.posterUrl) {
-          localStorage.setItem('brian_twitch_active_movie', JSON.stringify({
-            title: activeMovie.title,
-            startMs: activeMovie.startMs,
-            endMs: activeMovie.endMs,
-            posterUrl: activeMovie.posterUrl,
-            trailerId: activeMovie.trailerId,
-            showtimeText: activeMovie.showtimeText,
-            isNowPlaying: activeMovie.isNowPlaying,
-            doorMode: activeMovie.doorMode,
-            isPosterError: activeMovie.isPosterError
-          }));
-        }
-      } catch(e) {}
+      // Persist active movie state for instant seamless boot next time (skip during Studio preview)
+      if (!studioPreviewLocked) {
+        try {
+          if (activeMovie.title && activeMovie.posterUrl) {
+            localStorage.setItem('brian_twitch_active_movie', JSON.stringify({
+              title: activeMovie.title,
+              startMs: activeMovie.startMs,
+              endMs: activeMovie.endMs,
+              posterUrl: activeMovie.posterUrl,
+              trailerId: activeMovie.trailerId,
+              showtimeText: activeMovie.showtimeText,
+              isNowPlaying: activeMovie.isNowPlaying,
+              doorMode: activeMovie.doorMode,
+              isPosterError: activeMovie.isPosterError
+            }));
+          }
+        } catch(e) {}
+      }
 
       if (typeof getActiveThemeName === 'function' && getActiveThemeName() === 'moviescene' && typeof updateTwitchMovieSceneEngine === 'function') {
         updateTwitchMovieSceneEngine(cleanTitle, activeMovie.posterUrl);
@@ -4326,8 +4379,6 @@
     // 5. Dynamic Schedule & Movie Progression Resolver
     function resolveActiveOrNextMovie(now = Date.now()) {
       const merged = lastKnownPayload;
-      if (merged.doorMode) activeMovie.doorMode = merged.doorMode;
-      if (merged.partyUrl) activeMovie.partyUrl = merged.partyUrl;
 
       let foundNow = null;
       let foundNext = null;
@@ -4352,9 +4403,22 @@
 
       // 2. Gather all schedule entries
       const allSchedules = [];
-      if (Array.isArray(merged.schedule)) allSchedules.push(...merged.schedule);
+      if (merged.seasonPlanner && merged.seasonPlanner.moviesByDate && typeof merged.seasonPlanner.moviesByDate === 'object') {
+        allSchedules.push(...Object.values(merged.seasonPlanner.moviesByDate));
+      }
       if (Array.isArray(merged.officialSchedule)) allSchedules.push(...merged.officialSchedule);
       if (Array.isArray(merged.cinema && merged.cinema.schedule)) allSchedules.push(...merged.cinema.schedule);
+      if (Array.isArray(merged.schedule)) allSchedules.push(...merged.schedule);
+
+      if (typeof refreshStudioUpcomingDropdown === 'function') {
+        refreshStudioUpcomingDropdown();
+      }
+      if (studioPreviewLocked) {
+        return;
+      }
+
+      if (merged.doorMode) activeMovie.doorMode = merged.doorMode;
+      if (merged.partyUrl) activeMovie.partyUrl = merged.partyUrl;
 
       // Check if any schedule entry is actively screening right now
       if (!foundNow) {
@@ -4497,6 +4561,7 @@
         }
       }
       resolveActiveOrNextMovie(Date.now());
+      if (studioPreviewLocked) return;
       if (data.trailerUpdate && data.trailerUpdate.trailerId && !isTvShowTitle(activeMovie.title, activeMovie)) {
         const cleanTarget = (data.trailerUpdate.title || '').replace(/^🎬\s*/, '').trim();
         if (!cleanTarget || cleanTarget.toLowerCase() === activeMovie.title.toLowerCase()) {
@@ -4508,7 +4573,7 @@
 
     // Apply instantaneous state broadcast from main theater page
     function applyStageBroadcast(payload) {
-      if (!payload) return;
+      if (!payload || studioPreviewLocked) return;
       if (payload.title) activeMovie.title = payload.title.replace(/^🎬\s*/, '').trim();
       if (payload.date) activeMovie.showtimeText = payload.date;
       if (payload.poster) {
@@ -5448,6 +5513,8 @@
     // 4B. TWITCH LAYOUT & THEME DESIGN STUDIO
     // ==========================================
     let studioThemeLocked = Boolean(new URLSearchParams(window.location.search).get('theme'));
+    let studioPreviewLocked = false;
+    let studioPreviewIndex = -1;
     let studioSavedLiveMovieSnapshot = null;
     let studioVignetteLevel = 0; // 0 = Default, 1 = Dark, 2 = Bright
 
@@ -5532,6 +5599,7 @@
       const mistBtn = document.getElementById('studioLayerBtn-mist');
       if (flanksBtn && flanksEl) flanksBtn.classList.toggle('active', flanksEl.style.display !== 'none');
       if (mistBtn && mistEl) mistBtn.classList.toggle('active', mistEl.style.display !== 'none');
+      if (typeof refreshStudioUpcomingDropdown === 'function') refreshStudioUpcomingDropdown();
     }
     window.syncStudioDrawerActiveState = syncStudioDrawerActiveState;
 
@@ -5589,14 +5657,194 @@
     }
     window.studioSetDoorState = studioSetDoorState;
 
+    function getStudioUpcomingMoviesList(now = Date.now()) {
+      const merged = lastKnownPayload || {};
+      const sources = [];
+      if (merged.seasonPlanner && merged.seasonPlanner.moviesByDate && typeof merged.seasonPlanner.moviesByDate === 'object') {
+        sources.push(...Object.values(merged.seasonPlanner.moviesByDate));
+      }
+      if (Array.isArray(merged.officialSchedule)) sources.push(...merged.officialSchedule);
+      if (Array.isArray(merged.cinema && merged.cinema.schedule)) sources.push(...merged.cinema.schedule);
+      if (Array.isArray(merged.schedule)) sources.push(...merged.schedule);
+
+      const deduped = new Map();
+      sources.forEach(s => {
+        if (!s || !s.title) return;
+        if (isMovieConcluded(s, now)) return;
+        const cleanTitle = String(s.title).replace(/^🎬\s*/, '').trim();
+        if (!cleanTitle || cleanTitle === 'No Movie Scheduled') return;
+
+        const startMs = Number(s.startMs) || 0;
+        const endMs = Number(s.endMs) || (startMs ? startMs + (105 * 60 * 1000) : 0);
+        if (!(startMs >= now - 3600000 || endMs > now)) return;
+
+        const normTitle = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const bucket = startMs ? Math.round(startMs / 86400000) : String(s.date || '').toLowerCase();
+        const key = `${normTitle}__${bucket}`;
+
+        const resolvedPoster = s.posterUrl || s.imageUrl || getMovieArtworkUrl(cleanTitle, merged.moviePosters);
+        let resolvedTrailer = s.trailerId || '';
+        if (!resolvedTrailer && s.trailerUrl && typeof extractTwitchYouTubeId === 'function') {
+          resolvedTrailer = extractTwitchYouTubeId(s.trailerUrl);
+        }
+        if (!resolvedTrailer && !isTvShowTitle(cleanTitle, s)) {
+          resolvedTrailer = getTrailerIdForTitle(cleanTitle, merged.movieTrailers);
+        }
+
+        const existing = deduped.get(key);
+        if (!existing) {
+          deduped.set(key, {
+            title: cleanTitle,
+            startMs,
+            endMs,
+            date: s.date || '',
+            time: s.startTime || s.time || '',
+            showtimeText: formatShowtime(startMs, s.date, s.startTime || s.time),
+            posterUrl: resolvedPoster || DEFAULT_FALLBACK_POSTER,
+            trailerId: resolvedTrailer || ''
+          });
+        } else {
+          if ((!existing.posterUrl || existing.posterUrl === DEFAULT_FALLBACK_POSTER) && resolvedPoster) {
+            existing.posterUrl = resolvedPoster;
+          }
+          if (!existing.trailerId && resolvedTrailer) existing.trailerId = resolvedTrailer;
+          if (!existing.date && s.date) existing.date = s.date;
+        }
+      });
+
+      return Array.from(deduped.values()).sort((a, b) => (a.startMs || 0) - (b.startMs || 0));
+    }
+    window.getStudioUpcomingMoviesList = getStudioUpcomingMoviesList;
+
+    function formatShortUpcomingLabel(item, index) {
+      let shortDate = '';
+      if (item.startMs) {
+        try {
+          shortDate = new Date(item.startMs).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            timeZone: 'America/Los_Angeles'
+          });
+        } catch(e) {}
+      }
+      if (!shortDate && item.date) {
+        shortDate = String(item.date).replace(/^[^,]+,\s*/, '').replace(/,\s*\d{4}$/, '').trim();
+      }
+      return shortDate ? `${index + 1}. ${shortDate} — ${item.title}` : `${index + 1}. ${item.title}`;
+    }
+
+    function refreshStudioUpcomingDropdown() {
+      const sel = document.getElementById('studioUpcomingSelect');
+      const badge = document.getElementById('studioUpcomingCountBadge');
+      const list = getStudioUpcomingMoviesList();
+      if (badge) badge.textContent = `${list.length} Upcoming`;
+      if (!sel) return;
+
+      const prevValue = studioPreviewLocked && studioPreviewIndex >= 0 ? String(studioPreviewIndex) : 'live';
+      sel.innerHTML = '';
+      const liveOpt = document.createElement('option');
+      liveOpt.value = 'live';
+      liveOpt.textContent = '📡 LIVE AUTO (Current Next Screening)';
+      sel.appendChild(liveOpt);
+
+      list.forEach((item, idx) => {
+        const opt = document.createElement('option');
+        opt.value = String(idx);
+        opt.textContent = formatShortUpcomingLabel(item, idx);
+        sel.appendChild(opt);
+      });
+
+      sel.value = (prevValue !== 'live' && Number(prevValue) < list.length) ? prevValue : 'live';
+    }
+
+    function studioPreviewUpcomingByIndex(val) {
+      const sel = document.getElementById('studioUpcomingSelect');
+      const liveBtn = document.getElementById('studioUpcomingLiveBtn');
+      const hint = document.getElementById('studioUpcomingStatusHint');
+      const sampleLiveBtn = document.getElementById('studioSampleBtn-live');
+
+      if (val === 'live' || val === '' || val === null || val === undefined || Number(val) < 0) {
+        studioPreviewLocked = false;
+        studioPreviewIndex = -1;
+        if (studioSavedLiveMovieSnapshot) {
+          Object.assign(activeMovie, studioSavedLiveMovieSnapshot);
+        }
+        resolveActiveOrNextMovie(Date.now());
+        if (sel) sel.value = 'live';
+        if (liveBtn) liveBtn.classList.add('active');
+        if (sampleLiveBtn) sampleLiveBtn.classList.add('active');
+        ['moana', 'ahs', 'nosferatu'].forEach(k => {
+          const b = document.getElementById(`studioSampleBtn-${k}`);
+          if (b) b.classList.remove('active');
+        });
+        if (hint) hint.textContent = 'Synced with live schedule';
+        renderMovieState();
+        return;
+      }
+
+      const list = getStudioUpcomingMoviesList();
+      const idx = Math.max(0, Math.min(list.length - 1, Number(val)));
+      const item = list[idx];
+      if (!item) return;
+
+      if (!studioPreviewLocked && !studioSavedLiveMovieSnapshot) {
+        studioSavedLiveMovieSnapshot = Object.assign({}, activeMovie);
+      }
+      studioPreviewLocked = true;
+      studioPreviewIndex = idx;
+
+      activeMovie.title = item.title;
+      activeMovie.startMs = item.startMs || (Date.now() + 86400000);
+      activeMovie.endMs = item.endMs || (activeMovie.startMs + (105 * 60 * 1000));
+      activeMovie.showtimeText = item.showtimeText;
+      activeMovie.posterUrl = item.posterUrl || DEFAULT_FALLBACK_POSTER;
+      activeMovie.trailerId = item.trailerId || '';
+      activeMovie.isNowPlaying = false;
+      activeMovie.isPosterError = (activeMovie.posterUrl === DEFAULT_FALLBACK_POSTER);
+
+      if (sel) sel.value = String(idx);
+      if (liveBtn) liveBtn.classList.remove('active');
+      ['live', 'moana', 'ahs', 'nosferatu'].forEach(k => {
+        const b = document.getElementById(`studioSampleBtn-${k}`);
+        if (b) b.classList.remove('active');
+      });
+      if (hint) hint.textContent = `Previewing ${idx + 1}/${list.length}: ${item.title} (Stream Unchanged)`;
+      renderMovieState();
+    }
+    window.studioPreviewUpcomingByIndex = studioPreviewUpcomingByIndex;
+
+    function studioStepUpcomingPreview(delta) {
+      const list = getStudioUpcomingMoviesList();
+      if (!list.length) return;
+      let nextIdx;
+      if (!studioPreviewLocked || studioPreviewIndex < 0) {
+        nextIdx = delta >= 0 ? (list.length > 1 ? 1 : 0) : (list.length - 1);
+      } else {
+        nextIdx = (studioPreviewIndex + delta + list.length) % list.length;
+      }
+      studioPreviewUpcomingByIndex(nextIdx);
+    }
+    window.studioStepUpcomingPreview = studioStepUpcomingPreview;
+
     function studioSelectSampleMovie(sampleKey) {
+      if (sampleKey === 'live') {
+        studioPreviewUpcomingByIndex('live');
+        return;
+      }
       ['live', 'moana', 'ahs', 'nosferatu'].forEach(k => {
         const b = document.getElementById(`studioSampleBtn-${k}`);
         if (b) b.classList.toggle('active', k === sampleKey);
       });
-      if (!studioSavedLiveMovieSnapshot) {
+      if (!studioPreviewLocked && !studioSavedLiveMovieSnapshot) {
         studioSavedLiveMovieSnapshot = Object.assign({}, activeMovie);
       }
+      studioPreviewLocked = true;
+      studioPreviewIndex = -1;
+      const sel = document.getElementById('studioUpcomingSelect');
+      const liveBtn = document.getElementById('studioUpcomingLiveBtn');
+      const hint = document.getElementById('studioUpcomingStatusHint');
+      if (sel) sel.value = 'live';
+      if (liveBtn) liveBtn.classList.remove('active');
       if (sampleKey === 'moana') {
         activeMovie.title = "Moana";
         activeMovie.posterUrl = "images/moana_demo_poster.jpg";
@@ -5615,10 +5863,8 @@
         activeMovie.showtimeText = "Saturday, Oct 31, 2026 • 9:00 PM PST";
         activeMovie.trailerId = "nulvWqYUM8k";
         activeMovie.isPosterError = false;
-      } else if (studioSavedLiveMovieSnapshot) {
-        Object.assign(activeMovie, studioSavedLiveMovieSnapshot);
-        resolveActiveOrNextMovie(Date.now());
       }
+      if (hint) hint.textContent = `Previewing sample: ${activeMovie.title} (Stream Unchanged)`;
       renderMovieState();
     }
     window.studioSelectSampleMovie = studioSelectSampleMovie;
@@ -5819,7 +6065,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.11.8";
+    const TWITCH_OVERLAY_VERSION = "4.11.9";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

@@ -4890,7 +4890,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.8";
+    const APP_VERSION = "4.11.9";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6330,6 +6330,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.9": [
+        "Added Upcoming Schedule Preview dropdown to Twitch Studio drawer.",
+        "Added Prev, Next, and Live Auto preview stepper controls.",
+        "Matched distinct accent palettes for November and December movies."
+      ],
       "4.11.8": [
         "Added Dynamic Movie Scene mode for Twitch and stage cards.",
         "Removed VIP badges from dynamic movie scene backgrounds.",
@@ -7186,7 +7191,7 @@
         customMovieImages = JSON.parse(stored);
         let cleanedLegacy = false;
         for (const [k, v] of Object.entries(customMovieImages)) {
-          if (typeof v === 'string' && v.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) {
+          if (typeof v === 'string' && (v.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw') || v.includes('1jVHWheLrQKXuUXL7sZTQcwD-_swmB35w'))) {
             delete customMovieImages[k];
             cleanedLegacy = true;
           }
@@ -7419,6 +7424,9 @@
 
     function optimizeArtworkUrl(url) {
       if (!url || typeof url !== 'string') return url;
+      if (url.includes('1jVHWheLrQKXuUXL7sZTQcwD-_swmB35w')) {
+        return "https://image.tmdb.org/t/p/w780/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg";
+      }
       if (url.includes('lh3.googleusercontent.com/d/') && !url.includes('=w') && !url.includes('=s')) {
         return url + '=w600';
       }
@@ -7478,12 +7486,12 @@
 
       // Tier 1: Custom admin overrides take absolute precedence across all matching layers
       const customMatch = searchDict(customMovieImages);
-      if (customMatch && !customMatch.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return optimizeArtworkUrl(customMatch);
+      if (customMatch && !customMatch.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw') && !customMatch.includes('1jVHWheLrQKXuUXL7sZTQcwD-_swmB35w')) return optimizeArtworkUrl(customMatch);
 
       // Tier 2: Attached movie object artwork (if valid and not placeholder)
       if (typeof movieOrTitle === 'object' && (movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl)) {
         const url = movieOrTitle.posterUrl || movieOrTitle.imageUrl || movieOrTitle.backdropUrl;
-        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4') && !url.includes('data:image') && !url.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return optimizeArtworkUrl(url);
+        if (url && typeof url === 'string' && url.startsWith('http') && !url.includes('gCcx85zbxz4') && !url.includes('data:image') && !url.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw') && !url.includes('1jVHWheLrQKXuUXL7sZTQcwD-_swmB35w')) return optimizeArtworkUrl(url);
       }
 
       // Tier 3: Verified default movie artwork dictionary
@@ -7507,7 +7515,7 @@
 
       if (foundInCat && (foundInCat.posterUrl || foundInCat.imageUrl)) {
         const u = foundInCat.posterUrl || foundInCat.imageUrl;
-        if (u && typeof u === 'string' && u.startsWith('http') && !u.includes('data:image') && !u.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw')) return optimizeArtworkUrl(u);
+        if (u && typeof u === 'string' && u.startsWith('http') && !u.includes('data:image') && !u.includes('1w0QfpxWgayIb4zs4YieZFNK153KKvPnw') && !u.includes('1jVHWheLrQKXuUXL7sZTQcwD-_swmB35w')) return optimizeArtworkUrl(u);
       }
 
       // Default AHS fallback to official season 13 artwork if everything else failed
@@ -8534,10 +8542,22 @@
 
     function getPortalPaletteFallback(title) {
       const t = String(title || '').toLowerCase();
+      if (/guarding stars/.test(t)) return { pRgb: '96, 165, 250', sRgb: '251, 191, 36' };
+      if (/nightmare before christmas/.test(t)) return { pRgb: '249, 115, 22', sRgb: '168, 85, 247' };
+      if (/grinch/.test(t)) return { pRgb: '132, 204, 22', sRgb: '244, 63, 94' };
+      if (/polar express/.test(t)) return { pRgb: '56, 189, 248', sRgb: '251, 191, 36' };
+      if (/christmas carol|gospel of christmas/.test(t)) return { pRgb: '245, 158, 11', sRgb: '45, 212, 191' };
+      if (/christmas switch|holidaze|clashing through the snow/.test(t)) return { pRgb: '244, 63, 94', sRgb: '251, 191, 36' };
+      if (/home alone|man with the bag|deck the halls/.test(t)) return { pRgb: '239, 68, 68', sRgb: '16, 185, 129' };
       if (/supergirl|galactic|star|alien|disclosure|dune|avatar|sci|space|tron/.test(t)) return { pRgb: '56, 189, 248', sRgb: '251, 146, 60' };
-      if (/christmas|holiday|home alone|polar|bag|santa|snow|grinch|holidaze|hall/.test(t)) return { pRgb: '52, 211, 153', sRgb: '251, 191, 36' };
+      if (/christmas|holiday|santa|snow|12 dates/.test(t)) return { pRgb: '52, 211, 153', sRgb: '251, 191, 36' };
+      if (/haunted heist/.test(t)) return { pRgb: '168, 85, 247', sRgb: '251, 191, 36' };
       if (/dracula|evil dead|ahs|horror|nosferatu|nightmare|terror|scream|blood|devil|backrooms/.test(t)) return { pRgb: '244, 63, 94', sRgb: '168, 85, 247' };
-      if (/borderlands|mad max|grey|action|john wick|furious/.test(t)) return { pRgb: '245, 158, 11', sRgb: '236, 72, 153' };
+      if (/in the grey|borderlands|mad max|action|john wick|furious/.test(t)) return { pRgb: '245, 158, 11', sRgb: '56, 189, 248' };
+      if (/fuze/.test(t)) return { pRgb: '249, 115, 22', sRgb: '236, 72, 153' };
+      if (/signal one/.test(t)) return { pRgb: '34, 211, 238', sRgb: '129, 140, 248' };
+      if (/lifehack/.test(t)) return { pRgb: '16, 185, 129', sRgb: '56, 189, 248' };
+      if (/pinocchio/.test(t)) return { pRgb: '217, 119, 6', sRgb: '225, 29, 72' };
       return { pRgb: '56, 189, 248', sRgb: '245, 158, 11' };
     }
 
