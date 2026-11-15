@@ -1,11 +1,10 @@
 {
-  "version": "4.11.6",
+  "version": "4.11.7",
   "releaseDate": "2026-11-14",
-  "title": "Brian's Theater v4.11.6",
+  "title": "Brian's Theater v4.11.7",
   "notes": [
-    "Added permanent Season Planner Cloud Vault backup storage.",
-    "Added one-click Save Slate button and cloud status badge.",
-    "Blocked legacy sync overwrites from erasing future schedules.",
-    "Restored all ten December holiday movies with verified posters."
+    "Replaced Home Sweet Home Alone with Home Alone (1990).",
+    "Assigned 12/10/2025 watch date in 2025 Christmas marathon.",
+    "Synced updated past catalog across web and Google Sheets."
   ]
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.11.7] - 2026-11-14
+
+### What's New
+- Replaced Home Sweet Home Alone with Home Alone (1990).
+- Assigned 12/10/2025 watch date in 2025 Christmas marathon.
+- Updated 2025 holiday festival card with Home Alone.
+
 ## [4.11.6] - 2026-11-14
 
 ### What's New
