@@ -1,10 +1,10 @@
 {
-  "version": "4.11.7",
+  "version": "4.11.8",
   "releaseDate": "2026-11-14",
-  "title": "Brian's Theater v4.11.7",
+  "title": "Brian's Theater v4.11.8",
   "notes": [
-    "Replaced Home Sweet Home Alone with Home Alone (1990).",
-    "Assigned 12/10/2025 watch date in 2025 Christmas marathon.",
-    "Synced updated past catalog across web and Google Sheets."
+    "Added dynamic movie scene backgrounds with matched color palettes.",
+    "Hid VIP wing badges cleanly during movie scene mode.",
+    "Added compact movie backdrop inside mobile stage main card."
   ]
 }

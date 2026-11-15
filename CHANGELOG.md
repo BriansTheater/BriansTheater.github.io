@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.11.8] - 2026-11-14
+
+### What's New
+- Added dynamic movie scene backgrounds for Twitch stream overlay.
+- Matched glow, mist, spotlights, and badges to movie stills.
+- Hid VIP wing badges cleanly during movie scene mode.
+- Added compact movie scene backdrop inside mobile stage card.
+- Kept instant switching back to November and holiday themes.
+
 ## [4.11.7] - 2026-11-14
 
 ### What's New

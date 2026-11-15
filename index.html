@@ -116,6 +116,13 @@
     .theme-transition {
       transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
     }
+    /* Dynamic Movie Scene (Compact In-Card Mobile & Desktop Mode) */
+    body.theme-moviescene {
+      background-color: #050811 !important;
+    }
+    body.theme-moviescene header {
+      border-bottom-color: rgba(56, 189, 248, 0.28) !important;
+    }
     /* ========================================================
        SITE-WIDE SEASONAL FESTIVE THEMES & AMBIENCE
        ======================================================== */
@@ -691,6 +698,10 @@
         <div id="stageAmbientGlow" class="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-black/80 pointer-events-none rounded-2xl"></div>
         <div id="stageAmbientGlowLeft" class="absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-40 bg-sky-500/20 theme-transition"></div>
         <div id="stageAmbientGlowRight" class="absolute -bottom-16 -right-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-40 bg-purple-500/20 theme-transition"></div>
+        <div id="stageMovieSceneBg" class="hidden absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-0">
+          <img id="stageMovieSceneImg" src="" alt="" class="w-full h-full object-cover opacity-45 blur-[4px] scale-105 saturate-125 transition-all duration-700" referrerpolicy="no-referrer" />
+          <div class="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/70 to-slate-950/95"></div>
+        </div>
 
         <!-- Seasonal Living Flairs: Halloween Spooky Creatures -->
         <div id="theaterSpookyFlair" class="hidden pointer-events-none select-none">
@@ -1828,6 +1839,7 @@
                 </div>
               </div>
               <select id="adminSeasonalThemeSelect" onchange="setSeasonalThemeOverride(this.value)" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 focus:border-sky-400 cursor-pointer">
+                <option value="moviescene">🎥 Dynamic Movie Scene (Auto-Match Movie)</option>
                 <option value="auto">✨ Smart Auto-Switch (Seasonal Calendar)</option>
                 <option value="default">🎬 Midnight Cinema Palace (Normal / Default)</option>
                 <option value="newyears">🥂 Golden Midnight Gala (New Year's)</option>
@@ -4878,7 +4890,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.7";
+    const APP_VERSION = "4.11.8";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -4972,6 +4984,7 @@
       if (t === 'halloween') return { left: '🎃', right: '🦇' };
       if (t === 'christmas') return { left: '🎄', right: '❄️' };
       if (t === 'newyears') return { left: '🥂', right: '✨' };
+      if (t === 'moviescene') return { left: '🎬', right: '✨' };
       if (t === 'valentines') return { left: '💖', right: '💝' };
       if (t === 'stpatricks') return { left: '☘️', right: '🪙' };
       if (t === 'july4th') return { left: '🎆', right: '🚀' };
@@ -6317,6 +6330,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.8": [
+        "Added Dynamic Movie Scene mode for Twitch and stage cards.",
+        "Removed VIP badges from dynamic movie scene backgrounds.",
+        "Synced TMDB scenes and spotlights with every scheduled movie."
+      ],
       "4.11.7": [
         "Replaced Home Sweet Home Alone with Home Alone (1990).",
         "Assigned 12/10/2025 watch date in 2025 Christmas marathon.",
@@ -7537,6 +7555,12 @@
         const nextImg = optimizeArtworkUrl(getMovieArtworkUrl(nextInfo.movie || nextMovie) || (data && data.nextPoster));
         if (schedNextPoster.src !== nextImg) schedNextPoster.src = nextImg;
       }
+
+      if (typeof getActiveSeasonalTheme === 'function' && getActiveSeasonalTheme().theme === 'moviescene' && typeof updatePortalMovieSceneEngine === 'function') {
+        const sceneTitle = isLive ? activeMovie : nextMovie;
+        const posterSrc = stagePoster ? stagePoster.src : '';
+        updatePortalMovieSceneEngine(sceneTitle, posterSrc);
+      }
     }
 
     // (doorOverrideMode & movieEarlyConclusionUntilMs declared and initialized at script top)
@@ -7659,6 +7683,7 @@
 
       if (override !== 'auto') {
         const clean = String(override).toLowerCase().trim();
+        if (clean === 'moviescene' || clean === 'movie_scene' || clean === 'scene' || clean === 'movie') return { theme: 'moviescene', mode: 'override' };
         if (clean === 'normal' || clean === 'default' || clean === 'cinema') return { theme: 'default', mode: 'override' };
         return { theme: clean, mode: 'override' };
       }
@@ -7759,7 +7784,7 @@
       document.body.classList.remove(
         'theme-halloween', 'theme-christmas', 'theme-default',
         'theme-newyears', 'theme-valentines', 'theme-stpatricks',
-        'theme-july4th', 'theme-thanksgiving', 'theme-normal'
+        'theme-july4th', 'theme-thanksgiving', 'theme-normal', 'theme-moviescene'
       );
       document.body.classList.add('theme-' + theme);
 
@@ -7840,6 +7865,15 @@
           titleGrad: 'from-amber-300 via-orange-400 to-yellow-500',
           flair: '<span class="inline-block text-base select-none" title="Autumn Hearth">🍂</span>'
         },
+        moviescene: {
+          icon: '🎥',
+          title: "Brian's Theater",
+          sub: 'Movie Scene Edition',
+          tabTitle: "🎥 Brian's Theater v" + APP_VERSION + " — Movie Scene Mode",
+          logoGrad: 'from-sky-500 via-cyan-300 to-amber-400 shadow-sky-950/60',
+          titleGrad: 'from-sky-300 via-white to-amber-300',
+          flair: '<span class="anim-sparkle inline-block" title="Dynamic Movie Scene">✨</span>'
+        },
         default: {
           icon: '🎬',
           title: "Brian's Theater",
@@ -7888,6 +7922,7 @@
         stpatricks:   { screening: '🍀', schedule: '📅', vault: '🪙', requests: '🍺', plex: '🎟️', other: '🌈' },
         july4th:      { screening: '🎆', schedule: '📅', vault: '🍿', requests: '🌭', plex: '🎟️', other: '🗽' },
         thanksgiving: { screening: '🦃', schedule: '📅', vault: '🥧', requests: '🍂', plex: '🎟️', other: '🍁' },
+        moviescene:   { screening: '🎥', schedule: '📅', vault: '🎬', requests: '📝', plex: '🎟️', other: '✨' },
         default:      { screening: '🎬', schedule: '📅', vault: '🔍', requests: '📝', plex: '🎟️', other: '🧟‍♂️' }
       };
       const curIcons = navIcons[theme] || navIcons.default;
@@ -7932,6 +7967,9 @@
       // Hide all living flairs first
       const allFlairs = [spookyFlair, holidayLights, snowContainer, newYearsFlair, valentinesFlair, stPatricksFlair, july4thFlair, thanksgivingFlair];
       allFlairs.forEach(f => { if (f) f.classList.add('hidden'); });
+      if (theme !== 'moviescene' && typeof clearPortalMovieSceneOverrides === 'function') {
+        clearPortalMovieSceneOverrides();
+      }
 
       // Sync Admin Studio Dropdown & Badge if present
       let savedOverride = 'auto';
@@ -8351,6 +8389,66 @@
         }
         if (enterIconLeftThx) enterIconLeftThx.textContent = '🦃';
         if (enterIconRightThx) enterIconRightThx.textContent = '🍁';
+      } else if (theme === 'moviescene') {
+        if (stageCard) {
+          stageCard.className = 'theme-transition rounded-2xl border p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center gap-4 overflow-hidden bg-slate-950/90 border-sky-400/50 shadow-sky-950/40';
+        }
+        if (glowLeft) {
+          glowLeft.className = 'absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-45 bg-sky-500/25 theme-transition';
+        }
+        if (glowRight) {
+          glowRight.className = 'absolute -bottom-16 -right-16 w-56 h-56 rounded-full blur-3xl pointer-events-none anim-pulse opacity-45 bg-amber-500/25 theme-transition';
+        }
+        if (spookyFlair) spookyFlair.classList.add('hidden');
+        if (holidayLights) holidayLights.classList.add('hidden');
+        if (snowContainer) {
+          snowContainer.classList.add('hidden');
+          clearTheaterSnowflakes();
+        }
+        if (categoryLabel) {
+          categoryLabel.className = 'text-xs font-bold uppercase tracking-widest text-sky-300 theme-transition';
+        }
+
+        if (cdBox) {
+          cdBox.className = 'bg-slate-950/85 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-sky-500/35 w-full shadow-xl flex flex-col gap-3 theme-transition';
+        }
+        if (cdLabel) {
+          cdLabel.className = 'text-[11px] text-center uppercase tracking-widest text-sky-300 mb-2 font-mono font-bold flex items-center justify-center gap-1.5 theme-transition';
+        }
+        if (cdIconLeft) cdIconLeft.textContent = '🎬';
+        if (cdIconRight) {
+          cdIconRight.textContent = '✨';
+          cdIconRight.classList.remove('hidden');
+        }
+        if (cdLabelText) cdLabelText.textContent = 'Theater Opens In';
+
+        const allTiles = [colDays, colHours, colMins, colSecs];
+        allTiles.forEach(el => {
+          if (el) el.className = 'bg-slate-900/85 rounded-xl p-2.5 sm:p-3 border border-sky-500/30 theme-transition';
+        });
+        const allDigits = [cntDays, cntHours, cntMins, cntSecs];
+        allDigits.forEach(el => {
+          if (el) el.className = 'text-xl sm:text-2xl font-black text-sky-300 theme-transition';
+        });
+        const allUnits = [unitDays, unitHours, unitMins, unitSecs];
+        allUnits.forEach(el => {
+          if (el) el.className = 'text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 theme-transition';
+        });
+
+        const enterBtnScene = document.getElementById('btnEnterAuditorium');
+        const enterIconLeftScene = document.getElementById('btnEnterIconLeft');
+        const enterIconRightScene = document.getElementById('btnEnterIconRight');
+        if (enterBtnScene) {
+          enterBtnScene.className = 'theater-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-sky-500 via-cyan-400 to-amber-400 hover:from-sky-400 hover:to-amber-300 text-slate-950 font-black text-base sm:text-lg tracking-wider uppercase shadow-2xl transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer';
+        }
+        if (enterIconLeftScene) enterIconLeftScene.textContent = '🎬';
+        if (enterIconRightScene) enterIconRightScene.textContent = '✨';
+
+        const curTitle = document.getElementById('nowPlayingHeading')?.textContent || '';
+        const curPoster = document.getElementById('stagePoster')?.src || '';
+        if (typeof updatePortalMovieSceneEngine === 'function') {
+          updatePortalMovieSceneEngine(curTitle, curPoster);
+        }
       } else {
         // Default Midnight Cinema theme
         if (stageCard) {
@@ -8430,6 +8528,102 @@
       }
     }
 
+    // Compact Option 1 In-Card Movie Scene Engine (Smartphone & Portal)
+    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v1';
+    let portalSceneToken = 0;
+
+    function getPortalPaletteFallback(title) {
+      const t = String(title || '').toLowerCase();
+      if (/supergirl|galactic|star|alien|disclosure|dune|avatar|sci|space|tron/.test(t)) return { pRgb: '56, 189, 248', sRgb: '251, 146, 60' };
+      if (/christmas|holiday|home alone|polar|bag|santa|snow|grinch|holidaze|hall/.test(t)) return { pRgb: '52, 211, 153', sRgb: '251, 191, 36' };
+      if (/dracula|evil dead|ahs|horror|nosferatu|nightmare|terror|scream|blood|devil|backrooms/.test(t)) return { pRgb: '244, 63, 94', sRgb: '168, 85, 247' };
+      if (/borderlands|mad max|grey|action|john wick|furious/.test(t)) return { pRgb: '245, 158, 11', sRgb: '236, 72, 153' };
+      return { pRgb: '56, 189, 248', sRgb: '245, 158, 11' };
+    }
+
+    function clearPortalMovieSceneOverrides() {
+      const bgWrap = document.getElementById('stageMovieSceneBg');
+      if (bgWrap) bgWrap.classList.add('hidden');
+      const stageCard = document.getElementById('stageMainCard');
+      if (stageCard) {
+        stageCard.style.borderColor = '';
+        stageCard.style.boxShadow = '';
+      }
+      const glowLeft = document.getElementById('stageAmbientGlowLeft');
+      const glowRight = document.getElementById('stageAmbientGlowRight');
+      if (glowLeft) glowLeft.style.background = '';
+      if (glowRight) glowRight.style.background = '';
+      const cdBox = document.getElementById('stageCountdownBox');
+      if (cdBox) cdBox.style.borderColor = '';
+    }
+
+    async function updatePortalMovieSceneEngine(movieTitle, posterUrl) {
+      const token = ++portalSceneToken;
+      const bgWrap = document.getElementById('stageMovieSceneBg');
+      const bgImg = document.getElementById('stageMovieSceneImg');
+      if (!bgWrap || !bgImg) return;
+
+      bgWrap.classList.remove('hidden');
+      const cleanTitle = String(movieTitle || '')
+        .replace(/^[^\w\d]+/, '')
+        .replace(/^(AHS|American Horror Story)\s*:?\s*s\d+\s*e\d+.*$/i, 'American Horror Story')
+        .replace(/\(\d{4}\)/g, '')
+        .trim();
+
+      let sceneUrl = posterUrl || '';
+      const cacheKey = cleanTitle.toLowerCase();
+      try {
+        const disk = JSON.parse(localStorage.getItem(PORTAL_SCENE_CACHE_KEY) || '{}');
+        if (disk[cacheKey] && disk[cacheKey].sceneUrl && (Date.now() - (disk[cacheKey].ts || 0)) < 7 * 86400000) {
+          sceneUrl = disk[cacheKey].sceneUrl;
+        } else if (cleanTitle) {
+          const k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+          const sRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${k}&query=${encodeURIComponent(cleanTitle)}&include_adult=false`);
+          if (sRes.ok) {
+            const sData = await sRes.json();
+            const match = (sData.results || []).find(r => (r.media_type === 'movie' || r.media_type === 'tv') && (r.backdrop_path || r.poster_path));
+            if (match) {
+              const mt = match.media_type === 'tv' ? 'tv' : 'movie';
+              let picked = match.backdrop_path || '';
+              try {
+                const iRes = await fetch(`https://api.themoviedb.org/3/${mt}/${match.id}/images?api_key=${k}`);
+                if (iRes.ok) {
+                  const iData = await iRes.json();
+                  const bds = Array.isArray(iData.backdrops) ? iData.backdrops : [];
+                  const cleanStills = bds.filter(b => !b.iso_639_1 && b.file_path);
+                  const nonDup = cleanStills.find(b => !posterUrl || !String(posterUrl).includes(b.file_path));
+                  const best = nonDup || cleanStills[0] || bds[0];
+                  if (best && best.file_path) picked = best.file_path;
+                }
+              } catch(ie) {}
+              if (picked) {
+                sceneUrl = `https://image.tmdb.org/t/p/w1280${picked}`;
+                disk[cacheKey] = { sceneUrl, ts: Date.now() };
+                localStorage.setItem(PORTAL_SCENE_CACHE_KEY, JSON.stringify(disk));
+              }
+            }
+          }
+        }
+      } catch(e) {}
+
+      if (token !== portalSceneToken) return;
+      if (sceneUrl) bgImg.src = sceneUrl;
+
+      const pal = getPortalPaletteFallback(cleanTitle);
+      const stageCard = document.getElementById('stageMainCard');
+      if (stageCard) {
+        stageCard.style.borderColor = `rgba(${pal.pRgb}, 0.62)`;
+        stageCard.style.boxShadow = `0 0 36px rgba(${pal.pRgb}, 0.28), 0 24px 48px rgba(0, 0, 0, 0.85)`;
+      }
+      const glowLeft = document.getElementById('stageAmbientGlowLeft');
+      const glowRight = document.getElementById('stageAmbientGlowRight');
+      if (glowLeft) glowLeft.style.background = `rgba(${pal.pRgb}, 0.28)`;
+      if (glowRight) glowRight.style.background = `rgba(${pal.sRgb}, 0.24)`;
+      const cdBox = document.getElementById('stageCountdownBox');
+      if (cdBox) cdBox.style.borderColor = `rgba(${pal.pRgb}, 0.40)`;
+    }
+    window.updatePortalMovieSceneEngine = updatePortalMovieSceneEngine;
+
     // Real-Time Firebase Sync: Handles incoming cloud updates from other devices (app -> PC)
     function applyIncomingSeasonalTheme(incoming) {
       if (!incoming) return;
@@ -8489,6 +8683,7 @@
       fetch(`${API_BASE_URL}?action=admin_set_seasonal_theme&theme=${encodeURIComponent(themeVal)}`, { mode: 'no-cors' }).catch(() => {});
 
       const msgs = {
+        'moviescene': '🎥 Dynamic Movie Scene mode activated site-wide.',
         'auto': '✨ Smart Auto-Switch enabled (Seasonal calendar).',
         'default': '🎬 Midnight Cinema default theme activated site-wide.',
         'newyears': "🥂 Golden Midnight Gala (New Year's) theme activated site-wide.",
