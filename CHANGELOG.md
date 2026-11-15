@@ -1,9 +1,9 @@
 # Changelog
 
 ## [4.11.11] - 2026-11-15
-- Fixed live Twitch page sync when pushing SuperGirl updates.
-- Excluded main poster images from side and background scenes.
-- Added scene still switcher and live broadcast demo sync.
+- Added universal Studio audio and Off controls for themes.
+- Stopped Thanksgiving music from playing during SuperGirl movie scenes.
+- Fixed live SuperGirl sync and removed duplicate poster scenes.
 
 ## [4.11.10] - 2026-11-15
 - Added interactive Demo A, B, C scene layout switcher.

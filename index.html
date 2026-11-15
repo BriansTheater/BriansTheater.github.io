@@ -6331,9 +6331,9 @@
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
       "4.11.11": [
-        "Fixed live Twitch page sync when pushing SuperGirl updates.",
-        "Excluded main poster images from side and background scenes.",
-        "Added scene still switcher and live broadcast demo sync."
+        "Added universal Studio audio and Off controls for themes.",
+        "Stopped Thanksgiving music from playing during SuperGirl movie scenes.",
+        "Fixed live SuperGirl sync and removed duplicate poster scenes."
       ],
       "4.11.10": [
         "Added interactive Demo A, B, C scene layout switcher.",
@@ -8547,7 +8547,18 @@
     }
 
     // Compact Option 1 In-Card Movie Scene Engine (Smartphone & Portal)
-    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v2';
+    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v3';
+    const PORTAL_POSTER_CROP_BLACKLIST = new Set([
+      '/54KIfdTEzOliHDKx0OkzYGqAICx.jpg',
+      '/8CIgg0gCHIYz0jrx5IcZEOy047J.jpg',
+      '/wZJTidyAi53smx6x4LBFgfQolRU.jpg',
+      '/tSzVHArGY8NLUNAecy2JsE18T8.jpg',
+      '/j5bNVfWgbbb36cUSVqSwcbIspOh.jpg',
+      '/vQuIi5iOCN3V6yg7nbP5HUiVnpK.jpg',
+      '/5A3c0R5L2CUY4Dj9VJkm4zdFG7H.jpg',
+      '/c9EnVQHuo010jDeafnH830zDqPy.jpg',
+      '/qLAMT52DRM3vzqYtcRJ4hBAOYgd.jpg'
+    ]);
     let portalSceneToken = 0;
 
     function getPortalPaletteFallback(title) {
@@ -8645,8 +8656,8 @@
                   const iData = await iRes.json();
                   const bds = Array.isArray(iData.backdrops) ? iData.backdrops.filter(b => b.file_path && (b.width || 1280) >= 900) : [];
                   const cleanStills = bds.filter(b => !b.iso_639_1);
-                  // Exclude default poster-crop backdrop when >= 3 clean stills exist so background never duplicates the main poster
-                  const nonDup = cleanStills.filter(b => (!posterUrl || !String(posterUrl).includes(b.file_path)) && !(cleanStills.length >= 3 && match.backdrop_path && b.file_path === match.backdrop_path));
+                  // Exclude known studio poster-crops and default poster-crop backdrop when >= 3 clean stills exist so background never duplicates the main poster
+                  const nonDup = cleanStills.filter(b => !PORTAL_POSTER_CROP_BLACKLIST.has(b.file_path) && (!posterUrl || !String(posterUrl).includes(b.file_path)) && !(cleanStills.length >= 3 && match.backdrop_path && b.file_path === match.backdrop_path));
                   const best = nonDup[0] || cleanStills[1] || cleanStills[0] || bds[0];
                   if (best && best.file_path) picked = best.file_path;
                 }

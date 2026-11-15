@@ -1146,6 +1146,35 @@
       </div>
     </div>
 
+    <!-- 3. UNIVERSAL THEME AUDIO & AMBIENT BGM (Visible on ALL 9 Themes) -->
+    <div id="studioUniversalAudioSection" class="flex flex-col gap-1.5 pt-2 border-t border-slate-800">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">🔊 Theme Audio &amp; Ambient BGM:</span>
+        <span id="studioAudioStatusBadge" class="text-[9px] font-mono font-bold text-rose-300 truncate max-w-[140px]">🔇 OFF</span>
+      </div>
+      <div class="grid grid-cols-3 gap-1">
+        <button type="button" id="studioUnivBgm-off" onclick="studioSelectBgmTrack('off')" class="studio-pill active px-2 py-1 rounded-xl text-[10px] font-black cursor-pointer text-rose-200 border-rose-500/40" title="Turn all theme background audio OFF">🔇 Audio OFF</button>
+        <button type="button" id="studioUniversalBtnMusic" onclick="studioToggleAudioBgm()" class="studio-pill px-2 py-1 rounded-xl text-[10px] font-bold cursor-pointer">🔕 BGM: OFF</button>
+        <button type="button" id="studioUniversalBtnSfx" onclick="studioToggleAudioSound()" class="studio-pill active px-2 py-1 rounded-xl text-[10px] font-bold cursor-pointer">🔊 SFX: ON</button>
+      </div>
+      <div class="flex items-center gap-2 px-2 py-1 rounded-xl bg-slate-900/90 border border-slate-800">
+        <span class="text-[9px] font-mono text-slate-400 shrink-0">🔈 Vol:</span>
+        <input id="studioAudioVolumeSlider" type="range" min="0" max="100" value="40" oninput="studioSetAudioVolume(this.value)" class="flex-1 h-1.5 accent-amber-400 cursor-pointer" aria-label="Theme audio volume" />
+        <span id="studioAudioVolumeLabel" class="text-[9px] font-mono font-bold text-amber-300 w-8 text-right shrink-0">40%</span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        <button type="button" id="studioUnivTrack-off" onclick="studioSelectBgmTrack('off')" class="studio-pill active px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer text-rose-300 border-rose-500/40">🔇 Off</button>
+        <button type="button" id="studioUnivTrack-tg_piano" onclick="studioSelectBgmTrack('tg_piano')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🎹 Piano</button>
+        <button type="button" id="studioUnivTrack-tg_jazz" onclick="studioSelectBgmTrack('tg_jazz')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🎷 Jazz</button>
+        <button type="button" id="studioUnivTrack-tg_acoustic" onclick="studioSelectBgmTrack('tg_acoustic')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🎸 Acoustic</button>
+        <button type="button" id="studioUnivTrack-harp" onclick="studioSelectBgmTrack('harp')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🪕 Harp</button>
+        <button type="button" id="studioUnivTrack-tg_fiddle" onclick="studioSelectBgmTrack('tg_fiddle')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🎻 Fiddle</button>
+        <button type="button" id="studioUnivTrack-jig" onclick="studioSelectBgmTrack('jig')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🎻 Jig</button>
+        <button type="button" id="studioUnivTrack-pub" onclick="studioSelectBgmTrack('pub')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🍺 Pub</button>
+        <button type="button" id="studioUnivTrack-reel" onclick="studioSelectBgmTrack('reel')" class="studio-pill px-2 py-0.5 rounded-lg text-[9px] font-bold cursor-pointer">🥁 Reel</button>
+      </div>
+    </div>
+
     <!-- 3A. CONTEXTUAL ST. PATRICK'S TAVERN CONTROLS -->
     <div id="studioContextStPatricks" class="hidden flex-col gap-2 pt-2 border-t border-emerald-500/30">
       <div class="flex items-center justify-between">
@@ -1632,11 +1661,19 @@
       if (spotlightLeft) spotlightLeft.style.display = (conf.showFlanks || conf.showSpotlights) ? '' : 'none';
       if (spotlightRight) spotlightRight.style.display = (conf.showFlanks || conf.showSpotlights) ? '' : 'none';
 
-      // 2. Dynamic Atmosphere Particles
+      // 2. Dynamic Atmosphere Particles & Theme-Scoped Audio Control
       if (conf.particles) {
         startThemeParticleAnimation(conf.particles);
       } else {
         stopThemeParticleAnimation();
+      }
+      if (effective !== 'stpatricks' && effective !== 'thanksgiving') {
+        const uniTrack = (() => {
+          try { return localStorage.getItem('brian_universal_bgm_track') || 'off'; } catch(e) { return 'off'; }
+        })();
+        if (window.lepAudio && typeof window.lepAudio.setBgmTrack === 'function') {
+          window.lepAudio.setBgmTrack(uniTrack === 'tg_off' || uniTrack === 'stp_off' ? 'off' : uniTrack);
+        }
       }
 
       // 3. Header Branding Pill
@@ -1701,9 +1738,20 @@
     // OPTION 1: DYNAMIC MOVIE-MATCHED SCENE & PALETTE ENGINE
     // ========================================================
     const MOVIE_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v1';
-    const MOVIE_SCENE_PACK_CACHE_KEY = 'brian_movie_scene_pack_v3';
+    const MOVIE_SCENE_PACK_CACHE_KEY = 'brian_movie_scene_pack_v4';
     const SCENE_DEMO_MODE_KEY = 'brian_twitch_scene_demo_mode';
     const SCENE_VARIANT_MAP_KEY = 'brian_twitch_scene_variants_v1';
+    const POSTER_CROP_BACKDROP_BLACKLIST = new Set([
+      '/54KIfdTEzOliHDKx0OkzYGqAICx.jpg',
+      '/8CIgg0gCHIYz0jrx5IcZEOy047J.jpg',
+      '/wZJTidyAi53smx6x4LBFgfQolRU.jpg',
+      '/tSzVHArGY8NLUNAecy2JsE18T8.jpg',
+      '/j5bNVfWgbbb36cUSVqSwcbIspOh.jpg',
+      '/vQuIi5iOCN3V6yg7nbP5HUiVnpK.jpg',
+      '/5A3c0R5L2CUY4Dj9VJkm4zdFG7H.jpg',
+      '/c9EnVQHuo010jDeafnH830zDqPy.jpg',
+      '/qLAMT52DRM3vzqYtcRJ4hBAOYgd.jpg'
+    ]);
     const movieSceneMemoryCache = new Map();
     const movieScenePackMemoryCache = new Map();
     let sceneDemoMode = (() => {
@@ -2063,8 +2111,8 @@
               || match.backdrop_path
               || '';
 
-            // Exclude default poster-crop backdrop & main poster when >= 3 clean stills exist so side/scene panels never mirror the main poster
-            const excludeFiles = new Set([posterFile, portraitFile, heroPath].filter(Boolean));
+            // Exclude known studio poster-crops, default poster-crop backdrop & main poster so side/scene panels never mirror the main poster
+            const excludeFiles = new Set([...POSTER_CROP_BACKDROP_BLACKLIST, posterFile, portraitFile, heroPath].filter(Boolean));
             if (cleanStills.length >= 3 && match.backdrop_path) {
               excludeFiles.add(match.backdrop_path);
             }
@@ -2439,6 +2487,130 @@
       return dots;
     }
 
+    const GLOBAL_BGM_TRACKS = {
+      jig: {
+        id: 'jig',
+        name: 'Tavern Jig',
+        icon: '🎻',
+        src: 'audio/celtic_tavern_jig.mp3',
+        description: 'Lively fiddle, guitar & tin whistle'
+      },
+      pub: {
+        id: 'pub',
+        name: 'Irish Pub',
+        icon: '🍺',
+        src: 'audio/irish_pub_ambience.mp3',
+        description: 'Dublin crowd chatter, clinking pints & hearth'
+      },
+      harp: {
+        id: 'harp',
+        name: 'Celtic Harp',
+        icon: '🪕',
+        src: 'audio/celtic_harp_forest.mp3',
+        description: 'Serene acoustic harp & woodland breeze'
+      },
+      reel: {
+        id: 'reel',
+        name: 'Bodhrán Reel',
+        icon: '🥁',
+        src: 'audio/celtic_bodhran_reel.mp3',
+        description: 'Fast traditional tin whistle & bodhrán'
+      },
+      tg_acoustic: {
+        id: 'tg_acoustic',
+        name: 'Acoustic Harvest',
+        icon: '🎸',
+        src: 'audio/tg_harvest_acoustic.mp3',
+        description: 'Warm fingerpicked porch guitar & autumn chords'
+      },
+      tg_jazz: {
+        id: 'tg_jazz',
+        name: 'Thanksgiving Jazz',
+        icon: '🎷',
+        src: 'audio/tg_jazz_trio.mp3',
+        description: 'Smooth Charlie Brown style jazz piano & upright bass'
+      },
+      tg_fiddle: {
+        id: 'tg_fiddle',
+        name: 'Autumn Bluegrass',
+        icon: '🎻',
+        src: 'audio/tg_autumn_fiddle.mp3',
+        description: 'Cheerful rustic country fiddle & acoustic strum'
+      },
+      tg_piano: {
+        id: 'tg_piano',
+        name: 'Cozy Hearth Piano',
+        icon: '🎹',
+        src: 'audio/tg_hearth_piano.mp3',
+        description: 'Gentle lodge piano & serene autumn warmth'
+      }
+    };
+    window.BGM_TRACKS = GLOBAL_BGM_TRACKS;
+
+    function ensureUniversalAudioEngine() {
+      if (window.lepAudio && typeof window.lepAudio.setBgmTrack === 'function') return window.lepAudio;
+      const savedVol = (() => {
+        try {
+          const n = parseInt(localStorage.getItem('brian_universal_bgm_volume') || '40', 10);
+          return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 40;
+        } catch(e) { return 40; }
+      })();
+      const ctrl = {
+        enabled: true,
+        volume: Math.min(1, (savedVol / 100) * 1.5),
+        bgmVolume: savedVol / 100,
+        bgmEnabled: false,
+        currentTrackId: 'off',
+        bgmAudio: null,
+        _isFallbackOnly: true,
+        setVolume(v) { this.volume = Math.max(0, Math.min(1, v)); },
+        toggleSound() { this.enabled = !this.enabled; return this.enabled; },
+        setBgmVolume(v) {
+          this.bgmVolume = Math.max(0, Math.min(1, v));
+          if (this.bgmAudio && this.bgmEnabled) this.bgmAudio.volume = this.bgmVolume;
+        },
+        setBgmTrack(trackId) {
+          if (!trackId || trackId === 'off' || trackId === 'tg_off' || trackId === 'stp_off') {
+            this.currentTrackId = 'off';
+            this.bgmEnabled = false;
+            if (this.bgmAudio) { this.bgmAudio.pause(); this.bgmAudio.volume = 0; }
+            return 'off';
+          }
+          const t = GLOBAL_BGM_TRACKS[trackId];
+          if (!t) return this.currentTrackId;
+          this.currentTrackId = trackId;
+          this.bgmEnabled = true;
+          if (!this.bgmAudio && typeof Audio !== 'undefined') this.bgmAudio = new Audio();
+          if (this.bgmAudio) {
+            this.bgmAudio.loop = true;
+            this.bgmAudio.src = t.src;
+            this.bgmAudio.volume = this.bgmVolume;
+            this.bgmAudio.play().catch(() => {});
+          }
+          return this.currentTrackId;
+        },
+        toggleBgm() {
+          if (this.bgmEnabled) {
+            this.bgmEnabled = false;
+            if (this.bgmAudio) this.bgmAudio.pause();
+          } else {
+            const fallbackId = this.currentTrackId !== 'off' ? this.currentTrackId : 'tg_piano';
+            this.setBgmTrack(fallbackId);
+          }
+          return this.bgmEnabled;
+        },
+        startBgm() { if (this.bgmAudio && this.bgmEnabled) this.bgmAudio.play().catch(() => {}); },
+        pauseBgm() { if (this.bgmAudio) this.bgmAudio.pause(); }
+      };
+      window.lepAudio = ctrl;
+      window.setLeprechaunVolume = v => (window.lepAudio || ctrl).setVolume(v);
+      window.toggleLeprechaunSound = () => (window.lepAudio || ctrl).toggleSound();
+      window.setLeprechaunBgmVolume = v => (window.lepAudio || ctrl).setBgmVolume(v);
+      window.toggleLeprechaunBgm = () => (window.lepAudio || ctrl).toggleBgm();
+      window.setLeprechaunBgmTrack = id => (window.lepAudio || ctrl).setBgmTrack(id);
+      return ctrl;
+    }
+
     function startThemeParticleAnimation(type) {
       stopThemeParticleAnimation();
       if (!type) return;
@@ -2773,65 +2945,7 @@
       // ==========================================
       // AMBIENT BACKGROUND SOUNDSCAPES
       // ==========================================
-      const BGM_TRACKS = {
-        jig: {
-          id: 'jig',
-          name: 'Tavern Jig',
-          icon: '🎻',
-          src: 'audio/celtic_tavern_jig.mp3',
-          description: 'Lively fiddle, guitar & tin whistle'
-        },
-        pub: {
-          id: 'pub',
-          name: 'Irish Pub',
-          icon: '🍺',
-          src: 'audio/irish_pub_ambience.mp3',
-          description: 'Dublin crowd chatter, clinking pints & hearth'
-        },
-        harp: {
-          id: 'harp',
-          name: 'Celtic Harp',
-          icon: '🪕',
-          src: 'audio/celtic_harp_forest.mp3',
-          description: 'Serene acoustic harp & woodland breeze'
-        },
-        reel: {
-          id: 'reel',
-          name: 'Bodhrán Reel',
-          icon: '🥁',
-          src: 'audio/celtic_bodhran_reel.mp3',
-          description: 'Fast traditional tin whistle & bodhrán'
-        },
-        tg_acoustic: {
-          id: 'tg_acoustic',
-          name: 'Acoustic Harvest',
-          icon: '🎸',
-          src: 'audio/tg_harvest_acoustic.mp3',
-          description: 'Warm fingerpicked porch guitar & autumn chords'
-        },
-        tg_jazz: {
-          id: 'tg_jazz',
-          name: 'Thanksgiving Jazz',
-          icon: '🎷',
-          src: 'audio/tg_jazz_trio.mp3',
-          description: 'Smooth Charlie Brown style jazz piano & upright bass'
-        },
-        tg_fiddle: {
-          id: 'tg_fiddle',
-          name: 'Autumn Bluegrass',
-          icon: '🎻',
-          src: 'audio/tg_autumn_fiddle.mp3',
-          description: 'Cheerful rustic country fiddle & acoustic strum'
-        },
-        tg_piano: {
-          id: 'tg_piano',
-          name: 'Cozy Hearth Piano',
-          icon: '🎹',
-          src: 'audio/tg_hearth_piano.mp3',
-          description: 'Gentle lodge piano & serene autumn warmth'
-        }
-      };
-      window.BGM_TRACKS = BGM_TRACKS;
+      const BGM_TRACKS = GLOBAL_BGM_TRACKS;
 
       // ==========================================
       // PROCEDURAL WEB AUDIO SYNTHESIZER ENGINE
@@ -2907,6 +3021,10 @@
         }
 
         toggleBgm() {
+          if (!this.bgmEnabled && (this.currentTrackId === 'off' || this.currentTrackId === 'tg_off' || this.currentTrackId === 'stp_off')) {
+            this.setBgmTrack('tg_piano');
+            return true;
+          }
           this.bgmEnabled = !this.bgmEnabled;
           this.initBgm();
           if (this.bgmAudio) {
@@ -3387,22 +3505,56 @@
       }
 
       const urlParams = new URLSearchParams(window.location.search);
-      const defaultThemeTrack = (type === 'leaves')
-        ? (urlParams.get('bgm') || localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic')
-        : (urlParams.get('bgm') || localStorage.getItem('brian_stpatricks_bgm_track') || 'jig');
-      const lepAudio = new LeprechaunAudioEngine({ enabled: true, volume: 0.75, trackId: defaultThemeTrack });
-      window.lepAudio = lepAudio;
-      window.setLeprechaunVolume = vol => lepAudio.setVolume(vol);
-      window.toggleLeprechaunSound = () => lepAudio.toggleSound();
-      window.setLeprechaunBgmVolume = vol => lepAudio.setBgmVolume(vol);
-      window.toggleLeprechaunBgm = () => lepAudio.toggleBgm();
-      window.setLeprechaunBgmTrack = trackId => lepAudio.setBgmTrack(trackId);
+      const savedUniTrack = (() => {
+        try { return localStorage.getItem('brian_universal_bgm_track') || 'off'; } catch(e) { return 'off'; }
+      })();
+      const savedVolPct = (() => {
+        try {
+          const n = parseInt(localStorage.getItem('brian_universal_bgm_volume') || '40', 10);
+          return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 40;
+        } catch(e) { return 40; }
+      })();
+      const defaultThemeTrack = urlParams.get('bgm')
+        || (type === 'leaves'
+          ? (localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic')
+          : (type === 'clovers'
+            ? (localStorage.getItem('brian_stpatricks_bgm_track') || 'jig')
+            : savedUniTrack));
 
-      // Start joyful tavern / harvest BGM upon first user interaction
-      if (type === 'clovers' || type === 'leaves') {
+      let lepAudio = window.lepAudio;
+      if (!lepAudio || lepAudio._isFallbackOnly) {
+        const inheritedTrack = (lepAudio && lepAudio.currentTrackId) ? lepAudio.currentTrackId : defaultThemeTrack;
+        if (lepAudio && lepAudio.bgmAudio) {
+          try { lepAudio.bgmAudio.pause(); lepAudio.bgmAudio.volume = 0; } catch(e) {}
+        }
+        lepAudio = new LeprechaunAudioEngine({
+          enabled: lepAudio ? lepAudio.enabled : true,
+          volume: Math.min(1, (savedVolPct / 100) * 1.5),
+          bgmVolume: savedVolPct / 100,
+          trackId: inheritedTrack
+        });
+        window.lepAudio = lepAudio;
+      } else {
+        lepAudio.setBgmVolume(savedVolPct / 100);
+        lepAudio.setVolume(Math.min(1, (savedVolPct / 100) * 1.5));
+        lepAudio.setBgmTrack(defaultThemeTrack);
+      }
+
+      window.setLeprechaunVolume = vol => (window.lepAudio || lepAudio).setVolume(vol);
+      window.toggleLeprechaunSound = () => (window.lepAudio || lepAudio).toggleSound();
+      window.setLeprechaunBgmVolume = vol => (window.lepAudio || lepAudio).setBgmVolume(vol);
+      window.toggleLeprechaunBgm = () => (window.lepAudio || lepAudio).toggleBgm();
+      window.setLeprechaunBgmTrack = trackId => (window.lepAudio || lepAudio).setBgmTrack(trackId);
+
+      // Unlock audio upon first user interaction only when BGM is explicitly enabled and not 'off'
+      if (!window._lepBgmInteractionBound) {
+        window._lepBgmInteractionBound = true;
         ['click', 'keydown', 'touchstart'].forEach(evt => {
           window.addEventListener(evt, () => {
-            if (window.lepAudio === lepAudio) lepAudio.startBgm();
+            const eng = window.lepAudio;
+            if (eng && eng.bgmEnabled && eng.currentTrackId !== 'off' && eng.currentTrackId !== 'tg_off' && eng.currentTrackId !== 'stp_off') {
+              eng.startBgm();
+            }
           }, { once: true });
         });
       }
@@ -4363,7 +4515,11 @@
         particleAnimId = null;
       }
       if (window.lepAudio && typeof window.lepAudio.pauseBgm === 'function') {
-        window.lepAudio.pauseBgm();
+        const eff = typeof getActiveThemeName === 'function' ? getActiveThemeName() : '';
+        const uniTrack = (() => { try { return localStorage.getItem('brian_universal_bgm_track') || 'off'; } catch(e) { return 'off'; } })();
+        if (eff === 'stpatricks' || eff === 'thanksgiving' || uniTrack === 'off') {
+          window.lepAudio.pauseBgm();
+        }
       }
       activeRockets = [];
       activeFireworkSparks = [];
@@ -5303,9 +5459,23 @@
           if (typeof syncStudioDrawerActiveState === 'function') syncStudioDrawerActiveState();
         }
         if (typeof data.seasonalTheme === 'object' && data.seasonalTheme.bgmTrack && typeof window.setLeprechaunBgmTrack === 'function') {
-          const storageKey = String(data.seasonalTheme.bgmTrack).startsWith('tg_') ? 'brian_thanksgiving_bgm_track' : 'brian_stpatricks_bgm_track';
-          try { localStorage.setItem(storageKey, data.seasonalTheme.bgmTrack); } catch(e) {}
-          window.setLeprechaunBgmTrack(data.seasonalTheme.bgmTrack);
+          const effTheme = resolveSeasonalTheme(data.seasonalTheme.theme || currentThemeMode);
+          const incomingTrack = String(data.seasonalTheme.bgmTrack);
+          const isExplicitOff = (incomingTrack === 'off' || incomingTrack === 'tg_off' || incomingTrack === 'stp_off');
+          if (isExplicitOff) {
+            try { localStorage.setItem('brian_universal_bgm_track', 'off'); } catch(e) {}
+            window.setLeprechaunBgmTrack('off');
+          } else if (effTheme === 'thanksgiving' || effTheme === 'stpatricks' || data.seasonalTheme.universalAudio === true) {
+            const storageKey = incomingTrack.startsWith('tg_') ? 'brian_thanksgiving_bgm_track' : 'brian_stpatricks_bgm_track';
+            try {
+              localStorage.setItem(storageKey, incomingTrack);
+              if (data.seasonalTheme.universalAudio === true) localStorage.setItem('brian_universal_bgm_track', incomingTrack);
+            } catch(e) {}
+            window.setLeprechaunBgmTrack(incomingTrack);
+          } else {
+            window.setLeprechaunBgmTrack('off');
+          }
+          if (typeof syncStudioDrawerActiveState === 'function') syncStudioDrawerActiveState();
         }
       }
       resolveActiveOrNextMovie(Date.now());
@@ -5400,6 +5570,7 @@
                   seasonalTheme: {
                     theme: event.data.theme,
                     bgmTrack: event.data.bgmTrack,
+                    universalAudio: Boolean(event.data.universalAudio),
                     sceneDemoMode: event.data.sceneDemoMode,
                     sceneVariantMap: event.data.sceneVariantMap,
                     updatedAt: event.data.updatedAt || Date.now()
@@ -6355,7 +6526,8 @@
         julyPanel.classList.toggle('flex', effective === 'july4th');
       }
 
-      // Sync St. Patrick's & Thanksgiving BGM button states
+      // Sync St. Patrick's, Thanksgiving & Universal Theme Audio Controls
+      const activeEng = window.lepAudio;
       const stpTrack = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
       ['jig', 'pub', 'harp', 'reel', 'stp_off'].forEach(t => {
         const b = document.getElementById(`studioStpBgm-${t}`);
@@ -6365,6 +6537,54 @@
       ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano', 'tg_off'].forEach(t => {
         const b = document.getElementById(`studioTgBgm-${t}`);
         if (b) b.classList.toggle('active', t === tgTrack);
+      });
+
+      const curTrackId = (activeEng && activeEng.currentTrackId)
+        ? String(activeEng.currentTrackId)
+        : ((effective === 'thanksgiving' || effective === 'stpatricks')
+          ? (effective === 'thanksgiving' ? tgTrack : stpTrack)
+          : (localStorage.getItem('brian_universal_bgm_track') || 'off'));
+      const isBgmMuted = !activeEng
+        ? (curTrackId === 'off' || curTrackId === 'tg_off' || curTrackId === 'stp_off')
+        : (!activeEng.bgmEnabled || curTrackId === 'off' || curTrackId === 'tg_off' || curTrackId === 'stp_off');
+      const normalizedUnivTrack = isBgmMuted ? 'off' : curTrackId;
+      const isSfxOn = activeEng ? Boolean(activeEng.enabled) : true;
+      const volPct = activeEng && Number.isFinite(activeEng.bgmVolume)
+        ? Math.round(activeEng.bgmVolume * 100)
+        : (parseInt(localStorage.getItem('brian_universal_bgm_volume') || '40', 10) || 40);
+
+      const audioBadge = document.getElementById('studioAudioStatusBadge');
+      const trackInfo = (!isBgmMuted && GLOBAL_BGM_TRACKS[normalizedUnivTrack]) ? GLOBAL_BGM_TRACKS[normalizedUnivTrack] : null;
+      if (audioBadge) {
+        audioBadge.textContent = trackInfo ? `${trackInfo.icon} ${trackInfo.name.toUpperCase()}` : '🔇 OFF';
+        audioBadge.className = trackInfo
+          ? 'text-[9px] font-mono font-bold text-emerald-300 truncate max-w-[140px]'
+          : 'text-[9px] font-mono font-bold text-rose-300 truncate max-w-[140px]';
+      }
+      const offMasterBtn = document.getElementById('studioUnivBgm-off');
+      if (offMasterBtn) offMasterBtn.classList.toggle('active', isBgmMuted);
+      ['studioUniversalBtnMusic', 'studioBtnStpMusic', 'studioBtnTgMusic'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.textContent = isBgmMuted ? '🔕 BGM: OFF' : '🎵 BGM: ON';
+          btn.classList.toggle('active', !isBgmMuted);
+        }
+      });
+      ['studioUniversalBtnSfx', 'studioBtnStpSound', 'studioBtnTgSound'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.textContent = isSfxOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+          btn.classList.toggle('active', isSfxOn);
+        }
+      });
+      const volSlider = document.getElementById('studioAudioVolumeSlider');
+      const volLabel = document.getElementById('studioAudioVolumeLabel');
+      if (volSlider) volSlider.value = String(Math.max(0, Math.min(100, volPct)));
+      if (volLabel) volLabel.textContent = `${Math.max(0, Math.min(100, volPct))}%`;
+
+      ['off', 'tg_piano', 'tg_jazz', 'tg_acoustic', 'harp', 'tg_fiddle', 'jig', 'pub', 'reel'].forEach(t => {
+        const b = document.getElementById(`studioUnivTrack-${t}`);
+        if (b) b.classList.toggle('active', t === normalizedUnivTrack);
       });
 
       // Sync Flanks & Mist layer buttons
@@ -6438,7 +6658,6 @@
     function studioSelectTheme(themeKey) {
       studioThemeLocked = true;
       applySeasonalTheme(themeKey);
-      syncStudioDrawerActiveState();
       const eff = getActiveThemeName();
       if ((eff === 'stpatricks' || eff === 'thanksgiving') && window.lepAudio && typeof window.lepAudio.startBgm === 'function') {
         const defaultTrack = eff === 'thanksgiving'
@@ -6450,6 +6669,7 @@
           window.lepAudio.startBgm();
         }
       }
+      syncStudioDrawerActiveState();
       // Reset particle override buttons to Theme Default
       ['default', 'snow', 'sparkles', 'hearts', 'clovers', 'fireworks', 'leaves', 'off'].forEach(p => {
         const b = document.getElementById(`studioPartBtn-${p}`);
@@ -6801,59 +7021,97 @@
     }
     window.studioSelectAction = studioSelectAction;
 
+    function getActiveStudioBgmTrack() {
+      const eff = typeof getActiveThemeName === 'function' ? getActiveThemeName() : '';
+      const eng = window.lepAudio;
+      if (eng && (!eng.bgmEnabled || eng.currentTrackId === 'off' || eng.currentTrackId === 'tg_off' || eng.currentTrackId === 'stp_off')) {
+        return 'off';
+      }
+      if (eng && eng.currentTrackId) return eng.currentTrackId;
+      if (eff === 'thanksgiving') return localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic';
+      if (eff === 'stpatricks') return localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
+      return localStorage.getItem('brian_universal_bgm_track') || 'off';
+    }
+    window.getActiveStudioBgmTrack = getActiveStudioBgmTrack;
+
     function studioSelectBgmTrack(trackId) {
-      const isTg = String(trackId).startsWith('tg_');
-      if (isTg) {
-        ['tg_acoustic', 'tg_jazz', 'tg_fiddle', 'tg_piano', 'tg_off'].forEach(t => {
-          const b = document.getElementById(`studioTgBgm-${t}`);
-          if (b) b.classList.toggle('active', t === trackId);
-        });
-        try { localStorage.setItem('brian_thanksgiving_bgm_track', trackId); } catch(e) {}
-      } else {
-        ['jig', 'pub', 'harp', 'reel', 'stp_off'].forEach(t => {
-          const b = document.getElementById(`studioStpBgm-${t}`);
-          if (b) b.classList.toggle('active', t === trackId);
-        });
-        try { localStorage.setItem('brian_stpatricks_bgm_track', trackId); } catch(e) {}
-      }
+      const eng = ensureUniversalAudioEngine();
+      const raw = String(trackId || 'off');
+      const isOff = (raw === 'off' || raw === 'tg_off' || raw === 'stp_off');
+      const normalized = isOff ? 'off' : raw;
+      const eff = typeof getActiveThemeName === 'function' ? getActiveThemeName() : '';
+
+      try {
+        localStorage.setItem('brian_universal_bgm_track', normalized);
+        if (isOff) {
+          if (eff === 'thanksgiving' || raw === 'tg_off') localStorage.setItem('brian_thanksgiving_bgm_track', 'tg_off');
+          if (eff === 'stpatricks' || raw === 'stp_off') localStorage.setItem('brian_stpatricks_bgm_track', 'stp_off');
+        } else if (raw.startsWith('tg_')) {
+          localStorage.setItem('brian_thanksgiving_bgm_track', raw);
+        } else {
+          localStorage.setItem('brian_stpatricks_bgm_track', raw);
+        }
+      } catch(e) {}
+
       if (typeof window.setLeprechaunBgmTrack === 'function') {
-        window.setLeprechaunBgmTrack(trackId);
+        window.setLeprechaunBgmTrack(normalized);
+      } else if (eng && typeof eng.setBgmTrack === 'function') {
+        eng.setBgmTrack(normalized);
       }
-      const isOff = (trackId === 'tg_off' || trackId === 'stp_off' || trackId === 'off');
-      ['studioBtnStpMusic', 'studioBtnTgMusic'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) btn.textContent = isOff ? '🔕 BGM: OFF' : '🎵 BGM: ON';
-      });
+      if (isOff && eng && typeof eng.pauseBgm === 'function') {
+        eng.pauseBgm();
+      }
+      syncStudioDrawerActiveState();
     }
     window.studioSelectBgmTrack = studioSelectBgmTrack;
 
     function studioToggleAudioSound() {
+      const eng = ensureUniversalAudioEngine();
       if (typeof window.toggleLeprechaunSound === 'function') {
-        const isOn = window.toggleLeprechaunSound();
-        ['studioBtnStpSound', 'studioBtnTgSound'].forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) btn.textContent = isOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
-        });
+        window.toggleLeprechaunSound();
+      } else if (eng && typeof eng.toggleSound === 'function') {
+        eng.toggleSound();
       }
+      syncStudioDrawerActiveState();
     }
     window.studioToggleAudioSound = studioToggleAudioSound;
 
     function studioToggleAudioBgm() {
-      if (typeof window.toggleLeprechaunBgm === 'function') {
-        const isOn = window.toggleLeprechaunBgm();
-        ['studioBtnStpMusic', 'studioBtnTgMusic'].forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) btn.textContent = isOn ? '🎵 BGM: ON' : '🔕 BGM: OFF';
-        });
-      }
+      const eng = ensureUniversalAudioEngine();
+      const isOn = typeof window.toggleLeprechaunBgm === 'function'
+        ? window.toggleLeprechaunBgm()
+        : (eng && typeof eng.toggleBgm === 'function' ? eng.toggleBgm() : false);
+      try {
+        if (!isOn) {
+          localStorage.setItem('brian_universal_bgm_track', 'off');
+        } else if (eng && eng.currentTrackId) {
+          localStorage.setItem('brian_universal_bgm_track', eng.currentTrackId);
+        }
+      } catch(e) {}
+      syncStudioDrawerActiveState();
     }
     window.studioToggleAudioBgm = studioToggleAudioBgm;
 
+    function studioSetAudioVolume(pctVal) {
+      const eng = ensureUniversalAudioEngine();
+      const pct = Math.max(0, Math.min(100, parseInt(pctVal, 10) || 0));
+      try { localStorage.setItem('brian_universal_bgm_volume', String(pct)); } catch(e) {}
+      if (typeof window.setLeprechaunBgmVolume === 'function') {
+        window.setLeprechaunBgmVolume(pct / 100);
+      } else if (eng && typeof eng.setBgmVolume === 'function') {
+        eng.setBgmVolume(pct / 100);
+      }
+      if (typeof window.setLeprechaunVolume === 'function') {
+        window.setLeprechaunVolume(Math.min(1, (pct / 100) * 1.5));
+      }
+      syncStudioDrawerActiveState();
+    }
+    window.studioSetAudioVolume = studioSetAudioVolume;
+
     async function broadcastStudioThemeToLive() {
       const themeToSave = getActiveThemeName();
-      const bgmTrack = themeToSave === 'thanksgiving'
-        ? (localStorage.getItem('brian_thanksgiving_bgm_track') || 'tg_acoustic')
-        : (localStorage.getItem('brian_stpatricks_bgm_track') || 'jig');
+      const bgmTrack = getActiveStudioBgmTrack();
+      const universalAudio = (bgmTrack !== 'off' && bgmTrack !== 'tg_off' && bgmTrack !== 'stp_off');
       const liveDemoMode = typeof getSceneDemoMode === 'function' ? getSceneDemoMode() : sceneDemoMode;
       const liveVariantMap = Object.assign({}, sceneVariantMap || {});
       const nowTs = Date.now();
@@ -6871,6 +7129,7 @@
             type: 'SEASONAL_THEME_UPDATED',
             theme: themeToSave,
             bgmTrack: bgmTrack,
+            universalAudio: universalAudio,
             sceneDemoMode: liveDemoMode,
             sceneVariantMap: liveVariantMap,
             updatedAt: nowTs
@@ -6885,6 +7144,7 @@
           body: JSON.stringify({
             theme: themeToSave,
             bgmTrack: bgmTrack,
+            universalAudio: universalAudio,
             sceneDemoMode: liveDemoMode,
             sceneVariantMap: liveVariantMap,
             updatedAt: nowTs
@@ -7015,6 +7275,8 @@
       window.applySeasonalTheme = applySeasonalTheme;
       window.studioSetSceneDemoMode = studioSetSceneDemoMode;
       window.studioStepSceneVariant = studioStepSceneVariant;
+      window.studioSetAudioVolume = studioSetAudioVolume;
+      window.getActiveStudioBgmTrack = getActiveStudioBgmTrack;
       window.getSceneDemoMode = getSceneDemoMode;
       window.resolveSeasonalTheme = resolveSeasonalTheme;
       window.getActiveThemeName = getActiveThemeName;
