@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.11.11] - 2026-11-15
+- Fixed live Twitch page sync when pushing SuperGirl updates.
+- Excluded main poster images from side and background scenes.
+- Added scene still switcher and live broadcast demo sync.
+
 ## [4.11.10] - 2026-11-15
 - Added interactive Demo A, B, C scene layout switcher.
 - Added 3D IMAX theater walls and reflective stage floor.

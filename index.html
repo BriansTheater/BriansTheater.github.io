@@ -4890,7 +4890,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.10";
+    const APP_VERSION = "4.11.11";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6330,6 +6330,11 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.11": [
+        "Fixed live Twitch page sync when pushing SuperGirl updates.",
+        "Excluded main poster images from side and background scenes.",
+        "Added scene still switcher and live broadcast demo sync."
+      ],
       "4.11.10": [
         "Added interactive Demo A, B, C scene layout switcher.",
         "Added 3D IMAX theater walls and reflective stage floor.",
@@ -8542,7 +8547,7 @@
     }
 
     // Compact Option 1 In-Card Movie Scene Engine (Smartphone & Portal)
-    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v1';
+    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v2';
     let portalSceneToken = 0;
 
     function getPortalPaletteFallback(title) {
@@ -8596,7 +8601,7 @@
         .trim();
 
       let sceneUrl = posterUrl || '';
-      const cacheKey = cleanTitle.toLowerCase();
+      const cacheKey = `${cleanTitle.toLowerCase()}__${String(posterUrl || '').trim()}`;
       try {
         const disk = JSON.parse(localStorage.getItem(PORTAL_SCENE_CACHE_KEY) || '{}');
         if (disk[cacheKey] && disk[cacheKey].sceneUrl && (Date.now() - (disk[cacheKey].ts || 0)) < 7 * 86400000) {
@@ -8606,7 +8611,31 @@
           const sRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${k}&query=${encodeURIComponent(cleanTitle)}&include_adult=false`);
           if (sRes.ok) {
             const sData = await sRes.json();
-            const match = (sData.results || []).find(r => (r.media_type === 'movie' || r.media_type === 'tv') && (r.backdrop_path || r.poster_path));
+            const candidates = (sData.results || []).filter(r => (r.media_type === 'movie' || r.media_type === 'tv') && (r.backdrop_path || r.poster_path));
+            const lowerClean = cleanTitle.toLowerCase();
+            const fileMatch = String(posterUrl || '').match(/\/([a-zA-Z0-9]{10,}\.(?:jpg|jpeg|png|webp))(?:[?#]|$)/i);
+            const posterFile = fileMatch ? ('/' + fileMatch[1]) : '';
+            const isTv = /\b(ahs|american\s+horror\s+story|s\d+\s*e\d+|season\s+\d+|episode\s+\d+)\b/i.test(cleanTitle);
+
+            let match = posterFile ? candidates.find(r => r.backdrop_path === posterFile || r.poster_path === posterFile) : null;
+            if (!match && candidates.length) {
+              match = candidates.slice().sort((a, b) => {
+                const scoreOf = (r) => {
+                  const n = String(r.title || r.name || '').trim().toLowerCase();
+                  const rel = String(r.release_date || r.first_air_date || '');
+                  const pop = Number(r.popularity) || 0;
+                  let sc = 0;
+                  if (n === lowerClean) sc += 300;
+                  if (!isTv && r.media_type === 'movie') sc += 200;
+                  if (isTv && r.media_type === 'tv') sc += 200;
+                  if (n === lowerClean && rel >= '2025-01-01' && pop >= 2.5) sc += 150;
+                  sc += Math.min(pop, 100);
+                  return sc;
+                };
+                return scoreOf(b) - scoreOf(a);
+              })[0];
+            }
+
             if (match) {
               const mt = match.media_type === 'tv' ? 'tv' : 'movie';
               let picked = match.backdrop_path || '';
@@ -8614,10 +8643,11 @@
                 const iRes = await fetch(`https://api.themoviedb.org/3/${mt}/${match.id}/images?api_key=${k}`);
                 if (iRes.ok) {
                   const iData = await iRes.json();
-                  const bds = Array.isArray(iData.backdrops) ? iData.backdrops : [];
-                  const cleanStills = bds.filter(b => !b.iso_639_1 && b.file_path);
-                  const nonDup = cleanStills.find(b => !posterUrl || !String(posterUrl).includes(b.file_path));
-                  const best = nonDup || cleanStills[0] || bds[0];
+                  const bds = Array.isArray(iData.backdrops) ? iData.backdrops.filter(b => b.file_path && (b.width || 1280) >= 900) : [];
+                  const cleanStills = bds.filter(b => !b.iso_639_1);
+                  // Exclude default poster-crop backdrop when >= 3 clean stills exist so background never duplicates the main poster
+                  const nonDup = cleanStills.filter(b => (!posterUrl || !String(posterUrl).includes(b.file_path)) && !(cleanStills.length >= 3 && match.backdrop_path && b.file_path === match.backdrop_path));
+                  const best = nonDup[0] || cleanStills[1] || cleanStills[0] || bds[0];
                   if (best && best.file_path) picked = best.file_path;
                 }
               } catch(ie) {}
