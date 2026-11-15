@@ -1,5 +1,15 @@
 # Changelog
- 
+
+## [4.11.6] - 2026-11-14
+
+### What's New
+- Added permanent Season Planner Cloud Vault backup storage.
+- Added one-click Save Slate button and cloud status badge.
+- Blocked legacy sync overwrites from erasing future schedules.
+- Routed schedule updates safely through the Firebase command queue.
+- Restored all ten December holiday movies with verified posters.
+- Fixed live SSE sync from overwriting draft schedules.
+
 ## [4.11.5] - 2026-11-12
 
 ### What's New

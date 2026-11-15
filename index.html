@@ -3512,8 +3512,12 @@
           </button>
         </div>
 
-        <!-- Right: Action Cluster (Publish Lineup + Scan + Sync + Close) -->
+        <!-- Right: Action Cluster (Cloud Vault Status + Save Slate + Publish Lineup + Scan + Sync + Close) -->
         <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+          <span id="schedPopupCloudSaveBadge" class="px-2 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold text-[10px] flex items-center gap-1"><span>☁️</span><span id="schedPopupCloudSaveText">Cloud Vault Saved</span></span>
+          <button type="button" id="btnSaveSeasonPlannerSlate" onclick="saveEntireSeasonPlannerSlateNow()" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-green-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow flex items-center gap-1 active:scale-95 cursor-pointer">
+            <span>💾</span> <span id="btnSaveSeasonPlannerLabel">Save Slate</span>
+          </button>
           <div id="schedPopupPublishActionSlot" class="flex items-center gap-1.5"></div>
           <button type="button" onclick="scanKevinScheduleFromApp(true)" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:brightness-110 text-slate-950 font-black text-xs transition shadow flex items-center gap-1 active:scale-95 cursor-pointer">
             <span>🔄</span> <span id="btnPopupScanKevinLabel">Scan Shifts</span>
@@ -4874,7 +4878,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.5";
+    const APP_VERSION = "4.11.6";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6313,6 +6317,12 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.6": [
+        "Added permanent Season Planner Cloud Vault backup storage.",
+        "Added one-click Save Slate button and cloud status badge.",
+        "Blocked legacy sync overwrites from erasing future schedules.",
+        "Restored all ten December holiday movies with verified posters."
+      ],
       "4.9.243": [
         "Upgraded New Year's brand logo to deep midnight contrast.",
         "Eliminated yellow-on-yellow washout on champagne glass icons.",
@@ -10773,11 +10783,11 @@
         return;
       }
       const btn = document.getElementById('btnForceSync');
-      btn.textContent = "Syncing...";
-      fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+      if (btn) btn.textContent = "Syncing...";
+      triggerBackendQueueSync('force_sync', { force: true });
       setTimeout(() => {
-        btn.textContent = "⚡ Force Sync";
-        showTheaterToast("⚡ Firebase Realtime Database synced successfully!");
+        if (btn) btn.textContent = "⚡ Force Sync";
+        showTheaterToast("⚡ Firebase Realtime Database & Season Planner sync queued!");
       }, 800);
     }
 
@@ -11150,6 +11160,29 @@
         } catch(e) {}
       }
 
+      // Persist reschedule / postponement into Season Planner Cloud Vault
+      try {
+        const cleanNormResched = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (window.theaterSeasonPlannerMap) {
+          for (const [vk, vm] of Object.entries(window.theaterSeasonPlannerMap)) {
+            if (vm && vm.title && vm.title.toLowerCase().replace(/[^a-z0-9]/g, '') === cleanNormResched) {
+              const targetKey = (!options.isPostponed && movie) ? parseScheduleDateToPacificKey(movie) : '';
+              if (options.isPostponed || (targetKey && targetKey !== vk)) {
+                await removeMovieFromSeasonPlannerVault(vk);
+              }
+            }
+          }
+        }
+        if (!options.isPostponed && movie) {
+          const newVaultKey = parseScheduleDateToPacificKey(movie);
+          if (newVaultKey) {
+            await saveMovieToSeasonPlannerVault(newVaultKey, movie);
+          }
+        }
+      } catch(vaultErr) {
+        console.warn("Reschedule Season Planner Vault warning:", vaultErr);
+      }
+
       // Sync updated schedule array to Firebase
       try {
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
@@ -11368,10 +11401,354 @@
       return '';
     }
 
+    // =========================================================================
+    // SEASON PLANNER CLOUD VAULT (`theaterSync/seasonPlanner.json`) & SAVE ENGINE
+    // Persistent date-keyed storage preventing sheet/bot syncs from wiping drafts.
+    // =========================================================================
+    (function hydrateSeasonPlannerVaultFromLocalStorage() {
+      window.theaterSeasonPlannerMap = window.theaterSeasonPlannerMap || {};
+      window.theaterSeasonPlannerDeleted = window.theaterSeasonPlannerDeleted || {};
+      try {
+        const raw = localStorage.getItem('briansTheater_seasonPlannerVault_v1');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.moviesByDate && typeof parsed.moviesByDate === 'object') {
+            window.theaterSeasonPlannerMap = Object.assign({}, parsed.moviesByDate, window.theaterSeasonPlannerMap);
+          }
+          if (parsed && parsed.deletedDates && typeof parsed.deletedDates === 'object') {
+            window.theaterSeasonPlannerDeleted = Object.assign({}, parsed.deletedDates, window.theaterSeasonPlannerDeleted);
+          }
+        }
+      } catch (e) {}
+    })();
+
+    function persistSeasonPlannerLocalCache() {
+      try {
+        localStorage.setItem('briansTheater_seasonPlannerVault_v1', JSON.stringify({
+          moviesByDate: window.theaterSeasonPlannerMap || {},
+          deletedDates: window.theaterSeasonPlannerDeleted || {},
+          updatedAt: Date.now()
+        }));
+      } catch (e) {}
+    }
+
+    function updateSeasonPlannerSaveStatus(state, customText = '') {
+      const badge = document.getElementById('schedPopupCloudSaveBadge');
+      const textEl = document.getElementById('schedPopupCloudSaveText');
+      const btnLabel = document.getElementById('btnSaveSeasonPlannerLabel');
+      const btn = document.getElementById('btnSaveSeasonPlannerSlate');
+      if (state === 'saving') {
+        if (badge) badge.className = 'px-2 py-1 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold text-[10px] flex items-center gap-1';
+        if (textEl) textEl.textContent = customText || 'Saving to Cloud...';
+        if (btnLabel) btnLabel.textContent = 'Saving...';
+        if (btn) btn.disabled = true;
+      } else if (state === 'error') {
+        if (badge) badge.className = 'px-2 py-1 rounded-lg bg-amber-500/20 border border-rose-500/50 text-amber-200 font-bold text-[10px] flex items-center gap-1';
+        if (textEl) textEl.textContent = customText || 'Local Backup Saved';
+        if (btnLabel) btnLabel.textContent = 'Save Slate';
+        if (btn) btn.disabled = false;
+      } else {
+        if (badge) badge.className = 'px-2 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold text-[10px] flex items-center gap-1';
+        if (textEl) textEl.textContent = customText || 'Cloud Vault Saved';
+        if (btnLabel) btnLabel.textContent = 'Save Slate';
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function parseSeasonPlannerDateMs(dateKey, timeStr = '7:00 PM') {
+      if (!dateKey || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return 0;
+      const [y, m, d] = dateKey.split('-').map(Number);
+      let hour = 19, min = 0;
+      const match = String(timeStr || '7:00 PM').match(/(\d+):?(\d+)?\s*(AM|PM)?/i);
+      if (match) {
+        hour = parseInt(match[1], 10);
+        min = match[2] ? parseInt(match[2], 10) : 0;
+        const ampm = (match[3] || '').toUpperCase();
+        if (ampm === 'PM' && hour < 12) hour += 12;
+        if (ampm === 'AM' && hour === 12) hour = 0;
+      }
+      // Compute America/Los_Angeles offset for that calendar date (handles PST -08:00 & PDT -07:00)
+      try {
+        const probe = new Date(Date.UTC(y, m - 1, d, 20, 0, 0));
+        const tzPart = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', timeZoneName: 'short' }).format(probe);
+        const utcOffsetHours = tzPart.includes('PDT') ? 7 : 8;
+        return Date.UTC(y, m - 1, d, hour + utcOffsetHours, min, 0);
+      } catch (e) {
+        return Date.UTC(y, m - 1, d, hour + 8, min, 0);
+      }
+    }
+
+    function parseRuntimeMinutesForVault(runtimeStr) {
+      if (!runtimeStr) return 105;
+      const hm = String(runtimeStr).match(/(\d+)\s*h\s*(\d+)?\s*m?/i);
+      if (hm) return (parseInt(hm[1], 10) * 60) + (hm[2] ? parseInt(hm[2], 10) : 0);
+      const colon = String(runtimeStr).match(/^(\d+):(\d{2})$/);
+      if (colon) return (parseInt(colon[1], 10) * 60) + parseInt(colon[2], 10);
+      const mins = String(runtimeStr).match(/(\d+)\s*m/i);
+      if (mins) return parseInt(mins[1], 10);
+      return 105;
+    }
+
+    function normalizeVaultScheduleItem(dateKey, item, existingFallback = null) {
+      const merged = Object.assign({}, existingFallback || {}, item || {});
+      const dk = (dateKey && /^\d{4}-\d{2}-\d{2}$/.test(dateKey))
+        ? dateKey
+        : (parseScheduleDateToPacificKey(merged) || merged.dateKey || '');
+      let displayDate = merged.date || '';
+      if ((!displayDate || /^\d{4}-\d{2}-\d{2}$/.test(displayDate)) && /^\d{4}-\d{2}-\d{2}$/.test(dk)) {
+        const [y, m, d] = dk.split('-').map(Number);
+        displayDate = new Date(y, m - 1, d, 12, 0, 0).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      const startTime = merged.startTime || merged.time || '7:00 PM';
+      const runtime = merged.runtime || '1h 45m';
+      let startMs = Number(merged.startMs) || 0;
+      if (!startMs && dk) startMs = parseSeasonPlannerDateMs(dk, startTime);
+      const durMin = parseRuntimeMinutesForVault(runtime);
+      let endMs = Number(merged.endMs) || 0;
+      if (!endMs && startMs > 0) endMs = startMs + (durMin * 60 * 1000);
+      let endTime = merged.endTime || '';
+      if (!endTime && endMs > 0) {
+        try {
+          endTime = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date(endMs));
+        } catch (e) {
+          endTime = '8:45 PM';
+        }
+      }
+      return Object.assign({}, merged, {
+        title: (merged.title || '').replace(/^[🎬🎥📽️\s]+/, '').trim(),
+        dateKey: dk,
+        date: displayDate,
+        startTime,
+        time: merged.time || startTime,
+        endTime: endTime || '8:45 PM',
+        runtime,
+        startMs,
+        endMs,
+        posterUrl: merged.posterUrl || merged.imageUrl || ''
+      });
+    }
+
+    function mergeSeasonPlannerIntoScheduleList(baseList) {
+      const vaultMap = window.theaterSeasonPlannerMap || {};
+      const deletedMap = window.theaterSeasonPlannerDeleted || {};
+      const byDate = new Map();
+      const unkeyed = [];
+
+      (Array.isArray(baseList) ? baseList : []).forEach(item => {
+        if (!item || !item.title) return;
+        const dk = parseScheduleDateToPacificKey(item) || (item.dateKey || '');
+        if (dk && deletedMap[dk] && !vaultMap[dk]) return;
+        if (dk) {
+          const prev = byDate.get(dk);
+          byDate.set(dk, normalizeVaultScheduleItem(dk, item, prev));
+        } else {
+          unkeyed.push(Object.assign({}, item));
+        }
+      });
+
+      Object.entries(vaultMap).forEach(([dk, vm]) => {
+        if (!vm || !vm.title || vm.status === 'POSTPONED') return;
+        const prev = byDate.get(dk);
+        byDate.set(dk, normalizeVaultScheduleItem(dk, vm, prev));
+      });
+
+      return Array.from(byDate.values())
+        .concat(unkeyed)
+        .sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+    }
+
+    async function saveMovieToSeasonPlannerVault(dateKey, movieObj) {
+      const dk = (dateKey && /^\d{4}-\d{2}-\d{2}$/.test(dateKey))
+        ? dateKey
+        : parseScheduleDateToPacificKey(movieObj);
+      if (!dk || !movieObj || !movieObj.title) return null;
+
+      window.theaterSeasonPlannerMap = window.theaterSeasonPlannerMap || {};
+      window.theaterSeasonPlannerDeleted = window.theaterSeasonPlannerDeleted || {};
+      const normalized = normalizeVaultScheduleItem(dk, movieObj);
+      normalized.savedAt = Date.now();
+      window.theaterSeasonPlannerMap[dk] = normalized;
+      delete window.theaterSeasonPlannerDeleted[dk];
+      window._lastLocalVaultWriteMs = Date.now();
+      persistSeasonPlannerLocalCache();
+      updateSeasonPlannerSaveStatus('saving');
+
+      try {
+        await Promise.allSettled([
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner/moviesByDate/${dk}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(normalized)
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner/deletedDates/${dk}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'DELETE'
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner/updatedAt.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Date.now())
+          })
+        ]);
+        updateSeasonPlannerSaveStatus('saved');
+      } catch (err) {
+        console.warn("saveMovieToSeasonPlannerVault warning:", err);
+        updateSeasonPlannerSaveStatus('error');
+      }
+      return normalized;
+    }
+
+    async function removeMovieFromSeasonPlannerVault(dateKey) {
+      if (!dateKey || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return;
+      window.theaterSeasonPlannerMap = window.theaterSeasonPlannerMap || {};
+      window.theaterSeasonPlannerDeleted = window.theaterSeasonPlannerDeleted || {};
+      delete window.theaterSeasonPlannerMap[dateKey];
+      window.theaterSeasonPlannerDeleted[dateKey] = true;
+      window._lastLocalVaultWriteMs = Date.now();
+      persistSeasonPlannerLocalCache();
+      updateSeasonPlannerSaveStatus('saving');
+
+      try {
+        await Promise.allSettled([
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner/moviesByDate/${dateKey}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'DELETE'
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner/deletedDates/${dateKey}.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(true)
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner/updatedAt.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Date.now())
+          })
+        ]);
+        updateSeasonPlannerSaveStatus('saved');
+      } catch (err) {
+        console.warn("removeMovieFromSeasonPlannerVault warning:", err);
+        updateSeasonPlannerSaveStatus('error');
+      }
+    }
+
+    function triggerBackendQueueSync(actionName = 'force_sync', extra = {}) {
+      return fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({
+          action: actionName,
+          requestedAt: Date.now(),
+          timestamp: Date.now()
+        }, extra || {}))
+      }).catch(() => {});
+    }
+
+    async function saveEntireSeasonPlannerSlateNow() {
+      if (!isAdmin) {
+        openAdminAuthModal();
+        showTheaterToast("🔒 Admin authentication required.");
+        return;
+      }
+      updateSeasonPlannerSaveStatus('saving');
+      try {
+        const currentList = (window.theaterOfficialSchedule && Array.isArray(window.theaterOfficialSchedule) && window.theaterOfficialSchedule.length > 0)
+          ? window.theaterOfficialSchedule
+          : (Array.isArray(window.theaterScheduleCache) ? window.theaterScheduleCache : []);
+
+        const mergedList = mergeSeasonPlannerIntoScheduleList(currentList);
+        window.theaterSeasonPlannerMap = window.theaterSeasonPlannerMap || {};
+        window.theaterSeasonPlannerDeleted = window.theaterSeasonPlannerDeleted || {};
+
+        mergedList.forEach(item => {
+          if (!item || !item.title || item.status === 'POSTPONED') return;
+          const dk = parseScheduleDateToPacificKey(item) || item.dateKey || '';
+          if (dk && /^\d{4}-\d{2}-\d{2}$/.test(dk)) {
+            window.theaterSeasonPlannerMap[dk] = normalizeVaultScheduleItem(dk, item, window.theaterSeasonPlannerMap[dk]);
+            delete window.theaterSeasonPlannerDeleted[dk];
+          }
+        });
+
+        window.theaterOfficialSchedule = mergedList;
+        window.theaterScheduleCache = mergedList;
+        window._lastLocalVaultWriteMs = Date.now();
+        persistSeasonPlannerLocalCache();
+
+        const vaultPayload = {
+          moviesByDate: window.theaterSeasonPlannerMap,
+          deletedDates: window.theaterSeasonPlannerDeleted,
+          updatedAt: Date.now()
+        };
+
+        if (kevinScheduleScanCache && Array.isArray(kevinScheduleScanCache.days)) {
+          kevinScheduleScanCache.days.forEach(d => {
+            if (!d || !d.dateKey) return;
+            const m = window.theaterSeasonPlannerMap[d.dateKey];
+            if (m && m.title) {
+              d.status = 'movie_scheduled';
+              d.scheduledMovie = {
+                title: m.title,
+                startTime: m.startTime || m.time || '7:00 PM',
+                endTime: m.endTime || '8:45 PM',
+                runtime: m.runtime || '1h 45m',
+                posterUrl: m.posterUrl || ''
+              };
+            } else if (d.status === 'movie_scheduled' && window.theaterSeasonPlannerDeleted[d.dateKey]) {
+              d.scheduledMovie = null;
+              d.status = d.isWorkingNight ? 'working_night' : 'movie_night_open';
+            }
+          });
+        }
+
+        const writes = [
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonPlanner.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(vaultPayload)
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(mergedList)
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(mergedList)
+          }),
+          fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinema/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(mergedList)
+          })
+        ];
+        if (kevinScheduleScanCache) {
+          writes.push(
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/kevinScheduleScan.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(kevinScheduleScanCache)
+            })
+          );
+        }
+
+        await Promise.allSettled(writes);
+        updateSeasonPlannerSaveStatus('saved');
+        renderSchedule(mergedList);
+        if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
+        showTheaterToast("💾 Season Planner slate permanently saved to Cloud Vault!");
+      } catch (err) {
+        console.error("saveEntireSeasonPlannerSlateNow error:", err);
+        updateSeasonPlannerSaveStatus('error');
+        showTheaterToast(`⚠️ Cloud Vault save warning: ${err.message}`);
+      }
+    }
+    window.saveEntireSeasonPlannerSlateNow = saveEntireSeasonPlannerSlateNow;
+    window.mergeSeasonPlannerIntoScheduleList = mergeSeasonPlannerIntoScheduleList;
+
     function buildSchedulerLookupMaps() {
-      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+      const rawSched = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
         ? window.theaterScheduleCache
         : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+      const schedSource = mergeSeasonPlannerIntoScheduleList(rawSched);
 
       const scheduledMap = {};
       schedSource.forEach(item => {
@@ -11381,6 +11758,15 @@
           scheduledMap[dKey] = item;
         }
       });
+
+      // Authoritative overlay from Season Planner Cloud Vault
+      if (window.theaterSeasonPlannerMap) {
+        Object.entries(window.theaterSeasonPlannerMap).forEach(([dk, vm]) => {
+          if (vm && vm.title && vm.status !== 'POSTPONED') {
+            scheduledMap[dk] = normalizeVaultScheduleItem(dk, vm, scheduledMap[dk]);
+          }
+        });
+      }
 
       const kevinDaysMap = {};
       if (kevinScheduleScanCache && Array.isArray(kevinScheduleScanCache.days)) {
@@ -11636,8 +12022,8 @@
           }).catch(() => {});
         }
 
-        // Trigger Google Apps Script force_sync to mirror to Google Sheets Quick Schedule
-        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+        // Queue full slate force sync on @HEAD via Firebase smartSchedulerQueue
+        triggerBackendQueueSync('force_sync', { monthKey });
       } catch(syncErr) {
         console.warn("Month publish sync warning:", syncErr);
       }
@@ -12272,37 +12658,50 @@
         if (ampm === 'AM' && h === 12) h = 0;
         tHour = h; tMin = m;
       }
-      foundSource.startMs = new Date(Date.UTC(tY, tM - 1, tD, tHour + 8, tMin, 0)).getTime();
+      foundSource.startMs = parseSeasonPlannerDateMs(targetDateKey, foundSource.startTime || foundSource.time || '7:00 PM') || new Date(Date.UTC(tY, tM - 1, tD, tHour + 8, tMin, 0)).getTime();
 
-      window.theaterScheduleCache = schedule;
-      window.theaterOfficialSchedule = schedule;
+      const mergedMovedSchedule = mergeSeasonPlannerIntoScheduleList(schedule);
+      window.theaterScheduleCache = mergedMovedSchedule;
+      window.theaterOfficialSchedule = mergedMovedSchedule;
+
+      if (swapMovie) {
+        const swappedEntry = mergedMovedSchedule.find(s => s && parseScheduleDateToPacificKey(s) === sourceDateKey) || swapMovie;
+        await saveMovieToSeasonPlannerVault(sourceDateKey, swappedEntry);
+      } else {
+        await removeMovieFromSeasonPlannerVault(sourceDateKey);
+      }
+      await saveMovieToSeasonPlannerVault(targetDateKey, foundSource);
 
       await Promise.allSettled([
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(schedule)
+          body: JSON.stringify(mergedMovedSchedule)
         }),
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(schedule)
+          body: JSON.stringify(mergedMovedSchedule)
         }),
-        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
-          method: 'POST',
+        fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinema/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+          method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'move_movie',
-            title: foundSource.title,
-            from: sourceDateKey,
-            to: targetDateKey,
-            timestamp: Date.now()
-          })
+          body: JSON.stringify(mergedMovedSchedule)
+        }),
+        triggerBackendQueueSync('move_movie', {
+          title: foundSource.title,
+          from: sourceDateKey,
+          to: targetDateKey,
+          fromDateKey: sourceDateKey,
+          toDateKey: targetDateKey,
+          dateKey: targetDateKey,
+          posterUrl: foundSource.posterUrl || '',
+          startTime: foundSource.startTime || foundSource.time || '7:00 PM'
         })
       ]);
 
       renderSchedulerCalendarPopup();
-      renderSchedule(schedule);
+      renderSchedule(mergedMovedSchedule);
       updateCountdown();
       if (typeof renderSmartMovieNightScheduler === 'function') renderSmartMovieNightScheduler();
 
@@ -12495,15 +12894,8 @@
       if (badge) badge.textContent = "Scanning kevindurham61@gmail.com (+60d)...";
 
       try {
-        // Queue a scan command in Firebase so the Google Apps Script backend executes getKevinNightShiftSchedule(65)
-        await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'scan_kevin', days: 65, requestedAt: Date.now() })
-        }).catch(() => {});
-
-        // Trigger force_sync on Apps Script so it processes the queue immediately
-        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+        // Queue a scan command in Firebase so the Google Apps Script @HEAD trigger executes getKevinNightShiftSchedule(65)
+        await triggerBackendQueueSync('scan_kevin', { days: 65 });
 
         await new Promise(r => setTimeout(r, 1200));
         await loadKevinScheduleScanFromFirebase();
@@ -13107,10 +13499,12 @@
           schedMap.set(getSchedItemKey(newScheduleEntry), newScheduleEntry);
         }
 
-        const schedSource = Array.from(schedMap.values());
-        schedSource.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+        const schedSource = mergeSeasonPlannerIntoScheduleList(Array.from(schedMap.values()));
         window.theaterScheduleCache = schedSource;
         window.theaterOfficialSchedule = schedSource;
+
+        // Persist permanently into Season Planner Cloud Vault first
+        await saveMovieToSeasonPlannerVault(rawDateKey, newScheduleEntry);
 
         // 2. Save artwork, trailer, and summary maps locally
         if (typeof customMovieImages !== 'undefined' && meta.posterUrl) {
@@ -13182,8 +13576,7 @@
           })
         ]);
 
-        // 4. Trigger Google Apps Script autoSync to execute the Google Calendar event creation immediately
-        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+        // 4. Queued in smartSchedulerQueue above for @HEAD execution without legacy @200 overwrite
 
         // 5. Re-render Schedule, Countdown, and Admin Smart Scheduler Grid
         renderSchedule(schedSource);
@@ -13298,21 +13691,35 @@
         });
       }
 
+      if (resolvedDateKey) {
+        await removeMovieFromSeasonPlannerVault(resolvedDateKey);
+      } else if (normTargetTitle && window.theaterSeasonPlannerMap) {
+        for (const [vk, vm] of Object.entries(window.theaterSeasonPlannerMap)) {
+          if (vm && vm.title && vm.title.toLowerCase().replace(/[^a-z0-9]/g, '') === normTargetTitle) {
+            await removeMovieFromSeasonPlannerVault(vk);
+          }
+        }
+      }
+
+      const finalFiltered = mergeSeasonPlannerIntoScheduleList(filtered);
+      window.theaterScheduleCache = finalFiltered;
+      window.theaterOfficialSchedule = finalFiltered;
+
       const putPayloads = [
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filtered)
+          body: JSON.stringify(finalFiltered)
         }),
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filtered)
+          body: JSON.stringify(finalFiltered)
         }),
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/cinema/schedule.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filtered)
+          body: JSON.stringify(finalFiltered)
         }),
         fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/smartSchedulerQueue.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'POST',
@@ -13333,9 +13740,7 @@
 
       await Promise.allSettled(putPayloads);
 
-      fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
-
-      renderSchedule(filtered);
+      renderSchedule(finalFiltered);
       updateCountdown();
       renderAdminRescheduleList();
       if (typeof renderSmartMovieNightScheduler === 'function') renderSmartMovieNightScheduler();
@@ -13369,6 +13774,7 @@
 
       try {
         showTheaterToast("⚡ Syncing schedule to Google Calendar (Title only, no emojis)...");
+        triggerBackendQueueSync('sync_google_calendar', { calId: 'ls7pgevicthgfep3rgfghmht4s@group.calendar.google.com', updateExisting: true });
         const calId = encodeURIComponent("ls7pgevicthgfep3rgfghmht4s@group.calendar.google.com");
         const res = await fetch(`${API_BASE_URL}?action=sync_google_calendar&calendarId=${calId}&updateExisting=true`);
         const data = await res.json();
@@ -13987,6 +14393,14 @@
         }
 
         // 4. Concurrent schedule and poster sync to Firebase RTDB
+        for (const s of schedSource) {
+          if (s && s.title && s.title === newTitle) {
+            const dk = (typeof parseScheduleDateToPacificKey === 'function' ? parseScheduleDateToPacificKey(s) : '') || s.dateKey || '';
+            if (dk) {
+              firebaseSyncPromises.push(saveMovieToSeasonPlannerVault(dk, s));
+            }
+          }
+        }
         firebaseSyncPromises.push(
           fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
             method: 'PUT',
@@ -15617,7 +16031,7 @@
       showTheaterToast("🔄 Pulling live catalog from Google Sheets...");
 
       try {
-        await fetch(`${API_BASE_URL}?action=force_sync&force=true`, { mode: 'no-cors' });
+        await triggerBackendQueueSync('force_sync', { force: true });
         setTimeout(async () => {
           await syncFromFirebase();
           populateAdminMediaStudio(true);
@@ -16122,6 +16536,23 @@
       } catch(e) {}
       const now = Date.now();
 
+      // 0. Hydrate Season Planner Cloud Vault (`theaterSync/seasonPlanner`) before schedule resolution
+      if (data.seasonPlanner && typeof data.seasonPlanner === 'object') {
+        const recentLocalWrite = (typeof window._lastLocalVaultWriteMs === 'number') && (Date.now() - window._lastLocalVaultWriteMs < 4000);
+        if (!recentLocalWrite) {
+          if (data.seasonPlanner.moviesByDate && typeof data.seasonPlanner.moviesByDate === 'object') {
+            window.theaterSeasonPlannerMap = Object.assign({}, data.seasonPlanner.moviesByDate);
+          }
+          if (data.seasonPlanner.deletedDates && typeof data.seasonPlanner.deletedDates === 'object') {
+            window.theaterSeasonPlannerDeleted = Object.assign({}, data.seasonPlanner.deletedDates);
+          } else {
+            window.theaterSeasonPlannerDeleted = {};
+          }
+          if (typeof persistSeasonPlannerLocalCache === 'function') persistSeasonPlannerLocalCache();
+          if (typeof updateSeasonPlannerSaveStatus === 'function') updateSeasonPlannerSaveStatus('saved');
+        }
+      }
+
       // 1. Authoritative Cinema Schedule Resolution
       const cinemaObj = data.cinema || {};
       const officialSched = (data.officialSchedule && Array.isArray(data.officialSchedule) && data.officialSchedule.length > 0)
@@ -16132,12 +16563,13 @@
             ? cinemaObj.schedule
             : null;
 
-      // Reconcile officialSchedule, cinema.schedule, and schedule into a complete, merged schedule
-      const schedCandidates = [];
-      if (Array.isArray(officialSched)) schedCandidates.push(...officialSched);
-      if (Array.isArray(data.schedule)) schedCandidates.push(...data.schedule);
+      // Only fallback to legacy data.schedule when no authoritative officialSchedule exists (prevents UTC-shifted 3 AM duplicates)
+      const schedCandidates = officialSched
+        ? [...officialSched]
+        : (Array.isArray(data.schedule) ? [...data.schedule] : []);
 
-      if (schedCandidates.length > 0) {
+      const hasVaultMovies = window.theaterSeasonPlannerMap && Object.keys(window.theaterSeasonPlannerMap).length > 0;
+      if (schedCandidates.length > 0 || hasVaultMovies) {
         const mergedSchedMap = new Map();
         const normKey = function(s) {
           if (!s || !s.title) return '';
@@ -16146,7 +16578,8 @@
 
         schedCandidates.forEach(item => {
           if (!item || !item.title) return;
-          const k = normKey(item);
+          const dk = (typeof parseScheduleDateToPacificKey === 'function') ? (parseScheduleDateToPacificKey(item) || item.dateKey || '') : (item.dateKey || '');
+          const k = dk ? `${dk}_${normKey(item)}` : normKey(item);
           if (!mergedSchedMap.has(k)) {
             mergedSchedMap.set(k, Object.assign({}, item));
           } else {
@@ -16163,17 +16596,32 @@
         // Protect active live screening from being stomped
         const existingLive = (window.theaterScheduleCache || sampleSchedule || []).find(s => s && s.startMs && s.endMs && (now >= s.startMs && now < s.endMs));
         if (existingLive && existingLive.title) {
-          const liveKey = normKey(existingLive);
+          const liveDk = (typeof parseScheduleDateToPacificKey === 'function') ? (parseScheduleDateToPacificKey(existingLive) || existingLive.dateKey || '') : (existingLive.dateKey || '');
+          const liveKey = liveDk ? `${liveDk}_${normKey(existingLive)}` : normKey(existingLive);
           if (!mergedSchedMap.has(liveKey)) {
             mergedSchedMap.set(liveKey, existingLive);
           }
         }
 
-        const reconciled = Array.from(mergedSchedMap.values());
-        reconciled.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+        const dedupedList = Array.from(mergedSchedMap.values());
+        const reconciled = (typeof mergeSeasonPlannerIntoScheduleList === 'function')
+          ? mergeSeasonPlannerIntoScheduleList(dedupedList)
+          : dedupedList.sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
 
         window.theaterOfficialSchedule = reconciled;
         window.theaterScheduleCache = reconciled;
+
+        // Self-heal officialSchedule.json in Firebase if a legacy sync wiped Season Planner Vault movies
+        if (typeof isAdmin !== 'undefined' && isAdmin && Array.isArray(data.officialSchedule) && data.officialSchedule.length > 0 && reconciled.length > data.officialSchedule.length) {
+          if (Date.now() - (window._lastVaultSelfHealMs || 0) > 15000) {
+            window._lastVaultSelfHealMs = Date.now();
+            fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/officialSchedule.json?auth=${FIREBASE_SECRET_KEY}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(reconciled)
+            }).catch(() => {});
+          }
+        }
       }
 
       // Synchronize published months registry from Firebase RTDB for Season Planner
@@ -16457,6 +16905,28 @@
             firebaseEventSource.close();
           }
           firebaseEventSource = new EventSource('https://brianstheater-default-rtdb.firebaseio.com/theaterSync.json');
+          const applySeasonPlannerSseSnapshot = (vaultObj, isPatch = false) => {
+            if (!vaultObj || typeof vaultObj !== 'object') return;
+            if (vaultObj.moviesByDate && typeof vaultObj.moviesByDate === 'object') {
+              window.theaterSeasonPlannerMap = isPatch
+                ? Object.assign({}, window.theaterSeasonPlannerMap || {}, vaultObj.moviesByDate)
+                : Object.assign({}, vaultObj.moviesByDate);
+            }
+            if (vaultObj.deletedDates && typeof vaultObj.deletedDates === 'object') {
+              window.theaterSeasonPlannerDeleted = isPatch
+                ? Object.assign({}, window.theaterSeasonPlannerDeleted || {}, vaultObj.deletedDates)
+                : Object.assign({}, vaultObj.deletedDates);
+            } else if (!isPatch) {
+              window.theaterSeasonPlannerDeleted = {};
+            }
+            if (typeof persistSeasonPlannerLocalCache === 'function') persistSeasonPlannerLocalCache();
+            if (typeof updateSeasonPlannerSaveStatus === 'function') updateSeasonPlannerSaveStatus('saved');
+            const syncedList = mergeSeasonPlannerIntoScheduleList(window.theaterOfficialSchedule || window.theaterScheduleCache || []);
+            window.theaterOfficialSchedule = syncedList;
+            window.theaterScheduleCache = syncedList;
+            renderSchedule(syncedList);
+            if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
+          };
           firebaseEventSource.addEventListener('put', (event) => {
             try {
               const payload = JSON.parse(event.data);
@@ -16482,13 +16952,45 @@
                 if (movieKey && typeof payload.data === 'string') {
                   applySinglePosterUpdate(movieKey, payload.data, false);
                 }
-              } else if ((payload.path === '/officialSchedule' || payload.path === '/cinema/schedule' || payload.path === '/schedule') && Array.isArray(payload.data)) {
-                const newList = payload.data.filter(s => s && s.title).sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
+              } else if (payload.path === '/schedule' && Array.isArray(payload.data)) {
+                // Prevent legacy bot/script /schedule SSE packets from overwriting Season Planner officialSchedule
+                if (!window.theaterOfficialSchedule || window.theaterOfficialSchedule.length === 0) {
+                  const safeList = mergeSeasonPlannerIntoScheduleList(payload.data.filter(s => s && s.title));
+                  window.theaterOfficialSchedule = safeList;
+                  window.theaterScheduleCache = safeList;
+                  renderSchedule(safeList);
+                  if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
+                }
+              } else if ((payload.path === '/officialSchedule' || payload.path === '/cinema/schedule') && Array.isArray(payload.data)) {
+                const newList = mergeSeasonPlannerIntoScheduleList(payload.data.filter(s => s && s.title));
                 window.theaterOfficialSchedule = newList;
                 window.theaterScheduleCache = newList;
                 renderSchedule(newList);
                 mergeScheduleIntoVault(newList);
                 if (typeof renderSchedulerCalendarPopup === 'function') renderSchedulerCalendarPopup();
+              } else if (payload.path === '/seasonPlanner' && payload.data && typeof payload.data === 'object') {
+                applySeasonPlannerSseSnapshot(payload.data, false);
+              } else if (payload.path && payload.path.startsWith('/seasonPlanner/')) {
+                const sub = payload.path.replace(/^\/seasonPlanner\//, '');
+                if (sub.startsWith('moviesByDate/')) {
+                  const dk = sub.replace(/^moviesByDate\//, '').replace(/\.json$/, '');
+                  window.theaterSeasonPlannerMap = window.theaterSeasonPlannerMap || {};
+                  if (payload.data && typeof payload.data === 'object') {
+                    window.theaterSeasonPlannerMap[dk] = payload.data;
+                    if (window.theaterSeasonPlannerDeleted) delete window.theaterSeasonPlannerDeleted[dk];
+                  } else if (payload.data === null) {
+                    delete window.theaterSeasonPlannerMap[dk];
+                  }
+                } else if (sub.startsWith('deletedDates/')) {
+                  const dk = sub.replace(/^deletedDates\//, '').replace(/\.json$/, '');
+                  window.theaterSeasonPlannerDeleted = window.theaterSeasonPlannerDeleted || {};
+                  if (payload.data) {
+                    window.theaterSeasonPlannerDeleted[dk] = true;
+                  } else {
+                    delete window.theaterSeasonPlannerDeleted[dk];
+                  }
+                }
+                applySeasonPlannerSseSnapshot({}, true);
               } else if (payload.path === '/cinema' && payload.data) {
                 applyFirebaseData({ cinema: payload.data });
               } else if (payload.path === '/plexUsers' && payload.data) {
@@ -16528,6 +17030,8 @@
                   if (typeof v === 'string') applySinglePosterUpdate(k, v, false, true);
                 }
                 renderSchedule(window.theaterScheduleCache);
+              } else if (payload.path === '/seasonPlanner' && payload.data && typeof payload.data === 'object') {
+                applySeasonPlannerSseSnapshot(payload.data, true);
               } else if (payload.path === '/seasonalTheme' && payload.data) {
                 if (typeof applyIncomingSeasonalTheme === 'function') applyIncomingSeasonalTheme(payload.data);
               } else if (payload.path && payload.data) {
@@ -22280,9 +22784,9 @@ Enjoy the show! 🎬✨`;
         loadRequests();
       }
 
-      // Trigger Web App AutoSync
+      // Queue Web App AutoSync on @HEAD
       try {
-        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+        triggerBackendQueueSync('force_sync');
       } catch (e) {}
 
       // Close modal and show success card
@@ -22434,9 +22938,9 @@ Enjoy the show! 🎬✨`;
 
 
 
-      // 4. Trigger Web App AutoSync
+      // 4. Queue Web App AutoSync on @HEAD
       try {
-        fetch(`${API_BASE_URL}?action=force_sync`, { mode: 'no-cors' }).catch(() => {});
+        triggerBackendQueueSync('force_sync');
       } catch (e) {}
 
       // Add to in-memory requests list immediately so it shows up in UI

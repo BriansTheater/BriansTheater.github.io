@@ -1,10 +1,11 @@
 {
-  "version": "4.9.267",
-  "releaseDate": "2026-11-05",
-  "title": "Brian's Theater v4.9.267",
+  "version": "4.11.6",
+  "releaseDate": "2026-11-14",
+  "title": "Brian's Theater v4.11.6",
   "notes": [
-    "Restored Minions & Monsters as tonight's live screening.",
-    "Re-enabled collapsible Recently Concluded Screenings hidden drawer.",
-    "Synchronized authoritative Firebase stage countdown and cinema banner."
+    "Added permanent Season Planner Cloud Vault backup storage.",
+    "Added one-click Save Slate button and cloud status badge.",
+    "Blocked legacy sync overwrites from erasing future schedules.",
+    "Restored all ten December holiday movies with verified posters."
   ]
 }
