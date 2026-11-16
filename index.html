@@ -4890,7 +4890,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.11";
+    const APP_VERSION = "4.11.12";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6330,6 +6330,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.12": [
+        "Filtered past movies out of Upcoming Lineup Gallery."
+      ],
       "4.11.11": [
         "Added universal Studio audio and Off controls for themes.",
         "Stopped Thanksgiving music from playing during SuperGirl movie scenes.",
@@ -14963,10 +14966,27 @@
       renderAdminArtworkGallery();
     }
 
+    function getUpcomingAdminGalleryItems(items) {
+      const rawSource = (items && Array.isArray(items))
+        ? items
+        : ((window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
+            ? window.theaterScheduleCache
+            : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []));
+      const now = Date.now();
+      return rawSource.filter(s => {
+        if (!s || !s.title) return false;
+        if (s.isConcluded === true) return false;
+        if (String(s.status || '').toUpperCase() === 'CONCLUDED') return false;
+        const end = Number(s.endMs) || 0;
+        const start = Number(s.startMs) || 0;
+        if (end > 0 && now >= end) return false;
+        if (start > 0 && now >= start + (4 * 3600000)) return false;
+        return true;
+      });
+    }
+
     function selectAllFilteredAdminGalleryTitles() {
-      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
-        ? window.theaterScheduleCache
-        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+      const schedSource = getUpcomingAdminGalleryItems();
 
       const searchInput = document.getElementById('adminGallerySearchInput');
       const query = (searchInput?.value || '').toLowerCase().trim();
@@ -15000,9 +15020,7 @@
     }
 
     function selectFranchiseInAdminGallery(prefix = 'ahs') {
-      const schedSource = (window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
-        ? window.theaterScheduleCache
-        : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []);
+      const schedSource = getUpcomingAdminGalleryItems();
 
       let count = 0;
       schedSource.forEach(s => {
@@ -15075,11 +15093,7 @@
       const countBadge = document.getElementById('adminGalleryCountBadge');
       if (!gallery) return;
 
-      const schedSource = (items && Array.isArray(items))
-        ? items
-        : ((window.theaterScheduleCache && Array.isArray(window.theaterScheduleCache) && window.theaterScheduleCache.length > 0)
-            ? window.theaterScheduleCache
-            : (typeof sampleSchedule !== 'undefined' ? sampleSchedule : []));
+      const schedSource = getUpcomingAdminGalleryItems(items);
 
       const searchInput = document.getElementById('adminGallerySearchInput');
       const query = (searchInput?.value || '').toLowerCase().trim();

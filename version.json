@@ -1,10 +1,8 @@
 {
-  "version": "4.11.11",
+  "version": "4.11.12",
   "releaseDate": "2026-11-15",
-  "title": "Brian's Theater v4.11.11",
+  "title": "Brian's Theater v4.11.12",
   "notes": [
-    "Added universal Studio audio and Off controls for themes.",
-    "Stopped Thanksgiving music from playing during SuperGirl movie scenes.",
-    "Fixed live SuperGirl sync and removed duplicate poster scenes."
+    "Filtered past movies out of Upcoming Lineup Gallery."
   ]
 }

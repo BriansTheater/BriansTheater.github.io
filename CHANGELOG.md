@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.12] - 2026-11-15
+- Filtered past movies out of Upcoming Lineup Gallery.
+
 ## [4.11.11] - 2026-11-15
 - Added universal Studio audio and Off controls for themes.
 - Stopped Thanksgiving music from playing during SuperGirl movie scenes.
