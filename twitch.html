@@ -5308,11 +5308,25 @@
       if (merged.doorMode) activeMovie.doorMode = merged.doorMode;
       if (merged.partyUrl) activeMovie.partyUrl = merged.partyUrl;
 
+      const isPublishedMonthEntry = (s) => {
+        if (!s) return false;
+        const sStart = Number(s.startMs) || 0;
+        if (sStart <= 0) return true;
+        const d = new Date(sStart);
+        const ymKey = `${d.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' })}-${d.toLocaleDateString('en-US', { month: '2-digit', timeZone: 'America/Los_Angeles' })}`;
+        const nowD = new Date(now);
+        const curKey = `${nowD.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' })}-${nowD.toLocaleDateString('en-US', { month: '2-digit', timeZone: 'America/Los_Angeles' })}`;
+        if (ymKey <= curKey) return true;
+        const pubMap = merged.publishedMonths;
+        return Boolean(pubMap && typeof pubMap === 'object' && pubMap[ymKey] === true);
+      };
+
       // Check if any schedule entry is actively screening right now
       if (!foundNow) {
         const liveEntry = allSchedules.find(s => {
           if (!s || !s.title) return false;
           if (isMovieConcluded(s, now)) return false;
+          if (!isPublishedMonthEntry(s)) return false;
           const sStart = Number(s.startMs) || 0;
           const sEnd = Number(s.endMs) || (sStart ? sStart + (105 * 60 * 1000) : 0);
           return (sStart > 0 && sEnd > 0 && now >= sStart && now < sEnd);
@@ -5329,10 +5343,11 @@
         }
       }
 
-      // 3. Search upcoming schedules chronologically
+      // 3. Search upcoming schedules chronologically (excluding unpublished future months)
       const upcoming = allSchedules.filter(s => {
         if (!s || !s.title) return false;
         if (isMovieConcluded(s, now)) return false;
+        if (!isPublishedMonthEntry(s)) return false;
         const sEnd = Number(s.endMs) || 0;
         const sStart = Number(s.startMs) || 0;
         return (sEnd > now || sStart > now);
@@ -7255,7 +7270,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.11.18";
+    const TWITCH_OVERLAY_VERSION = "4.11.19";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

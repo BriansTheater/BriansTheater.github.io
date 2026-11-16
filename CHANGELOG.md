@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.19] - 2026-11-16
+- Hid unpublished future months across Stage and Twitch schedules.
+
 ## [4.11.18] - 2026-11-16
 - Added visual TMDB image selector in Admin Media Studio.
 

@@ -4893,7 +4893,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.18";
+    const APP_VERSION = "4.11.19";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6194,10 +6194,23 @@
         };
       }
 
-      // 2. Find upcoming movies with future endMs or future startMs
+      // 2. Find upcoming movies with future endMs or future startMs (respecting publishedMonths)
       const upcomingList = scheduleSource
         .filter(s => {
           if (isMoviePostponed(s) || isMovieConcluded(s)) return false;
+          if (typeof isMonthPublished === 'function') {
+            let ymKey = '';
+            if (s.startMs && Number(s.startMs) > 0) {
+              const d = new Date(Number(s.startMs));
+              const y = d.toLocaleDateString('en-US', { year: 'numeric', timeZone: 'America/Los_Angeles' });
+              const m = d.toLocaleDateString('en-US', { month: '2-digit', timeZone: 'America/Los_Angeles' });
+              ymKey = `${y}-${m}`;
+            } else if (typeof parseScheduleDateToPacificKey === 'function') {
+              const pk = parseScheduleDateToPacificKey(s);
+              if (pk && /^\d{4}-\d{2}-\d{2}$/.test(pk)) ymKey = pk.slice(0, 7);
+            }
+            if (ymKey && !isMonthPublished(ymKey)) return false;
+          }
           return (s.endMs ? Number(s.endMs) > now : (s.startMs ? Number(s.startMs) > now : false));
         })
         .sort((a, b) => (Number(a.startMs) || 0) - (Number(b.startMs) || 0));
@@ -6333,6 +6346,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.19": [
+        "Hid unpublished future months across Stage and Twitch schedules."
+      ],
       "4.11.18": [
         "Added visual TMDB image selector in Admin Media Studio."
       ],
