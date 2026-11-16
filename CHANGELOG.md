@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.11.20] - 2026-11-16
+- Fixed Firebase SSE loop re-downloading full database continuously.
+- Throttled Spotify live sync to track changes only.
+- Purged stale September and October quota logs.
+
 ## [4.11.19] - 2026-11-16
 - Hid unpublished future months across Stage and Twitch schedules.
 

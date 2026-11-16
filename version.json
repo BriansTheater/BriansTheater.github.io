@@ -1,8 +1,9 @@
 {
-  "version": "4.11.19",
+  "version": "4.11.20",
   "releaseDate": "2026-11-16",
-  "title": "Brian's Theater v4.11.19",
+  "title": "Brian's Theater v4.11.20",
   "notes": [
-    "Hid unpublished future months across Stage and Twitch schedules."
+    "Stopped Firebase SSE loop from re-downloading full database.",
+    "Throttled Spotify live sync to track changes only."
   ]
 }

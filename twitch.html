@@ -5705,9 +5705,9 @@
 
       window.pollFirebaseHeartbeat = pollFirebaseHeartbeat;
 
-      // 1. Initial snapshot on boot (forced) & fallback watchdog interval for OBS
-      pollFirebaseHeartbeat(true);
-      setInterval(() => pollFirebaseHeartbeat(false), 30000);
+      // 1. Fallback watchdog interval for OBS (only fetches if SSE is disconnected)
+      setTimeout(() => pollFirebaseHeartbeat(false), 4000);
+      setInterval(() => pollFirebaseHeartbeat(false), 60000);
 
       // 2. Persistent Real-Time SSE Stream with auto-reconnection
       let sseReconnectTimer = null;
@@ -6445,8 +6445,18 @@
       return accessToken;
     }
 
+    let _lastTwitchSpotifySig = '';
+    let _lastTwitchSpotifyPushMs = 0;
     async function syncSpotifyToFirebase(payload) {
       try {
+        const sig = `${Boolean(payload?.isActive)}|${Boolean(payload?.isPlaying)}|${payload?.trackTitle || ''}|${payload?.artistName || ''}`;
+        const nowMs = Date.now();
+        if (sig === _lastTwitchSpotifySig && (nowMs - _lastTwitchSpotifyPushMs) < 60000) {
+          return;
+        }
+        _lastTwitchSpotifySig = sig;
+        _lastTwitchSpotifyPushMs = nowMs;
+
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/spotifyLive.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -7270,7 +7280,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.11.19";
+    const TWITCH_OVERLAY_VERSION = "4.11.20";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
