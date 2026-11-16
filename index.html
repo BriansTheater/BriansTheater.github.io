@@ -4874,7 +4874,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.13";
+    const APP_VERSION = "4.11.14";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6314,6 +6314,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.14": [
+        "Synced identical scene images across Twitch, website, and app."
+      ],
       "4.11.13": [
         "Removed duplicate Admin Doors bar from theater stage."
       ],
@@ -7290,7 +7293,7 @@
             msg.titles.forEach(t => applySinglePosterUpdate(t, msg.imageUrl, false));
           } else if (msg && msg.type === 'SEASONAL_THEME_UPDATED' && msg.theme) {
             if (typeof applyIncomingSeasonalTheme === 'function') {
-              applyIncomingSeasonalTheme(msg.theme);
+              applyIncomingSeasonalTheme(msg);
             }
           } else if (msg && msg.type === 'enter_button_update') {
             if (typeof syncPartyWatchUrls === 'function') {
@@ -7414,10 +7417,14 @@
         const activeTitle = nextObj?.title ? String(nextObj.title).replace(/^🎬\s*/, '').toLowerCase().trim() : '';
         const activeNorm = activeTitle.replace(/[^a-z0-9]/g, '');
         if (activeTitle === lower || (norm && activeNorm === norm)) {
+          const optImg = optimizeArtworkUrl(imageUrl);
           const stagePoster = document.getElementById('stagePoster');
-          if (stagePoster) stagePoster.src = optimizeArtworkUrl(imageUrl);
+          if (stagePoster) stagePoster.src = optImg;
           const schedNextPoster = document.getElementById('schedNextPoster');
-          if (schedNextPoster) schedNextPoster.src = optimizeArtworkUrl(imageUrl);
+          if (schedNextPoster) schedNextPoster.src = optImg;
+          if (!skipRender && typeof getActiveSeasonalTheme === 'function' && getActiveSeasonalTheme().theme === 'moviescene' && typeof updatePortalMovieSceneEngine === 'function') {
+            updatePortalMovieSceneEngine(nextObj.title || cleanTitle, optImg);
+          }
         }
       } catch(e) {}
     }
@@ -8536,8 +8543,10 @@
       }
     }
 
-    // Compact Option 1 In-Card Movie Scene Engine (Smartphone & Portal)
-    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v3';
+    // Compact Option 1 In-Card Movie Scene Engine (Smartphone, App & Portal — Synced with Twitch)
+    const PORTAL_SCENE_CACHE_KEY = 'brian_movie_scene_cache_v4';
+    const PORTAL_SCENE_DEMO_MODE_KEY = 'brian_twitch_scene_demo_mode_v1';
+    const PORTAL_SCENE_VARIANT_MAP_KEY = 'brian_twitch_scene_variants_v1';
     const PORTAL_POSTER_CROP_BLACKLIST = new Set([
       '/54KIfdTEzOliHDKx0OkzYGqAICx.jpg',
       '/8CIgg0gCHIYz0jrx5IcZEOy047J.jpg',
@@ -8588,6 +8597,37 @@
       if (cdBox) cdBox.style.borderColor = '';
     }
 
+    function getPortalSceneDemoMode() {
+      try {
+        const m = localStorage.getItem(PORTAL_SCENE_DEMO_MODE_KEY);
+        if (m === 'demoA' || m === 'demoB' || m === 'demoC') return m;
+      } catch(e) {}
+      return 'demoB';
+    }
+
+    function getPortalSceneVariantOffset(movieTitle) {
+      const key = String(movieTitle || '').replace(/^[^\w\d]+/, '').toLowerCase().trim();
+      if (!key) return 0;
+      try {
+        const map = JSON.parse(localStorage.getItem(PORTAL_SCENE_VARIANT_MAP_KEY) || '{}');
+        const val = Number(map[key]);
+        return Number.isFinite(val) && val >= 0 ? Math.floor(val) : 0;
+      } catch(e) {
+        return 0;
+      }
+    }
+
+    function pickSyncedSceneBackdrop(scenes, movieTitle, fallbackUrl) {
+      const pool = Array.isArray(scenes) ? scenes.filter(Boolean) : [];
+      if (!pool.length) return fallbackUrl || '';
+      const total = pool.length;
+      const offset = getPortalSceneVariantOffset(movieTitle);
+      const idx = ((offset % total) + total) % total;
+      const scene1 = pool[idx];
+      const scene2 = total >= 2 ? pool[(idx + 1) % total] : pool[idx];
+      return getPortalSceneDemoMode() === 'demoA' ? scene1 : scene2;
+    }
+
     async function updatePortalMovieSceneEngine(movieTitle, posterUrl) {
       const token = ++portalSceneToken;
       const bgWrap = document.getElementById('stageMovieSceneBg');
@@ -8605,8 +8645,8 @@
       const cacheKey = `${cleanTitle.toLowerCase()}__${String(posterUrl || '').trim()}`;
       try {
         const disk = JSON.parse(localStorage.getItem(PORTAL_SCENE_CACHE_KEY) || '{}');
-        if (disk[cacheKey] && disk[cacheKey].sceneUrl && (Date.now() - (disk[cacheKey].ts || 0)) < 7 * 86400000) {
-          sceneUrl = disk[cacheKey].sceneUrl;
+        if (disk[cacheKey] && Array.isArray(disk[cacheKey].scenes) && disk[cacheKey].scenes.length && (Date.now() - (disk[cacheKey].ts || 0)) < 7 * 86400000) {
+          sceneUrl = pickSyncedSceneBackdrop(disk[cacheKey].scenes, movieTitle, posterUrl);
         } else if (cleanTitle) {
           const k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
           const sRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${k}&query=${encodeURIComponent(cleanTitle)}&include_adult=false`);
@@ -8639,22 +8679,35 @@
 
             if (match) {
               const mt = match.media_type === 'tv' ? 'tv' : 'movie';
-              let picked = match.backdrop_path || '';
+              let scenes = [];
               try {
                 const iRes = await fetch(`https://api.themoviedb.org/3/${mt}/${match.id}/images?api_key=${k}`);
                 if (iRes.ok) {
                   const iData = await iRes.json();
                   const bds = Array.isArray(iData.backdrops) ? iData.backdrops.filter(b => b.file_path && (b.width || 1280) >= 900) : [];
+                  const enHero = bds.find(b => b.iso_639_1 === 'en');
                   const cleanStills = bds.filter(b => !b.iso_639_1);
-                  // Exclude known studio poster-crops and default poster-crop backdrop when >= 3 clean stills exist so background never duplicates the main poster
-                  const nonDup = cleanStills.filter(b => !PORTAL_POSTER_CROP_BLACKLIST.has(b.file_path) && (!posterUrl || !String(posterUrl).includes(b.file_path)) && !(cleanStills.length >= 3 && match.backdrop_path && b.file_path === match.backdrop_path));
-                  const best = nonDup[0] || cleanStills[1] || cleanStills[0] || bds[0];
-                  if (best && best.file_path) picked = best.file_path;
+                  const heroPath = (enHero && enHero.file_path) || (cleanStills[0] && cleanStills[0].file_path) || (bds[0] && bds[0].file_path) || match.backdrop_path || '';
+                  const excludeFiles = new Set([...PORTAL_POSTER_CROP_BLACKLIST, posterFile, match.poster_path || '', heroPath].filter(Boolean));
+                  if (cleanStills.length >= 3 && match.backdrop_path) excludeFiles.add(match.backdrop_path);
+                  scenes = cleanStills.filter(b => b.file_path && !excludeFiles.has(b.file_path)).map(b => `https://image.tmdb.org/t/p/w1280${b.file_path}`);
+                  if (scenes.length < 2) {
+                    const strictPosterSet = new Set([posterFile, match.poster_path || ''].filter(Boolean));
+                    cleanStills.concat(bds).forEach(b => {
+                      if (!b.file_path || strictPosterSet.has(b.file_path)) return;
+                      const u = `https://image.tmdb.org/t/p/w1280${b.file_path}`;
+                      if (!scenes.includes(u)) scenes.push(u);
+                    });
+                  }
                 }
               } catch(ie) {}
-              if (picked) {
-                sceneUrl = `https://image.tmdb.org/t/p/w1280${picked}`;
-                disk[cacheKey] = { sceneUrl, ts: Date.now() };
+              if (!scenes.length && match.backdrop_path) {
+                scenes = [`https://image.tmdb.org/t/p/w1280${match.backdrop_path}`];
+              }
+              scenes = Array.from(new Set(scenes)).slice(0, 12);
+              if (scenes.length) {
+                sceneUrl = pickSyncedSceneBackdrop(scenes, movieTitle, posterUrl);
+                disk[cacheKey] = { scenes, ts: Date.now() };
                 localStorage.setItem(PORTAL_SCENE_CACHE_KEY, JSON.stringify(disk));
               }
             }
@@ -8688,12 +8741,37 @@
       const localTs = parseInt(localStorage.getItem('brian_theater_seasonal_theme_ts') || '0', 10);
       const curSaved = localStorage.getItem('brian_theater_seasonal_theme') || 'auto';
 
+      let sceneConfigChanged = false;
+      if (typeof incoming === 'object') {
+        if (incoming.sceneDemoMode && (incoming.sceneDemoMode === 'demoA' || incoming.sceneDemoMode === 'demoB' || incoming.sceneDemoMode === 'demoC')) {
+          try {
+            if (localStorage.getItem(PORTAL_SCENE_DEMO_MODE_KEY) !== incoming.sceneDemoMode) {
+              localStorage.setItem(PORTAL_SCENE_DEMO_MODE_KEY, incoming.sceneDemoMode);
+              sceneConfigChanged = true;
+            }
+          } catch(e) {}
+        }
+        if (incoming.sceneVariantMap && typeof incoming.sceneVariantMap === 'object') {
+          try {
+            const prevRaw = localStorage.getItem(PORTAL_SCENE_VARIANT_MAP_KEY) || '{}';
+            const merged = Object.assign(JSON.parse(prevRaw), incoming.sceneVariantMap);
+            const nextRaw = JSON.stringify(merged);
+            if (nextRaw !== prevRaw) {
+              localStorage.setItem(PORTAL_SCENE_VARIANT_MAP_KEY, nextRaw);
+              sceneConfigChanged = true;
+            }
+          } catch(e) {}
+        }
+      }
+
       if (!localTs || !themeTs || themeTs >= localTs || themeVal !== curSaved) {
         try {
           localStorage.setItem('brian_theater_seasonal_theme', themeVal);
           if (themeTs) localStorage.setItem('brian_theater_seasonal_theme_ts', String(themeTs));
         } catch(e) {}
         applySeasonalTheme(themeVal);
+      } else if (sceneConfigChanged && typeof getActiveSeasonalTheme === 'function' && getActiveSeasonalTheme().theme === 'moviescene') {
+        applySeasonalTheme(curSaved);
       }
     }
 
@@ -8712,6 +8790,9 @@
 
       // Instant global sync via Firebase RTDB PUT so PC and all devices update in real time!
       const savedBgm = localStorage.getItem('brian_stpatricks_bgm_track') || 'jig';
+      const savedDemoMode = getPortalSceneDemoMode();
+      let savedVariantMap = {};
+      try { savedVariantMap = JSON.parse(localStorage.getItem(PORTAL_SCENE_VARIANT_MAP_KEY) || '{}'); } catch(e) {}
       try {
         await fetch(`https://brianstheater-default-rtdb.firebaseio.com/theaterSync/seasonalTheme.json?auth=${FIREBASE_SECRET_KEY}`, {
           method: 'PUT',
@@ -8719,6 +8800,8 @@
           body: JSON.stringify({
             theme: themeVal,
             bgmTrack: savedBgm,
+            sceneDemoMode: savedDemoMode,
+            sceneVariantMap: savedVariantMap,
             updatedAt: ts
           })
         });
@@ -8730,7 +8813,7 @@
       try {
         if (typeof BroadcastChannel !== 'undefined') {
           const bc = new BroadcastChannel('brian_theater_sync');
-          bc.postMessage({ type: 'SEASONAL_THEME_UPDATED', theme: themeVal, bgmTrack: savedBgm, updatedAt: ts });
+          bc.postMessage({ type: 'SEASONAL_THEME_UPDATED', theme: themeVal, bgmTrack: savedBgm, sceneDemoMode: savedDemoMode, sceneVariantMap: savedVariantMap, updatedAt: ts });
           bc.close();
         }
       } catch(e) {}

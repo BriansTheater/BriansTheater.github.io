@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.14] - 2026-11-15
+- Synced identical scene images across Twitch, website, and app.
+
 ## [4.11.13] - 2026-11-15
 - Removed duplicate Admin Doors bar from theater stage.
 
