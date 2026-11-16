@@ -657,7 +657,7 @@
               src="https://image.tmdb.org/t/p/w780/1950DCZIiDljYpDVVgzYDpsWSOE.jpg"
               alt="Centered Uncropped Movie Poster"
               referrerpolicy="no-referrer"
-              class="relative z-10 h-full w-auto max-w-full object-contain rounded-xl shadow-[0_14px_40px_rgba(0,0,0,0.92)] border"
+              class="relative z-10 max-h-full max-w-full object-contain rounded-xl shadow-[0_14px_40px_rgba(0,0,0,0.92)] border"
               style="border-color: rgba(var(--scene-p-rgb, 245, 158, 11), 0.65);"
               onerror="handlePosterError(this)"
             />
@@ -2102,7 +2102,7 @@
       const cacheKey = `${cleanTitle.toLowerCase()}__${String(posterUrl || '').trim()}`;
       const applyCallerPoster = (pack) => {
         const cloned = Object.assign({}, pack);
-        if (posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER && !cloned.posterIsLandscape) {
+        if (posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER) {
           cloned.portraitPoster = posterUrl;
         }
         const pair = getActiveScenePairFromPack(cloned, movieTitle);
@@ -2218,16 +2218,14 @@
               ];
             }
 
+            const dedupedScenes = Array.from(new Set(sceneCandidates)).slice(0, 12);
             const toW1280 = (fp, fb) => fp ? `https://image.tmdb.org/t/p/w1280${fp}` : fb;
             const pushedLandscapeUrl = (posterIsLandscape && posterUrl)
               ? String(posterUrl).replace(/\/t\/p\/w\d+\//i, '/t/p/w1280/')
               : '';
-            const dedupedScenes = Array.from(new Set(
-              pushedLandscapeUrl ? [pushedLandscapeUrl, ...sceneCandidates] : sceneCandidates
-            )).slice(0, 12);
 
             pack = {
-              portraitPoster: (!posterIsLandscape && posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER) ? posterUrl : tmdbPortraitUrl,
+              portraitPoster: (posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER) ? posterUrl : tmdbPortraitUrl,
               hero16x9: pushedLandscapeUrl || toW1280(heroPath, tmdbPortraitUrl),
               scene1: dedupedScenes[0],
               scene2: dedupedScenes[1] || dedupedScenes[0],
@@ -7257,7 +7255,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.11.16";
+    const TWITCH_OVERLAY_VERSION = "4.11.17";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 

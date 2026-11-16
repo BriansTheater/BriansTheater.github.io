@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.17] - 2026-11-15
+- Matched Twitch middle poster to website movie poster selection.
+
 ## [4.11.16] - 2026-11-15
 - Fixed Twitch overlay ignoring Admin Menu poster overrides.
 
