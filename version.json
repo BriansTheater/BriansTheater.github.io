@@ -1,9 +1,8 @@
 {
-  "version": "4.11.15",
+  "version": "4.11.16",
   "releaseDate": "2026-11-15",
-  "title": "Brian's Theater v4.11.15",
+  "title": "Brian's Theater v4.11.16",
   "notes": [
-    "Added Compact Bottom Scene Dock for unobstructed background preview.",
-    "Added live Studio toggle for Twitch Theater Title badge."
+    "Fixed Twitch overlay ignoring Admin Menu poster overrides."
   ]
 }

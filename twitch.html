@@ -2218,11 +2218,13 @@
               ];
             }
 
-            const dedupedScenes = Array.from(new Set(sceneCandidates)).slice(0, 12);
             const toW1280 = (fp, fb) => fp ? `https://image.tmdb.org/t/p/w1280${fp}` : fb;
             const pushedLandscapeUrl = (posterIsLandscape && posterUrl)
               ? String(posterUrl).replace(/\/t\/p\/w\d+\//i, '/t/p/w1280/')
               : '';
+            const dedupedScenes = Array.from(new Set(
+              pushedLandscapeUrl ? [pushedLandscapeUrl, ...sceneCandidates] : sceneCandidates
+            )).slice(0, 12);
 
             pack = {
               portraitPoster: (!posterIsLandscape && posterUrl && posterUrl !== DEFAULT_FALLBACK_POSTER) ? posterUrl : tmdbPortraitUrl,
@@ -5324,7 +5326,7 @@
             endMs: Number(liveEntry.endMs),
             date: liveEntry.date,
             time: liveEntry.startTime || liveEntry.time,
-            posterUrl: liveEntry.posterUrl || liveEntry.imageUrl || getMovieArtworkUrl(liveEntry.title, merged.moviePosters)
+            posterUrl: getMovieArtworkUrl(liveEntry.title, merged.moviePosters) || liveEntry.posterUrl || liveEntry.imageUrl
           };
         }
       }
@@ -5346,7 +5348,7 @@
           endMs: Number(next.endMs),
           date: next.date,
           time: next.startTime || next.time,
-          posterUrl: next.posterUrl || next.imageUrl || getMovieArtworkUrl(next.title, merged.moviePosters)
+          posterUrl: getMovieArtworkUrl(next.title, merged.moviePosters) || next.posterUrl || next.imageUrl
         };
       } else if (merged.cinema && merged.cinema.nextTitle && merged.cinema.nextTitle !== 'No Movie Scheduled') {
         const nextStart = Number(merged.cinema.nextStartMs) || 0;
@@ -5354,7 +5356,7 @@
           foundNext = {
             title: merged.cinema.nextTitle,
             startMs: nextStart,
-            posterUrl: merged.cinema.nextPoster || getMovieArtworkUrl(merged.cinema.nextTitle, merged.moviePosters)
+            posterUrl: getMovieArtworkUrl(merged.cinema.nextTitle, merged.moviePosters) || merged.cinema.nextPoster
           };
         }
       }
@@ -5372,7 +5374,7 @@
         activeMovie.isNowPlaying = Boolean(foundNow);
         activeMovie.showtimeText = nextShowtimeText;
 
-        let resolvedPoster = (target.posterUrl && target.posterUrl !== DEFAULT_FALLBACK_POSTER ? target.posterUrl : '') || getMovieArtworkUrl(activeMovie.title, merged.moviePosters) || target.posterUrl;
+        let resolvedPoster = getMovieArtworkUrl(activeMovie.title, merged.moviePosters) || (target.posterUrl && target.posterUrl !== DEFAULT_FALLBACK_POSTER ? target.posterUrl : '') || target.posterUrl;
         const hasPosterChanged = Boolean(resolvedPoster && activeMovie.posterUrl !== resolvedPoster);
         if (resolvedPoster) {
           activeMovie.posterUrl = resolvedPoster;
@@ -5455,7 +5457,7 @@
         if (!item || !item.title) return;
         const cleanTitle = String(item.title).replace(/^🎬\s*/, '').trim();
         const url = item.posterUrl || item.imageUrl || '';
-        if (cleanTitle && url && url !== DEFAULT_FALLBACK_POSTER) {
+        if (cleanTitle && url && url !== DEFAULT_FALLBACK_POSTER && !targetMap[cleanTitle]) {
           targetMap[cleanTitle] = url;
         }
       });
@@ -7255,7 +7257,7 @@
     // ==========================================
     // 5. AUTOMATIC VERSION UPDATE DETECTOR
     // ==========================================
-    const TWITCH_OVERLAY_VERSION = "4.11.15";
+    const TWITCH_OVERLAY_VERSION = "4.11.16";
     window.TWITCH_OVERLAY_VERSION = TWITCH_OVERLAY_VERSION;
     let isCheckingForOverlayUpdate = false;
 
