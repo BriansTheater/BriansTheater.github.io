@@ -2545,9 +2545,28 @@
               </div>
 
               <!-- Quick Choice Chips (Backdrop vs Poster) -->
-              <div class="flex items-center gap-2" id="adminArtworkQuickChips">
+              <div class="flex items-center gap-2 flex-wrap" id="adminArtworkQuickChips">
                 <button type="button" onclick="useAdminCandidateArtwork('backdrop')" id="btnUseBackdropChip" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-mono text-slate-300 transition border border-slate-700">Use 16:9 Backdrop</button>
                 <button type="button" onclick="useAdminCandidateArtwork('poster')" id="btnUsePosterChip" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-mono text-slate-300 transition border border-slate-700">Use Vertical Poster</button>
+                <button type="button" onclick="loadAdminMovieImageOptions()" id="btnLoadTmdbImages" class="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-[10px] font-mono font-bold text-amber-300 transition border border-amber-500/40 cursor-pointer">🔍 Load TMDB Images</button>
+              </div>
+
+              <!-- Visual TMDB Poster & Backdrop Selector Grid -->
+              <div id="adminArtworkPickerSection" class="flex flex-col gap-2 p-2.5 rounded-xl bg-slate-950/90 border border-slate-800">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">Choose Main Image:</span>
+                    <span id="adminArtworkPickerBadge" class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">0 Images</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button type="button" id="artFilterBtn-all" onclick="setAdminArtworkPickerFilter('all')" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400 text-slate-950 cursor-pointer">All</button>
+                    <button type="button" id="artFilterBtn-poster" onclick="setAdminArtworkPickerFilter('poster')" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-300 hover:text-white cursor-pointer">Posters</button>
+                    <button type="button" id="artFilterBtn-backdrop" onclick="setAdminArtworkPickerFilter('backdrop')" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-300 hover:text-white cursor-pointer">16:9</button>
+                  </div>
+                </div>
+                <div id="adminArtworkOptionsGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-[210px] overflow-y-auto pr-1 scrollbar-thin">
+                  <div class="col-span-full py-4 text-center text-[11px] text-slate-500">Select a movie above to load poster & backdrop options.</div>
+                </div>
               </div>
 
               <!-- Live Artwork Preview Card -->
@@ -4874,7 +4893,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.17";
+    const APP_VERSION = "4.11.18";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6314,6 +6333,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.18": [
+        "Added visual TMDB image selector in Admin Media Studio."
+      ],
       "4.11.17": [
         "Matched Twitch middle poster to website movie poster selection."
       ],
@@ -15703,6 +15725,9 @@
       if (previewImg) previewImg.src = currentArtUrl;
       if (caption) caption.textContent = cleanTitle || "Cinema Stage";
       if (urlText) urlText.textContent = currentArtUrl;
+      if (cleanTitle && typeof loadAdminMovieImageOptions === 'function') {
+        loadAdminMovieImageOptions(cleanTitle);
+      }
 
       // 2. Update Trailer Sub-Panel
       const trInput = document.getElementById('adminTrailerCustomUrlInput');
@@ -16108,11 +16133,159 @@
       if (prevGenres) prevGenres.textContent = `Genres: ${candidate.genres || '--'}`;
 
       window.currentAdminSelectedCandidate = candidate;
+      if (typeof loadAdminMovieImageOptions === 'function') {
+        loadAdminMovieImageOptions(candidate.title, candidate);
+      }
 
       if (showToast) {
         showTheaterToast(`⚡ Applied TMDB media for "${candidate.title}". Click Save in any tab to apply!`);
       }
     }
+
+    let adminArtworkOptionsList = [];
+    let adminArtworkPickerFilter = 'all';
+    let adminArtworkOptionsToken = 0;
+
+    function setAdminArtworkPickerFilter(filter) {
+      adminArtworkPickerFilter = ['all', 'poster', 'backdrop'].includes(filter) ? filter : 'all';
+      ['all', 'poster', 'backdrop'].forEach(f => {
+        const b = document.getElementById(`artFilterBtn-${f}`);
+        if (!b) return;
+        b.className = (f === adminArtworkPickerFilter)
+          ? 'px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400 text-slate-950 cursor-pointer'
+          : 'px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-300 hover:text-white cursor-pointer';
+      });
+      renderAdminArtworkOptionsGrid();
+    }
+    window.setAdminArtworkPickerFilter = setAdminArtworkPickerFilter;
+
+    function selectAdminArtworkOption(idx) {
+      const item = adminArtworkOptionsList[idx];
+      if (!item || !item.fullUrl) return;
+      const urlInput = document.getElementById('adminArtworkUrlInput');
+      const previewImg = document.getElementById('adminArtworkPreviewImg');
+      const urlText = document.getElementById('adminArtworkPreviewUrl');
+      if (urlInput) urlInput.value = item.fullUrl;
+      if (previewImg) previewImg.src = item.fullUrl;
+      if (urlText) urlText.textContent = item.fullUrl;
+      renderAdminArtworkOptionsGrid();
+      if (typeof showTheaterToast === 'function') {
+        showTheaterToast(`🖼️ Selected ${item.kind === 'poster' ? 'Poster' : '16:9 Image'}. Click "Save Image" or "Push All" to apply!`);
+      }
+    }
+    window.selectAdminArtworkOption = selectAdminArtworkOption;
+
+    function renderAdminArtworkOptionsGrid() {
+      const grid = document.getElementById('adminArtworkOptionsGrid');
+      const badge = document.getElementById('adminArtworkPickerBadge');
+      if (!grid) return;
+
+      const curUrl = (document.getElementById('adminArtworkUrlInput')?.value || '').trim();
+      const filtered = adminArtworkOptionsList
+        .map((item, idx) => ({ item, idx }))
+        .filter(({ item }) => adminArtworkPickerFilter === 'all' || item.kind === adminArtworkPickerFilter);
+
+      if (badge) badge.textContent = `${filtered.length} / ${adminArtworkOptionsList.length}`;
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="col-span-full py-4 text-center text-[11px] text-slate-500">No TMDB images found for this filter.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(({ item, idx }) => {
+        const isActive = curUrl && (curUrl === item.fullUrl || curUrl.includes(item.filePath));
+        const ringCls = isActive
+          ? 'border-amber-400 ring-2 ring-amber-400 bg-amber-950/30'
+          : 'border-slate-800 hover:border-amber-400/70 bg-slate-900';
+        return `
+          <button type="button" onclick="selectAdminArtworkOption(${idx})" class="relative group rounded-lg overflow-hidden border ${ringCls} transition cursor-pointer text-left p-0.5">
+            <div class="w-full ${item.kind === 'poster' ? 'aspect-[2/3]' : 'aspect-video'} bg-black rounded overflow-hidden">
+              <img src="${escapeHtml(item.thumbUrl)}" alt="${escapeHtml(item.label)}" loading="lazy" referrerpolicy="no-referrer" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
+            </div>
+            <span class="absolute top-1 left-1 px-1 py-0.5 rounded bg-slate-950/85 text-[8px] font-mono font-bold ${item.kind === 'poster' ? 'text-sky-300' : 'text-amber-300'}">${item.kind === 'poster' ? 'POSTER' : '16:9'}</span>
+            ${isActive ? '<span class="absolute top-1 right-1 px-1 py-0.5 rounded bg-amber-400 text-slate-950 text-[8px] font-black">✓</span>' : ''}
+          </button>
+        `;
+      }).join('');
+    }
+    window.renderAdminArtworkOptionsGrid = renderAdminArtworkOptionsGrid;
+
+    async function loadAdminMovieImageOptions(titleOverride, candidateOverride) {
+      const token = ++adminArtworkOptionsToken;
+      const grid = document.getElementById('adminArtworkOptionsGrid');
+      const badge = document.getElementById('adminArtworkPickerBadge');
+      const selectTitle = document.getElementById('adminMediaMovieSelect')?.value?.trim() || '';
+      const searchTitle = document.getElementById('adminMediaSearchTitleInput')?.value?.trim() || '';
+      const rawTitle = (titleOverride || selectTitle || searchTitle).replace(/^🎬\s*/, '').trim();
+      if (!rawTitle || !grid) return;
+
+      const cleanQuery = rawTitle
+        .replace(/^(AHS|American Horror Story)\s*:?\s*s\d+\s*e\d+.*$/i, 'American Horror Story')
+        .replace(/\(\d{4}\)/g, '')
+        .trim();
+      grid.innerHTML = '<div class="col-span-full py-4 text-center text-[11px] text-amber-300/80 font-mono">Loading TMDB posters & backdrops...</div>';
+      if (badge) badge.textContent = '...';
+
+      try {
+        const k = atob('YWIyMDliYWUyZDQ5ZWUxMmQ1YTFmODYwMWMxMWVmNmE=');
+        let tmdbId = candidateOverride && candidateOverride.id;
+        let mediaType = candidateOverride && candidateOverride.isTv ? 'tv' : 'movie';
+
+        if (!tmdbId) {
+          const sRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${k}&query=${encodeURIComponent(cleanQuery)}&include_adult=false`);
+          if (sRes.ok) {
+            const sData = await sRes.json();
+            const cands = (sData.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv');
+            const lowerQ = cleanQuery.toLowerCase();
+            const isTv = /\b(ahs|american\s+horror\s+story|s\d+\s*e\d+|season\s+\d+|episode\s+\d+)\b/i.test(cleanQuery);
+            cands.sort((a, b) => {
+              const sc = (r) => {
+                const n = String(r.title || r.name || '').trim().toLowerCase();
+                const rel = String(r.release_date || r.first_air_date || '');
+                const pop = Number(r.popularity) || 0;
+                return (n === lowerQ ? 300 : 0) + ((isTv ? r.media_type === 'tv' : r.media_type === 'movie') ? 200 : 0) + (n === lowerQ && rel >= '2025-01-01' && pop >= 2.5 ? 150 : 0) + Math.min(pop, 100);
+              };
+              return sc(b) - sc(a);
+            });
+            if (cands[0]) {
+              tmdbId = cands[0].id;
+              mediaType = cands[0].media_type === 'tv' ? 'tv' : 'movie';
+            }
+          }
+        }
+
+        if (token !== adminArtworkOptionsToken) return;
+        const items = [];
+        const seen = new Set();
+        const pushOpt = (fp, kind) => {
+          if (!fp || seen.has(fp)) return;
+          seen.add(fp);
+          items.push({
+            filePath: fp,
+            kind,
+            label: `${cleanQuery} ${kind}`,
+            thumbUrl: `https://image.tmdb.org/t/p/${kind === 'poster' ? 'w342' : 'w780'}${fp}`,
+            fullUrl: `https://image.tmdb.org/t/p/${kind === 'poster' ? 'w780' : 'w1280'}${fp}`
+          });
+        };
+
+        if (tmdbId) {
+          const iRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}/images?api_key=${k}`);
+          if (iRes.ok) {
+            const iData = await iRes.json();
+            (iData.posters || []).slice(0, 14).forEach(p => pushOpt(p.file_path, 'poster'));
+            (iData.backdrops || []).filter(b => (b.width || 1280) >= 900).slice(0, 14).forEach(b => pushOpt(b.file_path, 'backdrop'));
+          }
+        }
+        if (token !== adminArtworkOptionsToken) return;
+        adminArtworkOptionsList = items;
+        renderAdminArtworkOptionsGrid();
+      } catch(e) {
+        if (token === adminArtworkOptionsToken) {
+          grid.innerHTML = '<div class="col-span-full py-4 text-center text-[11px] text-rose-400">Could not load TMDB images.</div>';
+        }
+      }
+    }
+    window.loadAdminMovieImageOptions = loadAdminMovieImageOptions;
 
     function useAdminCandidateArtwork(type) {
       const c = window.currentAdminSelectedCandidate || (window.currentAdminMediaCandidates && window.currentAdminMediaCandidates[0]);

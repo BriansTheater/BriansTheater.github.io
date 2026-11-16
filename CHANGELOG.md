@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.18] - 2026-11-16
+- Added visual TMDB image selector in Admin Media Studio.
+
 ## [4.11.17] - 2026-11-15
 - Matched Twitch middle poster to website movie poster selection.
 
