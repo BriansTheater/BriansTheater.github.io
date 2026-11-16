@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.13] - 2026-11-15
+- Removed duplicate Admin Doors bar from theater stage.
+
 ## [4.11.12] - 2026-11-15
 - Filtered past movies out of Upcoming Lineup Gallery.
 
