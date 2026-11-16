@@ -1,8 +1,9 @@
 {
-  "version": "4.11.14",
+  "version": "4.11.15",
   "releaseDate": "2026-11-15",
-  "title": "Brian's Theater v4.11.14",
+  "title": "Brian's Theater v4.11.15",
   "notes": [
-    "Synced identical scene images across Twitch, website, and app."
+    "Added Compact Bottom Scene Dock for unobstructed background preview.",
+    "Added live Studio toggle for Twitch Theater Title badge."
   ]
 }

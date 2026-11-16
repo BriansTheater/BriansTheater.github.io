@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.11.15] - 2026-11-15
+- Added Compact Bottom Scene Dock for unobstructed background preview.
+- Added live Studio toggle for Twitch Theater Title badge.
+
 ## [4.11.14] - 2026-11-15
 - Synced identical scene images across Twitch, website, and app.
 
