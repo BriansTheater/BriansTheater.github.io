@@ -4893,7 +4893,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.20";
+    const APP_VERSION = "4.11.21";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6346,6 +6346,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.21": [
+        "Added automatic reload for stale and force-updated browser tabs."
+      ],
       "4.11.20": [
         "Fixed Firebase SSE loop re-downloading full database continuously.",
         "Throttled Spotify live sync to track changes only."
@@ -6764,6 +6767,18 @@
                 }
               }
               console.log(`[UpdateDetector] Server has newer version v${vData.version} (local: v${APP_VERSION})`);
+              if ((vData.forceReload === true || document.visibilityState === 'hidden') && !recentlyReloaded) {
+                try {
+                  localStorage.setItem('brian_theater_last_reload_timestamp', String(Date.now()));
+                } catch(e) {}
+                console.log(`[UpdateDetector] Auto-reloading to v${vData.version} (forceReload=${Boolean(vData.forceReload)}, visibility=${document.visibilityState})`);
+                if (waitingServiceWorker) {
+                  waitingServiceWorker.postMessage({ type: 'SKIP_WAITING', action: 'skipWaiting' });
+                }
+                window.location.reload();
+                isCheckingForUpdate = false;
+                return;
+              }
               showAppUpdateToast({
                 version: vData.version,
                 isUpdateAvailable: true,

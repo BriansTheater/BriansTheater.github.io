@@ -1,9 +1,9 @@
 {
-  "version": "4.11.20",
-  "releaseDate": "2026-11-16",
-  "title": "Brian's Theater v4.11.20",
+  "version": "4.11.21",
+  "releaseDate": "2026-11-17",
+  "title": "Brian's Theater v4.11.21",
+  "forceReload": true,
   "notes": [
-    "Stopped Firebase SSE loop from re-downloading full database.",
-    "Throttled Spotify live sync to track changes only."
+    "Added automatic reload for idle and force-updated browser tabs."
   ]
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.21] - 2026-11-17
+- Added automatic reload for stale and force-updated tabs.
+
 ## [4.11.20] - 2026-11-16
 - Fixed Firebase SSE loop re-downloading full database continuously.
 - Throttled Spotify live sync to track changes only.
