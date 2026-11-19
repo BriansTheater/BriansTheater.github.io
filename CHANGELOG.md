@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.24] - 2026-11-18
+- Removed Join Launch Party link from GTA 6 overlay.
+
 ## [4.11.23] - 2026-11-18
 - Removed Brian's Theater title badge from GTA 6 overlay.
 - Auto-hid zero days, hours, and completed countdown boxes.
