@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.11.23] - 2026-11-18
+- Removed Brian's Theater title badge from GTA 6 overlay.
+- Auto-hid zero days, hours, and completed countdown boxes.
+
 ## [4.11.22] - 2026-11-18
 - Added GTA 6 release countdown Twitch overlay and studio.
 - Added 6-Star Wanted HUD, Vice Radar, and 3D Triptych.

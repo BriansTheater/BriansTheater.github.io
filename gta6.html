@@ -154,26 +154,6 @@
   <!-- 5. CENTER STAGE: GTA VI LIVE BILLBOARD -->
   <main class="relative z-20 w-full max-w-4xl mx-auto px-3 sm:px-6 py-3 flex flex-col items-center justify-center text-center">
 
-    <!-- A. TOP THEATER BRANDING BADGE (TOGGLEABLE ON/OFF) -->
-    <header id="gtaBrandHeader" class="mb-2">
-      <div class="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-slate-950/90 border border-pink-500/60 shadow-[0_0_28px_rgba(255,42,133,0.32)] backdrop-blur-md">
-        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-pink-500 via-amber-400 to-cyan-400 flex items-center justify-center text-slate-950 font-black text-base sm:text-xl shrink-0">
-          <span>🌴</span>
-        </div>
-        <div class="flex flex-col text-left">
-          <div class="flex items-center gap-1.5">
-            <h1 id="gtaBrandTitleText" class="text-xs sm:text-base md:text-lg font-black tracking-wider uppercase text-amber-300 leading-tight">
-              BRIAN'S THEATER • VICE CITY HQ
-            </h1>
-            <span class="text-sm sm:text-base">✨</span>
-          </div>
-          <span class="text-[8px] sm:text-[10px] text-cyan-300 font-mono tracking-widest uppercase font-bold">
-            GRAND THEFT AUTO VI • SPECIAL LAUNCH EDITION
-          </span>
-        </div>
-      </div>
-    </header>
-
     <!-- B. RELEASE HEADLINE & SUBTITLE -->
     <section class="flex flex-col items-center gap-0.5 mb-2.5 w-full px-2">
       <span id="gtaStatusBadge" class="text-[10px] sm:text-xs font-mono font-extrabold tracking-[0.26em] text-cyan-300 uppercase">
@@ -260,21 +240,21 @@
           🌴 LEONIDA LAUNCH DOORS OPEN IN
         </span>
 
-        <!-- 4-Box Countdown Grid -->
+        <!-- 4-Box Countdown Grid (Auto-hides leading 00 DAYS / 00 HOURS and hides completely when countdown finishes) -->
         <div id="gtaCountdownGrid" class="grid grid-cols-4 gap-2 sm:gap-3.5 w-full">
-          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
+          <div id="gtaCdBoxDays" class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
             <span id="gtaCdDays" class="text-xl sm:text-4xl font-mono font-black text-cyan-300 drop-shadow-[0_0_14px_rgba(0,240,255,0.65)]">00</span>
             <span class="text-[8px] sm:text-[10px] font-mono text-pink-300 tracking-widest uppercase mt-0.5">DAYS</span>
           </div>
-          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
+          <div id="gtaCdBoxHours" class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
             <span id="gtaCdHours" class="text-xl sm:text-4xl font-mono font-black text-cyan-300 drop-shadow-[0_0_14px_rgba(0,240,255,0.65)]">00</span>
             <span class="text-[8px] sm:text-[10px] font-mono text-pink-300 tracking-widest uppercase mt-0.5">HOURS</span>
           </div>
-          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
+          <div id="gtaCdBoxMins" class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
             <span id="gtaCdMins" class="text-xl sm:text-4xl font-mono font-black text-cyan-300 drop-shadow-[0_0_14px_rgba(0,240,255,0.65)]">00</span>
             <span class="text-[8px] sm:text-[10px] font-mono text-pink-300 tracking-widest uppercase mt-0.5">MINS</span>
           </div>
-          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-amber-400/55 flex flex-col items-center">
+          <div id="gtaCdBoxSecs" class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-amber-400/55 flex flex-col items-center">
             <span id="gtaCdSecs" class="text-xl sm:text-4xl font-mono font-black text-amber-300 drop-shadow-[0_0_14px_rgba(255,209,92,0.65)]">00</span>
             <span class="text-[8px] sm:text-[10px] font-mono text-amber-200 tracking-widest uppercase mt-0.5">SECS</span>
           </div>
@@ -361,21 +341,17 @@
     <!-- 2. HUD & STREAM STATE TOGGLES -->
     <div class="flex flex-col gap-1.5">
       <span class="text-[10px] font-mono font-bold text-cyan-300 uppercase">2. GTA VI HUD & Stream Overlays:</span>
-      <div class="grid grid-cols-2 gap-1.5">
-        <button type="button" id="gtaToggleBtn-wanted" onclick="gtaToggleSetting('showWantedHud')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
-          <span>⭐ 6-Star HUD</span>
+      <div class="grid grid-cols-3 gap-1.5">
+        <button type="button" id="gtaToggleBtn-wanted" onclick="gtaToggleSetting('showWantedHud')" class="studio-pill active px-2 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>⭐ 6-Star</span>
           <span id="gtaBadge-wanted" class="text-[9px] font-mono">ON</span>
         </button>
-        <button type="button" id="gtaToggleBtn-radar" onclick="gtaToggleSetting('showRadarHud')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
-          <span>🗺️ Vice Radar</span>
+        <button type="button" id="gtaToggleBtn-radar" onclick="gtaToggleSetting('showRadarHud')" class="studio-pill active px-2 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>🗺️ Radar</span>
           <span id="gtaBadge-radar" class="text-[9px] font-mono">ON</span>
         </button>
-        <button type="button" id="gtaToggleBtn-title" onclick="gtaToggleSetting('showTheaterTitle')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
-          <span>🏷️ Title Badge</span>
-          <span id="gtaBadge-title" class="text-[9px] font-mono">ON</span>
-        </button>
-        <button type="button" id="gtaToggleBtn-trailer" onclick="gtaToggleSetting('trailerLoop')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
-          <span>🎬 Trailer Loop</span>
+        <button type="button" id="gtaToggleBtn-trailer" onclick="gtaToggleSetting('trailerLoop')" class="studio-pill px-2 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>🎬 Trailer</span>
           <span id="gtaBadge-trailer" class="text-[9px] font-mono">OFF</span>
         </button>
       </div>
@@ -453,13 +429,12 @@
     <div class="w-px h-5 bg-slate-700/80 shrink-0"></div>
     <button type="button" id="gtaMiniWantedBtn" onclick="gtaToggleSetting('showWantedHud')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0 whitespace-nowrap">⭐ 6-Star: ON</button>
     <button type="button" id="gtaMiniRadarBtn" onclick="gtaToggleSetting('showRadarHud')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0 whitespace-nowrap">🗺️ Radar: ON</button>
-    <button type="button" id="gtaMiniTitleBtn" onclick="gtaToggleSetting('showTheaterTitle')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0 whitespace-nowrap">🏷️ Title: ON</button>
     <button type="button" id="gtaMiniSaveBtn" onclick="gtaBroadcastToLive()" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-pink-500 to-cyan-400 text-slate-950 font-black text-[10px] uppercase tracking-wider cursor-pointer shrink-0 whitespace-nowrap">📡 Save Live</button>
     <button type="button" id="btnGtaExpandFullStudio" onclick="gtaSetMiniDockMode(false)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-[10px] cursor-pointer shrink-0 whitespace-nowrap">⤢ Full Studio</button>
   </div>
 
   <script>
-    const GTA6_OVERLAY_VERSION = "4.11.22";
+    const GTA6_OVERLAY_VERSION = "4.11.23";
     window.GTA6_OVERLAY_VERSION = GTA6_OVERLAY_VERSION;
     const FIREBASE_GTA6_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync/gta6Overlay.json";
     const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
@@ -740,21 +715,11 @@
           : "hidden";
       }
 
-      const brandEl = document.getElementById("gtaBrandHeader");
-      if (brandEl) brandEl.classList.toggle("hidden", !gtaState.showTheaterTitle);
-
       // 5. Subtitle & Countdown vs Live Mode
       const subEl = document.getElementById("gtaSubtitleText");
       if (subEl) subEl.textContent = gtaState.subtitle || DEFAULT_STATE.subtitle;
 
-      const isLive = gtaState.launchState === "live";
-      const cdGrid = document.getElementById("gtaCountdownGrid");
-      const liveBanner = document.getElementById("gtaLaunchLiveBanner");
-      const cdHeading = document.getElementById("gtaCountdownHeading");
-      if (cdGrid) cdGrid.classList.toggle("hidden", isLive);
-      if (liveBanner) liveBanner.classList.toggle("hidden", !isLive);
-      if (cdHeading) cdHeading.textContent = isLive ? "🌴 LEONIDA DOORS ARE OPEN" : "🌴 LEONIDA LAUNCH DOORS OPEN IN";
-
+      updateGtaCountdown();
       syncGtaStudioControls(pair);
     }
 
@@ -796,7 +761,6 @@
 
       syncToggle("showWantedHud", "gtaToggleBtn-wanted", "gtaBadge-wanted", "gtaMiniWantedBtn", "⭐ 6-Star");
       syncToggle("showRadarHud", "gtaToggleBtn-radar", "gtaBadge-radar", "gtaMiniRadarBtn", "🗺️ Radar");
-      syncToggle("showTheaterTitle", "gtaToggleBtn-title", "gtaBadge-title", "gtaMiniTitleBtn", "🏷️ Title");
       syncToggle("trailerLoop", "gtaToggleBtn-trailer", "gtaBadge-trailer", "", "");
 
       const cdBtn = document.getElementById("gtaStateBtn-countdown");
@@ -1049,14 +1013,38 @@
     }
     window.gtaSetAudioTrack = gtaSetAudioTrack;
 
-    // Live Countdown Ticker
+    // Live Countdown Ticker (Auto-hides 00 DAYS / 00 HOURS and hides entire countdown when 0 days 0 hrs 0 mins 0 secs)
     function updateGtaCountdown() {
       const targetMs = Date.parse(gtaState.targetIso || DEFAULT_STATE.targetIso) || Date.parse("2026-11-19T00:00:00-08:00");
-      const diff = Math.max(0, targetMs - Date.now());
+      const rawDiff = targetMs - Date.now();
+      const diff = Math.max(0, rawDiff);
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
+
+      const isCompleteOrLive = (gtaState.launchState === "live") || (diff <= 0);
+      const cdGrid = document.getElementById("gtaCountdownGrid");
+      const liveBanner = document.getElementById("gtaLaunchLiveBanner");
+      const cdHeading = document.getElementById("gtaCountdownHeading");
+
+      if (cdGrid) cdGrid.classList.toggle("hidden", isCompleteOrLive);
+      if (liveBanner) liveBanner.classList.toggle("hidden", !isCompleteOrLive);
+      if (cdHeading) {
+        cdHeading.classList.toggle("hidden", isCompleteOrLive);
+        cdHeading.textContent = "🌴 LEONIDA LAUNCH DOORS OPEN IN";
+      }
+
+      if (!isCompleteOrLive && cdGrid) {
+        const boxDays = document.getElementById("gtaCdBoxDays");
+        const boxHours = document.getElementById("gtaCdBoxHours");
+        const hideDays = (days === 0);
+        const hideHours = (days === 0 && hours === 0);
+        if (boxDays) boxDays.classList.toggle("hidden", hideDays);
+        if (boxHours) boxHours.classList.toggle("hidden", hideHours);
+        const visibleCols = hideHours ? 2 : (hideDays ? 3 : 4);
+        cdGrid.className = `grid grid-cols-${visibleCols} gap-2 sm:gap-3.5 w-full`;
+      }
 
       const pad = (n) => String(n).padStart(2, "0");
       const dEl = document.getElementById("gtaCdDays");
