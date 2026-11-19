@@ -1,9 +1,10 @@
 {
-  "version": "4.11.21",
-  "releaseDate": "2026-11-17",
-  "title": "Brian's Theater v4.11.21",
+  "version": "4.11.22",
+  "releaseDate": "2026-11-18",
+  "title": "Brian's Theater v4.11.22",
   "forceReload": true,
   "notes": [
-    "Added automatic reload for idle and force-updated browser tabs."
+    "Added GTA 6 release countdown Twitch overlay and studio.",
+    "Added 6-Star Wanted HUD, Vice Radar, and 3D Triptych."
   ]
 }

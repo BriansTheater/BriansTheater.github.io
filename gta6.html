@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌴 Brian's Theater • GTA VI Launch HQ (1080p Twitch Overlay)</title>
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+
+    :root {
+      --vice-pink: 255, 42, 133;
+      --vice-cyan: 0, 240, 255;
+      --vice-gold: 255, 209, 92;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background-color: #05020e;
+      color: #f8fafc;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .vice-title-gradient {
+      background: linear-gradient(90deg, #ff2a85 0%, #ffd15c 48%, #00f0ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 24px rgba(255, 42, 133, 0.55));
+    }
+
+    .studio-pill {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      color: #cbd5e1;
+      transition: all 0.18s ease;
+    }
+    .studio-pill:hover {
+      border-color: rgba(0, 240, 255, 0.65);
+      color: #ffffff;
+    }
+    .studio-pill.active {
+      background: linear-gradient(90deg, rgba(255, 42, 133, 0.92), rgba(255, 140, 43, 0.92));
+      border-color: #ffd15c;
+      color: #05020e;
+      font-weight: 900;
+      box-shadow: 0 0 16px rgba(255, 42, 133, 0.45);
+    }
+
+    /* 3D Triptych Wing Perspectives on Desktop / 1080p */
+    .triptych-wing-left {
+      transform: perspective(1150px) rotateY(18deg);
+      transform-origin: left center;
+    }
+    .triptych-wing-right {
+      transform: perspective(1150px) rotateY(-18deg);
+      transform-origin: right center;
+    }
+
+    @keyframes starPulse {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 209, 92, 0.75)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 18px rgba(255, 42, 133, 0.95)); transform: scale(1.06); }
+    }
+    .wanted-star-active {
+      animation: starPulse 2.4s infinite ease-in-out;
+    }
+
+    @keyframes radarBlip {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: 0.55; }
+    }
+    .radar-blip {
+      animation: radarBlip 1.6s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="w-full min-h-screen relative flex items-center justify-center select-none overflow-x-hidden">
+
+  <!-- 1. FULL-BLEED VICE CITY / LEONIDA SCENE BACKDROP -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <img
+      id="gtaBackdropImg"
+      src=""
+      alt="Vice City Backdrop"
+      referrerpolicy="no-referrer"
+      class="w-full h-full object-cover transition-all duration-700"
+      style="filter: blur(6px) brightness(0.46) saturate(1.28); transform: scale(1.05);"
+    />
+    <div id="gtaSpotlightLeft" class="absolute inset-0" style="background: linear-gradient(135deg, rgba(255, 42, 133, 0.28) 0%, rgba(255, 140, 43, 0.08) 45%, transparent 70%);"></div>
+    <div id="gtaSpotlightRight" class="absolute inset-0" style="background: linear-gradient(225deg, rgba(0, 240, 255, 0.25) 0%, rgba(168, 85, 247, 0.08) 45%, transparent 70%);"></div>
+    <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 45%, rgba(255, 42, 133, 0.10) 0%, rgba(4, 2, 14, 0.84) 78%);"></div>
+  </div>
+
+  <!-- 2. 6-STAR LEONIDA WANTED LEVEL HUD (TOP-RIGHT, TOGGLEABLE) -->
+  <div
+    id="gtaWantedHud"
+    class="fixed top-3 right-3 sm:top-5 sm:right-6 z-30 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-2xl bg-slate-950/90 border-2 border-amber-400/80 shadow-[0_0_28px_rgba(255,209,92,0.38)] backdrop-blur-md flex flex-col items-end gap-0.5 pointer-events-none"
+  >
+    <span class="text-[8px] sm:text-[10px] font-mono font-extrabold tracking-[0.2em] text-cyan-300 uppercase">LEONIDA WANTED LEVEL • HYPE</span>
+    <div id="gtaWantedStarsRow" class="flex items-center gap-1 sm:gap-1.5 text-lg sm:text-2xl text-amber-300 wanted-star-active">
+      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+    </div>
+  </div>
+
+  <!-- 3. VICE BEACH GPS RADAR MINIMAP HUD (BOTTOM-LEFT, TOGGLEABLE) -->
+  <div
+    id="gtaRadarHud"
+    class="hidden lg:flex fixed bottom-5 left-6 z-30 w-52 h-36 rounded-2xl bg-slate-950/90 border-2 border-cyan-400/80 shadow-[0_0_28px_rgba(0,240,255,0.35)] backdrop-blur-md p-2.5 flex-col justify-between font-mono pointer-events-none"
+  >
+    <div class="flex items-center justify-between text-[9px] font-extrabold text-cyan-300 tracking-wider">
+      <span id="gtaRadarLocationText">GPS: OCEAN BEACH</span>
+      <span class="text-pink-400">LEONIDA</span>
+    </div>
+    <div class="relative flex-1 my-1.5 rounded-lg overflow-hidden border border-cyan-500/35" style="background: radial-gradient(circle, #083344 0%, #020617 85%);">
+      <div class="absolute inset-0" style="background: linear-gradient(90deg, transparent 49%, rgba(0,240,255,0.28) 50%, transparent 51%), linear-gradient(0deg, transparent 49%, rgba(0,240,255,0.28) 50%, transparent 51%);"></div>
+      <svg class="absolute inset-0 w-full h-full opacity-45" viewBox="0 0 200 100">
+        <path d="M10,80 Q65,40 120,55 T190,25" fill="none" stroke="#00f0ff" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <path d="M30,15 L85,90 M135,10 L160,92" fill="none" stroke="#ff2a85" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+      <div class="radar-blip absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_12px_#ff2a85]"></div>
+    </div>
+    <!-- GTA Health / Armor / Special Stamina Bar -->
+    <div class="w-full h-1.5 rounded-full overflow-hidden flex gap-0.5 bg-slate-900">
+      <div class="h-full bg-emerald-400" style="width: 50%"></div>
+      <div class="h-full bg-cyan-400" style="width: 30%"></div>
+      <div class="h-full bg-pink-500" style="width: 20%"></div>
+    </div>
+  </div>
+
+  <!-- 4. 3D TRIPTYCH LEFT & RIGHT WING SCREENS (VISIBLE IN DEMO C ON LG+ VIEWPORTS) -->
+  <div id="gtaTriptychWingsOverlay" class="hidden lg:block fixed inset-0 z-10 pointer-events-none">
+    <!-- Left Wing -->
+    <div class="absolute left-6 xl:left-12 top-[29%] w-[26vw] max-w-[465px] aspect-video">
+      <div class="triptych-wing-left w-full h-full rounded-2xl overflow-hidden border-2 border-cyan-400/75 shadow-[0_18px_50px_rgba(0,0,0,0.92),0_0_35px_rgba(0,240,255,0.28)] bg-slate-950">
+        <img id="gtaWingLeftImg" src="" alt="Vice City Left Wing Scene" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
+      </div>
+    </div>
+    <!-- Right Wing -->
+    <div class="absolute right-6 xl:right-12 top-[29%] w-[26vw] max-w-[465px] aspect-video">
+      <div class="triptych-wing-right w-full h-full rounded-2xl overflow-hidden border-2 border-pink-500/75 shadow-[0_18px_50px_rgba(0,0,0,0.92),0_0_35px_rgba(255,42,133,0.28)] bg-slate-950">
+        <img id="gtaWingRightImg" src="" alt="Vice City Right Wing Scene" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. CENTER STAGE: GTA VI LIVE BILLBOARD -->
+  <main class="relative z-20 w-full max-w-4xl mx-auto px-3 sm:px-6 py-3 flex flex-col items-center justify-center text-center">
+
+    <!-- A. TOP THEATER BRANDING BADGE (TOGGLEABLE ON/OFF) -->
+    <header id="gtaBrandHeader" class="mb-2">
+      <div class="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-slate-950/90 border border-pink-500/60 shadow-[0_0_28px_rgba(255,42,133,0.32)] backdrop-blur-md">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-pink-500 via-amber-400 to-cyan-400 flex items-center justify-center text-slate-950 font-black text-base sm:text-xl shrink-0">
+          <span>🌴</span>
+        </div>
+        <div class="flex flex-col text-left">
+          <div class="flex items-center gap-1.5">
+            <h1 id="gtaBrandTitleText" class="text-xs sm:text-base md:text-lg font-black tracking-wider uppercase text-amber-300 leading-tight">
+              BRIAN'S THEATER • VICE CITY HQ
+            </h1>
+            <span class="text-sm sm:text-base">✨</span>
+          </div>
+          <span class="text-[8px] sm:text-[10px] text-cyan-300 font-mono tracking-widest uppercase font-bold">
+            GRAND THEFT AUTO VI • SPECIAL LAUNCH EDITION
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- B. RELEASE HEADLINE & SUBTITLE -->
+    <section class="flex flex-col items-center gap-0.5 mb-2.5 w-full px-2">
+      <span id="gtaStatusBadge" class="text-[10px] sm:text-xs font-mono font-extrabold tracking-[0.26em] text-cyan-300 uppercase">
+        OFFICIAL WORLDWIDE RELEASE COUNTDOWN
+      </span>
+      <h2 id="gtaMainTitle" class="text-2xl sm:text-5xl md:text-6xl font-black tracking-tight uppercase vice-title-gradient leading-tight max-w-full">
+        GRAND THEFT AUTO VI
+      </h2>
+      <p id="gtaSubtitleText" class="text-xs sm:text-sm md:text-base text-pink-100/90 font-medium tracking-wide">
+        Thursday, Nov 19, 2026 • Midnight Launch Stream • Vice City, Leonida
+      </p>
+    </section>
+
+    <!-- C. MULTI-MODE CENTER HERO STAGE (DEMO A: 16:9 IMAX | DEMO B: HEIST SPLIT | DEMO C: 3D TRIPTYCH CENTER) -->
+    <section class="relative w-full max-w-2xl">
+      <div
+        id="gtaHeroCardFrame"
+        class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-950 border-2 border-pink-500/80 shadow-[0_0_45px_rgba(255,42,133,0.40),0_0_80px_rgba(0,240,255,0.20),0_25px_60px_rgba(0,0,0,0.92)]"
+      >
+        <!-- MODE A: 16:9 IMAX WIDESCREEN STAGE -->
+        <div id="gtaPaneDemoA" class="hidden relative w-full h-full">
+          <img id="gtaDemoAHeroImg" src="" alt="GTA VI 16:9 Hero Art" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
+          <div class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/85 border border-cyan-400/70 text-[10px] font-mono font-extrabold text-cyan-300">
+            🎬 VICE CITY 16:9 IMAX STAGE
+          </div>
+        </div>
+
+        <!-- MODE B: LEONIDA HEIST DOSSIER SPLIT CARD -->
+        <div id="gtaPaneDemoB" class="hidden relative w-full h-full p-2.5 sm:p-3 flex items-center gap-3 bg-slate-950/95">
+          <div class="h-full aspect-[2/3] shrink-0 rounded-xl overflow-hidden border-2 border-pink-500/80 shadow-[0_0_24px_rgba(255,42,133,0.35)] bg-black flex items-center justify-center">
+            <img id="gtaDemoBPosterImg" src="" alt="GTA VI Vertical Poster" referrerpolicy="no-referrer" class="max-h-full max-w-full object-contain" />
+          </div>
+          <div class="flex-1 h-full flex flex-col gap-2 min-w-0">
+            <div class="relative flex-1 rounded-xl overflow-hidden border border-cyan-400/75 bg-black">
+              <img id="gtaDemoBSceneImg" src="" alt="GTA VI Heist Scene" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
+              <div class="absolute top-2 right-2 px-2 py-0.5 rounded bg-slate-950/90 border border-amber-400/70 text-[9px] font-mono font-black text-amber-300">
+                📡 LIVE HEIST DOSSIER
+              </div>
+            </div>
+            <div class="px-3 py-1.5 rounded-xl bg-slate-900/95 border border-cyan-500/40 flex items-center justify-between gap-2 text-[9px] sm:text-[10px] font-mono text-pink-100">
+              <span class="truncate">📍 LEONIDA • VICE-DALE COUNTY</span>
+              <span class="text-cyan-300 font-extrabold shrink-0">STATUS: LAUNCH READY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE C: 3D TRIPTYCH UNCROPPED CENTER POSTER -->
+        <div id="gtaPaneDemoC" class="relative w-full h-full flex items-center justify-center p-2.5">
+          <img
+            id="gtaDemoCBlurImg"
+            src=""
+            alt=""
+            referrerpolicy="no-referrer"
+            class="absolute inset-0 w-full h-full object-cover scale-110"
+            style="filter: blur(20px) brightness(0.55) saturate(1.4);"
+          />
+          <div class="absolute inset-0" style="background: radial-gradient(circle at center, rgba(255, 42, 133, 0.22) 0%, rgba(5, 2, 14, 0.75) 75%);"></div>
+          <img
+            id="gtaDemoCPosterImg"
+            src=""
+            alt="GTA VI Center Poster"
+            referrerpolicy="no-referrer"
+            class="relative z-10 max-h-full max-w-full object-contain rounded-xl border-2 border-amber-300/80 shadow-[0_14px_40px_rgba(0,0,0,0.95)]"
+          />
+        </div>
+
+        <!-- OPTIONAL YOUTUBE TRAILER OVERLAY (WHEN TRAILER MODE IS ACTIVE) -->
+        <div id="gtaTrailerOverlay" class="hidden absolute inset-0 z-20 bg-black">
+          <iframe
+            id="gtaTrailerIframe"
+            class="w-full h-full border-0"
+            src="about:blank"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- D. COUNTDOWN & LAUNCH PARTY CTA PANEL -->
+    <section class="w-full max-w-2xl mt-3">
+      <div class="p-3 sm:p-4 rounded-2xl bg-slate-950/90 border-2 border-cyan-400/55 shadow-[0_14px_40px_rgba(0,0,0,0.88),0_0_30px_rgba(0,240,255,0.20)] backdrop-blur-xl flex flex-col items-center gap-2.5">
+        <span id="gtaCountdownHeading" class="text-[10px] sm:text-xs font-mono font-extrabold tracking-[0.28em] text-amber-300 uppercase">
+          🌴 LEONIDA LAUNCH DOORS OPEN IN
+        </span>
+
+        <!-- 4-Box Countdown Grid -->
+        <div id="gtaCountdownGrid" class="grid grid-cols-4 gap-2 sm:gap-3.5 w-full">
+          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
+            <span id="gtaCdDays" class="text-xl sm:text-4xl font-mono font-black text-cyan-300 drop-shadow-[0_0_14px_rgba(0,240,255,0.65)]">00</span>
+            <span class="text-[8px] sm:text-[10px] font-mono text-pink-300 tracking-widest uppercase mt-0.5">DAYS</span>
+          </div>
+          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
+            <span id="gtaCdHours" class="text-xl sm:text-4xl font-mono font-black text-cyan-300 drop-shadow-[0_0_14px_rgba(0,240,255,0.65)]">00</span>
+            <span class="text-[8px] sm:text-[10px] font-mono text-pink-300 tracking-widest uppercase mt-0.5">HOURS</span>
+          </div>
+          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-pink-500/45 flex flex-col items-center">
+            <span id="gtaCdMins" class="text-xl sm:text-4xl font-mono font-black text-cyan-300 drop-shadow-[0_0_14px_rgba(0,240,255,0.65)]">00</span>
+            <span class="text-[8px] sm:text-[10px] font-mono text-pink-300 tracking-widest uppercase mt-0.5">MINS</span>
+          </div>
+          <div class="py-2 px-1 sm:py-2.5 sm:px-3 rounded-xl bg-slate-900/95 border border-amber-400/55 flex flex-col items-center">
+            <span id="gtaCdSecs" class="text-xl sm:text-4xl font-mono font-black text-amber-300 drop-shadow-[0_0_14px_rgba(255,209,92,0.65)]">00</span>
+            <span class="text-[8px] sm:text-[10px] font-mono text-amber-200 tracking-widest uppercase mt-0.5">SECS</span>
+          </div>
+        </div>
+
+        <!-- Launch Live Banner (Shown when Doors Open / Launch Live mode is toggled) -->
+        <div id="gtaLaunchLiveBanner" class="hidden w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-amber-500 to-cyan-500 text-slate-950 font-mono font-black text-sm sm:text-lg tracking-wider uppercase shadow-[0_0_30px_rgba(255,42,133,0.65)]">
+          🚀 WELCOME TO VICE CITY • LAUNCH STREAM IS LIVE NOW!
+        </div>
+
+        <!-- Join Stream CTA Bar -->
+        <a
+          id="gtaJoinCtaLink"
+          href="http://tiny.cc/BriansTheater"
+          target="_blank"
+          rel="noopener"
+          class="w-full py-2.5 px-4 rounded-xl border border-amber-300/70 bg-gradient-to-r from-pink-500/25 via-purple-600/25 to-cyan-500/25 hover:from-pink-500/40 hover:to-cyan-500/40 transition flex items-center justify-center gap-2.5 text-xs sm:text-base font-mono font-black tracking-wider text-white"
+        >
+          <span>🎮</span>
+          <span id="gtaCtaTextDisplay">JOIN LAUNCH PARTY: TINY.CC/BRIANSTHEATER</span>
+          <span>✨</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- E. VICE FM SYNTHWAVE RADIO PILL -->
+    <div class="mt-2.5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-950/90 border border-pink-500/50 text-[10px] sm:text-xs font-mono text-pink-100 shadow-lg">
+      <span>🎧</span>
+      <span class="text-cyan-300 font-extrabold">VICE FM SYNTHWAVE RADIO</span>
+      <span>•</span>
+      <span id="gtaRadioNowPlayingText" class="text-slate-300">🔇 Radio Standby (Studio Audio Controls)</span>
+    </div>
+  </main>
+
+  <!-- 6. FLOATING STUDIO GEAR BUTTON -->
+  <button
+    type="button"
+    id="btnToggleGtaStudio"
+    onclick="toggleGtaStudioDrawer()"
+    title="Open GTA VI Layout Studio (Shift + S)"
+    class="hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-xl bg-slate-950/90 hover:bg-slate-900 border-2 border-pink-500/70 text-amber-300 shadow-[0_0_20px_rgba(255,42,133,0.45)] items-center justify-center text-lg cursor-pointer transition active:scale-95"
+  >
+    ⚙️
+  </button>
+
+  <!-- 7. FULL GTA VI LAYOUT STUDIO DRAWER -->
+  <aside
+    id="gtaStudioDrawer"
+    class="hidden fixed top-14 right-3 sm:right-4 z-50 w-80 sm:w-96 max-h-[84vh] overflow-y-auto p-4 rounded-2xl bg-slate-950/95 backdrop-blur-xl border-2 border-pink-500/60 shadow-[0_15px_50px_rgba(0,0,0,0.95)] flex flex-col gap-3 text-left font-sans"
+  >
+    <div class="flex items-center justify-between border-b border-pink-500/30 pb-2">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🌴</span>
+        <div class="flex flex-col">
+          <span class="text-xs font-mono font-black text-amber-300 uppercase tracking-wider">GTA VI Launch Studio</span>
+          <span class="text-[9px] font-mono text-cyan-300">Vice City 1080p Stream Designer</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="twitch.html?studio=1" class="text-cyan-300 hover:text-white text-[10px] font-mono font-bold px-2 py-1 rounded-lg bg-slate-900 border border-cyan-500/40" title="Switch to Movie Theater Studio">🎬 Theater</a>
+        <button type="button" id="btnGtaMinimizeToMiniDock" onclick="gtaSetMiniDockMode(true)" class="text-amber-300 hover:text-amber-200 text-[10px] font-mono font-bold px-2 py-1 rounded-lg bg-slate-900 border border-amber-500/40 cursor-pointer" title="Collapse Studio to Compact Bottom Scene Dock">⬇ Mini Dock</button>
+        <button type="button" onclick="toggleGtaStudioDrawer(false)" class="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 rounded-lg bg-slate-900 border border-slate-700 cursor-pointer">✕</button>
+      </div>
+    </div>
+
+    <!-- 1. LAYOUT CONCEPT SWITCHER (A / B / C) & SCENE STEPPER -->
+    <div class="flex flex-col gap-1.5 p-2.5 rounded-xl bg-pink-950/25 border border-pink-500/35">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-bold text-amber-300 uppercase">1. Layout Mode (Concepts 1-3):</span>
+        <span id="gtaStudioModeBadge" class="text-[9px] font-mono font-bold text-cyan-300">C: 3D TRIPTYCH</span>
+      </div>
+      <div class="grid grid-cols-3 gap-1">
+        <button type="button" id="gtaModeBtn-demoA" onclick="gtaSetLayoutMode('demoA')" class="studio-pill px-2 py-1.5 rounded-lg text-[10px] font-bold cursor-pointer truncate">🅰️ A: IMAX 16:9</button>
+        <button type="button" id="gtaModeBtn-demoB" onclick="gtaSetLayoutMode('demoB')" class="studio-pill px-2 py-1.5 rounded-lg text-[10px] font-bold cursor-pointer truncate">🅱️ B: Heist Split</button>
+        <button type="button" id="gtaModeBtn-demoC" onclick="gtaSetLayoutMode('demoC')" class="studio-pill active px-2 py-1.5 rounded-lg text-[10px] font-bold cursor-pointer truncate">🅲️ C: 3D Triptych</button>
+      </div>
+      <div class="flex items-center gap-1 pt-1 border-t border-pink-500/20">
+        <button type="button" id="gtaStudioScenePrevBtn" onclick="gtaStepSceneVariant(-1)" class="studio-pill px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer">◀ Scene</button>
+        <span id="gtaStudioSceneLabel" class="flex-1 text-center text-[10px] font-mono text-amber-200 font-bold truncate">Scene Set #1 / 12</span>
+        <button type="button" id="gtaStudioSceneNextBtn" onclick="gtaStepSceneVariant(1)" class="studio-pill px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer">Scene ▶</button>
+      </div>
+    </div>
+
+    <!-- 2. HUD & STREAM STATE TOGGLES -->
+    <div class="flex flex-col gap-1.5">
+      <span class="text-[10px] font-mono font-bold text-cyan-300 uppercase">2. GTA VI HUD & Stream Overlays:</span>
+      <div class="grid grid-cols-2 gap-1.5">
+        <button type="button" id="gtaToggleBtn-wanted" onclick="gtaToggleSetting('showWantedHud')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>⭐ 6-Star HUD</span>
+          <span id="gtaBadge-wanted" class="text-[9px] font-mono">ON</span>
+        </button>
+        <button type="button" id="gtaToggleBtn-radar" onclick="gtaToggleSetting('showRadarHud')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>🗺️ Vice Radar</span>
+          <span id="gtaBadge-radar" class="text-[9px] font-mono">ON</span>
+        </button>
+        <button type="button" id="gtaToggleBtn-title" onclick="gtaToggleSetting('showTheaterTitle')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>🏷️ Title Badge</span>
+          <span id="gtaBadge-title" class="text-[9px] font-mono">ON</span>
+        </button>
+        <button type="button" id="gtaToggleBtn-trailer" onclick="gtaToggleSetting('trailerLoop')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between cursor-pointer">
+          <span>🎬 Trailer Loop</span>
+          <span id="gtaBadge-trailer" class="text-[9px] font-mono">OFF</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-1.5 mt-0.5">
+        <button type="button" id="gtaStateBtn-countdown" onclick="gtaSetLaunchState('countdown')" class="studio-pill active px-2.5 py-1.5 rounded-xl text-[10px] font-bold cursor-pointer text-center">⏳ Countdown Mode</button>
+        <button type="button" id="gtaStateBtn-live" onclick="gtaSetLaunchState('live')" class="studio-pill px-2.5 py-1.5 rounded-xl text-[10px] font-bold cursor-pointer text-center">🚀 Launch Live Now</button>
+      </div>
+    </div>
+
+    <!-- 3. VISUAL POSTER & SCENE SELECTOR GRID -->
+    <div class="flex flex-col gap-1.5 pt-2 border-t border-slate-800">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-bold text-amber-300 uppercase">3. Choose Main Poster / Scene:</span>
+        <div class="flex items-center gap-1">
+          <button type="button" id="gtaGalleryTab-posters" onclick="gtaSwitchGalleryTab('posters')" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400 text-slate-950 cursor-pointer">Posters</button>
+          <button type="button" id="gtaGalleryTab-scenes" onclick="gtaSwitchGalleryTab('scenes')" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-300 cursor-pointer">16:9 Scenes</button>
+        </div>
+      </div>
+      <div id="gtaArtworkPickerGrid" class="grid grid-cols-3 gap-1.5 max-h-[165px] overflow-y-auto pr-1"></div>
+      <div class="flex gap-1.5 mt-0.5">
+        <input type="text" id="gtaCustomPosterInput" placeholder="Paste custom poster/image URL..." class="flex-1 px-2.5 py-1 text-[10px] rounded-lg bg-slate-900 border border-slate-700 text-slate-100 font-mono" />
+        <button type="button" onclick="gtaApplyCustomPosterUrl()" class="px-2.5 py-1 rounded-lg bg-pink-500 hover:bg-pink-400 text-slate-950 font-black text-[10px] cursor-pointer shrink-0">Apply</button>
+      </div>
+    </div>
+
+    <!-- 4. LAUNCH TARGET DATE/TIME & HEADLINE -->
+    <div class="flex flex-col gap-1.5 pt-2 border-t border-slate-800">
+      <span class="text-[10px] font-mono font-bold text-cyan-300 uppercase">4. Launch Date & Headline:</span>
+      <div class="flex gap-1.5">
+        <input type="datetime-local" id="gtaTargetDateInput" onchange="gtaUpdateTargetDate(this.value)" class="flex-1 px-2.5 py-1 text-[10px] rounded-lg bg-slate-900 border border-slate-700 text-slate-100 font-mono" />
+      </div>
+      <input type="text" id="gtaCustomSubtitleInput" oninput="gtaUpdateSubtitle(this.value)" placeholder="Subtitle / Showtime text..." class="w-full px-2.5 py-1 text-[10px] rounded-lg bg-slate-900 border border-slate-700 text-slate-100 font-mono" />
+    </div>
+
+    <!-- 5. VICE FM SYNTHWAVE AUDIO ENGINE (WITH OFF) -->
+    <div class="flex flex-col gap-1.5 pt-2 border-t border-slate-800">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-bold text-pink-300 uppercase">5. Vice FM Synthwave Audio:</span>
+        <span id="gtaAudioStatusBadge" class="text-[9px] font-mono text-slate-400 font-bold">🔇 OFF</span>
+      </div>
+      <div class="grid grid-cols-4 gap-1">
+        <button type="button" id="gtaAudioBtn-off" onclick="gtaSetAudioTrack('off')" class="studio-pill active px-2 py-1 rounded-lg text-[9px] font-bold cursor-pointer">🔇 OFF</button>
+        <button type="button" id="gtaAudioBtn-flash" onclick="gtaSetAudioTrack('flash')" class="studio-pill px-2 py-1 rounded-lg text-[9px] font-bold cursor-pointer">🎹 Flash FM</button>
+        <button type="button" id="gtaAudioBtn-ocean" onclick="gtaSetAudioTrack('ocean')" class="studio-pill px-2 py-1 rounded-lg text-[9px] font-bold cursor-pointer">🌴 Ocean</button>
+        <button type="button" id="gtaAudioBtn-leonida" onclick="gtaSetAudioTrack('leonida')" class="studio-pill px-2 py-1 rounded-lg text-[9px] font-bold cursor-pointer">🌅 Sunset</button>
+      </div>
+    </div>
+
+    <!-- 6. SAVE & BROADCAST TO OBS -->
+    <div class="pt-2 border-t border-slate-800">
+      <button
+        type="button"
+        id="btnGtaBroadcastLive"
+        onclick="gtaBroadcastToLive()"
+        class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-500 via-amber-400 to-cyan-400 hover:brightness-110 text-slate-950 font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,42,133,0.45)] cursor-pointer transition active:scale-95 flex items-center justify-center gap-2"
+      >
+        <span>📡</span>
+        <span id="gtaBroadcastBtnLabel">Save & Broadcast GTA VI Live</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- 8. COMPACT FLOATING BOTTOM SCENE DOCK (UNOBSTRUCTED VIEW) -->
+  <div
+    id="gtaMiniSceneDock"
+    class="hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-50 px-3 py-2 rounded-2xl bg-slate-950/92 backdrop-blur-xl border border-amber-400/60 shadow-[0_12px_40px_rgba(0,0,0,0.9)] flex items-center gap-1.5 sm:gap-2 text-xs font-sans max-w-[96vw] overflow-x-auto"
+  >
+    <button type="button" id="gtaMiniScenePrevBtn" onclick="gtaStepSceneVariant(-1)" class="studio-pill px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0">◀ Scene</button>
+    <span id="gtaMiniSceneLabel" class="text-[10px] font-mono font-bold text-amber-300 px-1 whitespace-nowrap shrink-0">#1 / 12</span>
+    <button type="button" id="gtaMiniSceneNextBtn" onclick="gtaStepSceneVariant(1)" class="studio-pill px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0">Scene ▶</button>
+    <div class="w-px h-5 bg-slate-700/80 shrink-0"></div>
+    <button type="button" id="gtaMiniModeBtn-demoA" onclick="gtaSetLayoutMode('demoA')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0">A: IMAX</button>
+    <button type="button" id="gtaMiniModeBtn-demoB" onclick="gtaSetLayoutMode('demoB')" class="studio-pill px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0">B: Heist Split</button>
+    <button type="button" id="gtaMiniModeBtn-demoC" onclick="gtaSetLayoutMode('demoC')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0">C: 3D Triptych</button>
+    <div class="w-px h-5 bg-slate-700/80 shrink-0"></div>
+    <button type="button" id="gtaMiniWantedBtn" onclick="gtaToggleSetting('showWantedHud')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0 whitespace-nowrap">⭐ 6-Star: ON</button>
+    <button type="button" id="gtaMiniRadarBtn" onclick="gtaToggleSetting('showRadarHud')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0 whitespace-nowrap">🗺️ Radar: ON</button>
+    <button type="button" id="gtaMiniTitleBtn" onclick="gtaToggleSetting('showTheaterTitle')" class="studio-pill active px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer shrink-0 whitespace-nowrap">🏷️ Title: ON</button>
+    <button type="button" id="gtaMiniSaveBtn" onclick="gtaBroadcastToLive()" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-pink-500 to-cyan-400 text-slate-950 font-black text-[10px] uppercase tracking-wider cursor-pointer shrink-0 whitespace-nowrap">📡 Save Live</button>
+    <button type="button" id="btnGtaExpandFullStudio" onclick="gtaSetMiniDockMode(false)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold text-[10px] cursor-pointer shrink-0 whitespace-nowrap">⤢ Full Studio</button>
+  </div>
+
+  <script>
+    const GTA6_OVERLAY_VERSION = "4.11.22";
+    window.GTA6_OVERLAY_VERSION = GTA6_OVERLAY_VERSION;
+    const FIREBASE_GTA6_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync/gta6Overlay.json";
+    const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
+    const GTA_STORAGE_KEY = "brian_gta6_overlay_config_v1";
+
+    function svgDataUri(svg) {
+      return "data:image/svg+xml;utf8," + encodeURIComponent(svg.trim());
+    }
+
+    // Embedded Zero-Latency High-Detail Vice City Scenes & Posters
+    const VICE_SCENES = [
+      {
+        label: "Ocean Drive Sunset Strip",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs>
+            <linearGradient id="s1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0b032d"/><stop offset="40%" stop-color="#5a0b6c"/><stop offset="72%" stop-color="#e31c79"/><stop offset="100%" stop-color="#ffae34"/></linearGradient>
+            <radialGradient id="sun1" cx="50%" cy="62%" r="28%"><stop offset="0%" stop-color="#fff8b8"/><stop offset="50%" stop-color="#ff5ca1"/><stop offset="100%" stop-color="#ff2a85" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="1280" height="720" fill="url(#s1)"/>
+          <circle cx="640" cy="435" r="195" fill="url(#sun1)"/>
+          <g fill="#120428"><rect x="70" y="260" width="85" height="230"/><rect x="170" y="220" width="105" height="270"/><rect x="290" y="295" width="75" height="195"/><rect x="920" y="240" width="95" height="250"/><rect x="1030" y="210" width="110" height="280"/></g>
+          <g fill="#00f0ff" opacity="0.85"><rect x="185" y="235" width="6" height="220"/><rect x="250" y="235" width="6" height="220"/><rect x="1050" y="225" width="6" height="240"/></g>
+          <rect x="0" y="490" width="1280" height="230" fill="#090218"/>
+          <line x1="0" y1="492" x2="1280" y2="492" stroke="#00f0ff" stroke-width="3"/>
+          <g stroke="#ff2a85" stroke-width="2" opacity="0.6"><line x1="640" y1="492" x2="140" y2="720"/><line x1="640" y1="492" x2="390" y2="720"/><line x1="640" y1="492" x2="640" y2="720" stroke="#ffd15c" stroke-width="4" stroke-dasharray="16 12"/><line x1="640" y1="492" x2="890" y2="720"/><line x1="640" y1="492" x2="1140" y2="720"/></g>
+          <g transform="translate(490, 525)"><path d="M35,65 L65,20 L235,20 L265,65 L290,75 L290,115 L10,115 L10,75 Z" fill="#0d031c" stroke="#00f0ff" stroke-width="2.5"/><rect x="22" y="78" width="62" height="14" rx="4" fill="#ff1744"/><rect x="216" y="78" width="62" height="14" rx="4" fill="#ff1744"/><rect x="118" y="82" width="64" height="18" rx="3" fill="#00f0ff"/><text x="150" y="95" text-anchor="middle" fill="#05020d" font-family="monospace" font-weight="900" font-size="12">LEONIDA</text></g>
+        </svg>`)
+      },
+      {
+        label: "Leonida Keys Speedboat & Chopper Chase",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs>
+            <linearGradient id="s2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#041126"/><stop offset="48%" stop-color="#0e3160"/><stop offset="78%" stop-color="#b51968"/><stop offset="100%" stop-color="#ff7729"/></linearGradient>
+            <linearGradient id="sea2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00b4d8"/><stop offset="45%" stop-color="#071936"/><stop offset="100%" stop-color="#020712"/></linearGradient>
+          </defs>
+          <rect width="1280" height="720" fill="url(#s2)"/>
+          <circle cx="940" cy="355" r="125" fill="#ffb84d" opacity="0.88"/>
+          <rect x="0" y="435" width="1280" height="18" fill="#060a17"/>
+          <rect x="0" y="485" width="1280" height="235" fill="url(#sea2)"/>
+          <polygon points="310,165 510,590 660,590" fill="#00f0ff" opacity="0.24"/>
+          <g fill="#050711" transform="translate(260, 130)"><ellipse cx="50" cy="28" rx="46" ry="20"/><rect x="-35" y="22" width="50" height="8"/><rect x="10" y="6" width="95" height="4" fill="#00f0ff"/></g>
+          <path d="M510,595 L810,565 L855,590 L535,615 Z" fill="#0c1328" stroke="#ff2a85" stroke-width="3"/>
+          <path d="M180,680 Q360,625 520,605" stroke="#ffffff" stroke-width="8" fill="none" opacity="0.78"/>
+        </svg>`)
+      },
+      {
+        label: "Vice Beach Neon Boardwalk Night",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs><linearGradient id="s3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#040112"/><stop offset="55%" stop-color="#1d0947"/><stop offset="100%" stop-color="#6e0e53"/></linearGradient></defs>
+          <rect width="1280" height="720" fill="url(#s3)"/>
+          <g fill="#0b0320"><rect x="90" y="160" width="140" height="360"/><rect x="255" y="200" width="130" height="320"/><rect x="415" y="140" width="160" height="380"/><rect x="740" y="180" width="150" height="340"/><rect x="920" y="150" width="175" height="370"/></g>
+          <g stroke="#00f0ff" stroke-width="4" opacity="0.85"><line x1="110" y1="185" x2="210" y2="185"/><line x1="435" y1="165" x2="555" y2="165"/><line x1="940" y1="175" x2="1075" y2="175"/></g>
+          <g stroke="#ff2a85" stroke-width="4" opacity="0.9"><rect x="275" y="230" width="90" height="240" fill="none"/><rect x="765" y="210" width="100" height="260" fill="none"/></g>
+          <rect x="0" y="520" width="1280" height="200" fill="#060214"/>
+          <ellipse cx="320" cy="610" rx="180" ry="28" fill="#ff2a85" opacity="0.32"/>
+          <ellipse cx="960" cy="620" rx="210" ry="30" fill="#00f0ff" opacity="0.3"/>
+        </svg>`)
+      },
+      {
+        label: "Everglades Grassrivers Airboat Dusk",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs><linearGradient id="s4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#120524"/><stop offset="45%" stop-color="#7c1652"/><stop offset="80%" stop-color="#f26422"/><stop offset="100%" stop-color="#ffe066"/></linearGradient></defs>
+          <rect width="1280" height="720" fill="url(#s4)"/>
+          <circle cx="420" cy="390" r="145" fill="#fff2a1" opacity="0.85"/>
+          <rect x="0" y="470" width="1280" height="250" fill="#0b1924"/>
+          <path d="M0,490 Q320,460 640,495 T1280,480 L1280,720 L0,720 Z" fill="#062129"/>
+          <g fill="#050b0e"><path d="M680,585 L920,575 L960,605 L660,605 Z"/><rect x="675" y="485" width="75" height="95" fill="none" stroke="#ffd15c" stroke-width="4"/></g>
+        </svg>`)
+      },
+      {
+        label: "Rockstar GTA VI Official Trailer Frame 1",
+        url: "https://i.ytimg.com/vi/QdBZY2fkU-0/maxresdefault.jpg"
+      },
+      {
+        label: "Rockstar GTA VI Official Scene Frame 2",
+        url: "https://i.ytimg.com/vi/QdBZY2fkU-0/maxres1.jpg"
+      },
+      {
+        label: "Rockstar GTA VI Official Scene Frame 3",
+        url: "https://i.ytimg.com/vi/QdBZY2fkU-0/maxres2.jpg"
+      },
+      {
+        label: "Rockstar GTA VI Official Scene Frame 4",
+        url: "https://i.ytimg.com/vi/QdBZY2fkU-0/maxres3.jpg"
+      },
+      {
+        label: "Port Gellhorn Container Docks Heist",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs><linearGradient id="s5" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#050b1e"/><stop offset="55%" stop-color="#1e1548"/><stop offset="100%" stop-color="#a81762"/></linearGradient></defs>
+          <rect width="1280" height="720" fill="url(#s5)"/>
+          <g stroke="#ff8c2b" stroke-width="5" fill="none"><path d="M220,480 L280,210 L460,160 L320,480"/><path d="M820,480 L880,190 L1080,140 L920,480"/></g>
+          <rect x="0" y="480" width="1280" height="240" fill="#040814"/>
+          <g fill="#00f0ff" opacity="0.7"><rect x="260" y="430" width="140" height="50"/><rect x="860" y="430" width="160" height="50"/></g>
+        </svg>`)
+      },
+      {
+        label: "Vice City Crosstown Expressway Midnight Run",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <rect width="1280" height="720" fill="#070217"/>
+          <circle cx="640" cy="290" r="240" fill="#ff2a85" opacity="0.22"/>
+          <path d="M0,720 L520,380 L760,380 L1280,720 Z" fill="#100626"/>
+          <path d="M120,720 L560,380 M1160,720 L720,380" stroke="#00f0ff" stroke-width="5"/>
+          <path d="M640,380 L640,720" stroke="#ffd15c" stroke-width="6" stroke-dasharray="22 16"/>
+        </svg>`)
+      },
+      {
+        label: "Club Jack of Hearts Neon VIP Lounge",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs><radialGradient id="s7" cx="50%" cy="45%" r="60%"><stop offset="0%" stop-color="#5c0955"/><stop offset="100%" stop-color="#05010f"/></radialGradient></defs>
+          <rect width="1280" height="720" fill="url(#s7)"/>
+          <circle cx="640" cy="340" r="170" fill="none" stroke="#ff2a85" stroke-width="8"/>
+          <circle cx="640" cy="340" r="215" fill="none" stroke="#00f0ff" stroke-width="4" stroke-dasharray="28 14"/>
+          <text x="640" y="365" text-anchor="middle" fill="#ffd15c" font-family="Impact, sans-serif" font-size="92" letter-spacing="8">VICE VIP</text>
+        </svg>`)
+      },
+      {
+        label: "Mount Kalaga National Park Radar Lookout",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+          <defs><linearGradient id="s8" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#030b1c"/><stop offset="60%" stop-color="#17385c"/><stop offset="100%" stop-color="#d4426f"/></linearGradient></defs>
+          <rect width="1280" height="720" fill="url(#s8)"/>
+          <polygon points="0,560 280,330 560,490 880,290 1280,540 1280,720 0,720" fill="#081326"/>
+          <polygon points="220,720 620,390 1040,720" fill="#040914"/>
+        </svg>`)
+      }
+    ];
+
+    const VICE_POSTERS = [
+      {
+        label: "Vice Sunset VI Vertical Key Art",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900">
+          <defs><linearGradient id="p1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#190536"/><stop offset="42%" stop-color="#9b1265"/><stop offset="76%" stop-color="#ff5e3a"/><stop offset="100%" stop-color="#ffd25a"/></linearGradient></defs>
+          <rect width="600" height="900" fill="url(#p1)"/>
+          <circle cx="300" cy="410" r="210" fill="#ff9e44" opacity="0.55"/>
+          <g stroke="#080211" stroke-width="14"><line x1="0" y1="260" x2="600" y2="170"/><line x1="0" y1="620" x2="600" y2="700"/><line x1="290" y1="0" x2="220" y2="230"/></g>
+          <rect x="0" y="680" width="600" height="220" fill="#090214"/>
+          <g transform="translate(300, 445)">
+            <text x="0" y="45" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="255" font-weight="900" fill="#0b021a" stroke="#00f0ff" stroke-width="8">VI</text>
+            <text x="0" y="45" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="235" font-weight="900" fill="#ff2a85" opacity="0.92">VI</text>
+            <text x="0" y="15" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="38" font-weight="900" fill="#ffffff" letter-spacing="4">GRAND THEFT AUTO</text>
+          </g>
+          <text x="300" y="765" text-anchor="middle" font-family="monospace" font-size="24" font-weight="900" fill="#00f0ff" letter-spacing="6">WELCOME TO LEONIDA</text>
+          <text x="300" y="810" text-anchor="middle" font-family="monospace" font-size="18" font-weight="700" fill="#ffd25a" letter-spacing="4">LAUNCH NIGHT • NOV 19, 2026</text>
+        </svg>`)
+      },
+      {
+        label: "Neon Cyan & Magenta Edition",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900">
+          <defs><linearGradient id="p2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#030921"/><stop offset="55%" stop-color="#191654"/><stop offset="100%" stop-color="#ff2a85"/></linearGradient></defs>
+          <rect width="600" height="900" fill="url(#p2)"/>
+          <circle cx="300" cy="400" r="195" fill="none" stroke="#00f0ff" stroke-width="10"/>
+          <text x="300" y="475" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="245" fill="#00f0ff" stroke="#ff2a85" stroke-width="6">VI</text>
+          <text x="300" y="435" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="36" fill="#ffffff" letter-spacing="4">GRAND THEFT AUTO</text>
+          <text x="300" y="780" text-anchor="middle" font-family="monospace" font-size="23" font-weight="900" fill="#ffd15c" letter-spacing="5">VICE CITY • LEONIDA</text>
+        </svg>`)
+      },
+      {
+        label: "Gold Heist Dossier Poster",
+        url: svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900">
+          <rect width="600" height="900" fill="#080412"/>
+          <rect x="24" y="24" width="552" height="852" rx="20" fill="none" stroke="#ffd15c" stroke-width="5"/>
+          <text x="300" y="160" text-anchor="middle" font-family="monospace" font-size="26" fill="#ffd15c" letter-spacing="6">★ ★ ★ ★ ★ ★</text>
+          <text x="300" y="485" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="250" fill="#ffd15c" stroke="#ff2a85" stroke-width="6">VI</text>
+          <text x="300" y="445" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="36" fill="#ffffff" letter-spacing="4">GRAND THEFT AUTO</text>
+          <text x="300" y="760" text-anchor="middle" font-family="monospace" font-size="21" font-weight="900" fill="#00f0ff" letter-spacing="4">STATE OF LEONIDA DOSSIER</text>
+        </svg>`)
+      },
+      {
+        label: "Rockstar Official 16:9 Key Art",
+        url: "https://i.ytimg.com/vi/QdBZY2fkU-0/maxresdefault.jpg"
+      }
+    ];
+
+    const DEFAULT_STATE = {
+      layoutMode: "demoC",
+      sceneIndex: 0,
+      posterUrl: VICE_POSTERS[0].url,
+      showWantedHud: true,
+      showRadarHud: true,
+      showTheaterTitle: true,
+      trailerLoop: false,
+      launchState: "countdown",
+      targetIso: "2026-11-19T00:00",
+      subtitle: "Thursday, Nov 19, 2026 • Midnight Launch Stream • Vice City, Leonida",
+      audioTrack: "off",
+      updatedAt: 0
+    };
+
+    let gtaState = (() => {
+      try {
+        const raw = localStorage.getItem(GTA_STORAGE_KEY);
+        if (raw) return Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
+      } catch(e) {}
+      return Object.assign({}, DEFAULT_STATE);
+    })();
+
+    let activeGalleryTab = "posters";
+    let studioPreviewOpen = false;
+    const gtaBroadcastChannel = (typeof BroadcastChannel !== "undefined") ? new BroadcastChannel("brian_gta6_sync") : null;
+
+    function saveLocalGtaState() {
+      try {
+        localStorage.setItem(GTA_STORAGE_KEY, JSON.stringify(gtaState));
+      } catch(e) {}
+    }
+
+    function getActiveScenePair() {
+      const total = VICE_SCENES.length;
+      const idx = ((Number(gtaState.sceneIndex) || 0) % total + total) % total;
+      const scene1 = VICE_SCENES[idx].url;
+      const scene2 = VICE_SCENES[(idx + 1) % total].url;
+      return { scene1, scene2, index: idx, total, label: VICE_SCENES[idx].label };
+    }
+
+    function renderGtaOverlay() {
+      const pair = getActiveScenePair();
+      const mode = ["demoA", "demoB", "demoC"].includes(gtaState.layoutMode) ? gtaState.layoutMode : "demoC";
+      const poster = gtaState.posterUrl || VICE_POSTERS[0].url;
+
+      // 1. Backdrop & Wings
+      const backdropEl = document.getElementById("gtaBackdropImg");
+      if (backdropEl) {
+        const bgUrl = mode === "demoA" ? pair.scene1 : pair.scene2;
+        if (backdropEl.getAttribute("src") !== bgUrl) backdropEl.src = bgUrl;
+      }
+
+      const wingsOverlay = document.getElementById("gtaTriptychWingsOverlay");
+      if (wingsOverlay) {
+        wingsOverlay.className = (mode === "demoC") ? "hidden lg:block fixed inset-0 z-10 pointer-events-none" : "hidden";
+      }
+      const leftWing = document.getElementById("gtaWingLeftImg");
+      const rightWing = document.getElementById("gtaWingRightImg");
+      if (leftWing && leftWing.getAttribute("src") !== pair.scene1) leftWing.src = pair.scene1;
+      if (rightWing && rightWing.getAttribute("src") !== pair.scene2) rightWing.src = pair.scene2;
+
+      // 2. Center Mode Panes
+      const paneA = document.getElementById("gtaPaneDemoA");
+      const paneB = document.getElementById("gtaPaneDemoB");
+      const paneC = document.getElementById("gtaPaneDemoC");
+      if (paneA) paneA.classList.toggle("hidden", mode !== "demoA");
+      if (paneB) paneB.classList.toggle("hidden", mode !== "demoB");
+      if (paneC) paneC.classList.toggle("hidden", mode !== "demoC");
+
+      const heroA = document.getElementById("gtaDemoAHeroImg");
+      if (heroA && heroA.getAttribute("src") !== pair.scene1) heroA.src = pair.scene1;
+
+      const posterB = document.getElementById("gtaDemoBPosterImg");
+      const sceneB = document.getElementById("gtaDemoBSceneImg");
+      if (posterB && posterB.getAttribute("src") !== poster) posterB.src = poster;
+      if (sceneB && sceneB.getAttribute("src") !== pair.scene1) sceneB.src = pair.scene1;
+
+      const blurC = document.getElementById("gtaDemoCBlurImg");
+      const posterC = document.getElementById("gtaDemoCPosterImg");
+      if (blurC && blurC.getAttribute("src") !== pair.scene1) blurC.src = pair.scene1;
+      if (posterC && posterC.getAttribute("src") !== poster) posterC.src = poster;
+
+      // 3. Optional Official GTA VI Trailer Loop
+      const trailerWrap = document.getElementById("gtaTrailerOverlay");
+      const trailerIframe = document.getElementById("gtaTrailerIframe");
+      if (trailerWrap && trailerIframe) {
+        if (gtaState.trailerLoop) {
+          trailerWrap.classList.remove("hidden");
+          const targetSrc = "https://www.youtube-nocookie.com/embed/QdBZY2fkU-0?autoplay=1&mute=1&loop=1&playlist=QdBZY2fkU-0&controls=0&rel=0";
+          if (trailerIframe.getAttribute("src") !== targetSrc) trailerIframe.src = targetSrc;
+        } else {
+          trailerWrap.classList.add("hidden");
+          if (trailerIframe.getAttribute("src") !== "about:blank") trailerIframe.src = "about:blank";
+        }
+      }
+
+      // 4. HUD Overlays (6-Star Wanted, Vice Radar, Brand Title Badge)
+      const wantedEl = document.getElementById("gtaWantedHud");
+      if (wantedEl) wantedEl.classList.toggle("hidden", !gtaState.showWantedHud);
+
+      const radarEl = document.getElementById("gtaRadarHud");
+      if (radarEl) {
+        radarEl.className = gtaState.showRadarHud
+          ? "hidden lg:flex fixed bottom-5 left-6 z-30 w-52 h-36 rounded-2xl bg-slate-950/90 border-2 border-cyan-400/80 shadow-[0_0_28px_rgba(0,240,255,0.35)] backdrop-blur-md p-2.5 flex-col justify-between font-mono pointer-events-none"
+          : "hidden";
+      }
+
+      const brandEl = document.getElementById("gtaBrandHeader");
+      if (brandEl) brandEl.classList.toggle("hidden", !gtaState.showTheaterTitle);
+
+      // 5. Subtitle & Countdown vs Live Mode
+      const subEl = document.getElementById("gtaSubtitleText");
+      if (subEl) subEl.textContent = gtaState.subtitle || DEFAULT_STATE.subtitle;
+
+      const isLive = gtaState.launchState === "live";
+      const cdGrid = document.getElementById("gtaCountdownGrid");
+      const liveBanner = document.getElementById("gtaLaunchLiveBanner");
+      const cdHeading = document.getElementById("gtaCountdownHeading");
+      if (cdGrid) cdGrid.classList.toggle("hidden", isLive);
+      if (liveBanner) liveBanner.classList.toggle("hidden", !isLive);
+      if (cdHeading) cdHeading.textContent = isLive ? "🌴 LEONIDA DOORS ARE OPEN" : "🌴 LEONIDA LAUNCH DOORS OPEN IN";
+
+      syncGtaStudioControls(pair);
+    }
+
+    function syncGtaStudioControls(pairOverride) {
+      const pair = pairOverride || getActiveScenePair();
+      const mode = gtaState.layoutMode;
+      const modeLabels = {
+        demoA: "A: 16:9 IMAX",
+        demoB: "B: HEIST SPLIT",
+        demoC: "C: 3D TRIPTYCH"
+      };
+      const modeBadge = document.getElementById("gtaStudioModeBadge");
+      if (modeBadge) modeBadge.textContent = modeLabels[mode] || "C: 3D TRIPTYCH";
+
+      ["demoA", "demoB", "demoC"].forEach(m => {
+        const b1 = document.getElementById(`gtaModeBtn-${m}`);
+        const b2 = document.getElementById(`gtaMiniModeBtn-${m}`);
+        if (b1) b1.classList.toggle("active", m === mode);
+        if (b2) b2.classList.toggle("active", m === mode);
+      });
+
+      const sceneLbl = document.getElementById("gtaStudioSceneLabel");
+      const miniSceneLbl = document.getElementById("gtaMiniSceneLabel");
+      if (sceneLbl) sceneLbl.textContent = `Scene Set #${pair.index + 1} / ${pair.total}`;
+      if (miniSceneLbl) miniSceneLbl.textContent = `#${pair.index + 1} / ${pair.total}`;
+
+      const syncToggle = (key, btnId, badgeId, miniId, miniPrefix) => {
+        const on = Boolean(gtaState[key]);
+        const btn = document.getElementById(btnId);
+        const badge = document.getElementById(badgeId);
+        const mini = document.getElementById(miniId);
+        if (btn) btn.classList.toggle("active", on);
+        if (badge) badge.textContent = on ? "ON" : "OFF";
+        if (mini) {
+          mini.classList.toggle("active", on);
+          mini.textContent = `${miniPrefix}: ${on ? "ON" : "OFF"}`;
+        }
+      };
+
+      syncToggle("showWantedHud", "gtaToggleBtn-wanted", "gtaBadge-wanted", "gtaMiniWantedBtn", "⭐ 6-Star");
+      syncToggle("showRadarHud", "gtaToggleBtn-radar", "gtaBadge-radar", "gtaMiniRadarBtn", "🗺️ Radar");
+      syncToggle("showTheaterTitle", "gtaToggleBtn-title", "gtaBadge-title", "gtaMiniTitleBtn", "🏷️ Title");
+      syncToggle("trailerLoop", "gtaToggleBtn-trailer", "gtaBadge-trailer", "", "");
+
+      const cdBtn = document.getElementById("gtaStateBtn-countdown");
+      const liveBtn = document.getElementById("gtaStateBtn-live");
+      if (cdBtn) cdBtn.classList.toggle("active", gtaState.launchState !== "live");
+      if (liveBtn) liveBtn.classList.toggle("active", gtaState.launchState === "live");
+
+      const dateInput = document.getElementById("gtaTargetDateInput");
+      if (dateInput && document.activeElement !== dateInput) dateInput.value = gtaState.targetIso || DEFAULT_STATE.targetIso;
+
+      const subInput = document.getElementById("gtaCustomSubtitleInput");
+      if (subInput && document.activeElement !== subInput) subInput.value = gtaState.subtitle || DEFAULT_STATE.subtitle;
+
+      ["off", "flash", "ocean", "leonida"].forEach(t => {
+        const b = document.getElementById(`gtaAudioBtn-${t}`);
+        if (b) b.classList.toggle("active", (gtaState.audioTrack || "off") === t);
+      });
+
+      renderGtaStudioGallery();
+    }
+
+    function renderGtaStudioGallery() {
+      const grid = document.getElementById("gtaArtworkPickerGrid");
+      if (!grid) return;
+      const tPosters = document.getElementById("gtaGalleryTab-posters");
+      const tScenes = document.getElementById("gtaGalleryTab-scenes");
+      if (tPosters) {
+        tPosters.className = activeGalleryTab === "posters"
+          ? "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400 text-slate-950 cursor-pointer"
+          : "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-300 cursor-pointer";
+      }
+      if (tScenes) {
+        tScenes.className = activeGalleryTab === "scenes"
+          ? "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400 text-slate-950 cursor-pointer"
+          : "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-300 cursor-pointer";
+      }
+
+      if (activeGalleryTab === "posters") {
+        const allOptions = VICE_POSTERS.concat(VICE_SCENES.slice(0, 4));
+        grid.innerHTML = allOptions.map((item, idx) => {
+          const isSelected = gtaState.posterUrl === item.url;
+          const borderCls = isSelected ? "border-amber-400 ring-2 ring-amber-400" : "border-slate-800 hover:border-pink-400";
+          return `
+            <button type="button" onclick="gtaSelectGalleryPoster(${idx})" class="relative rounded-lg overflow-hidden border ${borderCls} bg-slate-900 p-0.5 cursor-pointer group">
+              <div class="w-full aspect-video bg-black rounded overflow-hidden">
+                <img src="${item.url}" alt="${item.label}" class="w-full h-full object-cover group-hover:scale-105 transition" />
+              </div>
+              <div class="text-[8px] font-mono text-slate-300 truncate px-1 pt-0.5">${item.label}</div>
+            </button>
+          `;
+        }).join("");
+      } else {
+        const pair = getActiveScenePair();
+        grid.innerHTML = VICE_SCENES.map((item, idx) => {
+          const isSelected = pair.index === idx;
+          const borderCls = isSelected ? "border-cyan-400 ring-2 ring-cyan-400" : "border-slate-800 hover:border-cyan-400";
+          return `
+            <button type="button" onclick="gtaSelectSceneIndex(${idx})" class="relative rounded-lg overflow-hidden border ${borderCls} bg-slate-900 p-0.5 cursor-pointer group">
+              <div class="w-full aspect-video bg-black rounded overflow-hidden">
+                <img src="${item.url}" alt="${item.label}" class="w-full h-full object-cover group-hover:scale-105 transition" />
+              </div>
+              <div class="text-[8px] font-mono text-slate-300 truncate px-1 pt-0.5">#${idx + 1} ${item.label}</div>
+            </button>
+          `;
+        }).join("");
+      }
+    }
+
+    function gtaSwitchGalleryTab(tab) {
+      activeGalleryTab = tab === "scenes" ? "scenes" : "posters";
+      renderGtaStudioGallery();
+    }
+    window.gtaSwitchGalleryTab = gtaSwitchGalleryTab;
+
+    function gtaSelectGalleryPoster(idx) {
+      const allOptions = VICE_POSTERS.concat(VICE_SCENES.slice(0, 4));
+      const picked = allOptions[idx];
+      if (!picked) return;
+      gtaState.posterUrl = picked.url;
+      const inp = document.getElementById("gtaCustomPosterInput");
+      if (inp) inp.value = picked.url.startsWith("data:") ? "" : picked.url;
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaSelectGalleryPoster = gtaSelectGalleryPoster;
+
+    function gtaSelectSceneIndex(idx) {
+      gtaState.sceneIndex = idx;
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaSelectSceneIndex = gtaSelectSceneIndex;
+
+    function gtaApplyCustomPosterUrl() {
+      const inp = document.getElementById("gtaCustomPosterInput");
+      const val = (inp && inp.value || "").trim();
+      if (!val) return;
+      gtaState.posterUrl = val;
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaApplyCustomPosterUrl = gtaApplyCustomPosterUrl;
+
+    function gtaSetLayoutMode(mode) {
+      if (!["demoA", "demoB", "demoC"].includes(mode)) return;
+      gtaState.layoutMode = mode;
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaSetLayoutMode = gtaSetLayoutMode;
+
+    function gtaStepSceneVariant(delta) {
+      const total = VICE_SCENES.length;
+      gtaState.sceneIndex = (((Number(gtaState.sceneIndex) || 0) + Number(delta || 1)) % total + total) % total;
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaStepSceneVariant = gtaStepSceneVariant;
+
+    function gtaToggleSetting(key, forceVal) {
+      if (!["showWantedHud", "showRadarHud", "showTheaterTitle", "trailerLoop"].includes(key)) return;
+      gtaState[key] = (forceVal !== undefined) ? Boolean(forceVal) : !gtaState[key];
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaToggleSetting = gtaToggleSetting;
+
+    function gtaSetLaunchState(state) {
+      gtaState.launchState = state === "live" ? "live" : "countdown";
+      saveLocalGtaState();
+      renderGtaOverlay();
+    }
+    window.gtaSetLaunchState = gtaSetLaunchState;
+
+    function gtaUpdateTargetDate(val) {
+      if (!val) return;
+      gtaState.targetIso = val;
+      saveLocalGtaState();
+      updateGtaCountdown();
+    }
+    window.gtaUpdateTargetDate = gtaUpdateTargetDate;
+
+    function gtaUpdateSubtitle(val) {
+      gtaState.subtitle = val;
+      saveLocalGtaState();
+      const subEl = document.getElementById("gtaSubtitleText");
+      if (subEl) subEl.textContent = val || DEFAULT_STATE.subtitle;
+    }
+    window.gtaUpdateSubtitle = gtaUpdateSubtitle;
+
+    function toggleGtaStudioDrawer(forceState) {
+      const drawer = document.getElementById("gtaStudioDrawer");
+      const mini = document.getElementById("gtaMiniSceneDock");
+      const gear = document.getElementById("btnToggleGtaStudio");
+      if (!drawer) return;
+      const show = (forceState !== undefined) ? Boolean(forceState) : drawer.classList.contains("hidden");
+      if (show) {
+        if (gear) { gear.classList.remove("hidden"); gear.classList.add("flex"); }
+        if (mini) mini.classList.add("hidden");
+        drawer.classList.remove("hidden");
+        syncGtaStudioControls();
+      } else {
+        drawer.classList.add("hidden");
+      }
+    }
+    window.toggleGtaStudioDrawer = toggleGtaStudioDrawer;
+
+    function gtaSetMiniDockMode(enabled) {
+      const drawer = document.getElementById("gtaStudioDrawer");
+      const mini = document.getElementById("gtaMiniSceneDock");
+      if (!drawer || !mini) return;
+      if (enabled) {
+        drawer.classList.add("hidden");
+        mini.classList.remove("hidden");
+      } else {
+        mini.classList.add("hidden");
+        drawer.classList.remove("hidden");
+      }
+      syncGtaStudioControls();
+    }
+    window.gtaSetMiniDockMode = gtaSetMiniDockMode;
+
+    document.addEventListener("keydown", (e) => {
+      if (e.shiftKey && (e.key === "S" || e.key === "s") && !["INPUT", "TEXTAREA", "SELECT"].includes((e.target && e.target.tagName) || "")) {
+        e.preventDefault();
+        toggleGtaStudioDrawer();
+      }
+    });
+
+    // Procedural Vice FM Synthwave Audio Engine (Default OFF)
+    let viceAudioCtx = null;
+    let viceAudioTimer = null;
+
+    function stopViceSynthAudio() {
+      if (viceAudioTimer) {
+        clearInterval(viceAudioTimer);
+        viceAudioTimer = null;
+      }
+      if (viceAudioCtx) {
+        try { viceAudioCtx.close(); } catch(e) {}
+        viceAudioCtx = null;
+      }
+    }
+
+    function gtaSetAudioTrack(trackId) {
+      const cleanTrack = ["off", "flash", "ocean", "leonida"].includes(trackId) ? trackId : "off";
+      gtaState.audioTrack = cleanTrack;
+      saveLocalGtaState();
+      stopViceSynthAudio();
+
+      const badge = document.getElementById("gtaAudioStatusBadge");
+      const radioText = document.getElementById("gtaRadioNowPlayingText");
+      const labels = {
+        off: "🔇 OFF",
+        flash: "🎹 Flash FM 80s Synthwave",
+        ocean: "🌴 Ocean Drive Outrun Bass",
+        leonida: "🌅 Leonida Twilight Pad"
+      };
+      if (badge) badge.textContent = cleanTrack === "off" ? "🔇 OFF" : "🔊 PLAYING";
+      if (radioText) radioText.textContent = cleanTrack === "off" ? "🔇 Radio Standby (OFF)" : `🔊 Now Playing: ${labels[cleanTrack]}`;
+      syncGtaStudioControls();
+
+      if (cleanTrack === "off") return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        viceAudioCtx = new AudioCtx();
+        const notes = cleanTrack === "flash"
+          ? [220, 277.18, 329.63, 440, 329.63, 277.18]
+          : cleanTrack === "ocean"
+          ? [110, 110, 146.83, 164.81, 130.81, 146.83]
+          : [196, 246.94, 293.66, 392];
+        let step = 0;
+        viceAudioTimer = setInterval(() => {
+          if (!viceAudioCtx || gtaState.audioTrack === "off") return;
+          const now = viceAudioCtx.currentTime;
+          const osc = viceAudioCtx.createOscillator();
+          const gain = viceAudioCtx.createGain();
+          osc.type = cleanTrack === "ocean" ? "sawtooth" : "triangle";
+          osc.frequency.setValueAtTime(notes[step % notes.length], now);
+          gain.gain.setValueAtTime(0.035, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+          osc.connect(gain);
+          gain.connect(viceAudioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.4);
+          step++;
+        }, 420);
+      } catch(e) {}
+    }
+    window.gtaSetAudioTrack = gtaSetAudioTrack;
+
+    // Live Countdown Ticker
+    function updateGtaCountdown() {
+      const targetMs = Date.parse(gtaState.targetIso || DEFAULT_STATE.targetIso) || Date.parse("2026-11-19T00:00:00-08:00");
+      const diff = Math.max(0, targetMs - Date.now());
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      const pad = (n) => String(n).padStart(2, "0");
+      const dEl = document.getElementById("gtaCdDays");
+      const hEl = document.getElementById("gtaCdHours");
+      const mEl = document.getElementById("gtaCdMins");
+      const sEl = document.getElementById("gtaCdSecs");
+      if (dEl) dEl.textContent = pad(days);
+      if (hEl) hEl.textContent = pad(hours);
+      if (mEl) mEl.textContent = pad(mins);
+      if (sEl) sEl.textContent = pad(secs);
+    }
+
+    async function gtaBroadcastToLive() {
+      gtaState.updatedAt = Date.now();
+      saveLocalGtaState();
+      const lbl = document.getElementById("gtaBroadcastBtnLabel");
+      const miniBtn = document.getElementById("gtaMiniSaveBtn");
+      if (lbl) lbl.textContent = "Broadcasting to OBS...";
+      if (miniBtn) miniBtn.textContent = "✅ Saved!";
+
+      if (gtaBroadcastChannel) {
+        try {
+          gtaBroadcastChannel.postMessage({ type: "GTA6_STATE_UPDATED", payload: gtaState });
+        } catch(e) {}
+      }
+
+      try {
+        await fetch(`${FIREBASE_GTA6_URL}?auth=${FIREBASE_SECRET_KEY}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(gtaState)
+        });
+      } catch(e) {}
+
+      if (lbl) {
+        lbl.textContent = "✅ GTA VI Overlay Broadcasted Live!";
+        setTimeout(() => { lbl.textContent = "Save & Broadcast GTA VI Live"; }, 2400);
+      }
+      if (miniBtn) {
+        setTimeout(() => { miniBtn.textContent = "📡 Save Live"; }, 2000);
+      }
+    }
+    window.gtaBroadcastToLive = gtaBroadcastToLive;
+
+    function applyIncomingGtaState(incoming) {
+      if (!incoming || typeof incoming !== "object") return;
+      const inTs = Number(incoming.updatedAt) || 0;
+      const curTs = Number(gtaState.updatedAt) || 0;
+      if (inTs && curTs && inTs < curTs) return;
+      const prevAudio = gtaState.audioTrack;
+      gtaState = Object.assign({}, DEFAULT_STATE, gtaState, incoming);
+      saveLocalGtaState();
+      renderGtaOverlay();
+      if (incoming.audioTrack && incoming.audioTrack !== prevAudio) {
+        gtaSetAudioTrack(incoming.audioTrack);
+      }
+    }
+    window.applyIncomingGtaState = applyIncomingGtaState;
+
+    if (gtaBroadcastChannel) {
+      gtaBroadcastChannel.onmessage = (event) => {
+        if (event.data && event.data.type === "GTA6_STATE_UPDATED" && event.data.payload) {
+          applyIncomingGtaState(event.data.payload);
+        }
+      };
+    }
+
+    function initGtaRealtimeSync() {
+      fetch(FIREBASE_GTA6_URL)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { if (data) applyIncomingGtaState(data); })
+        .catch(() => {});
+
+      if (typeof EventSource !== "undefined") {
+        try {
+          const es = new EventSource(FIREBASE_GTA6_URL);
+          es.addEventListener("put", (e) => {
+            try {
+              const packet = JSON.parse(e.data);
+              if (packet && packet.data) applyIncomingGtaState(packet.data);
+            } catch(err) {}
+          });
+        } catch(e) {}
+      }
+    }
+
+    // Stale-Tab Auto-Reload & Version Check (Universal Bandwidth Protection Protocol)
+    function isNewerVersion(remote, current) {
+      if (!remote || !current) return false;
+      const r = String(remote).replace(/^v/i, "").split(".").map(n => parseInt(n, 10) || 0);
+      const c = String(current).replace(/^v/i, "").split(".").map(n => parseInt(n, 10) || 0);
+      for (let i = 0; i < Math.max(r.length, c.length); i++) {
+        if ((r[i] || 0) > (c[i] || 0)) return true;
+        if ((r[i] || 0) < (c[i] || 0)) return false;
+      }
+      return false;
+    }
+
+    async function checkGtaOverlayVersion() {
+      try {
+        const res = await fetch(`version.json?t=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && data.version && isNewerVersion(data.version, GTA6_OVERLAY_VERSION)) {
+          const lastReload = parseInt(localStorage.getItem("brian_gta6_last_force_reload_ts") || "0", 10);
+          if ((document.visibilityState === "hidden" || data.forceReload === true) && (Date.now() - lastReload > 60000)) {
+            localStorage.setItem("brian_gta6_last_force_reload_ts", String(Date.now()));
+            window.location.reload();
+          }
+        }
+      } catch(e) {}
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const modeParam = params.get("mode");
+      if (["demoA", "demoB", "demoC"].includes(modeParam)) {
+        gtaState.layoutMode = modeParam;
+      }
+      renderGtaOverlay();
+      updateGtaCountdown();
+      setInterval(updateGtaCountdown, 1000);
+
+      const isStudio = params.get("studio") === "1" || params.get("studio") === "true";
+      const gear = document.getElementById("btnToggleGtaStudio");
+      if (isStudio) {
+        studioPreviewOpen = true;
+        if (gear) { gear.classList.remove("hidden"); gear.classList.add("flex"); }
+        toggleGtaStudioDrawer(true);
+      }
+
+      initGtaRealtimeSync();
+      setInterval(checkGtaOverlayVersion, 180000);
+    });
+  </script>
+</body>
+</html>

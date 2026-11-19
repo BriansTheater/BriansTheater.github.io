@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.11.22] - 2026-11-18
+- Added GTA 6 release countdown Twitch overlay and studio.
+- Added 6-Star Wanted HUD, Vice Radar, and 3D Triptych.
+
 ## [4.11.21] - 2026-11-17
 - Added automatic reload for stale and force-updated tabs.
 
