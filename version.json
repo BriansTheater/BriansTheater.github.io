@@ -1,9 +1,9 @@
 {
-  "version": "4.11.25",
+  "version": "4.11.26",
   "releaseDate": "2026-11-20",
-  "title": "Brian's Theater v4.11.25",
+  "title": "Brian's Theater v4.11.26",
   "forceReload": true,
   "notes": [
-    "Scoped Recently Concluded Screenings strictly to the current month."
+    "Removed launch banner and updated GTA 6 overlay text."
   ]
 }

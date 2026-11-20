@@ -157,13 +157,13 @@
     <!-- B. RELEASE HEADLINE & SUBTITLE -->
     <section class="flex flex-col items-center gap-0.5 mb-2.5 w-full px-2">
       <span id="gtaStatusBadge" class="text-[10px] sm:text-xs font-mono font-extrabold tracking-[0.26em] text-cyan-300 uppercase">
-        OFFICIAL WORLDWIDE RELEASE COUNTDOWN
+        VICE CITY, STATE OF LEONIDA
       </span>
       <h2 id="gtaMainTitle" class="text-2xl sm:text-5xl md:text-6xl font-black tracking-tight uppercase vice-title-gradient leading-tight max-w-full">
         GRAND THEFT AUTO VI
       </h2>
       <p id="gtaSubtitleText" class="text-xs sm:text-sm md:text-base text-pink-100/90 font-medium tracking-wide">
-        Thursday, Nov 19, 2026 • Midnight Launch Stream • Vice City, Leonida
+        Live Gameplay & Free Roam on Twitch
       </p>
     </section>
 
@@ -233,11 +233,11 @@
       </div>
     </section>
 
-    <!-- D. COUNTDOWN & LAUNCH PARTY CTA PANEL -->
-    <section class="w-full max-w-2xl mt-3">
+    <!-- D. COUNTDOWN PANEL (Auto-hides completely when no future countdown is active) -->
+    <section id="gtaCountdownSection" class="w-full max-w-2xl mt-3">
       <div class="p-3 sm:p-4 rounded-2xl bg-slate-950/90 border-2 border-cyan-400/55 shadow-[0_14px_40px_rgba(0,0,0,0.88),0_0_30px_rgba(0,240,255,0.20)] backdrop-blur-xl flex flex-col items-center gap-2.5">
         <span id="gtaCountdownHeading" class="text-[10px] sm:text-xs font-mono font-extrabold tracking-[0.28em] text-amber-300 uppercase">
-          🌴 LEONIDA LAUNCH DOORS OPEN IN
+          🌴 STREAM STARTING IN
         </span>
 
         <!-- 4-Box Countdown Grid (Auto-hides leading 00 DAYS / 00 HOURS and hides completely when countdown finishes) -->
@@ -258,11 +258,6 @@
             <span id="gtaCdSecs" class="text-xl sm:text-4xl font-mono font-black text-amber-300 drop-shadow-[0_0_14px_rgba(255,209,92,0.65)]">00</span>
             <span class="text-[8px] sm:text-[10px] font-mono text-amber-200 tracking-widest uppercase mt-0.5">SECS</span>
           </div>
-        </div>
-
-        <!-- Launch Live Banner (Shown when Doors Open / Launch Live mode is toggled) -->
-        <div id="gtaLaunchLiveBanner" class="hidden w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-amber-500 to-cyan-500 text-slate-950 font-mono font-black text-sm sm:text-lg tracking-wider uppercase shadow-[0_0_30px_rgba(255,42,133,0.65)]">
-          🚀 WELCOME TO VICE CITY • LAUNCH STREAM IS LIVE NOW!
         </div>
       </div>
     </section>
@@ -421,7 +416,7 @@
   </div>
 
   <script>
-    const GTA6_OVERLAY_VERSION = "4.11.25";
+    const GTA6_OVERLAY_VERSION = "4.11.26";
     window.GTA6_OVERLAY_VERSION = GTA6_OVERLAY_VERSION;
     const FIREBASE_GTA6_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync/gta6Overlay.json";
     const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
@@ -604,7 +599,7 @@
       trailerLoop: false,
       launchState: "countdown",
       targetIso: "2026-11-19T00:00",
-      subtitle: "Thursday, Nov 19, 2026 • Midnight Launch Stream • Vice City, Leonida",
+      subtitle: "Live Gameplay & Free Roam on Twitch",
       audioTrack: "off",
       updatedAt: 0
     };
@@ -1011,15 +1006,15 @@
       const secs = Math.floor((diff % 60000) / 1000);
 
       const isCompleteOrLive = (gtaState.launchState === "live") || (diff <= 0);
+      const cdSection = document.getElementById("gtaCountdownSection");
       const cdGrid = document.getElementById("gtaCountdownGrid");
-      const liveBanner = document.getElementById("gtaLaunchLiveBanner");
       const cdHeading = document.getElementById("gtaCountdownHeading");
 
+      if (cdSection) cdSection.classList.toggle("hidden", isCompleteOrLive);
       if (cdGrid) cdGrid.classList.toggle("hidden", isCompleteOrLive);
-      if (liveBanner) liveBanner.classList.toggle("hidden", !isCompleteOrLive);
       if (cdHeading) {
         cdHeading.classList.toggle("hidden", isCompleteOrLive);
-        cdHeading.textContent = "🌴 LEONIDA LAUNCH DOORS OPEN IN";
+        cdHeading.textContent = "🌴 STREAM STARTING IN";
       }
 
       if (!isCompleteOrLive && cdGrid) {

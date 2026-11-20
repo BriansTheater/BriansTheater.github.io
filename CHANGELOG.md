@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.26] - 2026-11-20
+- Removed launch banner and updated GTA 6 overlay text.
+
 ## [4.11.25] - 2026-11-20
 - Scoped Recently Concluded Screenings strictly to the current month.
 
