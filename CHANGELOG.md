@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.28] - 2026-11-20
+- Added top-left Twitch Drops Enabled HUD on GTA 6.
+
 ## [4.11.27] - 2026-11-20
 - Restored Welcome to Vice City banner on GTA 6.
 
