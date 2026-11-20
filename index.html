@@ -4893,7 +4893,7 @@
   <!-- 459+ Past Movies Catalog Data is dynamically hydrated asynchronously via ensurePastMoviesCatalogLoaded() without blocking initial render -->
 
   <script>
-    const APP_VERSION = "4.11.24";
+    const APP_VERSION = "4.11.25";
     window.APP_VERSION = APP_VERSION;
     var vaultMovies = [];
     var communityRequests = [];
@@ -6346,6 +6346,9 @@
 
     // App Store Style Release Notes for Brian's Theater
     const APP_STORE_RELEASES = {
+      "4.11.25": [
+        "Scoped Recently Concluded Screenings strictly to the current month."
+      ],
       "4.11.24": [
         "Removed Join Launch Party link from GTA 6 overlay."
       ],
@@ -22118,18 +22121,19 @@
         }
       }
 
-      // Render recently concluded shelf (lazy-hydrated when shelf is expanded)
-      window._cachedPastScheduleItems = pastItems;
+      // Render recently concluded shelf (strictly scoped to current month to avoid loading prior months / wasting bandwidth)
+      const currentMonthPastItems = pastItems.filter(s => getItemPacificYearMonth(s).key === currentMonthKey);
+      window._cachedPastScheduleItems = currentMonthPastItems;
       const concWrapper = document.getElementById('concludedScreeningsWrapper');
       const concGrid = document.getElementById('concludedCardsGrid');
       const concTitle = document.getElementById('concludedShelfTitle');
       if (concWrapper && concGrid) {
-        if (pastItems.length > 0) {
+        if (currentMonthPastItems.length > 0) {
           concWrapper.classList.remove('hidden');
           concWrapper.classList.add('flex');
-          if (concTitle) concTitle.textContent = `Recently Concluded Screenings (${pastItems.length})`;
+          if (concTitle) concTitle.textContent = `Recently Concluded Screenings (${currentMonthPastItems.length})`;
           if (!concGrid.classList.contains('hidden')) {
-            concGrid.innerHTML = pastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
+            concGrid.innerHTML = currentMonthPastItems.map((s, idx) => renderScheduleCardHtml(s, idx, true)).join('');
             concGrid.dataset.needsHydration = 'false';
           } else {
             concGrid.dataset.needsHydration = 'true';

@@ -1,9 +1,9 @@
 {
-  "version": "4.11.24",
-  "releaseDate": "2026-11-18",
-  "title": "Brian's Theater v4.11.24",
+  "version": "4.11.25",
+  "releaseDate": "2026-11-20",
+  "title": "Brian's Theater v4.11.25",
   "forceReload": true,
   "notes": [
-    "Removed Join Launch Party link from GTA 6 overlay."
+    "Scoped Recently Concluded Screenings strictly to the current month."
   ]
 }

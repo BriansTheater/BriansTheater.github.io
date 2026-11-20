@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.25] - 2026-11-20
+- Scoped Recently Concluded Screenings strictly to the current month.
+
 ## [4.11.24] - 2026-11-18
 - Removed Join Launch Party link from GTA 6 overlay.
 
