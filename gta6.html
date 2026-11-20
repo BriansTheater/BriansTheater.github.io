@@ -259,6 +259,11 @@
             <span class="text-[8px] sm:text-[10px] font-mono text-amber-200 tracking-widest uppercase mt-0.5">SECS</span>
           </div>
         </div>
+
+        <!-- Welcome Banner (Shown when countdown finishes or Launch Live mode is toggled) -->
+        <div id="gtaLaunchLiveBanner" class="hidden w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-amber-500 to-cyan-500 text-slate-950 font-mono font-black text-sm sm:text-lg tracking-wider uppercase shadow-[0_0_30px_rgba(255,42,133,0.65)]">
+          🚀 WELCOME TO VICE CITY
+        </div>
       </div>
     </section>
 
@@ -416,7 +421,7 @@
   </div>
 
   <script>
-    const GTA6_OVERLAY_VERSION = "4.11.26";
+    const GTA6_OVERLAY_VERSION = "4.11.27";
     window.GTA6_OVERLAY_VERSION = GTA6_OVERLAY_VERSION;
     const FIREBASE_GTA6_URL = "https://brianstheater-default-rtdb.firebaseio.com/theaterSync/gta6Overlay.json";
     const FIREBASE_SECRET_KEY = "VHTpghPbEcnrEoLsspt9h2XwXh63r6pPchCLEymd";
@@ -1008,10 +1013,12 @@
       const isCompleteOrLive = (gtaState.launchState === "live") || (diff <= 0);
       const cdSection = document.getElementById("gtaCountdownSection");
       const cdGrid = document.getElementById("gtaCountdownGrid");
+      const liveBanner = document.getElementById("gtaLaunchLiveBanner");
       const cdHeading = document.getElementById("gtaCountdownHeading");
 
-      if (cdSection) cdSection.classList.toggle("hidden", isCompleteOrLive);
+      if (cdSection) cdSection.classList.remove("hidden");
       if (cdGrid) cdGrid.classList.toggle("hidden", isCompleteOrLive);
+      if (liveBanner) liveBanner.classList.toggle("hidden", !isCompleteOrLive);
       if (cdHeading) {
         cdHeading.classList.toggle("hidden", isCompleteOrLive);
         cdHeading.textContent = "🌴 STREAM STARTING IN";

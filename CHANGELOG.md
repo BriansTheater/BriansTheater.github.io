@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.27] - 2026-11-20
+- Restored Welcome to Vice City banner on GTA 6.
+
 ## [4.11.26] - 2026-11-20
 - Removed launch banner and updated GTA 6 overlay text.
 
