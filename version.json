@@ -1,9 +1,9 @@
 {
-  "version": "4.11.28",
-  "releaseDate": "2026-11-20",
-  "title": "Brian's Theater v4.11.28",
+  "version": "4.11.29",
+  "releaseDate": "2026-11-26",
+  "title": "Brian's Theater v4.11.29",
   "forceReload": true,
   "notes": [
-    "Added top-left Twitch Drops Enabled HUD on GTA 6."
+    "Added Unlocked tab and active-only Quests to Cinemark."
   ]
 }

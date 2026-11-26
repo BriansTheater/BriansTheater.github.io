@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.29] - 2026-11-26
+- Added Unlocked tab and active-only Quests to Cinemark.
+
 ## [4.11.28] - 2026-11-20
 - Added top-left Twitch Drops Enabled HUD on GTA 6.
 
