@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.11.30] - 2026-11-26
+- Backfilled all 40 unlocked Cinemark badges and 13 active quests.
+
 ## [4.11.29] - 2026-11-26
 - Added Unlocked tab and active-only Quests to Cinemark.
 

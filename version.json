@@ -1,9 +1,9 @@
 {
-  "version": "4.11.29",
+  "version": "4.11.30",
   "releaseDate": "2026-11-26",
-  "title": "Brian's Theater v4.11.29",
+  "title": "Brian's Theater v4.11.30",
   "forceReload": true,
   "notes": [
-    "Added Unlocked tab and active-only Quests to Cinemark."
+    "Backfilled all 40 unlocked Cinemark badges and 13 active quests."
   ]
 }
